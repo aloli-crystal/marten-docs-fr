@@ -1,0 +1,84 @@
+name: Check upstream doc changes
+
+on:
+  schedule:
+    - cron: '0 8 * * 1' # Every Monday at 8:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: write
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/martenframework/marten.git
+          git fetch upstream main
+
+      - name: Check for doc changes and create issue
+        run: |
+          # Get the last sync commit hash
+          if [ -f .upstream-sync ]; then
+            LAST_SYNC=$(cat .upstream-sync)
+          else
+            LAST_SYNC=$(git log upstream/main -1 --format="%H" -- docs/docs/)
+            echo "$LAST_SYNC" > .upstream-sync
+            echo "First run — saving current upstream state."
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add .upstream-sync
+            git commit -m "Initialize upstream sync point"
+            git push
+            exit 0
+          fi
+
+          CHANGES=$(git diff --name-only "$LAST_SYNC"..upstream/main -- docs/docs/ 2>/dev/null || echo "")
+
+          if [ -z "$CHANGES" ]; then
+            echo "No documentation changes detected upstream."
+            exit 0
+          fi
+
+          # Build issue body
+          BODY="## Fichiers modifiés en amont
+
+          Les fichiers suivants ont été modifiés dans la [documentation officielle Marten](https://github.com/martenframework/marten) depuis la dernière synchronisation (\`${LAST_SYNC:0:7}\`).
+
+          ### Fichiers à mettre à jour
+          "
+
+          while IFS= read -r file; do
+            local_file="${file#docs/}"
+            BODY="${BODY}
+          - [ ] \`${local_file}\`"
+          done <<< "$CHANGES"
+
+          BODY="${BODY}
+
+          ### Comment mettre à jour
+
+          1. Consulter les changements : \`git diff ${LAST_SYNC:0:7}..upstream/main -- <fichier>\`
+          2. Reporter les modifications dans la traduction française
+          3. Le sync point sera mis à jour automatiquement par ce workflow"
+
+          gh issue create \
+            --title "Traduction : mise à jour depuis upstream ($(date +%Y-%m-%d))" \
+            --body "$BODY" \
+            --label "traduction"
+
+          # Update sync point
+          git log upstream/main -1 --format="%H" > .upstream-sync
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .upstream-sync
+          git commit -m "Update upstream sync point"
+          git push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

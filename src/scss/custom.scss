@@ -1,0 +1,74 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+
+@use './components/category_index';
+@use './components/docsearch';
+@use './components/markdown';
+@use './components/navbar';
+@use './components/pagination';
+@use './components/sidebar';
+@use './components/toc';
+
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --ifm-color-primary: #eb6864;
+  --ifm-color-primary-dark: rgb(33, 175, 144);
+  --ifm-color-primary-darker: rgb(31, 165, 136);
+  --ifm-color-primary-darkest: rgb(26, 136, 112);
+  --ifm-color-primary-light: rgb(70, 203, 174);
+  --ifm-color-primary-lighter: rgb(102, 212, 189);
+  --ifm-color-primary-lightest: rgb(146, 224, 208);
+  --ifm-code-font-size: 90%;
+  --ifm-code-padding-horizontal: 4px;
+  --ifm-font-family-base: 'Inter';
+  --ifm-font-color-base: #4a4a4a;
+  --ifm-navbar-link-color: #fafafa;
+}
+
+html[data-theme='light'] {
+  --ifm-background-color: white;
+  --ifm-code-background: #eee;
+  --ifm-font-color-base: rgb(34, 45, 58);
+  --ifm-heading-color: rgb(3, 6, 11);
+  --ifm-menu-color: rgb(3, 6, 11);
+  --ifm-navbar-shadow: 0 1px 0 0 #eee;
+  --ifm-toc-border-color: #eee;
+}
+
+html[data-theme='dark'] {
+  --ifm-background-color: #04060b;
+  --ifm-font-color-base: rgb(215, 221, 226);
+}
+
+body {
+  --aa-primary-color-rgb: 235, 104, 100 !important;
+  --aa-input-border-color-rgb: 119, 119, 119 !important;
+}
+
+body.dark, body[data-theme='dark'] {
+  --aa-primary-color-rgb: 235, 104, 100 !important;
+  --aa-text-color-rgb: 215, 221, 226 !important;
+  --aa-muted-color-rgb: 215, 221, 226 !important;
+  --aa-background-color-rgb: 19, 23, 28 !important;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+.card {
+  margin-bottom: 1rem;
+}
+
+.theme-doc-version-badge {
+  display: none;
+}
