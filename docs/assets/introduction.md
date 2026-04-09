@@ -1,61 +1,61 @@
 ---
-title: Assets handling
-description: Learn how to handle assets.
+title: Gestion des assets
+description: Apprenez à gérer les assets.
 sidebar_label: Introduction
 ---
 
-Web applications generally need to serve "static files" or "assets": static images, Javascript files, CSS files, etc. Marten provides a set of helpers in order to help you manage assets, refer to them, and upload them to specific storages.
+Les applications web ont généralement besoin de servir des « fichiers statiques » ou « assets » : images statiques, fichiers Javascript, fichiers CSS, etc. Marten fournit un ensemble d'aides pour vous aider à gérer les assets, à les référencer et à les téléverser vers des stockages spécifiques.
 
-## Idea and scope
+## Principe et portée
 
-Asset files can be defined in two places:
+Les fichiers d'assets peuvent être définis à deux endroits :
 
-* they can be provided by [apps](../development/applications.md): for example, some apps need to rely on specific assets to provide full-featured UIs
-* they can be defined in [specifically configured folders](../development/reference/settings.md#dirs) in projects
+* ils peuvent être fournis par les [applications](../development/applications.md) : par exemple, certaines applications ont besoin de s'appuyer sur des assets spécifiques pour fournir des interfaces utilisateur complètes
+* ils peuvent être définis dans des [dossiers spécifiquement configurés](../development/reference/settings.md#dirs) dans les projets
 
-This allows applications to be relatively independent and to rely on their own assets if they need to, while also allowing projects to define assets as part of their structure.
+Cela permet aux applications d'être relativement indépendantes et de s'appuyer sur leurs propres assets si elles en ont besoin, tout en permettant aux projets de définir des assets dans leur structure.
 
-When a project is deployed, it is expected that all these asset files will be "collected" to be placed to the final destination from which they will be served: this operation is made available through the use of the [`collectassets`](../development/reference/management-commands.md#collectassets) management command. This "destination" depends on your deployment strategy: it can be as simple as moving all these assets to a dedicated folder in your server (so that they can be served by your web server), or it can involve uploading these assets to an S3 or GCS bucket for example.
+Lorsqu'un projet est déployé, il est attendu que tous ces fichiers d'assets soient « collectés » pour être placés à la destination finale depuis laquelle ils seront servis : cette opération est rendue disponible via l'utilisation de la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets). Cette « destination » dépend de votre stratégie de déploiement : cela peut être aussi simple que déplacer tous ces assets dans un dossier dédié sur votre serveur (pour qu'ils puissent être servis par votre serveur web), ou cela peut impliquer le téléversement de ces assets dans un bucket S3 ou GCS par exemple.
 
 :::info
-The assets flow provided by Marten is **intentionally simple**. Indeed, Marten being a backend-oriented framework, can't account for all the ways assets can be packaged and/or bundled together. Some projects might require a webpack strategy to bundle assets, some might require a fingerprinting step on top of that, and others might need something entirely different. How these toolchains are configured or set up is left to the discretion of web application developers; it is just expected that these operations will be applied _before_ the [`collectassets`](../development/reference/management-commands.md#collectassets) management command is executed.
+Le flux d'assets fourni par Marten est **intentionnellement simple**. En effet, Marten étant un framework orienté backend, ne peut pas prendre en compte toutes les façons dont les assets peuvent être empaquetés et/ou regroupés. Certains projets pourraient nécessiter une stratégie webpack pour regrouper les assets, d'autres pourraient nécessiter une étape de fingerprinting en plus, et d'autres encore pourraient avoir besoin de quelque chose d'entièrement différent. La façon dont ces chaînes d'outils sont configurées ou mises en place est laissée à la discrétion des développeurs d'applications web ; il est simplement attendu que ces opérations soient appliquées _avant_ l'exécution de la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets).
 :::
 
-Once assets have been "collected", it is possible to generate their URLs through the use of dedicated helpers:
+Une fois les assets « collectés », il est possible de générer leurs URL via l'utilisation d'aides dédiées :
 
-* by using the [assets engine](pathname:///api/dev/Marten/Asset/Engine.html#url(filepath%3AString)%3AString-instance-method) in Crystal
-* by using the [`asset`](../templates/reference/tags.md#asset) tag in templates
+* en utilisant le [moteur d'assets](pathname:///api/dev/Marten/Asset/Engine.html#url(filepath%3AString)%3AString-instance-method) en Crystal
+* en utilisant le tag [`asset`](../templates/reference/tags.md#asset) dans les templates
 
-The way these asset URLs are generated depends on the configured [asset storage](../development/reference/settings.md#storage).
+La façon dont ces URL d'assets sont générées dépend du [stockage d'assets](../development/reference/settings.md#storage) configuré.
 
-## Configuring assets
+## Configurer les assets
 
-Assets can be configured through the use of the [assets settings](../development/reference/settings.md#assets-settings), which are available under the `assets` namespace.
+Les assets peuvent être configurés via l'utilisation des [paramètres d'assets](../development/reference/settings.md#assets-settings), qui sont disponibles sous l'espace de noms `assets`.
 
-An example assets configuration might look like this:
+Un exemple de configuration d'assets pourrait ressembler à ceci :
 
 ```crystal
 config.assets.root = "assets"
 config.assets.url = "/assets/"
 ```
 
-### Assets storage
+### Stockage des assets
 
-One of the most important asset settings is the [`storage`](../development/reference/settings.md#storage) one. Indeed, Marten uses a file storage mechanism to perform file operations related to assets (like uploading files, generating URLs, etc) by leveraging a standardized API. By default, assets use the [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) storage backend, which ensures that assets files are collected and placed to a specific folder in the local file system: this allows these files to then be served by a web server such as Nginx for example.
+L'un des paramètres d'assets les plus importants est celui du [`storage`](../development/reference/settings.md#storage). En effet, Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations liées aux assets (comme le téléversement de fichiers, la génération d'URL, etc.) en utilisant une API standardisée. Par défaut, les assets utilisent le backend de stockage [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers d'assets sont collectés et placés dans un dossier spécifique du système de fichiers local : cela permet à ces fichiers d'être ensuite servis par un serveur web tel que Nginx par exemple.
 
-### Assets root directory
+### Répertoire racine des assets
 
-This directory - which can be configured through the use of the [`root`](../development/reference/settings.md#root) setting - corresponds to the absolute path where collected assets will be persisted (when running the [`collectassets`](../development/reference/management-commands.md#collectassets) command). By default, assets will be persisted in a folder that is relative to the Marten project's directory. Obviously, this folder should be empty before running the `collectassets` command in order to not overwrite existing files. The default value is `assets`.
+Ce répertoire - qui peut être configuré via l'utilisation du paramètre [`root`](../development/reference/settings.md#root) - correspond au chemin absolu où les assets collectés seront persistés (lors de l'exécution de la commande [`collectassets`](../development/reference/management-commands.md#collectassets)). Par défaut, les assets seront persistés dans un dossier relatif au répertoire du projet Marten. Évidemment, ce dossier devrait être vide avant d'exécuter la commande `collectassets` afin de ne pas écraser les fichiers existants. La valeur par défaut est `assets`.
 
-### Assets URL
+### URL des assets
 
-The asset URL is used when generating URLs for assets. This base URL will be used by the default [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) storage to construct asset URLs. For example, requesting a `css/App.css` asset might generate a `/assets/css/App.css` URL. The default value is `/assets/`.
+L'URL des assets est utilisée lors de la génération des URL pour les assets. Cette URL de base sera utilisée par le stockage par défaut [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) pour construire les URL d'assets. Par exemple, demander un asset `css/App.css` pourrait générer une URL `/assets/css/App.css`. La valeur par défaut est `/assets/`.
 
-### Asset directories
+### Répertoires d'assets
 
-By default, Marten will collect asset files that are defined under an `assets` folder in [application](../development/applications.md) directories. That being said, your project will probably have asset files that are not associated with a particular app. That's why you can also define an array of additional directories where assets should be looked for.
+Par défaut, Marten collectera les fichiers d'assets définis dans un dossier `assets` dans les répertoires des [applications](../development/applications.md). Cela dit, votre projet aura probablement des fichiers d'assets qui ne sont pas associés à une application particulière. C'est pourquoi vous pouvez également définir un tableau de répertoires supplémentaires où les assets doivent être recherchés.
 
-This array of directories can be defined through the use of the [`dirs`](../development/reference/settings.md#dirs) assets setting:
+Ce tableau de répertoires peut être défini via l'utilisation du paramètre d'assets [`dirs`](../development/reference/settings.md#dirs) :
 
 ```crystal
 config.assets.dirs = [
@@ -64,13 +64,13 @@ config.assets.dirs = [
 ]
 ```
 
-### Asset manifests and fingerprinting
+### Manifestes d'assets et fingerprinting
 
-Fingerprinting involves adding a unique string of characters to the filename of each asset. This enables the browser to cache the file securely. When an asset is modified, its fingerprint changes, prompting the browser to retrieve and use the updated version.
+Le fingerprinting consiste à ajouter une chaîne de caractères unique au nom de fichier de chaque asset. Cela permet au navigateur de mettre en cache le fichier en toute sécurité. Lorsqu'un asset est modifié, son empreinte change, incitant le navigateur à récupérer et utiliser la version mise à jour.
 
-Modern asset bundling tools often provide the capability to generate manifest files. These manifest files typically contain mappings between the original asset filenames and their corresponding fingerprinted versions. Marten supports configuring paths to these manifest files so that [resolving assets](#resolving-asset-urls) produces URLs that automatically include the correct fingerprinted version of each asset.
+Les outils modernes de regroupement d'assets offrent souvent la possibilité de générer des fichiers de manifeste. Ces fichiers de manifeste contiennent généralement des correspondances entre les noms de fichiers d'assets originaux et leurs versions avec empreinte. Marten supporte la configuration de chemins vers ces fichiers de manifeste de sorte que la [résolution des assets](#résoudre-les-url-dassets) produise des URL incluant automatiquement la bonne version avec empreinte de chaque asset.
 
-This can be achieved by adding manifest paths to the [`assets.manifests`](../development/reference/settings.md#manifests) setting. For example:
+Cela peut être réalisé en ajoutant des chemins de manifeste au paramètre [`assets.manifests`](../development/reference/settings.md#manifests). Par exemple :
 
 ```crystal
 config.assets.manifests = [
@@ -78,7 +78,7 @@ config.assets.manifests = [
 ]
 ```
 
-It is assumed that the files whose paths are referenced in this setting are regular JSON manifests, containing mappings between original asset file names and their fingerprinted versions. For example:
+Il est supposé que les fichiers dont les chemins sont référencés dans ce paramètre sont des manifestes JSON classiques, contenant des correspondances entre les noms de fichiers d'assets originaux et leurs versions avec empreinte. Par exemple :
 
 ```json
 {
@@ -87,41 +87,41 @@ It is assumed that the files whose paths are referenced in this setting are regu
 }
 ```
 
-Considering the above manifest example, trying to resolve `app/home.css` would produce a URL ending with `app/home.9495841be78cdf06c45d.css`:
+En considérant l'exemple de manifeste ci-dessus, essayer de résoudre `app/home.css` produirait une URL se terminant par `app/home.9495841be78cdf06c45d.css` :
 
 ```crystal
-Marten.assets.url("app/home.css") # => "/assets/app/home.9495841be78cdf06c45d.css"
+Marten.assets.url("app/home.css") # => "/assets/app/home.9495841be78cdf06c45d.css"
 ```
 
 :::info
-Additionally, the [`collectassets`](../development/reference/management-commands.md#collectassets) command provides a `--fingerprint` option. Using this option automatically fingerprints the collected assets and generates a `manifest.json` file, which maps the original file paths to their fingerprinted versions.
+De plus, la commande [`collectassets`](../development/reference/management-commands.md#collectassets) fournit une option `--fingerprint`. L'utilisation de cette option applique automatiquement le fingerprinting aux assets collectés et génère un fichier `manifest.json`, qui fait correspondre les chemins de fichiers originaux à leurs versions avec empreinte.
 
-When the `--fingerprint` option is used, it's important to include the path to the generated "manifest.json" in the appropriate [`assets.manifests`](../development/reference/settings#manifests) environment config file, otherwise the collected assets can't be found when the URL is resolved.
+Lorsque l'option `--fingerprint` est utilisée, il est important d'inclure le chemin vers le « manifest.json » généré dans le fichier de configuration d'environnement approprié [`assets.manifests`](../development/reference/settings#manifests), sinon les assets collectés ne peuvent pas être trouvés lors de la résolution de l'URL.
 :::
 
-## Resolving asset URLs
+## Résoudre les URL d'assets
 
-As mentioned previously, assets are collected and persisted in a specific storage. When building HTML [templates](../templates/introduction.md), you will usually need to "resolve" the URL of assets to generate the absolute URLs that should be inserted into stylesheet or script tags (for example).
+Comme mentionné précédemment, les assets sont collectés et persistés dans un stockage spécifique. Lors de la construction de [templates](../templates/introduction.md) HTML, vous aurez généralement besoin de « résoudre » l'URL des assets pour générer les URL absolues qui doivent être insérées dans les tags de feuilles de style ou de script (par exemple).
 
-One possible way to do so is to leverage the [`asset`](../templates/reference/tags.md#asset) template tag. This template tag takes a single argument corresponding to the relative path of the asset you want to resolve, and it outputs the absolute URL of the asset (depending on your assets configuration).
+Une façon possible de faire cela est d'utiliser le tag de template [`asset`](../templates/reference/tags.md#asset). Ce tag de template prend un seul argument correspondant au chemin relatif de l'asset que vous souhaitez résoudre, et il affiche l'URL absolue de l'asset (en fonction de votre configuration d'assets).
 
-For example:
+Par exemple :
 
 ```html
 <link rel="stylesheet" type="text/css" href="{% asset 'app/app.css' %}" />
 ```
 
-In the above snippet, the `app/app.css` asset could be resolved to `/assets/app/app.css` (depending on the configuration of the project obviously).
+Dans le fragment ci-dessus, l'asset `app/app.css` pourrait être résolu en `/assets/app/app.css` (en fonction de la configuration du projet évidemment).
 
-It is also possible to resolve asset URLs programmatically in Crystal. To do so, you can leverage the [`#url`](pathname:///api/dev/Marten/Asset/Engine.html#url(filepath%3AString)%3AString-instance-method) method of the Marten assets engine:
+Il est également possible de résoudre les URL d'assets de manière programmatique en Crystal. Pour ce faire, vous pouvez utiliser la méthode [`#url`](pathname:///api/dev/Marten/Asset/Engine.html#url(filepath%3AString)%3AString-instance-method) du moteur d'assets de Marten :
 
 ```crystal
-Marten.assets.url("app/app.css") # => "/assets/app/app.css"
+Marten.assets.url("app/app.css") # => "/assets/app/app.css"
 ```
 
-## Serving assets in development
+## Servir les assets en développement
 
-Marten provides a handler that you can use to serve assets in development environments only. This handler ([`Marten::Handlers::Defaults::Development::ServeAsset`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeAsset.html)) is automatically mapped to a route when creating new projects through the use of the [`new`](../development/reference/management-commands.md#new) management command:
+Marten fournit un handler que vous pouvez utiliser pour servir les assets uniquement dans les environnements de développement. Ce handler ([`Marten::Handlers::Defaults::Development::ServeAsset`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeAsset.html)) est automatiquement associé à une route lors de la création de nouveaux projets via l'utilisation de la commande de gestion [`new`](../development/reference/management-commands.md#new) :
 
 ```crystal
 Marten.routes.draw do
@@ -133,31 +133,31 @@ Marten.routes.draw do
 end
 ```
 
-As you can see, this route will automatically use the URL that is configured as part of the [`url`](../development/reference/settings.md#url) asset setting. For example, this means that an `app/app.css` asset would be served by the `/assets/app/app.css` route in development if the [`url`](../development/reference/settings.md#url) setting is set to `/assets/`.
+Comme vous pouvez le voir, cette route utilisera automatiquement l'URL configurée dans le paramètre d'asset [`url`](../development/reference/settings.md#url). Par exemple, cela signifie qu'un asset `app/app.css` serait servi par la route `/assets/app/app.css` en développement si le paramètre [`url`](../development/reference/settings.md#url) est défini à `/assets/`.
 
 :::warning
-It is very important to understand that this handler should **only** be used in development environments. Indeed, the [`Marten::Handlers::Defaults::Development::ServeAsset`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeAsset.html) handler does not require assets to have been collected beforehand through the use of the [`collectassets`](../development/reference/management-commands.md#collectassets) management command. This means that it will try to find assets in your applications' `assets` directories and in the directories configured in the [`dirs`](../development/reference/settings.md#dirs) setting. This mechanism is helpful in development, but it is not suitable for production environments since it is inefficient and (probably) insecure.
+Il est très important de comprendre que ce handler ne devrait être utilisé **que** dans les environnements de développement. En effet, le handler [`Marten::Handlers::Defaults::Development::ServeAsset`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeAsset.html) ne nécessite pas que les assets aient été collectés au préalable via l'utilisation de la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets). Cela signifie qu'il essaiera de trouver les assets dans les répertoires `assets` de vos applications et dans les répertoires configurés dans le paramètre [`dirs`](../development/reference/settings.md#dirs). Ce mécanisme est utile en développement, mais il n'est pas adapté aux environnements de production car il est inefficace et (probablement) non sécurisé.
 :::
 
-## Serving assets in production
+## Servir les assets en production
 
-At deployment time, you will need to run the [`collectassets`](../development/reference/management-commands.md#collectassets) management command to collect all the available assets from the applications' `assets` directories and from the directories configured in the [`dirs`](../development/reference/settings.md#dirs) setting. This command will identify and "collect" those assets, and ensure they are "uploaded" into their final destination based on the storage that is currently used.
+Au moment du déploiement, vous devrez exécuter la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets) pour collecter tous les assets disponibles depuis les répertoires `assets` des applications et depuis les répertoires configurés dans le paramètre [`dirs`](../development/reference/settings.md#dirs). Cette commande identifiera et « collectera » ces assets, et s'assurera qu'ils sont « téléversés » vers leur destination finale en fonction du stockage actuellement utilisé.
 
 :::tip
-The [`collectassets`](../development/reference/management-commands.md#collectassets) management command should be executed _after_ your assets have been bundled and packaged. For example, your project could use a [gulp](https://gulpjs.com/) pipeline to compile your assets, minify them, and place them into a `src/app/assets/build` directory. Assuming that this directory is also specified in the [`dirs`](../development/reference/settings.md#dirs) setting, these prepared assets would also be collected and uploaded into the configured storage. Which would allow you to then refer to them from your project's templates.
+La commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets) devrait être exécutée _après_ que vos assets ont été regroupés et empaquetés. Par exemple, votre projet pourrait utiliser un pipeline [gulp](https://gulpjs.com/) pour compiler vos assets, les minifier et les placer dans un répertoire `src/app/assets/build`. En supposant que ce répertoire est également spécifié dans le paramètre [`dirs`](../development/reference/settings.md#dirs), ces assets préparés seraient également collectés et téléversés dans le stockage configuré. Ce qui vous permettrait ensuite de les référencer depuis les templates de votre projet.
 
-Obviously, every project is different and might use different tools and a different deployment pipeline, but the overall strategy would remain the same.
+Évidemment, chaque projet est différent et peut utiliser des outils différents et un pipeline de déploiement différent, mais la stratégie globale resterait la même.
 :::
 
-It should be noted that there are many ways to serve assets in production. Again, every deployment situation will be different, but we can identify a few generic strategies.
+Il est à noter qu'il existe de nombreuses façons de servir les assets en production. Encore une fois, chaque situation de déploiement sera différente, mais nous pouvons identifier quelques stratégies génériques.
 
-### Serving assets from a web server
+### Servir les assets depuis un serveur web
 
-As mentioned previously, Marten uses a file storage mechanism to perform file operations related to assets and to "collect" them. By default, assets use the [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) storage backend, which ensures that assets files are collected and placed into a specific folder in the local file system. This allows these assets to easily be served by a local web server if you have one properly configured.
+Comme mentionné précédemment, Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations liées aux assets et les « collecter ». Par défaut, les assets utilisent le backend de stockage [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers d'assets sont collectés et placés dans un dossier spécifique du système de fichiers local. Cela permet à ces assets d'être facilement servis par un serveur web local si vous en avez un correctement configuré.
 
-For example, you could use a web server like [Apache](https://httpd.apache.org/) or [Nginx](https://nginx.org) to serve your collected assets. The way to configure these web servers will obviously vary from one solution to another, but you will likely need to define a location whose URL matches the [`url`](../development/reference/settings.md#url) setting value and that serves files from the folder where assets were collected (the [`root`](../development/reference/settings.md#root) folder).
+Par exemple, vous pourriez utiliser un serveur web comme [Apache](https://httpd.apache.org/) ou [Nginx](https://nginx.org) pour servir vos assets collectés. La manière de configurer ces serveurs web variera évidemment d'une solution à une autre, mais vous devrez probablement définir un emplacement dont l'URL correspond à la valeur du paramètre [`url`](../development/reference/settings.md#url) et qui sert les fichiers depuis le dossier où les assets ont été collectés (le dossier [`root`](../development/reference/settings.md#root)).
 
-For example, a [Nginx](https://nginx.org) server configuration allowing to serve assets under a `/assets` location could look like this:
+Par exemple, une configuration de serveur [Nginx](https://nginx.org) permettant de servir les assets sous un emplacement `/assets` pourrait ressembler à ceci :
 
 ```conf
 server {
@@ -184,23 +184,23 @@ server {
 }
 ```
 
-### Serving assets from a cloud service or CDN
+### Servir les assets depuis un service cloud ou un CDN
 
-To serve assets from a cloud storage (like Amazon's S3 or GCS) and (optionally) a CDN (Content Delivery Network), you will likely need to write a custom file storage and set the [`storage`](../development/reference/settings.md#storage) setting accordingly. The advantage of doing so is that you are basically delegating the responsibility of serving assets to a dedicated cloud storage, which can often translate into faster-loading pages for your end users.
+Pour servir les assets depuis un stockage cloud (comme Amazon S3 ou GCS) et (optionnellement) un CDN (Content Delivery Network), vous devrez probablement écrire un stockage de fichiers personnalisé et configurer le paramètre [`storage`](../development/reference/settings.md#storage) en conséquence. L'avantage de procéder ainsi est que vous déléguez essentiellement la responsabilité de servir les assets à un stockage cloud dédié, ce qui peut souvent se traduire par des pages se chargeant plus rapidement pour vos utilisateurs finaux.
 
 :::info
-Marten does not provide file storage implementations for the most frequently encountered cloud storage solutions presently. This is something that is planned for future releases though.
+Marten ne fournit pas actuellement d'implémentations de stockage de fichiers pour les solutions de stockage cloud les plus couramment rencontrées. C'est cependant quelque chose qui est prévu pour les prochaines versions.
 :::
 
-Writing a custom file storage implementation will involve subclassing the [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html) abstract class and implementing a set of mandatory methods. The main difference compared to a "local file system" storage here is that you would need to make use of the API of the chosen cloud storage to perform low-level file operations (such as reading a file's content, verifying that a file exists, or generating a file URL).
+Écrire une implémentation de stockage de fichiers personnalisée impliquera de sous-classer la classe abstraite [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html) et d'implémenter un ensemble de méthodes obligatoires. La principale différence par rapport à un stockage « système de fichiers local » ici est que vous devrez utiliser l'API du stockage cloud choisi pour effectuer les opérations de fichiers de bas niveau (comme lire le contenu d'un fichier, vérifier qu'un fichier existe ou générer l'URL d'un fichier).
 
-### Serving assets using a middleware
+### Servir les assets en utilisant un middleware
 
-There are some situations where it is not possible to easily configure a web server such as [Nginx](https://nginx.org) or a third-party service (like Amazon's S3 or GCS) to serve your assets directly. To palliate this, Marten provides the [`Marten::Middleware::AssetServing`](../handlers-and-http/reference/middlewares.md#asset-serving-middleware) middleware.
+Il existe des situations où il n'est pas possible de configurer facilement un serveur web tel que [Nginx](https://nginx.org) ou un service tiers (comme Amazon S3 ou GCS) pour servir vos assets directement. Pour pallier cela, Marten fournit le middleware [`Marten::Middleware::AssetServing`](../handlers-and-http/reference/middlewares.md#asset-serving-middleware).
 
-The purpose of this middleware is to distribute collected assets stored under the configured assets root ([`assets.root`](../development/reference/settings.md#root) setting). These assets are assumed to have been collected using the [`collectassets`](../development/reference/management-commands.md#collectassets) management command, and it is also assumed that a "local file system" storage (such as [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)) is used.
+Le but de ce middleware est de distribuer les assets collectés stockés sous la racine d'assets configurée (paramètre [`assets.root`](../development/reference/settings.md#root)). Ces assets sont supposés avoir été collectés en utilisant la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets), et il est également supposé qu'un stockage « système de fichiers local » (tel que [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)) est utilisé.
 
-In order to use this middleware, you can "insert" the corresponding class at the beginning of the [`middleware`](../development/reference/settings.md#middleware) setting when defining production settings. For example:
+Afin d'utiliser ce middleware, vous pouvez l'« insérer » au début du paramètre [`middleware`](../development/reference/settings.md#middleware) lors de la définition des paramètres de production. Par exemple :
 
 ```crystal
 Marten.configure :production do |config|
@@ -210,4 +210,4 @@ Marten.configure :production do |config|
 end
 ```
 
-It is important to note that the [`assets.url`](../development/reference/settings.md#url) setting must align with the Marten application domain or correspond to a relative URL path (e.g., /assets/) for this middleware to work correctly. This guarantees proper mapping and accessibility of the assets within the application, allowing them to be served by this middleware.
+Il est important de noter que le paramètre [`assets.url`](../development/reference/settings.md#url) doit être aligné avec le domaine de l'application Marten ou correspondre à un chemin URL relatif (par exemple /assets/) pour que ce middleware fonctionne correctement. Cela garantit un mappage et une accessibilité corrects des assets au sein de l'application, leur permettant d'être servis par ce middleware.

@@ -1,22 +1,22 @@
 ---
-title: Create cache stores
-description: How to create custom cache stores.
+title: Créer des cache stores
+description: Comment créer des cache stores personnalisés.
 ---
 
-Marten lets you easily create custom [cache stores](../introduction.md#configuration-and-cache-stores) that you can then use as part of your application when it comes to perform caching operations.
+Marten vous permet de créer facilement des [cache stores](../introduction.md#configuration-et-cache-stores) personnalisés que vous pouvez ensuite utiliser dans votre application pour effectuer des opérations de mise en cache.
 
-## Basic store definition
+## Définition basique d'un store
 
-Defining a cache store is as simple as creating a class that inherits from the [`Marten::Caching::Store::Base`](pathname:///api/dev/Marten/Cache/Store/Base.html) abstract class and that implements the following methods:
+Définir un cache store est aussi simple que de créer une classe qui hérite de la classe abstraite [`Marten::Caching::Store::Base`](pathname:///api/dev/Marten/Cache/Store/Base.html) et qui implémente les méthodes suivantes :
 
-* [`#clear`](pathname:///api/dev/Marten/Cache/Store/Base.html#clear-instance-method) - called when clearing the cache
-* [`#decrement`](pathname:///api/dev/Marten/Cache/Store/Base.html#decrement(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) - called when decrementing an integer value in the cache
-* [`#delete_entry`](pathname:///http://localhost:3000/docs/api/dev/Marten/Cache/Store/Base.html#delete_entry%28key%3AString%29%3ABool-instance-method) - called when deleting an entry from the cache
-* [`#increment`](pathname:///api/dev/Marten/Cache/Store/Base.html#increment(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) - called when incrementing an integer value in the cache
-* [`#read_entry`](pathname:///api/dev/Marten/Cache/Store/Base.html#read_entry(key%3AString)%3AString|Nil-instance-method) - called when reading an entry in the cache
-* [`#write_entry`](pathname:///api/dev/Marten/Cache/Store/Base.html#write_entry(key%3AString%2Cvalue%3AString%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil)-instance-method) - called when writing an entry to the cache
+* [`#clear`](pathname:///api/dev/Marten/Cache/Store/Base.html#clear-instance-method) - appelée lors du vidage du cache
+* [`#decrement`](pathname:///api/dev/Marten/Cache/Store/Base.html#decrement(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) - appelée lors de la décrémentation d'une valeur entière dans le cache
+* [`#delete_entry`](pathname:///http://localhost:3000/docs/api/dev/Marten/Cache/Store/Base.html#delete_entry%28key%3AString%29%3ABool-instance-method) - appelée lors de la suppression d'une entrée du cache
+* [`#increment`](pathname:///api/dev/Marten/Cache/Store/Base.html#increment(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) - appelée lors de l'incrémentation d'une valeur entière dans le cache
+* [`#read_entry`](pathname:///api/dev/Marten/Cache/Store/Base.html#read_entry(key%3AString)%3AString|Nil-instance-method) - appelée lors de la lecture d'une entrée dans le cache
+* [`#write_entry`](pathname:///api/dev/Marten/Cache/Store/Base.html#write_entry(key%3AString%2Cvalue%3AString%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil)-instance-method) - appelée lors de l'écriture d'une entrée dans le cache
 
-For example, the following snippet implements an in-memory store that persists cache entries in a hash:
+Par exemple, l'extrait suivant implémente un store en mémoire qui persiste les entrées de cache dans un hash :
 
 ```crystal
 class MemoryStore < Marten::Cache::Store::Base
@@ -136,11 +136,11 @@ class MemoryStore < Marten::Cache::Store::Base
 end
 ```
 
-## Enabling the use of custom cache stores
+## Activer l'utilisation de cache stores personnalisés
 
-Custom cache store can be used by assigning an instance of the corresponding class to the [`cache_store`](../../development/reference/settings.md#cache_store) setting.
+Les cache stores personnalisés peuvent être utilisés en assignant une instance de la classe correspondante au paramètre [`cache_store`](../../development/reference/settings.md#cache_store).
 
-For example:
+Par exemple :
 
 ```crystal
 config.cache_store = MemoryStore.new

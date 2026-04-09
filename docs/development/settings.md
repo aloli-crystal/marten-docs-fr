@@ -1,18 +1,18 @@
 ---
-title: Settings
-description: Learn the basics of Marten settings.
-sidebar_label: Settings
+title: Paramètres
+description: Apprenez les bases des paramètres de Marten.
+sidebar_label: Paramètres
 ---
 
-Marten projects can be configured through the use of settings files. This section explains how settings work, how they relate to environments, and how they can be altered.
+Les projets Marten peuvent être configurés grâce à l'utilisation de fichiers de paramètres. Cette section explique comment fonctionnent les paramètres, comment ils sont liés aux environnements, et comment ils peuvent être modifiés.
 
-## Overview
+## Vue d'ensemble
 
-Settings will be usually defined under a `config/settings` folder at the root of your project structure. There are no strict requirements regarding _where_ settings are defined nor how they are organized, but as a general rule of thumb, it is recommended to organize settings on a per-environment basis (shared settings, development settings, production settings, etc).
+Les paramètres sont généralement définis dans un dossier `config/settings` à la racine de la structure de votre projet. Il n'y a pas d'exigences strictes concernant _où_ les paramètres sont définis ni comment ils sont organisés, mais en règle générale, il est recommandé d'organiser les paramètres sur une base par environnement (paramètres partagés, paramètres de développement, paramètres de production, etc).
 
-In such configuration, you will usually define shared settings (settings that are shared across all your environments) in a dedicated settings file (eg. `config/settings/base.cr`) and other environment-specific settings in other files (eg. `config/settings/development.cr`).
+Dans une telle configuration, vous définirez généralement les paramètres partagés (paramètres communs à tous vos environnements) dans un fichier de paramètres dédié (ex. `config/settings/base.cr`) et les autres paramètres spécifiques à un environnement dans d'autres fichiers (ex. `config/settings/development.cr`).
 
-To define settings, it is necessary to access the global Marten configuration object through the use of the [`Marten#configure`](pathname:///api/dev/Marten.html#configure(env%3ANil|String|Symbol%3Dnil%2C%26)-class-method) method. This method returns a [`Marten::Conf::GlobalSettings`](pathname:///api/dev/Marten/Conf/GlobalSettings.html) object that you can use to define setting values. For example:
+Pour définir des paramètres, il est nécessaire d'accéder à l'objet de configuration global de Marten via la méthode [`Marten#configure`](pathname:///api/dev/Marten.html#configure(env%3ANil|String|Symbol%3Dnil%2C%26)-class-method). Cette méthode retourne un objet [`Marten::Conf::GlobalSettings`](pathname:///api/dev/Marten/Conf/GlobalSettings.html) que vous pouvez utiliser pour définir les valeurs des paramètres. Par exemple :
 
 ```crystal
 Marten.configure do |config|
@@ -37,7 +37,7 @@ Marten.configure do |config|
 end
 ```
 
-It should be noted that the [`Marten#configure`](pathname:///api/dev/Marten.html#configure(env%3ANil|String|Symbol%3Dnil%2C%26)-class-method) method can be called with an additional argument to ensure that the underlying settings are defined for a specific environment only:
+Il convient de noter que la méthode [`Marten#configure`](pathname:///api/dev/Marten.html#configure(env%3ANil|String|Symbol%3Dnil%2C%26)-class-method) peut être appelée avec un argument supplémentaire pour s'assurer que les paramètres sous-jacents ne sont définis que pour un environnement spécifique :
 
 ```crystal
 Marten.configure :development do |config|
@@ -46,20 +46,20 @@ end
 ```
 
 :::caution
-You should avoid altering setting values outside of the configuration block provided by the [`Marten#configure`](pathname:///api/dev/Marten.html#configure(env%3ANil|String|Symbol%3Dnil%2C%26)-class-method) method. Most settings are "read" and applied when the Marten project is set up, that is before the server actually starts. Changing these setting values afterward won't produce any meaningful result.
+Vous devriez éviter de modifier les valeurs des paramètres en dehors du bloc de configuration fourni par la méthode [`Marten#configure`](pathname:///api/dev/Marten.html#configure(env%3ANil|String|Symbol%3Dnil%2C%26)-class-method). La plupart des paramètres sont "lus" et appliqués lorsque le projet Marten est initialisé, c'est-à-dire avant que le serveur ne démarre effectivement. Modifier ces valeurs après coup ne produira aucun résultat significatif.
 :::
 
-## Environments
+## Environnements
 
-When creating new projects by using the [`new`](./reference/management-commands.md#new) management command, the following environments will be created automatically:
+Lors de la création de nouveaux projets avec la commande de gestion [`new`](./reference/management-commands.md#new), les environnements suivants seront créés automatiquement :
 
-* Development (settings defined in `config/settings/development.cr`)
-* Test (settings defined in `config/settings/test.cr`)
-* Production (settings defined in `config/settings/production.cr`)
+* Development (paramètres définis dans `config/settings/development.cr`)
+* Test (paramètres définis dans `config/settings/test.cr`)
+* Production (paramètres définis dans `config/settings/production.cr`)
 
-When your application is running, Marten will rely on the `MARTEN_ENV` environment variable to determine the current environment. If this environment variable is not found, the environment will automatically default to `development`. The value you specify in the `MARTEN_ENV` environment variable must correspond to the argument you pass to the [`Marten#configure`](pathname:///api/dev/Marten.html#configure(env%3ANil|String|Symbol%3Dnil%2C%26)-class-method) method.
+Lorsque votre application est en cours d'exécution, Marten s'appuiera sur la variable d'environnement `MARTEN_ENV` pour déterminer l'environnement actuel. Si cette variable d'environnement n'est pas trouvée, l'environnement sera automatiquement défini à `development`. La valeur que vous spécifiez dans la variable d'environnement `MARTEN_ENV` doit correspondre à l'argument que vous passez à la méthode [`Marten#configure`](pathname:///api/dev/Marten.html#configure(env%3ANil|String|Symbol%3Dnil%2C%26)-class-method).
 
-It should be noted that the current environment can be retrieved through the use of the [`Marten#env`](pathname:///api/dev/Marten.html#env-class-method) method, which returns a [`Marten::Conf::Env`](pathname:///api/dev/Marten/Conf/Env.html) object. For example:
+Il convient de noter que l'environnement actuel peut être récupéré via la méthode [`Marten#env`](pathname:///api/dev/Marten.html#env-class-method), qui retourne un objet [`Marten::Conf::Env`](pathname:///api/dev/Marten/Conf/Env.html). Par exemple :
 
 ```crystal
 Marten.env              # => <Marten::Conf::Env:0x1052b8060 @id="development">
@@ -67,6 +67,6 @@ Marten.env.id           # => "development"
 Marten.env.development? # => true
 ```
 
-## Available settings
+## Paramètres disponibles
 
-All the available settings are listed in the [settings reference](./reference/settings.md).
+Tous les paramètres disponibles sont listés dans la [référence des paramètres](./reference/settings.md).

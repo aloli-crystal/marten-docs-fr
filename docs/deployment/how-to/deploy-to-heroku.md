@@ -1,132 +1,132 @@
 ---
-title: Deploy to Heroku
-description: Learn how to deploy a Marten project to Heroku.
+title: Déployer sur Heroku
+description: Apprenez à déployer un projet Marten sur Heroku.
 ---
 
-This guide covers how to deploy a Marten project to [Heroku](https://heroku.com).
+Ce guide couvre comment déployer un projet Marten sur [Heroku](https://heroku.com).
 
-## Prerequisites
+## Prérequis
 
-To complete the steps in this guide, you will need:
+Pour compléter les étapes de ce guide, vous aurez besoin de :
 
-* An active account on [Heroku](https://heroku.com).
-* The [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed and correctly configured.
-* A functional Marten project.
+* Un compte actif sur [Heroku](https://heroku.com).
+* Le [CLI Heroku](https://devcenter.heroku.com/articles/heroku-cli) installé et correctement configuré.
+* Un projet Marten fonctionnel.
 
-## Make your Marten project Heroku-ready
+## Rendre votre projet Marten prêt pour Heroku
 
-Before creating the Heroku application, it is important to ensure that your project is properly configured for deployment to Heroku. This section outlines some necessary steps to ensure that your project can be deployed to Heroku without issues.
+Avant de créer l'application Heroku, il est important de s'assurer que votre projet est correctement configuré pour le déploiement sur Heroku. Cette section décrit quelques étapes nécessaires pour s'assurer que votre projet peut être déployé sur Heroku sans problèmes.
 
-### Create a `Procfile`
+### Créer un `Procfile`
 
-You should first ensure that your project defines a [`Procfile`](https://devcenter.heroku.com/articles/procfile), at the root of your project folder. A Procfile specifies the commands Heroku's dynos run, defining process types like web servers and background workers.
+Vous devez d'abord vous assurer que votre projet définit un [`Procfile`](https://devcenter.heroku.com/articles/procfile), à la racine du dossier de votre projet. Un Procfile spécifie les commandes que les dynos Heroku exécutent, définissant les types de processus comme les serveurs web et les workers en arrière-plan.
 
-Your Procfile should contain the following content at least:
+Votre Procfile devrait contenir le contenu suivant au minimum :
 
 ```procfile title="Procfile"
 web: bin/server --port $PORT
 ```
 
 :::info
-The `PORT` environment variable is automatically defined by Heroku. That's why we have to ensure that its value is forwarded to your server.
+La variable d'environnement `PORT` est automatiquement définie par Heroku. C'est pourquoi nous devons nous assurer que sa valeur est transmise à votre serveur.
 :::
 
-If your application requires the use of a database, you should also add a [release process](https://devcenter.heroku.com/articles/procfile#the-release-process-type) that runs the [`migrate`](../../development/reference/management-commands.md#migrate) management command to your Procfile:
+Si votre application nécessite l'utilisation d'une base de données, vous devriez également ajouter un [processus de release](https://devcenter.heroku.com/articles/procfile#the-release-process-type) qui exécute la commande de gestion [`migrate`](../../development/reference/management-commands.md#migrate) à votre Procfile :
 
 ```procfile title="Procfile"
 web: bin/server --port $PORT
 release: marten migrate
 ```
 
-This will ensure that your database is properly migrated during each deployment.
+Cela garantira que votre base de données est correctement migrée lors de chaque déploiement.
 
-### Configure the root path
+### Configurer le chemin racine
 
-During deployment on Heroku, your application is prepared and compiled in a temporary directory, which is distinct from the location where the server runs your application. Specifically, the root of your application will be available under the `/app` folder on the Heroku platform. It's important to keep this in mind when setting up your application for deployment to Heroku.
+Lors du déploiement sur Heroku, votre application est préparée et compilée dans un répertoire temporaire, qui est distinct de l'emplacement où le serveur exécute votre application. Plus précisément, la racine de votre application sera disponible sous le dossier `/app` sur la plateforme Heroku. Il est important de garder cela à l'esprit lors de la configuration de votre application pour le déploiement sur Heroku.
 
-Marten's [application mechanism](../../development/applications.md) relies heavily on paths when it comes to locate things like [templates](../../templates.mdx), [translations](../../i18n.mdx), or [assets](../../assets.mdx). Because the path where your application is compiled will differ from the path where it runs, we need to ensure that you explicitly configure Marten so that it can find your project structure.
+Le [mécanisme d'application](../../development/applications.md) de Marten s'appuie fortement sur les chemins pour localiser des choses comme les [templates](../../templates.mdx), les [traductions](../../i18n.mdx) ou les [assets](../../assets.mdx). Comme le chemin où votre application est compilée sera différent du chemin où elle s'exécute, nous devons nous assurer que vous configurez explicitement Marten pour qu'il puisse trouver la structure de votre projet.
 
-To address this, we need to define a specific "root path" for your project in production. The root path specifies the actual location of the project sources in your system. This can prove helpful in scenarios where the project was compiled in a specific location different from the final destination where the project sources (and the `lib` folder) are copied, which is the case with Heroku.
+Pour résoudre cela, nous devons définir un "chemin racine" spécifique pour votre projet en production. Le chemin racine spécifie l'emplacement réel des sources du projet dans votre système. Cela peut s'avérer utile dans les scénarios où le projet a été compilé dans un emplacement spécifique différent de la destination finale où les sources du projet (et le dossier `lib`) sont copiés, ce qui est le cas avec Heroku.
 
-In this light, we can set the [`root_path`](../../development/reference/settings.md#root_path) setting to `/app` as follows:
+Dans cette optique, nous pouvons définir le paramètre [`root_path`](../../development/reference/settings.md#root_path) sur `/app` comme suit :
 
 ```crystal title="config/settings/production.cr"
 Marten.configure :production do |config|
   config.root_path = "/app"
 
-  # Other settings...
+  # Autres paramètres...
 end
 ```
 
-As highlighted in the above example, this should be done in your "production" settings file.
+Comme souligné dans l'exemple ci-dessus, cela devrait être fait dans votre fichier de paramètres "production".
 
-### Configure key settings from environment variables
+### Configurer les paramètres clés depuis les variables d'environnement
 
-When deploying to Heroku, you will have to set a few environment variables (later in this guide) that will be used to populate key settings. This should be the case for the [`secret_key`](../../development/reference/settings.md#secret_key) and [`allowed_hosts`](../../development/reference/settings.md#allowed_hosts) settings at least.
+Lors du déploiement sur Heroku, vous devrez définir quelques variables d'environnement (plus tard dans ce guide) qui seront utilisées pour remplir les paramètres clés. Cela devrait être le cas pour les paramètres [`secret_key`](../../development/reference/settings.md#secret_key) et [`allowed_hosts`](../../development/reference/settings.md#allowed_hosts) au minimum.
 
-As such, it is important to ensure that your project populates these settings by reading their values in corresponding environment variables. This can be achieved by updating your `config/settings/production.cr` production settings file as follows:
+Ainsi, il est important de s'assurer que votre projet remplit ces paramètres en lisant leurs valeurs dans les variables d'environnement correspondantes. Cela peut être réalisé en mettant à jour votre fichier de paramètres de production `config/settings/production.cr` comme suit :
 
 ```crystal title="config/settings/production.cr"
 Marten.configure :production do |config|
   config.secret_key = ENV.fetch("MARTEN_SECRET_KEY")
   config.allowed_hosts = ENV.fetch("MARTEN_ALLOWED_HOSTS", "").split(",")
 
-  # Other settings...
+  # Autres paramètres...
 end
 ```
 
-It should be noted that if your application requires a database, you should also make sure to parse the `DATABASE_URL` environment variable and to configure your [database settings](../../development/reference/settings.md#database-settings) from the parsed database URL properties. The `DATABASE_URL` variable contains a URL-encoded string that specifies the connection details of your database, such as the database type, hostname, port, username, password, and database name.
+Il convient de noter que si votre application nécessite une base de données, vous devriez également vous assurer d'analyser la variable d'environnement `DATABASE_URL` et de configurer vos [paramètres de base de données](../../development/reference/settings.md#database-settings) à partir des propriétés de l'URL de base de données analysée. La variable `DATABASE_URL` contient une chaîne encodée en URL qui spécifie les détails de connexion de votre base de données, comme le type de base de données, le nom d'hôte, le port, le nom d'utilisateur, le mot de passe et le nom de la base de données.
 
-This can be accomplished by providing the `DATABASE_URL` environment variable value to the [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database%28id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2Curl%3AString%7CNil%3Dnil%29-instance-method) configuration method:
+Cela peut être accompli en fournissant la valeur de la variable d'environnement `DATABASE_URL` à la méthode de configuration [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database%28id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2Curl%3AString%7CNil%3Dnil%29-instance-method) :
 
 ```crystal title="config/settings/production.cr"
 Marten.configure :production do |config|
   config.database url: ENV.fetch("DATABASE_URL")
 
-  # Other settings...
+  # Autres paramètres...
 end
 ```
 
-### Optional: set up the asset serving middleware
+### Optionnel : configurer le middleware de service d'assets
 
-In order to easily serve your application's assets in Heroku, you can make use of the [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware) middleware. Indeed, it won't be possible to configure a web server such as [Nginx](https://nginx.org) to serve your assets directly on Heroku if you intend to use a "local file system" asset store (such as [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)).
+Afin de servir facilement les assets de votre application sur Heroku, vous pouvez utiliser le middleware [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware). En effet, il ne sera pas possible de configurer un serveur web comme [Nginx](https://nginx.org) pour servir directement vos assets sur Heroku si vous avez l'intention d'utiliser un store d'assets "système de fichiers local" (comme [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)).
 
-To palliate this, you can make use of the [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware) middleware. Obviously, this is not necessary if you intend to leverage a cloud storage provider (like Amazon's S3 or GCS) to store and serve your collected assets (in this case, you can simply skip this section).
+Pour pallier cela, vous pouvez utiliser le middleware [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware). Évidemment, cela n'est pas nécessaire si vous avez l'intention d'utiliser un fournisseur de stockage cloud (comme Amazon S3 ou GCS) pour stocker et servir vos assets collectés (dans ce cas, vous pouvez simplement passer cette section).
 
-In order to use this middleware, you can "insert" the corresponding class at the beginning of the [`middleware`](../../development/reference/settings.md#middleware) setting when defining production settings. For example:
+Pour utiliser ce middleware, vous pouvez "insérer" la classe correspondante au début du paramètre [`middleware`](../../development/reference/settings.md#middleware) lors de la définition des paramètres de production. Par exemple :
 
 ```crystal
 Marten.configure :production do |config|
   config.middleware.unshift(Marten::Middleware::AssetServing)
 
-  # Other settings...
+  # Autres paramètres...
 end
 ```
 
-The middleware will serve the collected assets available under the assets root ([`assets.root`](../../development/reference/settings.md#root) setting). It is also important to note that the [`assets.url`](../../development/reference/settings.md#url) setting must align with the Marten application domain or correspond to a relative URL path (e.g., `/assets/`) for this middleware to work correctly.
+Le middleware servira les assets collectés disponibles sous la racine des assets (paramètre [`assets.root`](../../development/reference/settings.md#root)). Il est également important de noter que le paramètre [`assets.url`](../../development/reference/settings.md#url) doit correspondre au domaine de l'application Marten ou correspondre à un chemin d'URL relatif (ex. `/assets/`) pour que ce middleware fonctionne correctement.
 
-## Create the Heroku app
+## Créer l'application Heroku
 
-To begin, the initial action required is to generate your Heroku application itself. This can be achieved by executing the `heroku create` command as follows:
+Pour commencer, l'action initiale requise est de générer votre application Heroku elle-même. Cela peut être réalisé en exécutant la commande `heroku create` comme suit :
 
 ```bash
 heroku create <yourapp>
 ```
 
 :::info
-In this guide, the `<yourapp>` placeholder refers to the Heroku application name that you have chosen for your project. You should replace `<yourapp>` with the actual name of your application in all the relevant commands and code snippets mentioned in this guide.
+Dans ce guide, l'espace réservé `<yourapp>` fait référence au nom de l'application Heroku que vous avez choisi pour votre projet. Vous devriez remplacer `<yourapp>` par le nom réel de votre application dans toutes les commandes et extraits de code pertinents mentionnés dans ce guide.
 :::
 
-## Set up the required buildpacks
+## Configurer les buildpacks requis
 
-Heroku leverages [buildpacks](https://devcenter.heroku.com/articles/buildpacks) in order to "compile" web applications (which can include installing dependencies, compiling actual binaries, etc). In the context of a Marten project, it is recommended to use two buildbacks:
+Heroku utilise des [buildpacks](https://devcenter.heroku.com/articles/buildpacks) pour "compiler" les applications web (ce qui peut inclure l'installation de dépendances, la compilation de binaires réels, etc). Dans le contexte d'un projet Marten, il est recommandé d'utiliser deux buildpacks :
 
-1. First, the [Node.js official buildback](https://github.com/heroku/heroku-buildpack-nodejs) in order to "build" your project's assets.
-2. Second, the [Marten official buildback](https://github.com/martenframework/heroku-buildpack-marten) in order to (i) compile your server's binary, (ii) compile the Marten CLI, and (iii) [collect assets](../../assets/introduction.md).
+1. Premièrement, le [buildpack officiel Node.js](https://github.com/heroku/heroku-buildpack-nodejs) pour "construire" les assets de votre projet.
+2. Deuxièmement, le [buildpack officiel Marten](https://github.com/martenframework/heroku-buildpack-marten) pour (i) compiler le binaire de votre serveur, (ii) compiler le CLI Marten, et (iii) [collecter les assets](../../assets/introduction.md).
 
-The sequence of buildpacks applied during the deployment process is critical: the Node.js buildpack must be the first one applied, to ensure that Heroku can initiate the necessary Node.js installations and configurations. This approach will guarantee that when the Marten buildpack is activated, the assets will have already been created and are ready to be "collected" through the [`collectassets`](../../development/reference/management-commands.md#collectassets) management command.
+La séquence des buildpacks appliqués pendant le processus de déploiement est critique : le buildpack Node.js doit être le premier appliqué, pour s'assurer que Heroku peut initier les installations et configurations Node.js nécessaires. Cette approche garantira que lorsque le buildpack Marten est activé, les assets auront déjà été créés et sont prêts à être "collectés" via la commande de gestion [`collectassets`](../../development/reference/management-commands.md#collectassets).
 
-You can ensure that these buildpacks are used by running the following commands:
+Vous pouvez vous assurer que ces buildpacks sont utilisés en exécutant les commandes suivantes :
 
 ```bash
 heroku buildpacks:add heroku/nodejs
@@ -134,16 +134,16 @@ heroku buildpacks:add https://github.com/martenframework/heroku-buildpack-marten
 ```
 
 :::tip
-It is important to mention that the use of the [Node.js official buildback](https://github.com/heroku/heroku-buildpack-nodejs) is completely optional: you should only use it if your project leverages Node.js to build some assets.
+Il est important de mentionner que l'utilisation du [buildpack officiel Node.js](https://github.com/heroku/heroku-buildpack-nodejs) est complètement optionnelle : vous ne devriez l'utiliser que si votre projet utilise Node.js pour construire des assets.
 :::
 
-## Set up environment variables
+## Configurer les variables d'environnement
 
 ### `MARTEN_ENV`
 
-At least one environment variable needs to be configured in order to ensure that your Marten project operates in production mode in Heroku: the `MARTEN_ENV` variable. This variable determines the current environments (and the associated settings to apply).
+Au moins une variable d'environnement doit être configurée pour s'assurer que votre projet Marten fonctionne en mode production sur Heroku : la variable `MARTEN_ENV`. Cette variable détermine l'environnement actuel (et les paramètres associés à appliquer).
 
-To set this environment variable, you can leverage the `heroku config:set` command as follows:
+Pour définir cette variable d'environnement, vous pouvez utiliser la commande `heroku config:set` comme suit :
 
 ```bash
 heroku config:set MARTEN_ENV=production
@@ -151,9 +151,9 @@ heroku config:set MARTEN_ENV=production
 
 ### `MARTEN_SECRET_KEY`
 
-It is also recommended to define the `MARTEN_SECRET_KEY` environment variable in order to populate the [`secret_key`](../../development/reference/settings.md#secret_key) setting, as mentioned in [Configure key settings from environment variables](#configure-key-settings-from-environment-variables).
+Il est également recommandé de définir la variable d'environnement `MARTEN_SECRET_KEY` afin de remplir le paramètre [`secret_key`](../../development/reference/settings.md#secret_key), comme mentionné dans [Configurer les paramètres clés depuis les variables d'environnement](#configurer-les-paramètres-clés-depuis-les-variables-denvironnement).
 
-To set this environment variable, you can leverage the `heroku config:set` command as follows:
+Pour définir cette variable d'environnement, vous pouvez utiliser la commande `heroku config:set` comme suit :
 
 ```bash
 heroku config:set MARTEN_SECRET_KEY=$(openssl rand -hex 16)
@@ -161,45 +161,45 @@ heroku config:set MARTEN_SECRET_KEY=$(openssl rand -hex 16)
 
 ### `MARTEN_ALLOWED_HOSTS`
 
-Finally, we want to ensure that the [`allowed_hosts`](../../development/reference/settings.md#allowed_hosts) setting contains the actual domain of your Heroku application, which is required as part of Marten's [HTTP Host Header Attacks Protection mechanism](../../security/introduction.md#http-host-header-attacks-protection).
+Enfin, nous voulons nous assurer que le paramètre [`allowed_hosts`](../../development/reference/settings.md#allowed_hosts) contient le domaine réel de votre application Heroku, ce qui est requis dans le cadre du [mécanisme de protection contre les attaques par en-tête HTTP Host](../../security/introduction.md#protection-contre-les-attaques-par-en-tête-http-host) de Marten.
 
-To set this environment variable, you can use the following command:
+Pour définir cette variable d'environnement, vous pouvez utiliser la commande suivante :
 
 ```bash
 heroku config:set MARTEN_ALLOWED_HOSTS=<yourapp>.herokuapp.com
 ```
 
-## Set up a database
+## Configurer une base de données
 
-You'll need to provision a Heroku PostgreSQL database if your application makes use of models and migrations. To do so, you can make use of the following command:
+Vous devrez provisionner une base de données PostgreSQL Heroku si votre application utilise des modèles et des migrations. Pour ce faire, vous pouvez utiliser la commande suivante :
 
 ```bash
 heroku addons:create heroku-postgresql:essential-0
 ```
 
 :::info
-You should replace `essential-0` in the above command by your desired [Postgres plan](https://devcenter.heroku.com/articles/heroku-postgres-plans).
+Vous devriez remplacer `essential-0` dans la commande ci-dessus par le [plan Postgres](https://devcenter.heroku.com/articles/heroku-postgres-plans) souhaité.
 :::
 
-## Upload the application
+## Télécharger l'application
 
-The final step is to upload your application's code to Heroku. This can be done by using the standard `git push` command to copy the local `main` branch to the `main` branch on Heroku:
+La dernière étape est de télécharger le code de votre application sur Heroku. Cela peut être fait en utilisant la commande standard `git push` pour copier la branche `main` locale vers la branche `main` sur Heroku :
 
 ```bash
 git push heroku main
 ```
 
-It is worth mentioning that a few things will happen when you push your application's code to Heroku like in the above example. Indeed, Heroku will detect the type of your application and apply the buildpacks you [configured previously](#set-up-the-required-buildpacks) (ie. first the Node.js one and then the Marten one). As part of this step, your application's dependencies will be installed and your project will be compiled. If you defined a `release` process in your `Procfile` (like explained in [Create a Procfile](#create-a-procfile)), the specified command will also be executed (for example in order to run your project's migrations).
+Il est important de mentionner que quelques choses se produiront lorsque vous pousserez le code de votre application sur Heroku comme dans l'exemple ci-dessus. En effet, Heroku détectera le type de votre application et appliquera les buildpacks que vous [avez configurés précédemment](#configurer-les-buildpacks-requis) (c'est-à-dire d'abord celui de Node.js puis celui de Marten). Dans le cadre de cette étape, les dépendances de votre application seront installées et votre projet sera compilé. Si vous avez défini un processus `release` dans votre `Procfile` (comme expliqué dans [Créer un Procfile](#créer-un-procfile)), la commande spécifiée sera également exécutée (par exemple pour exécuter les migrations de votre projet).
 
-A few additional things should also be noted:
+Quelques éléments supplémentaires devraient également être notés :
 
-* The compiled server binary will be placed under the `bin/server` path.
-* Your project's `manage.cr` file will be compiled as well and will be available by simply calling the `marten` command. This means that you can run `marten <command>` if you need to call specific [management commands](../../development/management-commands.md).
-* The Marten buildpack will automatically call the [`collectassets`](../../development/reference/management-commands.md#collectassets) management command in order to collect your project's [assets](../../assets/introduction.md) and copy them to your configured assets storage. You can set the `DISABLE_COLLECTASSETS` environment variable to `1` if you don't want this behavior.
+* Le binaire du serveur compilé sera placé sous le chemin `bin/server`.
+* Le fichier `manage.cr` de votre projet sera également compilé et sera disponible en appelant simplement la commande `marten`. Cela signifie que vous pouvez exécuter `marten <command>` si vous devez appeler des [commandes de gestion](../../development/management-commands.md) spécifiques.
+* Le buildpack Marten appellera automatiquement la commande de gestion [`collectassets`](../../development/reference/management-commands.md#collectassets) pour collecter les [assets](../../assets/introduction.md) de votre projet et les copier vers le stockage d'assets configuré. Vous pouvez définir la variable d'environnement `DISABLE_COLLECTASSETS` sur `1` si vous ne voulez pas ce comportement.
 
-## Run management commands
+## Exécuter des commandes de gestion
 
-If you need to run additional [management commands](../../development/management-commands.md) in your provisioned application, you can use the `heroku run` command. For instance:
+Si vous devez exécuter des [commandes de gestion](../../development/management-commands.md) supplémentaires dans votre application provisionnée, vous pouvez utiliser la commande `heroku run`. Par exemple :
 
 ```bash
 heroku run marten listmigrations

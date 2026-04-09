@@ -1,15 +1,15 @@
 ---
 title: Middlewares
-description: Learn how to leverage middlewares to alter HTTP requests and responses.
+description: Apprenez à exploiter les middlewares pour modifier les requêtes et réponses HTTP.
 sidebar_label: Middlewares
 ---
 
 
-Middlewares are used to "hook" into Marten's request/response lifecycle. They can be used to alter or implement logic based on incoming HTTP requests and the resulting HTTP responses. These hooks take an HTTP request as their input and they output an HTTP response; in the process, they can implement whatever logic they deem necessary to perform actions based on the incoming request and/or the associated response.
+Les middlewares sont utilisés pour se « brancher » sur le cycle requête/réponse de Marten. Ils peuvent être utilisés pour modifier ou implémenter une logique basée sur les requêtes HTTP entrantes et les réponses HTTP résultantes. Ces hooks prennent une requête HTTP en entrée et produisent une réponse HTTP en sortie ; dans le processus, ils peuvent implémenter toute logique qu'ils jugent nécessaire pour effectuer des actions basées sur la requête entrante et/ou la réponse associée.
 
-## How middlewares work
+## Comment fonctionnent les middlewares
 
-Middlewares are subclasses of the [`Marten::Middleware`](pathname:///api/dev/Marten/Middleware.html) abstract class. They must implement a `#call` method that takes a request object (instance of [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)) and a `get_response` proc (allowing to get the final response) as arguments, and that returns a [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) object:
+Les middlewares sont des sous-classes de la classe abstraite [`Marten::Middleware`](pathname:///api/dev/Marten/Middleware.html). Ils doivent implémenter une méthode `#call` qui prend un objet de requête (instance de [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)) et un proc `get_response` (permettant d'obtenir la réponse finale) comme arguments, et qui retourne un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) :
 
 ```crystal
 class TestMiddleware < Marten::Middleware
@@ -25,13 +25,13 @@ class TestMiddleware < Marten::Middleware
 end
 ```
 
-The `get_response` proc will either call the next middleware in the chain of middlewares, or the handler processing the request and returning the response. Which of these is actually called is a detail that is hidden by the `get_response` proc, and this does not matter at an individual middleware level.
+Le proc `get_response` appellera soit le middleware suivant dans la chaîne de middlewares, soit le handler traitant la requête et retournant la réponse. Lequel de ces deux est effectivement appelé est un détail masqué par le proc `get_response`, et cela n'a pas d'importance au niveau d'un middleware individuel.
 
-## Activating middlewares
+## Activer les middlewares
 
-In order to be used, middleware classes need to be specified in the [`middleware`](../development/reference/settings.md#middleware) setting. This setting is an array of middleware classes that defines the "chain" of middlewares that will be "hooked" into Marten's request/response lifecycle.
+Pour être utilisées, les classes de middleware doivent être spécifiées dans le paramètre [`middleware`](../development/reference/settings.md#middleware). Ce paramètre est un tableau de classes de middleware qui définit la « chaîne » de middlewares qui seront « branchés » sur le cycle requête/réponse de Marten.
 
-For example:
+Par exemple :
 
 ```crystal
 config.middleware = [
@@ -41,8 +41,8 @@ config.middleware = [
 ]
 ```
 
-It should be noted that the order of middlewares is important. For example, if one of your middleware depends on a session value, you will want to ensure that it appears _after_ the `Marten::Middleware::Session` class in the `middleware` setting.
+Il convient de noter que l'ordre des middlewares est important. Par exemple, si l'un de vos middlewares dépend d'une valeur de session, vous voudrez vous assurer qu'il apparaît _après_ la classe `Marten::Middleware::Session` dans le paramètre `middleware`.
 
-## Available middlewares
+## Middlewares disponibles
 
-All the available middlewares are listed in the [dedicated reference section](./reference/middlewares.md).
+Tous les middlewares disponibles sont listés dans la [section de référence dédiée](./reference/middlewares.md).

@@ -1,24 +1,24 @@
 ---
-title: Settings
-description: Settings reference.
-sidebar_label: Settings
+title: Paramètres
+description: Référence des paramètres.
+sidebar_label: Paramètres
 ---
 
-This page provides a reference for all the available settings that can be used to configure Marten projects.
+Cette page fournit une référence pour tous les paramètres disponibles pouvant être utilisés pour configurer les projets Marten.
 
-## Common settings
+## Paramètres communs
 
 ### `allowed_hosts`
 
-Default: `[] of String`
+Défaut : `[] of String`
 
-An explicit array of allowed hosts for the application.
+Un tableau explicite des hôtes autorisés pour l'application.
 
-The application has to be explicitly configured to serve a list of allowed hosts. This is to mitigate HTTP Host header attacks. The strings in this array can correspond to regular domain names or subdomains (eg. `example.com` or `www.example.com`); when this is the case the Host header of the incoming request will be checked to ensure that it exactly matches one of the configured allowed hosts.
+L'application doit être explicitement configurée pour servir une liste d'hôtes autorisés. Ceci permet d'atténuer les attaques par en-tête HTTP Host. Les chaînes de ce tableau peuvent correspondre à des noms de domaine réguliers ou des sous-domaines (ex. `example.com` ou `www.example.com`) ; dans ce cas, l'en-tête Host de la requête entrante sera vérifiée pour s'assurer qu'elle correspond exactement à l'un des hôtes autorisés configurés.
 
-It is also possible to match all the subdomains of a specific domain by prepending a `.` at the beginning of the host string. For example `.example.com` will matches `example.com`, `www.example.com`, `sub.example.com`, or any other subdomains. Finally, the special `*` string can be used to match any Host value, but this wildcard value should be used with caution as you wouldn't be protected against Host header attacks.
+Il est également possible de faire correspondre tous les sous-domaines d'un domaine spécifique en ajoutant un `.` au début de la chaîne de l'hôte. Par exemple `.example.com` correspondra à `example.com`, `www.example.com`, `sub.example.com`, ou tout autre sous-domaine. Enfin, la chaîne spéciale `*` peut être utilisée pour correspondre à n'importe quelle valeur de Host, mais cette valeur joker doit être utilisée avec prudence car vous ne seriez pas protégé contre les attaques par en-tête Host.
 
-It should be noted that this setting is automatically set to the following array when a project is running in [debug mode](#debug) (unless it is explicitly set):
+Il convient de noter que ce paramètre est automatiquement défini au tableau suivant lorsqu'un projet s'exécute en [mode debug](#debug) (sauf s'il est explicitement défini) :
 
 ```crystal
 [".localhost", "127.0.0.1", "[::1]"]
@@ -26,17 +26,17 @@ It should be noted that this setting is automatically set to the following array
 
 ### `cache_store`
 
-Default: `Marten::Cache::Store::Memory.new`
+Défaut : `Marten::Cache::Store::Memory.new`
 
-The global cache store instance.
+L'instance globale du cache store.
 
-This setting allows to configure the cache store returned by the [`Marten#cache`](pathname:///api/dev/Marten.html#cache%3ACache%3A%3AStore%3A%3ABase-class-method) method (which can be used to perform low-level caching operations), and which is also leveraged for other caching features such as template fragment caching. Please refer to [Caching](../../caching.mdx) to learn more about the caching features provided by Marten.
+Ce paramètre permet de configurer le cache store retourné par la méthode [`Marten#cache`](pathname:///api/dev/Marten.html#cache%3ACache%3A%3AStore%3A%3ABase-class-method) (qui peut être utilisée pour effectuer des opérations de mise en cache de bas niveau), et qui est également utilisé pour d'autres fonctionnalités de mise en cache comme la mise en cache de fragments de template. Veuillez consulter [Mise en cache](../../caching.mdx) pour en savoir plus sur les fonctionnalités de mise en cache fournies par Marten.
 
-By default, the global cache store is set to be an in-memory cache (instance of [`Marten::Cache::Store::Memory`](pathname:///api/dev/Marten/Cache/Store/Memory.html)). In test environments you might want to use the "null store" by assigning an instance of the [`Marten::Cache::Store::Null](pathname:///api/dev/Marten/Cache/Store/Null.html) to this setting. Additional caching store shards are also maintained under the umbrella of the Marten project or by the community itself and can be used as part of your application depending on your caching requirements. These backends are listed in the [caching stores backend reference](../../caching/reference/stores.md).
+Par défaut, le cache store global est défini comme un cache en mémoire (instance de [`Marten::Cache::Store::Memory`](pathname:///api/dev/Marten/Cache/Store/Memory.html)). Dans les environnements de test, vous pourriez vouloir utiliser le "null store" en assignant une instance de [`Marten::Cache::Store::Null`](pathname:///api/dev/Marten/Cache/Store/Null.html) à ce paramètre. Des shards de cache store supplémentaires sont également maintenus sous l'égide du projet Marten ou par la communauté elle-même et peuvent être utilisés dans votre application selon vos besoins de mise en cache. Ces backends sont listés dans la [référence des stores de mise en cache](../../caching/reference/stores.md).
 
 ### `date_input_formats`
 
-Default:
+Défaut :
 
 ```crystal
 [
@@ -54,13 +54,13 @@ Default:
 ]
 ```
 
-An array of default date input formats.
+Un tableau de formats d'entrée de date par défaut.
 
-This array of default date input formats is used by the [`date` schema field](../../schemas/reference/fields.md#date) to parse date values from strings. Note that the date input formats coming from locales will be used with priority over the formats defined in this array.
+Ce tableau de formats d'entrée de date par défaut est utilisé par le [champ de schema `date`](../../schemas/reference/fields.md#date) pour analyser les valeurs de date à partir de chaînes. Notez que les formats d'entrée de date provenant des locales seront utilisés en priorité par rapport aux formats définis dans ce tableau.
 
 ### `date_time_input_formats`
 
-Default:
+Défaut :
 
 ```crystal
 [
@@ -73,51 +73,51 @@ Default:
 ]
 ```
 
-An array of default date input formats.
+Un tableau de formats d'entrée de date et heure par défaut.
 
-This array of default date input formats is used by the [`date_time` schema field](../../schemas/reference/fields.md#date_time) to parse date time values from strings. Note that the date time input formats coming from locales will be used with priority over the formats defined in this array.
+Ce tableau de formats d'entrée de date et heure par défaut est utilisé par le [champ de schema `date_time`](../../schemas/reference/fields.md#date_time) pour analyser les valeurs de date et heure à partir de chaînes. Notez que les formats d'entrée de date et heure provenant des locales seront utilisés en priorité par rapport aux formats définis dans ce tableau.
 
 ### `debug`
 
-Default: `false`
+Défaut : `false`
 
-A boolean allowing to enable or disable debug mode.
+Un booléen permettant d'activer ou de désactiver le mode debug.
 
-When running in debug mode, Marten will automatically provide detailed information about raised exceptions (including tracebacks) and incoming HTTP requests. As such this mode is mostly useful for development environments.
+Lorsqu'il s'exécute en mode debug, Marten fournira automatiquement des informations détaillées sur les exceptions levées (y compris les tracebacks) et les requêtes HTTP entrantes. Ce mode est donc principalement utile pour les environnements de développement.
 
 ### `host`
 
-Default: `"127.0.0.1"`
+Défaut : `"127.0.0.1"`
 
-The host the HTTP server running the application will be listening on.
+L'hôte sur lequel le serveur HTTP exécutant l'application écoutera.
 
 ### `installed_apps`
 
-Default: `[] of Marten::Apps::Config.class`
+Défaut : `[] of Marten::Apps::Config.class`
 
-An array of the installed app classes. Each Marten application must define a subclass of [`Marten::Apps::Config`](pathname:///api/dev/Marten/Apps/Config.html). When those subclasses are specified in the `installed_apps` setting, the applications' models, migrations, assets, and templates will be made available to the considered project. Please refer to [Applications](../applications.md) to learn more about applications.
+Un tableau des classes d'applications installées. Chaque application Marten doit définir une sous-classe de [`Marten::Apps::Config`](pathname:///api/dev/Marten/Apps/Config.html). Lorsque ces sous-classes sont spécifiées dans le paramètre `installed_apps`, les modèles, migrations, assets et templates des applications seront rendus disponibles pour le projet considéré. Veuillez consulter [Applications](../applications.md) pour en savoir plus sur les applications.
 
 ### `log_backend`
 
-Default: `Log::IOBackend.new(...)`
+Défaut : `Log::IOBackend.new(...)`
 
-The log backend used by the application. Any `Log::Backend` object can be used, which can allow to easily configure how logs are formatted for example.
+Le backend de log utilisé par l'application. Tout objet `Log::Backend` peut être utilisé, ce qui permet de configurer facilement le formatage des logs par exemple.
 
 ### `log_level`
 
-Default: `Log::Severity::Info`
+Défaut : `Log::Severity::Info`
 
-The default log level used by the application. Any severity defined in the [`Log::Severity`](https://crystal-lang.org/api/Log/Severity.html) enum can be used.
+Le niveau de log par défaut utilisé par l'application. Toute sévérité définie dans l'enum [`Log::Severity`](https://crystal-lang.org/api/Log/Severity.html) peut être utilisée.
 
 :::info
-This setting exclusively controls the log level for the Marten server. To set the log level for [management commands](../management-commands.md), use the `--log-level` command option (see [Shared options](../management-commands.md#shared-options)).
+Ce paramètre contrôle exclusivement le niveau de log pour le serveur Marten. Pour définir le niveau de log des [commandes de gestion](../management-commands.md), utilisez l'option de commande `--log-level` (voir [Options partagées](../management-commands.md#options-partagées)).
 :::
 
 ### `middleware`
 
-Default: `[] of Marten::Middleware.class`
+Défaut : `[] of Marten::Middleware.class`
 
-An array of middlewares used by the application. For example:
+Un tableau de middlewares utilisés par l'application. Par exemple :
 
 ```crystal
 config.middleware = [
@@ -127,56 +127,56 @@ config.middleware = [
 ]
 ```
 
-Middlewares are used to "hook" into Marten's request / response lifecycle. They can be used to alter or implement logics based on incoming HTTP requests and the resulting HTTP responses. Please refer to [Middlewares](../../handlers-and-http/middlewares.md) to learn more about middlewares.
+Les middlewares sont utilisés pour "s'accrocher" au cycle de vie requête / réponse de Marten. Ils peuvent être utilisés pour modifier ou implémenter des logiques basées sur les requêtes HTTP entrantes et les réponses HTTP résultantes. Veuillez consulter [Middlewares](../../handlers-and-http/middlewares.md) pour en savoir plus sur les middlewares.
 
 ### `port`
 
-Default: `8000`
+Défaut : `8000`
 
-The port the HTTP server running the application will be listening on.
+Le port sur lequel le serveur HTTP exécutant l'application écoutera.
 
 ### `port_reuse`
 
-Default: `true`
+Défaut : `true`
 
-A boolean indicating whether multiple processes can bind to the same HTTP server port.
+Un booléen indiquant si plusieurs processus peuvent se lier au même port du serveur HTTP.
 
 ### `referrer_policy`
 
-Default: `"same-origin"`
+Défaut : `"same-origin"`
 
-The value to use for the [Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy) header when the associated middleware is used. This header controls the amount of referrer information sent along with requests from your site to other origins, enhancing user privacy and security.
+La valeur à utiliser pour l'en-tête [Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy) lorsque le middleware associé est utilisé. Cet en-tête contrôle la quantité d'informations de référent envoyées avec les requêtes de votre site vers d'autres origines, améliorant la confidentialité et la sécurité de l'utilisateur.
 
-Possible values for the Referrer-Policy header include:
+Les valeurs possibles pour l'en-tête Referrer-Policy incluent :
 
-- `no-referrer`: The Referer header will be omitted entirely. No referrer information is sent with requests.
-- `no-referrer-when-downgrade`: The Referer header will not be sent to less secure destinations (e.g., from HTTPS to HTTP), but will be sent to same or more secure destinations.
-- `origin`: Only the origin of the document is sent as the referrer.
-- `origin-when-cross-origin`: The full URL is sent as the referrer when performing a same-origin request, but only the origin is sent for cross-origin requests.
-- `same-origin`: The Referer header is sent with same-origin requests, but not with cross-origin requests.
-- `strict-origin`: Only the origin is sent as the referrer, and only for same-origin requests.
-- `strict-origin-when-cross-origin`: The full URL is sent as the referrer when performing a same-origin request, but only the origin is sent for cross-origin requests. No referrer information is sent to less secure destinations.
-- `unsafe-url`: The full URL is always sent as the referrer, regardless of the request's security.
+- `no-referrer` : L'en-tête Referer sera entièrement omis. Aucune information de référent n'est envoyée avec les requêtes.
+- `no-referrer-when-downgrade` : L'en-tête Referer ne sera pas envoyé vers des destinations moins sécurisées (ex. de HTTPS vers HTTP), mais sera envoyé vers des destinations de même sécurité ou plus sécurisées.
+- `origin` : Seule l'origine du document est envoyée comme référent.
+- `origin-when-cross-origin` : L'URL complète est envoyée comme référent lors d'une requête de même origine, mais seule l'origine est envoyée pour les requêtes cross-origin.
+- `same-origin` : L'en-tête Referer est envoyé avec les requêtes de même origine, mais pas avec les requêtes cross-origin.
+- `strict-origin` : Seule l'origine est envoyée comme référent, et uniquement pour les requêtes de même origine.
+- `strict-origin-when-cross-origin` : L'URL complète est envoyée comme référent lors d'une requête de même origine, mais seule l'origine est envoyée pour les requêtes cross-origin. Aucune information de référent n'est envoyée vers des destinations moins sécurisées.
+- `unsafe-url` : L'URL complète est toujours envoyée comme référent, indépendamment de la sécurité de la requête.
 
-This setting will be used by the [`Marten::Middleware::ReferrerPolicy`](../../handlers-and-http/reference/middlewares.md#referrer-policy-middleware) middleware when inserting the Referrer-Policy header in HTTP responses. By configuring this setting, you can control how much referrer information is included with requests from your site to other origins.
+Ce paramètre sera utilisé par le middleware [`Marten::Middleware::ReferrerPolicy`](../../handlers-and-http/reference/middlewares.md#referrer-policy-middleware) lors de l'insertion de l'en-tête Referrer-Policy dans les réponses HTTP. En configurant ce paramètre, vous pouvez contrôler la quantité d'informations de référent incluses avec les requêtes de votre site vers d'autres origines.
 
 ### `request_max_parameters`
 
-Default: `1000`
+Défaut : `1000`
 
-The maximum number of allowed parameters per request (such as GET or POST parameters).
+Le nombre maximum de paramètres autorisés par requête (comme les paramètres GET ou POST).
 
-A large number of parameters will require more time to process and might be the sign of a denial-of-service attack, which is why this setting can be used. This protection can also be disabled by setting `request_max_parameters` to `nil`.
+Un grand nombre de paramètres nécessitera plus de temps de traitement et pourrait être le signe d'une attaque par déni de service, c'est pourquoi ce paramètre peut être utilisé. Cette protection peut également être désactivée en définissant `request_max_parameters` à `nil`.
 
 ### `root_path`
 
-Default: `nil`
+Défaut : `nil`
 
-The root path of the application.
+Le chemin racine de l'application.
 
-The root path of the application specifies the actual location of the project sources in your system. This can prove helpful in scenarios where the project was compiled in a specific location different from the final destination where the project sources (and the `lib` folder) are copied. For instance, platforms like Heroku often fall under this category. By configuring the root path, you can ensure that your application correctly locates the required project sources and avoids any discrepancies arising from inconsistent source paths. This can prevent issues related to missing dependencies or missing app-related files (eg. locales, assets, or templates) and make your application more robust and reliable.
+Le chemin racine de l'application spécifie l'emplacement réel des sources du projet dans votre système. Cela peut s'avérer utile dans les scénarios où le projet a été compilé dans un emplacement spécifique différent de la destination finale où les sources du projet (et le dossier `lib`) sont copiés. Par exemple, les plateformes comme Heroku entrent souvent dans cette catégorie. En configurant le chemin racine, vous pouvez vous assurer que votre application localise correctement les sources du projet requises et évite toute divergence résultant de chemins de sources incohérents. Cela peut prévenir les problèmes liés aux dépendances manquantes ou aux fichiers liés à l'app manquants (ex. locales, assets ou templates) et rendre votre application plus robuste et fiable.
 
-For example, deploying a Marten app on Heroku will usually involves setting the root path as follows:
+Par exemple, le déploiement d'une application Marten sur Heroku impliquera généralement de définir le chemin racine comme suit :
 
 ```crystal
 config.root_path = "/app"
@@ -184,101 +184,101 @@ config.root_path = "/app"
 
 ### `secret_key`
 
-Default: `""`
+Défaut : `""`
 
-A secret key used for cryptographic signing for the considered Marten project.
+Une clé secrète utilisée pour la signature cryptographique du projet Marten considéré.
 
-The secret key should be set to a unique and unpredictable string value. The secret key can be used by Marten to encrypt or sign messages (eg. for cookie-based sessions), or by other authentication applications.
+La clé secrète doit être définie sur une valeur de chaîne unique et imprévisible. La clé secrète peut être utilisée par Marten pour chiffrer ou signer des messages (ex. pour les sessions basées sur les cookies), ou par d'autres applications d'authentification.
 
 :::warning
-The `secret_key` setting value **must** be kept secret. You should never commit this setting value to source control (instead, consider loading it from environment variables for example).
+La valeur du paramètre `secret_key` **doit** être gardée secrète. Vous ne devriez jamais committer cette valeur dans le contrôle de version (envisagez plutôt de la charger depuis des variables d'environnement par exemple).
 :::
 
 ### `socket`
 
-Default: `nil`
+Défaut : `nil`
 
-The Unix socket path the HTTP server running the application will be listening on.
+Le chemin du socket Unix sur lequel le serveur HTTP exécutant l'application écoutera.
 
-When this setting is configured, the server will bind to the specified Unix socket instead of binding to a TCP port. In this case, the `host` and `port` settings are ignored. This is particularly useful when deploying a Marten application behind a reverse proxy like Nginx or Caddy on the same machine, as it provides better performance and security compared to TCP loopback.
+Lorsque ce paramètre est configuré, le serveur se lie au socket Unix spécifié au lieu de se lier à un port TCP. Dans ce cas, les paramètres `host` et `port` sont ignorés. Ceci est particulièrement utile lors du déploiement d'une application Marten derrière un reverse proxy comme Nginx ou Caddy sur la même machine, car cela offre de meilleures performances et sécurité par rapport au bouclage TCP.
 
 ### `time_zone`
 
-Default: `Time::Location.load("UTC")`
+Défaut : `Time::Location.load("UTC")`
 
-The default time zone used by the application when it comes to storing date times in the database and displaying them. Any [`Time::Location`](https://crystal-lang.org/api/Time/Location.html) object can be used.
+Le fuseau horaire par défaut utilisé par l'application pour le stockage des dates et heures en base de données et leur affichage. Tout objet [`Time::Location`](https://crystal-lang.org/api/Time/Location.html) peut être utilisé.
 
 ### `trailing_slash`
 
-Default: `:do_nothing`
+Défaut : `:do_nothing`
 
-The trailing slash behavior applied in case an incoming request URL does not match any of the configured routes.
+Le comportement du slash final appliqué lorsqu'une URL de requête entrante ne correspond à aucune des routes configurées.
 
-This setting allows you to configure whether an HTTP permanent redirect (301) should be issued when an incoming URL that does not match any of the configured routes either ends with a slash or does not. Three values are supported:
+Ce paramètre vous permet de configurer si une redirection HTTP permanente (301) doit être émise lorsqu'une URL entrante qui ne correspond à aucune des routes configurées se termine ou non par un slash. Trois valeurs sont prises en charge :
 
-* `:do_nothing` - No redirect is issued (this is the default behavior).
-* `:add` - If the incoming URL does not end with a slash and does not match any routes, a redirect is issued to the same URL with a trailing slash appended.
-* `:remove` - If the incoming URL ends with a slash and does not match any routes, a redirect is issued to the same URL with the trailing slash removed.
+* `:do_nothing` - Aucune redirection n'est émise (c'est le comportement par défaut).
+* `:add` - Si l'URL entrante ne se termine pas par un slash et ne correspond à aucune route, une redirection est émise vers la même URL avec un slash final ajouté.
+* `:remove` - Si l'URL entrante se termine par un slash et ne correspond à aucune route, une redirection est émise vers la même URL avec le slash final supprimé.
 
 ### `unsupported_http_method_strategy`
 
-Default: `:deny`
+Défaut : `:deny`
 
-The strategy to use when an unsupported HTTP method is encountered.
+La stratégie à utiliser lorsqu'une méthode HTTP non prise en charge est rencontrée.
 
-This setting allows you to configure the strategy to use when a handler processes an unsupported HTTP method. The default strategy is `:deny`, which means that the application will return a 405 Method Not Allowed response when an unsupported HTTP method is encountered. The other available strategy is `:hide`, which will results in 404 Not Found responses to be returned instead.
+Ce paramètre vous permet de configurer la stratégie à utiliser lorsqu'un handler traite une méthode HTTP non prise en charge. La stratégie par défaut est `:deny`, ce qui signifie que l'application retournera une réponse 405 Method Not Allowed lorsqu'une méthode HTTP non prise en charge est rencontrée. L'autre stratégie disponible est `:hide`, qui entraînera le retour de réponses 404 Not Found à la place.
 
 ### `use_x_forwarded_host`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating whether the `X-Forwarded-Host` header is used to look for the host. This setting can be enabled if the Marten application is served behind a proxy that sets this header.
+Un booléen indiquant si l'en-tête `X-Forwarded-Host` est utilisé pour rechercher l'hôte. Ce paramètre peut être activé si l'application Marten est servie derrière un proxy qui définit cet en-tête.
 
 ### `use_x_forwarded_port`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating if the `X-Forwarded-Port` header is used to determine the port of a request. This setting can be enabled if the Marten application is served behind a proxy that sets this header.
+Un booléen indiquant si l'en-tête `X-Forwarded-Port` est utilisé pour déterminer le port d'une requête. Ce paramètre peut être activé si l'application Marten est servie derrière un proxy qui définit cet en-tête.
 
 ### `use_x_forwarded_proto`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating if the `X-Forwarded-Proto` header is used to determine whether a request is secure. This setting can be enabled if the Marten application is served behind a proxy that sets this header. For example, if such proxy sets this header to `https`, Marten will assume that the request is secure at the application level **only** if `use_x_forwarded_proto` is set to `true`.
+Un booléen indiquant si l'en-tête `X-Forwarded-Proto` est utilisé pour déterminer si une requête est sécurisée. Ce paramètre peut être activé si l'application Marten est servie derrière un proxy qui définit cet en-tête. Par exemple, si un tel proxy définit cet en-tête sur `https`, Marten supposera que la requête est sécurisée au niveau de l'application **uniquement** si `use_x_forwarded_proto` est défini sur `true`.
 
 ### `handler400`
 
-Default: `Marten::Handlers::Defaults::BadRequest`
+Défaut : `Marten::Handlers::Defaults::BadRequest`
 
-The handler class that should generate responses for Bad Request responses (HTTP 400). Please refer to [Error handlers](../../handlers-and-http/error-handlers.md) to learn more about error handlers.
+La classe de handler qui devrait générer des réponses pour les réponses Bad Request (HTTP 400). Veuillez consulter [Handlers d'erreur](../../handlers-and-http/error-handlers.md) pour en savoir plus sur les handlers d'erreur.
 
 ### `handler403`
 
-Default: `Marten::Handlers::Defaults::PermissionDenied`
+Défaut : `Marten::Handlers::Defaults::PermissionDenied`
 
-The handler class that should generate responses for Permission Denied responses (HTTP 403). Please refer to [Error handlers](../../handlers-and-http/error-handlers.md) to learn more about error handlers.
+La classe de handler qui devrait générer des réponses pour les réponses Permission Denied (HTTP 403). Veuillez consulter [Handlers d'erreur](../../handlers-and-http/error-handlers.md) pour en savoir plus sur les handlers d'erreur.
 
 ### `handler404`
 
-Default: `Marten::Handlers::Defaults::PageNotFound`
+Défaut : `Marten::Handlers::Defaults::PageNotFound`
 
-The handler class that should generate responses for Not Found responses (HTTP 404). Please refer to [Error handlers](../../handlers-and-http/error-handlers.md) to learn more about error handlers.
+La classe de handler qui devrait générer des réponses pour les réponses Not Found (HTTP 404). Veuillez consulter [Handlers d'erreur](../../handlers-and-http/error-handlers.md) pour en savoir plus sur les handlers d'erreur.
 
 ### `handler500`
 
-Default: `Marten::Handlers::Defaults::ServerError`
+Défaut : `Marten::Handlers::Defaults::ServerError`
 
-The handler class that should generate responses for Internal Error responses (HTTP 500). Please refer to [Error handlers](../../handlers-and-http/error-handlers.md) to learn more about error handlers.
+La classe de handler qui devrait générer des réponses pour les réponses Internal Error (HTTP 500). Veuillez consulter [Handlers d'erreur](../../handlers-and-http/error-handlers.md) pour en savoir plus sur les handlers d'erreur.
 
 ### `x_frame_options`
 
-Default: `"DENY"`
+Défaut : `"DENY"`
 
-The value to use for the X-Frame-Options header when the associated middleware is used. The value of this setting will be used by the [`Marten::Middleware::XFrameOptions`](../../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) middleware when inserting the X-Frame-Options header in HTTP responses.
+La valeur à utiliser pour l'en-tête X-Frame-Options lorsque le middleware associé est utilisé. La valeur de ce paramètre sera utilisée par le middleware [`Marten::Middleware::XFrameOptions`](../../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) lors de l'insertion de l'en-tête X-Frame-Options dans les réponses HTTP.
 
-## Assets settings
+## Paramètres des assets
 
-Assets settings allow configuring how Marten should interact with [assets](../../assets/introduction.md). These settings are all available under the `assets` namespace:
+Les paramètres des assets permettent de configurer la façon dont Marten interagit avec les [assets](../../assets/introduction.md). Ces paramètres sont tous disponibles sous le namespace `assets` :
 
 ```crystal
 config.assets.root = "assets"
@@ -287,17 +287,17 @@ config.assets.url = "/assets/"
 
 ### `app_dirs`
 
-Default: `true`
+Défaut : `true`
 
-A boolean indicating whether assets should be looked for inside installed application folders. When this setting is set to `true`, this means that assets provided by installed applications will be collected by the `collectassets` command (please refer to [Asset handling](../../assets/introduction.md) for more details regarding how to manage assets in your project).
+Un booléen indiquant si les assets doivent être recherchés dans les dossiers des applications installées. Lorsque ce paramètre est défini sur `true`, cela signifie que les assets fournis par les applications installées seront collectés par la commande `collectassets` (veuillez consulter [Gestion des assets](../../assets/introduction.md) pour plus de détails sur la gestion des assets dans votre projet).
 
 ### `dirs`
 
-Default: `[] of String`
+Défaut : `[] of String`
 
-An array of directories where assets should be looked for. The order of these directories is important as it defines the order in which assets are searched for.
+Un tableau de répertoires où les assets doivent être recherchés. L'ordre de ces répertoires est important car il définit l'ordre dans lequel les assets sont recherchés.
 
-It should be noted that path objects or symbols can also be used to configure this setting:
+Il convient de noter que des objets path ou des symboles peuvent également être utilisés pour configurer ce paramètre :
 
 ```crystal
 config.assets.dirs = [
@@ -308,51 +308,51 @@ config.assets.dirs = [
 
 ### `manifests`
 
-Default: `[] of String`
+Défaut : `[] of String`
 
-An array of paths to manifest JSON files to use to resolve assets URLs. Manifest files will be used to return the right fingerprinted asset path for a generic path, which can be useful if your asset bundling strategy support this. You can read more about this capability in [Asset manifests and fingerprinting](../../assets/introduction.md#asset-manifests-and-fingerprinting).
+Un tableau de chemins vers des fichiers JSON de manifeste à utiliser pour résoudre les URLs des assets. Les fichiers de manifeste seront utilisés pour retourner le bon chemin d'asset avec empreinte pour un chemin générique, ce qui peut être utile si votre stratégie de bundling d'assets le supporte. Vous pouvez en savoir plus sur cette capacité dans [Manifestes d'assets et fingerprinting](../../assets/introduction.md#asset-manifests-and-fingerprinting).
 
 ### `max_age`
 
-Defaults: `3600`
+Défaut : `3600`
 
-Allows to set the max-age directive value used as part of the Cache-Control header that is set by the [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware) middleware.
+Permet de définir la valeur de la directive max-age utilisée dans l'en-tête Cache-Control qui est défini par le middleware [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware).
 
 ### `root`
 
-Default: `"assets"`
+Défaut : `"assets"`
 
-A string containing the absolute path where collected assets will be persisted (when running the `collectassets` command). By default, assets will be persisted in a folder that is relative to the Marten project's directory. Obviously, this folder should be empty before running the `collectassets` command in order to not overwrite existing files: assets should be defined as part of your applications' `assets` folders instead.
+Une chaîne contenant le chemin absolu où les assets collectés seront persistés (lors de l'exécution de la commande `collectassets`). Par défaut, les assets seront persistés dans un dossier relatif au répertoire du projet Marten. Évidemment, ce dossier devrait être vide avant d'exécuter la commande `collectassets` afin de ne pas écraser les fichiers existants : les assets doivent être définis dans les dossiers `assets` de vos applications à la place.
 
 :::info
-This setting is only used if `assets.storage` is `nil`.
+Ce paramètre n'est utilisé que si `assets.storage` est `nil`.
 :::
 
 ### `storage`
 
-Default: `nil`
+Défaut : `nil`
 
-An optional storage object, which must be an instance of a subclass of [`Marten::Core::Store::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html). This storage object will be used when collecting asset files to persist them in a given location.
+Un objet de stockage optionnel, qui doit être une instance d'une sous-classe de [`Marten::Core::Store::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html). Cet objet de stockage sera utilisé lors de la collecte de fichiers d'assets pour les persister dans un emplacement donné.
 
-By default this setting value is set to `nil`, which means that a [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) storage is automatically constructed by using the `assets.root` and `assets.url` setting values: in this situation, asset files are collected and persisted in a local directory, and it is expected that they will be served from this directory by the web server running the application.
+Par défaut, la valeur de ce paramètre est définie sur `nil`, ce qui signifie qu'un stockage [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) est automatiquement construit en utilisant les valeurs des paramètres `assets.root` et `assets.url` : dans cette situation, les fichiers d'assets sont collectés et persistés dans un répertoire local, et il est attendu qu'ils seront servis depuis ce répertoire par le serveur web exécutant l'application.
 
-A specific storage can be set instead to ensure that collected assets are persisted somewhere else in the cloud and served from there (for example in an Amazon's S3 bucket). When this is the case, the `assets.root` and `assets.url` setting values are basically ignored and are overridden by the use of the specified storage.
+Un stockage spécifique peut être défini à la place pour s'assurer que les assets collectés sont persistés ailleurs dans le cloud et servis depuis là (par exemple dans un bucket Amazon S3). Dans ce cas, les valeurs des paramètres `assets.root` et `assets.url` sont essentiellement ignorées et remplacées par l'utilisation du stockage spécifié.
 
 ### `url`
 
-Default: `"/assets/"`
+Défaut : `"/assets/"`
 
-The base URL to use when exposing asset URLs. This base URL will be used by the default [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) storage to construct asset URLs. For example, requesting a `css/App.css` asset might generate a `/assets/css/App.css` URL by default.
+L'URL de base à utiliser lors de l'exposition des URLs d'assets. Cette URL de base sera utilisée par le stockage par défaut [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) pour construire les URLs d'assets. Par exemple, demander un asset `css/App.css` pourrait générer une URL `/assets/css/App.css` par défaut.
 
 :::info
-This setting is only used if `assets.storage` is `nil`.
+Ce paramètre n'est utilisé que si `assets.storage` est `nil`.
 :::
 
-## CSRF settings
+## Paramètres CSRF
 
-CSRF settings allow configuring how Cross-Site Request Forgeries (CSRF) attack protection measures are implemented within the considered Marten project. Please refer to [Cross-Site Request Forgery protection](../../security/csrf.md) for more details about this topic.
+Les paramètres CSRF permettent de configurer la façon dont les mesures de protection contre les attaques Cross-Site Request Forgery (CSRF) sont implémentées au sein du projet Marten considéré. Veuillez consulter [Protection contre les Cross-Site Request Forgery](../../security/csrf.md) pour plus de détails sur ce sujet.
 
-The following settings are all available under the `csrf` namespace:
+Les paramètres suivants sont tous disponibles sous le namespace `csrf` :
 
 ```crystal
 config.csrf.protection_enabled = true
@@ -361,65 +361,65 @@ config.csrf.cookie_name = "csrf-token"
 
 ### `cookie_domain`
 
-Default: `nil`
+Défaut : `nil`
 
-An optional domain to use when setting the CSRF cookie. This can be used to share the CSRF cookie across multiple subdomains for example. For example, setting this option to `.example.com` will make it possible to send a POST request from a form on one subdomain (eg. `foo.example.com`) to another subdomain (eg. `bar.example.com `).
+Un domaine optionnel à utiliser lors de la définition du cookie CSRF. Cela peut être utilisé pour partager le cookie CSRF entre plusieurs sous-domaines par exemple. Par exemple, définir cette option sur `.example.com` permettra d'envoyer une requête POST depuis un formulaire sur un sous-domaine (ex. `foo.example.com`) vers un autre sous-domaine (ex. `bar.example.com`).
 
 ### `cookie_http_only`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating whether client-side scripts should be prevented from accessing the CSRF token cookie. If this option is set to `true`, Javascript scripts won't be able to access the CSRF cookie.
+Un booléen indiquant si les scripts côté client doivent être empêchés d'accéder au cookie du token CSRF. Si cette option est définie sur `true`, les scripts JavaScript ne pourront pas accéder au cookie CSRF.
 
 ### `cookie_max_age`
 
-Default: `31_556_952` (approximately one year)
+Défaut : `31_556_952` (environ un an)
 
-The max age (in seconds) of the CSRF cookie.
+L'âge maximum (en secondes) du cookie CSRF.
 
 ### `cookie_name`
 
-Default: `"csrftoken"`
+Défaut : `"csrftoken"`
 
-The name of the cookie to use for the CSRF token. This cookie name should be different than any other cookies created by your application.
+Le nom du cookie à utiliser pour le token CSRF. Ce nom de cookie doit être différent de tout autre cookie créé par votre application.
 
 ### `cookie_same_site`
 
-Default: `"Lax"`
+Défaut : `"Lax"`
 
-The value of the [SameSite flag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite) to use for the CSRF cookie. Accepted values are `"Lax"`, `"Strict"`, or `"None"`.
+La valeur du [flag SameSite](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite) à utiliser pour le cookie CSRF. Les valeurs acceptées sont `"Lax"`, `"Strict"` ou `"None"`.
 
 ### `cookie_secure`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating whether to use a secure cookie for the CSRF cookie. Setting this to `true` will force browsers to send the cookie with an encrypted request over the HTTPS protocol only.
+Un booléen indiquant s'il faut utiliser un cookie sécurisé pour le cookie CSRF. Définir ceci sur `true` forcera les navigateurs à envoyer le cookie avec une requête chiffrée via le protocole HTTPS uniquement.
 
 ### `protection_enabled`
 
-Default: `true`
+Défaut : `true`
 
-A boolean indicating if the CSRF protection is enabled globally. When set to `true`, handlers will automatically perform a CSRF check to protect unsafe requests (ie. requests whose methods are not `GET`, `HEAD`, `OPTIONS`, or `TRACE`). Regardless of the value of this setting, it is always possible to explicitly enable or disable CSRF protection on a per-handler basis. See [Cross-Site Request Forgery protection](../../security/csrf.md) for more details.
+Un booléen indiquant si la protection CSRF est activée globalement. Lorsque défini sur `true`, les handlers effectueront automatiquement une vérification CSRF pour protéger les requêtes non sûres (c'est-à-dire les requêtes dont les méthodes ne sont pas `GET`, `HEAD`, `OPTIONS` ou `TRACE`). Indépendamment de la valeur de ce paramètre, il est toujours possible d'activer ou de désactiver explicitement la protection CSRF par handler. Voir [Protection contre les Cross-Site Request Forgery](../../security/csrf.md) pour plus de détails.
 
 ### `session_key`
 
-Default: `"csrftoken"`
+Défaut : `"csrftoken"`
 
-The name of the session key to use for the CSRF token. This session key should be different than any other session key created by your application.
+Le nom de la clé de session à utiliser pour le token CSRF. Cette clé de session doit être différente de toute autre clé de session créée par votre application.
 
 :::info
-This value is only relevant if [`use_session`](#use_session) is set to `true`.
+Cette valeur n'est pertinente que si [`use_session`](#use_session) est défini sur `true`.
 :::
 
 ### `trusted_origins`
 
-Default: `[] of String`
+Défaut : `[] of String`
 
-An array of trusted origins.
+Un tableau d'origines de confiance.
 
-These origins will be trusted for CSRF-protected requests (such as POST requests) and they will be used to check either the `Origin` or the `Referer` header depending on the request scheme. This is done to ensure that a specific subdomain such as `sub1.example.com` cannot issue a POST request to `sub2.example.com`. To enable CSRF-protected requests over different origins, it's possible to add trusted origins to this array. For example `https://sub1.example.com` can be configured as a trusted domain that way, but it's possible to allow CSRF-protected requests for all the subdomains of a specific domain by using `https://*.example.com`.
+Ces origines seront considérées comme de confiance pour les requêtes protégées par CSRF (comme les requêtes POST) et elles seront utilisées pour vérifier soit l'en-tête `Origin` soit l'en-tête `Referer` selon le schéma de la requête. Cela est fait pour s'assurer qu'un sous-domaine spécifique comme `sub1.example.com` ne peut pas émettre une requête POST vers `sub2.example.com`. Pour activer les requêtes protégées par CSRF entre différentes origines, il est possible d'ajouter des origines de confiance à ce tableau. Par exemple `https://sub1.example.com` peut être configuré comme un domaine de confiance de cette façon, mais il est possible d'autoriser les requêtes protégées par CSRF pour tous les sous-domaines d'un domaine spécifique en utilisant `https://*.example.com`.
 
-For example:
+Par exemple :
 
 ```crystal
 config.csrf.trusted_origins = [
@@ -430,35 +430,35 @@ config.csrf.trusted_origins = [
 
 ### `use_session`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating whether the CSRF token should be stored inside a session.
-If set to `true`, the CSRF token will be stored [in a session](../../handlers-and-http/sessions.md) rather than in a cookie.
+Un booléen indiquant si le token CSRF doit être stocké dans une session.
+Si défini sur `true`, le token CSRF sera stocké [dans une session](../../handlers-and-http/sessions.md) plutôt que dans un cookie.
 
-## Content-Security-Policy settings
+## Paramètres Content-Security-Policy
 
-These settings allow configuring how the [`Marten::Middleware::ContentSecurityPolicy`](../../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) middleware behaves and the actual directives of the Content-Security-Policy header that are set by this middleware.
+Ces paramètres permettent de configurer le comportement du middleware [`Marten::Middleware::ContentSecurityPolicy`](../../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) et les directives réelles de l'en-tête Content-Security-Policy qui sont définies par ce middleware.
 
 ```crystal
 config.content_security_policy.report_only = true
 config.content_security_policy.default_policy.default_src = [:self, "other"]
 ```
 
-Please refer to [Content Security Policy](../../security/content-security-policy.md) to learn more about the Content-Security-Policy header protection.
+Veuillez consulter [Content Security Policy](../../security/content-security-policy.md) pour en savoir plus sur la protection par l'en-tête Content-Security-Policy.
 
 :::tip
-[Content-Security-Policy](https://www.w3.org/TR/CSP/) is a complicated header and there are possibly many values you may need to tweak. Make sure you understand it before configuring the below settings.
+[Content-Security-Policy](https://www.w3.org/TR/CSP/) est un en-tête complexe et il y a potentiellement de nombreuses valeurs que vous pourriez avoir besoin d'ajuster. Assurez-vous de le comprendre avant de configurer les paramètres ci-dessous.
 :::
 
 ### `default_policy`
 
-Default: `Marten::HTTP::ContentSecurityPolicy.new`
+Défaut : `Marten::HTTP::ContentSecurityPolicy.new`
 
-The default Content-Security-Policy object.
+L'objet Content-Security-Policy par défaut.
 
-This [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) object will be used to set the Content-Security-Policy header when the [`Marten::Middleware::ContentSecurityPolicy`](../../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) middleware is used.
+Cet objet [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) sera utilisé pour définir l'en-tête Content-Security-Policy lorsque le middleware [`Marten::Middleware::ContentSecurityPolicy`](../../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) est utilisé.
 
-All the attributes that can be set on this [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) object through the use of methods such as [`#default_src=`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html#default_src%3D(value%3AArray|Nil|String|Symbol|Tuple)-instance-method) or [`#frame_src=`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html#frame_src%3D(value%3AArray|Nil|String|Symbol|Tuple)-instance-method) can also be used directly on the `content_security_policy` setting object. For example:
+Tous les attributs qui peuvent être définis sur cet objet [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) via des méthodes comme [`#default_src=`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html#default_src%3D(value%3AArray|Nil|String|Symbol|Tuple)-instance-method) ou [`#frame_src=`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html#frame_src%3D(value%3AArray|Nil|String|Symbol|Tuple)-instance-method) peuvent également être utilisés directement sur l'objet de paramètre `content_security_policy`. Par exemple :
 
 ```crystal
 config.content_security_policy.default_src = [:self, "other"]
@@ -467,39 +467,39 @@ config.content_security_policy.block_all_mixed_content = true
 
 ### `nonce_directives`
 
-Default: `["script-src", "style-src"]`
+Défaut : `["script-src", "style-src"]`
 
-An array of directives where a dynamically-generated nonce will be included.
+Un tableau de directives où un nonce généré dynamiquement sera inclus.
 
-For example, if this setting is set to `["script-src"]`, a `nonce-<b64-value>` value will be added to the `script-src` directive in the Content-Security-Policy header value.
+Par exemple, si ce paramètre est défini sur `["script-src"]`, une valeur `nonce-<b64-value>` sera ajoutée à la directive `script-src` dans la valeur de l'en-tête Content-Security-Policy.
 
 ### `report_only`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating whether policy violations are reported without enforcing them.
+Un booléen indiquant si les violations de politique sont signalées sans les appliquer.
 
-If this setting is set to `true`, the [`Marten::Middleware::ContentSecurityPolicy`](../../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) middleware will set a [Content-Security-Policy-Report-Only](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only) header instead of the regular Content-Security-Policy header. Doing so can be useful to experiment with policies without enforcing them.
+Si ce paramètre est défini sur `true`, le middleware [`Marten::Middleware::ContentSecurityPolicy`](../../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) définira un en-tête [Content-Security-Policy-Report-Only](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only) au lieu de l'en-tête Content-Security-Policy habituel. Cela peut être utile pour expérimenter avec des politiques sans les appliquer.
 
-## Database settings
+## Paramètres de base de données {#database-settings}
 
-These settings allow configuring the databases used by the considered Marten project. At least one default database must be configured if your project makes use of [models](../../models-and-databases/introduction.md), and additional databases can optionally be configured as well.
+Ces paramètres permettent de configurer les bases de données utilisées par le projet Marten considéré. Au moins une base de données par défaut doit être configurée si votre projet utilise des [modèles](../../models-and-databases/introduction.md), et des bases de données supplémentaires peuvent optionnellement être configurées également.
 
 ```crystal
-# Default database
+# Base de données par défaut
 config.database do |db|
   db.backend = :sqlite
   db.name = "default_db.db"
 end
 
-# Additional database
+# Base de données supplémentaire
 config.database :other do |db|
   db.backend = :sqlite
   db.name = "other_db.db"
 end
 ```
 
-Configuring other database backends such as MariaDB, MySQL or PostgreSQL usually involves specifying more connection parameters (eg. user, password, etc). As such, you must define a block to configure the appropriate database options when calling the [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2Curl%3AString|Nil%3Dnil%2C%26)-instance-method) method. For example:
+La configuration d'autres backends de base de données tels que MariaDB, MySQL ou PostgreSQL implique généralement de spécifier plus de paramètres de connexion (ex. utilisateur, mot de passe, etc). Ainsi, vous devez définir un bloc pour configurer les options de base de données appropriées lors de l'appel à la méthode [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2Curl%3AString|Nil%3Dnil%2C%26)-instance-method). Par exemple :
 
 ```crystal
 config.database do |db|
@@ -511,34 +511,34 @@ config.database do |db|
 end
 ```
 
-It is worth mentioning that some cloud providers only provide a connection string in order to connect to a specific database (usually in a `DATABASE_URL` environment variable). In this situation, it is possible to automatically configure the database backend by providing the connection URL to the [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database%28id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2Curl%3AString%7CNil%3Dnil%29-instance-method) method as well. This technique can be used for configuring both the default database and additional databases too. For example:
+Il est important de mentionner que certains fournisseurs cloud ne fournissent qu'une chaîne de connexion pour se connecter à une base de données spécifique (généralement dans une variable d'environnement `DATABASE_URL`). Dans cette situation, il est possible de configurer automatiquement le backend de base de données en fournissant l'URL de connexion à la méthode [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database%28id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2Curl%3AString%7CNil%3Dnil%29-instance-method) également. Cette technique peut être utilisée pour configurer à la fois la base de données par défaut et les bases de données supplémentaires. Par exemple :
 
 ```crystal
-# Default database
+# Base de données par défaut
 config.database url: "postgres://my_user:my_db@localhost:1234/db"
 
-# Additional database
+# Base de données supplémentaire
 config.database :my_other_db, url: "sqlite://other_db.db?journal_mode=wal&synchronous=normal"
 ```
 
 :::tip
-You can combine both database configuration techniques mentioned above if needed. Indeed you can configure a database through the use of a connection string and also further customize the database by opening a block and setting additional options:
+Vous pouvez combiner les deux techniques de configuration de base de données mentionnées ci-dessus si nécessaire. En effet, vous pouvez configurer une base de données via une chaîne de connexion et également la personnaliser davantage en ouvrant un bloc et en définissant des options supplémentaires :
 
 ```crystal
-# Configure db with a URL and a block
+# Configurer la base de données avec une URL et un bloc
 config.database url: "postgres://my_user:my_db@localhost:1234/db" do |db|
   db.retry_delay = 1.0
 end
 ```
 :::
 
-The following sections provide details on all the available database configuration options.
+Les sections suivantes fournissent des détails sur toutes les options de configuration de base de données disponibles.
 
 ### `backend`
 
-Default: `nil`
+Défaut : `nil`
 
-The database backend to use for connecting to the considered database. Marten supports three backends presently:
+Le backend de base de données à utiliser pour se connecter à la base de données considérée. Marten prend en charge trois backends actuellement :
 
 * `:mysql`
 * `:postgresql`
@@ -546,47 +546,47 @@ The database backend to use for connecting to the considered database. Marten su
 
 ### `checkout_timeout`
 
-Default: `5.0`
+Défaut : `5.0`
 
-The number of seconds to wait for a connection to become available when the max pool size is reached.
+Le nombre de secondes à attendre pour qu'une connexion devienne disponible lorsque la taille maximale du pool est atteinte.
 
 ### `host`
 
-Default: `nil`
+Défaut : `nil`
 
-A string containing the host used to connect to the database. No value means that the host will be localhost.
+Une chaîne contenant l'hôte utilisé pour se connecter à la base de données. Aucune valeur signifie que l'hôte sera localhost.
 
 ### `initial_pool_size`
 
-Default: `1`
+Défaut : `1`
 
-The initial number of connections created for the database connections pool.
+Le nombre initial de connexions créées pour le pool de connexions de base de données.
 
 ### `max_idle_pool_size`
 
-Default: `1`
+Défaut : `1`
 
-The maximum number of idle connections for the database connections pool. Concretely, this means that when released, a connection will be closed only if there are already `max_idle_pool_size` idle connections.
+Le nombre maximum de connexions inactives pour le pool de connexions de base de données. Concrètement, cela signifie que lorsqu'une connexion est libérée, elle ne sera fermée que s'il y a déjà `max_idle_pool_size` connexions inactives.
 
 ### `max_pool_size`
 
-Default: `0`
+Défaut : `0`
 
-The maximum number of connections that will be held by the database connections pool. When set to `0`, this means that there is no limit to the number of connections.
+Le nombre maximum de connexions qui seront maintenues par le pool de connexions de base de données. Lorsque défini sur `0`, cela signifie qu'il n'y a pas de limite au nombre de connexions.
 
 ### `name`
 
-Default: `nil`
+Défaut : `nil`
 
-The name of the database to connect to. If you use the `sqlite` backend, this can be a string or a `Path` object containing the path (absolute or relative) to the considered database path.
+Le nom de la base de données à laquelle se connecter. Si vous utilisez le backend `sqlite`, cela peut être une chaîne ou un objet `Path` contenant le chemin (absolu ou relatif) vers le chemin de la base de données considérée.
 
 ### `options`
 
-Default: `{} of String => String`
+Défaut : `{} of String => String`
 
-A set of additional database options. This setting can be used to set additional database options that may be required in order to connect to the database at hand.
+Un ensemble d'options de base de données supplémentaires. Ce paramètre peut être utilisé pour définir des options de base de données supplémentaires qui peuvent être requises pour se connecter à la base de données en question.
 
-For example:
+Par exemple :
 
 ```crystal
 config.database do |db|
@@ -600,9 +600,9 @@ config.database do |db|
 end
 ```
 
-The options that you can set here will vary based on your chosen database backend. For example, you could set the `sslmode` option for PostgreSQL databases or some [pragma options](https://github.com/crystal-lang/crystal-sqlite3?tab=readme-ov-file#setting-pragmas) for SQLite3 databases.
+Les options que vous pouvez définir ici varieront en fonction du backend de base de données choisi. Par exemple, vous pourriez définir l'option `sslmode` pour les bases de données PostgreSQL ou certaines [options pragma](https://github.com/crystal-lang/crystal-sqlite3?tab=readme-ov-file#setting-pragmas) pour les bases de données SQLite3.
 
-Please refer to the applicable DB binding shard documentation for more details about the available options:
+Veuillez consulter la documentation du shard de liaison DB applicable pour plus de détails sur les options disponibles :
 
 * [crystal-pg](https://github.com/will/crystal-pg) (PostgreSQL)
 * [crystal-mysql](https://github.com/crystal-lang/crystal-mysql) (MariaDB, MySQL)
@@ -610,39 +610,39 @@ Please refer to the applicable DB binding shard documentation for more details a
 
 ### `password`
 
-Default: `nil`
+Défaut : `nil`
 
-A string containing the password to use to connect to the configured database.
+Une chaîne contenant le mot de passe à utiliser pour se connecter à la base de données configurée.
 
 ### `port`
 
-Default: `nil`
+Défaut : `nil`
 
-The port to use to connect to the configured database. No value means that the default port will be used.
+Le port à utiliser pour se connecter à la base de données configurée. Aucune valeur signifie que le port par défaut sera utilisé.
 
 ### `retry_attempts`
 
-Default: `1`
+Défaut : `1`
 
-The maximum number of attempts to retry re-establishing a lost connection.
+Le nombre maximum de tentatives pour rétablir une connexion perdue.
 
 ### `retry_delay`
 
-Default: `1.0`
+Défaut : `1.0`
 
-The delay to wait between each retry at re-establishing a lost connection.
+Le délai d'attente entre chaque tentative de rétablissement d'une connexion perdue.
 
 ### `user`
 
-Default: `nil`
+Défaut : `nil`
 
-A string containing the name of the user that should be used to connect to the configured database.
+Une chaîne contenant le nom de l'utilisateur qui devrait être utilisé pour se connecter à la base de données configurée.
 
-## Emailing settings
+## Paramètres d'emailing
 
-Emailing settings allow configuring emailing-related settings. Please refer to [Emailing](../../emailing.mdx) for more details about how to define and send emails in your projects.
+Les paramètres d'emailing permettent de configurer les paramètres liés à l'envoi d'emails. Veuillez consulter [Emailing](../../emailing.mdx) pour plus de détails sur la façon de définir et d'envoyer des emails dans vos projets.
 
-The following settings are all available under the `emailing` namespace:
+Les paramètres suivants sont tous disponibles sous le namespace `emailing` :
 
 ```crystal
 config.emailing.from_address = "no-reply@example.com"
@@ -651,29 +651,29 @@ config.emailing.backend = Marten::Emailing::Backend::Development.new(print_email
 
 ### `backend`
 
-Default: `Marten::Emailing::Backend::Development.new`
+Défaut : `Marten::Emailing::Backend::Development.new`
 
-The backend to use when it comes to send emails. Emailing backends define _how_ emails are actually sent.
+Le backend à utiliser pour l'envoi d'emails. Les backends d'emailing définissent _comment_ les emails sont réellement envoyés.
 
-By default, a development backend (instance of [`Marten::Emailing::Backend::Dev`](pathname:///api/dev/Marten/Emailing/Backend/Development.html)) is used: this backend "collects" all the emails that are "delivered" by default (which can be used in specs in order to test sent emails), but it can also be configured to print email details to the standard output if necessary (see the [emailing backend reference](../../emailing/reference/backends.md) for more details about this capability).
+Par défaut, un backend de développement (instance de [`Marten::Emailing::Backend::Dev`](pathname:///api/dev/Marten/Emailing/Backend/Development.html)) est utilisé : ce backend "collecte" tous les emails qui sont "envoyés" par défaut (ce qui peut être utilisé dans les specs pour tester les emails envoyés), mais il peut aussi être configuré pour afficher les détails des emails sur la sortie standard si nécessaire (voir la [référence des backends d'emailing](../../emailing/reference/backends.md) pour plus de détails sur cette capacité).
 
-Additional emailing backend shards are also maintained under the umbrella of the Marten project or by the community itself and can be used as part of your application depending on your specific email sending requirements. These backends are listed in the [emailing backend reference](../../emailing/reference/backends.md#other-backends).
+Des shards de backend d'emailing supplémentaires sont également maintenus sous l'égide du projet Marten ou par la communauté elle-même et peuvent être utilisés dans votre application selon vos besoins spécifiques d'envoi d'emails. Ces backends sont listés dans la [référence des backends d'emailing](../../emailing/reference/backends.md#other-backends).
 
 ### `from_address`
 
-Default: `"webmaster@localhost"`
+Défaut : `"webmaster@localhost"`
 
-The default from address used in emails. Email definitions that don't specify a "from" address explicitly will use this email address automatically for the sender email. It should be noted that this from email address can be defined as a string or as a [`Marten::Emailing::Address`](pathname:///api/dev/Marten/Emailing/Address.html) object (which allows to specify the name AND the address of the sender email).
+L'adresse d'expédition par défaut utilisée dans les emails. Les définitions d'emails qui ne spécifient pas explicitement une adresse "from" utiliseront automatiquement cette adresse email pour l'expéditeur. Il convient de noter que cette adresse email d'expédition peut être définie comme une chaîne ou comme un objet [`Marten::Emailing::Address`](pathname:///api/dev/Marten/Emailing/Address.html) (qui permet de spécifier le nom ET l'adresse de l'email expéditeur).
 
-## I18n settings
+## Paramètres I18n
 
-I18n settings allow configuring internationalization-related settings. Please refer to [Internationalization](../../i18n.mdx) for more details about how to leverage translations and localized content in your projects.
+Les paramètres I18n permettent de configurer les paramètres liés à l'internationalisation. Veuillez consulter [Internationalisation](../../i18n.mdx) pour plus de détails sur la façon d'utiliser les traductions et le contenu localisé dans vos projets.
 
 :::info
-Marten makes use of [crystal-i18n](https://crystal-i18n.github.io/) to handle translations and locales. Further [configuration options](https://crystal-i18n.github.io/configuration.html) are also provided by this shard and can be leveraged by any Marten projects if necessary.
+Marten utilise [crystal-i18n](https://crystal-i18n.github.io/) pour gérer les traductions et les locales. Des [options de configuration](https://crystal-i18n.github.io/configuration.html) supplémentaires sont également fournies par ce shard et peuvent être utilisées par tout projet Marten si nécessaire.
 :::
 
-The following settings are all available under the `i18n` namespace:
+Les paramètres suivants sont tous disponibles sous le namespace `i18n` :
 
 ```crystal
 config.i18n.default_locale = :fr
@@ -681,9 +681,9 @@ config.i18n.default_locale = :fr
 
 ### `available_locales`
 
-Default: `nil`
+Défaut : `nil`
 
-Allows defining the locales that can be activated to perform translation lookups and localizations. For example:
+Permet de définir les locales qui peuvent être activées pour effectuer des recherches de traduction et des localisations. Par exemple :
 
 ```crystal
 config.i18n.available_locales = [:en, :fr]
@@ -691,34 +691,34 @@ config.i18n.available_locales = [:en, :fr]
 
 ### `default_locale`
 
-Default: `"en"`
+Défaut : `"en"`
 
-The default locale used by the Marten project.
+La locale par défaut utilisée par le projet Marten.
 
 ### `fallbacks`
 
-Default: `["en"]`
+Défaut : `["en"]`
 
-The locale fallbacks of the project.
+Les locales de repli du projet.
 
-By configuring locale fallbacks, you can force your project to try to lookup translations in other (configured) locales if the current locale the translation is requested into is missing.
+En configurant les locales de repli, vous pouvez forcer votre projet à essayer de chercher les traductions dans d'autres locales (configurées) si la locale actuelle dans laquelle la traduction est demandée est manquante.
 
-The specified fallbacks can be:
+Les replis spécifiés peuvent être :
 
-* a hash or a named tuple defining the chains of fallbacks to use for specific locales.
-* a simple array of fallbacks. In that case, this chain of fallbacked locales will be used as a default for all the available locales when translations are missing.
-* an `I18n::Locale::Fallbacks` object, allowing you to specify a general default fallback array and fallback mappings at the same time (see the [crystal-i18n documentation](https://crystal-i18n.github.io/configuration.html#fallbacks)).
+* un hash ou un named tuple définissant les chaînes de repli à utiliser pour des locales spécifiques.
+* un simple tableau de replis. Dans ce cas, cette chaîne de locales de repli sera utilisée par défaut pour toutes les locales disponibles lorsque des traductions sont manquantes.
+* un objet `I18n::Locale::Fallbacks`, vous permettant de spécifier un tableau de repli par défaut général et des mappings de repli en même temps (voir la [documentation crystal-i18n](https://crystal-i18n.github.io/configuration.html#fallbacks)).
 
-For example:
+Par exemple :
 
 ```crystal
-# Simple fallback chain used by all configured locales:
+# Chaîne de repli simple utilisée par toutes les locales configurées :
 config.i18n.fallbacks = ["en-US", "en"]
 
-# Locale-specific fallback chains:
+# Chaînes de repli spécifiques par locale :
 config.i18n.fallbacks = {"en-CA" => ["en-US", "en"], "fr-CA" => "fr"}
 
-# Default fallback chain and locale-specific fallback chains:
+# Chaîne de repli par défaut et chaînes de repli spécifiques par locale :
 config.i18n.fallbacks = ::I18n::Locale::Fallbacks.new(
   {"fr-CA-special": ["fr-CA", "fr", "en"]},
   default: ["en"]
@@ -727,13 +727,13 @@ config.i18n.fallbacks = ::I18n::Locale::Fallbacks.new(
 
 ### `locale_cookie_name`
 
-Default: `"marten_locale"`
+Défaut : `"marten_locale"`
 
-The name of the cookie to use for saving the locale of the current user and activating the right locale (when the [`Marten::Middleware::I18n`](../../handlers-and-http/reference/middlewares.md#i18n-middleware) middleware is used). See [Internationalization](../../i18n/introduction.md) to learn more about this capability.
+Le nom du cookie à utiliser pour sauvegarder la locale de l'utilisateur actuel et activer la bonne locale (lorsque le middleware [`Marten::Middleware::I18n`](../../handlers-and-http/reference/middlewares.md#i18n-middleware) est utilisé). Voir [Internationalisation](../../i18n/introduction.md) pour en savoir plus sur cette capacité.
 
-## Media files settings
+## Paramètres des fichiers médias
 
-Media files settings allow configuring how Marten should interact with [media files](../../files/managing-files.md). These settings are all available under the `media_files` namespace:
+Les paramètres des fichiers médias permettent de configurer la façon dont Marten interagit avec les [fichiers médias](../../files/managing-files.md). Ces paramètres sont tous disponibles sous le namespace `media_files` :
 
 ```crystal
 config.media_files.root = "files"
@@ -742,37 +742,37 @@ config.media_files.url = "/files/"
 
 ### `root`
 
-Default: `"media"`
+Défaut : `"media"`
 
-A string containing the absolute path where uploaded files will be persisted. By default uploaded files will be persisted in a folder that is relative to the Marten project's directory.
+Une chaîne contenant le chemin absolu où les fichiers téléchargés seront persistés. Par défaut, les fichiers téléchargés seront persistés dans un dossier relatif au répertoire du projet Marten.
 
 :::info
-This setting is only used if `media_files.storage` is `nil`.
+Ce paramètre n'est utilisé que si `media_files.storage` est `nil`.
 :::
 
 ### `storage`
 
-Default: `nil`
+Défaut : `nil`
 
-An optional storage object, which must be an instance of a subclass of [`Marten::Core::Store::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html). This storage object will be used when uploading files to persist them in a given location.
+Un objet de stockage optionnel, qui doit être une instance d'une sous-classe de [`Marten::Core::Store::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html). Cet objet de stockage sera utilisé lors du téléchargement de fichiers pour les persister dans un emplacement donné.
 
-By default, this setting value is set to `nil`, which means that a [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) storage is automatically constructed by using the `media_files.root` and `media_files.url` setting values: in this situation, media files are persisted in a local directory, and it is expected that they will be served from this directory by the web server running the application.
+Par défaut, la valeur de ce paramètre est définie sur `nil`, ce qui signifie qu'un stockage [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) est automatiquement construit en utilisant les valeurs des paramètres `media_files.root` et `media_files.url` : dans cette situation, les fichiers médias sont persistés dans un répertoire local, et il est attendu qu'ils seront servis depuis ce répertoire par le serveur web exécutant l'application.
 
-A specific storage can be set instead to ensure that uploaded files are persisted somewhere else in the cloud and served from there (for example in an Amazon's S3 bucket). When this is the case, the `media_files.root` and `media_files.url` setting values are basically ignored and are overridden by the use of the specified storage.
+Un stockage spécifique peut être défini à la place pour s'assurer que les fichiers téléchargés sont persistés ailleurs dans le cloud et servis depuis là (par exemple dans un bucket Amazon S3). Dans ce cas, les valeurs des paramètres `media_files.root` et `media_files.url` sont essentiellement ignorées et remplacées par l'utilisation du stockage spécifié.
 
 ### `url`
 
-Default: `"/media/"`
+Défaut : `"/media/"`
 
-The base URL to use when exposing media files URLs. This base URL will be used by the default [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) storage to construct media files URLs. For example, requesting a `foo/bar.txt` file might generate a `/media/foo/bar.txt` URL by default.
+L'URL de base à utiliser lors de l'exposition des URLs de fichiers médias. Cette URL de base sera utilisée par le stockage par défaut [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) pour construire les URLs de fichiers médias. Par exemple, demander un fichier `foo/bar.txt` pourrait générer une URL `/media/foo/bar.txt` par défaut.
 
 :::info
-This setting is only used if `media_files.storage` is `nil`.
+Ce paramètre n'est utilisé que si `media_files.storage` est `nil`.
 :::
 
-## Method overriding settings
+## Paramètres de remplacement de méthode
 
-Method overriding settings allow configuring how the [`MethodOverride`](../../handlers-and-http/reference/middlewares.md#method-override-middleware) middleware should handle HTTP method overrides in forms. These settings are all available under the `method_override` namespace:
+Les paramètres de remplacement de méthode permettent de configurer la façon dont le middleware [`MethodOverride`](../../handlers-and-http/reference/middlewares.md#method-override-middleware) gère les remplacements de méthode HTTP dans les formulaires. Ces paramètres sont tous disponibles sous le namespace `method_override` :
 
 ```crystal
 config.method_override.allowed_methods = ["DELETE", "PATCH", "PUT"]
@@ -782,25 +782,25 @@ config.method_override.input_name = "_method"
 
 ### `allowed_methods`
 
-Default: `["DELETE", "PATCH", "PUT"]`
+Défaut : `["DELETE", "PATCH", "PUT"]`
 
-An array of HTTP methods that are allowed to be overridden using the `input_name` mechanism. This provides a layer of control, preventing the usage of arbitrary HTTP methods in overrides.
+Un tableau de méthodes HTTP qui sont autorisées à être remplacées en utilisant le mécanisme `input_name`. Cela fournit une couche de contrôle, empêchant l'utilisation de méthodes HTTP arbitraires dans les remplacements.
 
 ### `http_header_name`
 
-Default: `X-Http-Method-Override`
+Défaut : `X-Http-Method-Override`
 
-The name of the HTTP header used to signal a method override.
+Le nom de l'en-tête HTTP utilisé pour signaler un remplacement de méthode.
 
 ### `input_name`
 
-Default: `_method`
+Défaut : `_method`
 
-The name of the form input field (or query parameter) used to signal a method override.
+Le nom du champ de formulaire (ou paramètre de requête) utilisé pour signaler un remplacement de méthode.
 
-## Sessions settings
+## Paramètres de sessions
 
-Sessions settings allow configuring how Marten should handle [sessions](../../handlers-and-http/introduction.md#using-sessions). These settings are all available under the `sessions` namespace:
+Les paramètres de sessions permettent de configurer la façon dont Marten gère les [sessions](../../handlers-and-http/introduction.md#using-sessions). Ces paramètres sont tous disponibles sous le namespace `sessions` :
 
 ```crystal
 config.sessions.cookie_name = "_sessions"
@@ -809,52 +809,52 @@ config.sessions.store = :cookie
 
 ### `cookie_domain`
 
-Default: `nil`
+Défaut : `nil`
 
-An optional domain to use when setting the session cookie. This can be used to share the session cookie across multiple subdomains.
+Un domaine optionnel à utiliser lors de la définition du cookie de session. Cela peut être utilisé pour partager le cookie de session entre plusieurs sous-domaines.
 
 ### `cookie_http_only`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating whether client-side scripts should be prevented from accessing the session cookie. If this option is set to `true`, Javascript scripts won't be able to access the session cookie.
+Un booléen indiquant si les scripts côté client doivent être empêchés d'accéder au cookie de session. Si cette option est définie sur `true`, les scripts JavaScript ne pourront pas accéder au cookie de session.
 
 ### `cookie_max_age`
 
-Default: `1_209_600` (two weeks)
+Défaut : `1_209_600` (deux semaines)
 
-The max age (in seconds) of the session cookie.
+L'âge maximum (en secondes) du cookie de session.
 
 
 ### `cookie_name`
 
-Default: `"sessionid"`
+Défaut : `"sessionid"`
 
-The name of the cookie to use for the session token. This cookie name should be different than any other cookies created by your application.
+Le nom du cookie à utiliser pour le token de session. Ce nom de cookie doit être différent de tout autre cookie créé par votre application.
 
 ### `cookie_same_site`
 
-Default: `"Lax"`
+Défaut : `"Lax"`
 
-The value of the [SameSite flag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite) to use for the session cookie. Accepted values are `"Lax"`, `"Strict"`, or `"None"`.
+La valeur du [flag SameSite](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite) à utiliser pour le cookie de session. Les valeurs acceptées sont `"Lax"`, `"Strict"` ou `"None"`.
 
 ### `cookie_secure`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating whether to use a secure cookie for the session cookie. Setting this to `true` will force browsers to send the cookie with an encrypted request over the HTTPS protocol only.
+Un booléen indiquant s'il faut utiliser un cookie sécurisé pour le cookie de session. Définir ceci sur `true` forcera les navigateurs à envoyer le cookie avec une requête chiffrée via le protocole HTTPS uniquement.
 
 ### `store`
 
-Default: `"cookie"`
+Défaut : `"cookie"`
 
-A string containing the identifier of the store used to handle sessions.
+Une chaîne contenant l'identifiant du store utilisé pour gérer les sessions.
 
-By default, sessions are stored within a single cookie. Cookies have a 4K size limit, which is usually sufficient to persist things like a user ID and flash messages. Other stores can be implemented and leveraged to store sessions data; see [Sessions](../../handlers-and-http/sessions.md) for more details about this capability.
+Par défaut, les sessions sont stockées dans un seul cookie. Les cookies ont une limite de taille de 4K, qui est généralement suffisante pour persister des choses comme un ID utilisateur et des messages flash. D'autres stores peuvent être implémentés et utilisés pour stocker les données de session ; voir [Sessions](../../handlers-and-http/sessions.md) pour plus de détails sur cette capacité.
 
-## SSL redirect settings
+## Paramètres de redirection SSL
 
-SSL redirect settings allow to configure how Marten should redirect non-HTTPS requests to HTTPS when the [`Marten::Middleware::SSLRedirect`](../../handlers-and-http/reference/middlewares.md#ssl-redirect-middleware) middleware is used:
+Les paramètres de redirection SSL permettent de configurer la façon dont Marten redirige les requêtes non-HTTPS vers HTTPS lorsque le middleware [`Marten::Middleware::SSLRedirect`](../../handlers-and-http/reference/middlewares.md#ssl-redirect-middleware) est utilisé :
 
 ```crystal
 config.ssl_redirect.host = "example-redirect.com"
@@ -863,19 +863,19 @@ config.exempted_paths = [/^\/no-ssl\/$/]
 
 ### `exempted_paths`
 
-Default: `[] of Regex | String`
+Défaut : `[] of Regex | String`
 
-Allows to set the array of paths that should be exempted from HTTPS redirects. Both strings and regexes are accepted.
+Permet de définir le tableau des chemins qui doivent être exemptés des redirections HTTPS. Les chaînes et les expressions régulières sont acceptées.
 
 ### `host`
 
-Default: `nil`
+Défaut : `nil`
 
-Allows to set the host that should be used when redirecting non-HTTPS requests. If set to `nil`, the HTTPS redirect will be performed using the request's host.
+Permet de définir l'hôte qui devrait être utilisé lors de la redirection des requêtes non-HTTPS. Si défini sur `nil`, la redirection HTTPS sera effectuée en utilisant l'hôte de la requête.
 
-## Strict transport security policy settings
+## Paramètres de politique de sécurité de transport stricte
 
-Strict transport security policy settings allow to configure how Marten should set the HTTP Strict-Transport-Security response header when the [`Marten::Middleware::StrictTransportSecurity`](../../handlers-and-http/reference/middlewares.md#strict-transport-security-middleware) middleware is used:
+Les paramètres de politique de sécurité de transport stricte permettent de configurer la façon dont Marten définit l'en-tête de réponse HTTP Strict-Transport-Security lorsque le middleware [`Marten::Middleware::StrictTransportSecurity`](../../handlers-and-http/reference/middlewares.md#strict-transport-security-middleware) est utilisé :
 
 ```crystal
 config.strict_transport_security.max_age = 3_600
@@ -884,33 +884,33 @@ config.strict_transport_security.include_sub_domains = true
 
 ### `include_sub_domains`
 
-Default: `false`
+Défaut : `false`
 
-Defines whether the `includeSubDomains` directive should be inserted into the HTTP Strict-Transport-Security response header. When this directive is set, this means that the policy will also apply to all the site's subdomains.
+Définit si la directive `includeSubDomains` doit être insérée dans l'en-tête de réponse HTTP Strict-Transport-Security. Lorsque cette directive est définie, cela signifie que la politique s'appliquera également à tous les sous-domaines du site.
 
 :::caution
-You should be careful when enabling this option as this will prevent browsers from connecting to your site's subdomains using HTTP for the duration defined by the [`max_age`](#max_age) setting.
+Vous devriez être prudent lors de l'activation de cette option car cela empêchera les navigateurs de se connecter aux sous-domaines de votre site en utilisant HTTP pendant la durée définie par le paramètre [`max_age`](#max_age).
 :::
 
 ### `max_age`
 
-Default: `nil`
+Défaut : `nil`
 
-Defines the duration in seconds that browsers should remember that the web app must be accessed using HTTPS only. A `nil` value means that the HTTP Strict-Transport-Security response header is not inserted in responses (which is equivalent to not using the [`Marten::Middleware::StrictTransportSecurity`](../../handlers-and-http/reference/middlewares.md#strict-transport-security-middleware) middleware).
+Définit la durée en secondes pendant laquelle les navigateurs doivent retenir que l'application web doit être accédée uniquement via HTTPS. Une valeur `nil` signifie que l'en-tête de réponse HTTP Strict-Transport-Security n'est pas inséré dans les réponses (ce qui équivaut à ne pas utiliser le middleware [`Marten::Middleware::StrictTransportSecurity`](../../handlers-and-http/reference/middlewares.md#strict-transport-security-middleware)).
 
 :::caution
-You should be careful when defining a value for this setting because this will prevent browsers from connecting to your site using HTTP for the duration you specified.
+Vous devriez être prudent lors de la définition d'une valeur pour ce paramètre car cela empêchera les navigateurs de se connecter à votre site en utilisant HTTP pendant la durée que vous avez spécifiée.
 :::
 
 ### `preload`
 
-Default: `false`
+Défaut : `false`
 
-Defines whether the `preload` directive should be inserted into the HTTP Strict-Transport-Security response header. Setting this to `true` means that you allow your site to be submitted to the [HSTS browser preload list](https://hstspreload.org/) by browsers.
+Définit si la directive `preload` doit être insérée dans l'en-tête de réponse HTTP Strict-Transport-Security. Définir ceci sur `true` signifie que vous autorisez votre site à être soumis à la [liste de préchargement HSTS des navigateurs](https://hstspreload.org/) par les navigateurs.
 
-## Templates settings
+## Paramètres des templates
 
-Templates settings allow configuring how Marten discovers and renders [templates](../../templates.mdx). These settings are all available under the `templates` namespace:
+Les paramètres des templates permettent de configurer la façon dont Marten découvre et rend les [templates](../../templates.mdx). Ces paramètres sont tous disponibles sous le namespace `templates` :
 
 ```crystal
 config.templates.app_dirs = false
@@ -919,29 +919,29 @@ config.templates.cached = false
 
 ### `app_dirs`
 
-Default: `true`
+Défaut : `true`
 
-A boolean indicating whether templates should be looked for inside installed application folders (local `templates` directories). When this setting is set to `true`, this means that templates provided by installed applications can be loaded and rendered by the templates engine. Otherwise, it would not be possible to load and render these application templates.
+Un booléen indiquant si les templates doivent être recherchés dans les dossiers des applications installées (répertoires locaux `templates`). Lorsque ce paramètre est défini sur `true`, cela signifie que les templates fournis par les applications installées peuvent être chargés et rendus par le moteur de templates. Sinon, il ne serait pas possible de charger et de rendre ces templates d'application.
 
 ### `cached`
 
-Default: `false`
+Défaut : `false`
 
-A boolean indicating whether templates should be kept in a memory cache upon being loaded and parsed. This setting should likely be set to `false` in development environments (where changes to templates are frequent) and set to `true` in production environments (to avoid loading and parsing the same templates multiple times).
+Un booléen indiquant si les templates doivent être conservés dans un cache mémoire après avoir été chargés et analysés. Ce paramètre devrait probablement être défini sur `false` dans les environnements de développement (où les modifications des templates sont fréquentes) et sur `true` dans les environnements de production (pour éviter de charger et d'analyser les mêmes templates plusieurs fois).
 
 ### `context_producers`
 
-Default: `[] of Marten::Template::ContextProducer.class`
+Défaut : `[] of Marten::Template::ContextProducer.class`
 
-An array of context producer classes. Context producers are helpers that ensure that common variables are automatically inserted in the template context whenever a template is rendered. See [Using context producers](../../templates/introduction.md#using-context-producers) to learn more about this capability.
+Un tableau de classes de producteurs de contexte. Les producteurs de contexte sont des helpers qui s'assurent que les variables communes sont automatiquement insérées dans le contexte du template chaque fois qu'un template est rendu. Voir [Utiliser les producteurs de contexte](../../templates/introduction.md#using-context-producers) pour en savoir plus sur cette capacité.
 
 ### `dirs`
 
-Default: `[] of String`
+Défaut : `[] of String`
 
-An array of directories where templates should be looked for. The order of these directories is important as it defines the order in which templates are searched for when requesting a template for a given path (eg. `foo/bar/template.html`).
+Un tableau de répertoires où les templates doivent être recherchés. L'ordre de ces répertoires est important car il définit l'ordre dans lequel les templates sont recherchés lors de la demande d'un template pour un chemin donné (ex. `foo/bar/template.html`).
 
-It should be noted that path objects or symbols can also be used to configure this setting:
+Il convient de noter que des objets path ou des symboles peuvent également être utilisés pour configurer ce paramètre :
 
 ```crystal
 config.templates.dirs = [
@@ -952,15 +952,15 @@ config.templates.dirs = [
 
 ### `isolated_inclusions`
 
-Default: `false`
+Défaut : `false`
 
-A boolean option enabling or disabling isolated inclusions of templates when using the [`include`](../../templates/reference/tags.md#include) template tag. When set to `true`, included templates won't have access to variables from the outer context by default, unless the `contextual` modifier is used with the `include` template tag. Conversely, when set to `false`, included templates will have access to the outer context's variables by default, unless explicitly disabled with the `isolated` modifier of the `include` template tag.
+Une option booléenne activant ou désactivant les inclusions isolées de templates lors de l'utilisation du tag de template [`include`](../../templates/reference/tags.md#include). Lorsque défini sur `true`, les templates inclus n'auront pas accès aux variables du contexte externe par défaut, sauf si le modificateur `contextual` est utilisé avec le tag de template `include`. Inversement, lorsque défini sur `false`, les templates inclus auront accès aux variables du contexte externe par défaut, sauf si cela est explicitement désactivé avec le modificateur `isolated` du tag de template `include`.
 
 ### `loaders`
 
-Default: `nil`
+Défaut : `nil`
 
-Overwrites the loading mechanism of templates. Takes an array of classes inheriting from `Marten::Template::Loader::Base`. Customize this to load templates from various sources like databases or in-memory structures. For example, to load templates from a file system:
+Remplace le mécanisme de chargement des templates. Prend un tableau de classes héritant de `Marten::Template::Loader::Base`. Personnalisez ceci pour charger des templates depuis diverses sources comme des bases de données ou des structures en mémoire. Par exemple, pour charger des templates depuis un système de fichiers :
 
 ```crystal
 config.templates.loaders = [Marten::Template::Loader::FileSystem.new("/path/to/templates")] of Marten::Template::Loader::Base
@@ -968,6 +968,6 @@ config.templates.loaders = [Marten::Template::Loader::FileSystem.new("/path/to/t
 
 ### `strict_variables`
 
-Default: `false`
+Défaut : `false`
 
-A boolean allowing to enable or disable the [strict variables](../../templates/introduction.md#strict-variables) for templates. When this setting is set to `true`, unknown variables encountered in templates will result in [`Marten::Template::Errors::UnknownVariable`](pathname:///api/dev/Marten/Template/Errors/UnknownVariable.html) exceptions to be raised. When set to `false`, unknown variables will simply be treated as `nil` values in templates.
+Un booléen permettant d'activer ou de désactiver les [variables strictes](../../templates/introduction.md#strict-variables) pour les templates. Lorsque ce paramètre est défini sur `true`, les variables inconnues rencontrées dans les templates entraîneront des exceptions [`Marten::Template::Errors::UnknownVariable`](pathname:///api/dev/Marten/Template/Errors/UnknownVariable.html). Lorsque défini sur `false`, les variables inconnues seront simplement traitées comme des valeurs `nil` dans les templates.

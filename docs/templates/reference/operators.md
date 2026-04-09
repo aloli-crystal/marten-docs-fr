@@ -1,24 +1,24 @@
 ---
-title: Operators
-description: Operators reference.
+title: Opérateurs
+description: Référence des opérateurs.
 ---
 
-This page provides a reference for all the available operators that can be used when defining conditions in templates with the [`if`](./tags.md#if) and [`unless`](./tags.md#unless) tags.
+Cette page fournit une référence pour tous les opérateurs disponibles qui peuvent être utilisés lors de la définition de conditions dans les templates avec les tags [`if`](./tags.md#if) et [`unless`](./tags.md#unless).
 
-## Equality and comparison operators
+## Opérateurs d'égalité et de comparaison
 
-The following equality and comparison operators can be used:
+Les opérateurs d'égalité et de comparaison suivants peuvent être utilisés :
 
-| Operator | Description |
+| Opérateur | Description |
 | -------- | ----------- |
-| `==` | Equals |
-| `!=` | Not equals |
-| `>` | Greater than |
-| `>=` | Greater than or equals |
-| `<` | Less than |
-| `<=` | Greater than or equals |
+| `==` | Égal |
+| `!=` | Différent |
+| `>` | Supérieur à |
+| `>=` | Supérieur ou égal à |
+| `<` | Inférieur à |
+| `<=` | Inférieur ou égal à |
 
-For example:
+Par exemple :
 
 ```html
 {% if my_var == 0 %}
@@ -30,17 +30,17 @@ For example:
 {% endif %}
 ```
 
-## Logical operators
+## Opérateurs logiques
 
-The following logical operators can be used:
+Les opérateurs logiques suivants peuvent être utilisés :
 
-| Operator | Description |
+| Opérateur | Description |
 | -------- | ----------- |
-| `&&` | Logical AND |
-| `\|\|` | Logical OR |
-| `!` or `not` | Logical negation |
+| `&&` | ET logique |
+| `\|\|` | OU logique |
+| `!` ou `not` | Négation logique |
 
-For example:
+Par exemple :
 
 ```html
 {% if my_var == 0 %}
@@ -54,11 +54,11 @@ For example:
 {% endif %}
 ```
 
-## Inclusion operator
+## Opérateur d'inclusion
 
-The `in` operator is the inclusion operator that can be used in [`if`](./tags.md#if) or [`unless`](./tags.md#unless) conditions. This operator allows to check for the presence of a substring in another string or for the presence of a value in an array or tuple.
+L'opérateur `in` est l'opérateur d'inclusion qui peut être utilisé dans les conditions [`if`](./tags.md#if) ou [`unless`](./tags.md#unless). Cet opérateur permet de vérifier la présence d'une sous-chaîne dans une autre chaîne ou la présence d'une valeur dans un tableau ou un tuple.
 
-For example:
+Par exemple :
 
 ```html
 {% if "Top 10" in blog.title %}

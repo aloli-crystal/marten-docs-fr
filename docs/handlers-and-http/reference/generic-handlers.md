@@ -1,17 +1,17 @@
 ---
-title: Generic handlers
-description: Generic handlers reference
+title: Handlers génériques
+description: Référence des handlers génériques
 ---
 
-This page provides a reference for all the available [generic handlers](../generic-handlers.md).
+Cette page fournit une référence pour tous les [handlers génériques](../generic-handlers.md) disponibles.
 
-## Creating a record
+## Création d'un enregistrement
 
-**Class:** [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html)
+**Classe :** [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html)
 
-Handler allowing to create a new model record by processing a schema.
+Handler permettant de créer un nouvel enregistrement de modèle en traitant un schéma.
 
-This handler can be used to process a form, validate its data through the use of a [schema](../../schemas.mdx), and create a record by using the validated data. It is expected that the handler will be accessed through a GET request first: when this happens the configured template is rendered and displayed, and the configured schema which is initialized can be accessed from the template context in order to render a form for example. When the form is submitted via a POST request, the configured schema is validated using the form data. If the data is valid, the corresponding model record is created and the handler returns an HTTP redirect to a configured success URL.
+Ce handler peut être utilisé pour traiter un formulaire, valider ses données via l'utilisation d'un [schéma](../../schemas.mdx), et créer un enregistrement en utilisant les données validées. Il est attendu que le handler sera accédé via une requête GET en premier : lorsque cela se produit, le template configuré est rendu et affiché, et le schéma configuré qui est initialisé peut être accédé depuis le contexte du template pour rendre un formulaire par exemple. Lorsque le formulaire est soumis via une requête POST, le schéma configuré est validé en utilisant les données du formulaire. Si les données sont valides, l'enregistrement de modèle correspondant est créé et le handler retourne une redirection HTTP vers une URL de succès configurée.
 
 ```crystal
 class ArticleCreateHandler < Marten::Handlers::RecordCreate
@@ -22,13 +22,13 @@ class ArticleCreateHandler < Marten::Handlers::RecordCreate
 end
 ```
 
-It should be noted that the redirect response issued will be a 302 (found).
+Il convient de noter que la réponse de redirection émise sera un 302 (found).
 
-The model class used to create the new record can be configured through the use of the [`#model`](pathname:///api/dev/Marten/Handlers/RecordCreate.html#model(model_klass)-macro) macro. The schema used to perform the validation can be defined through the use of the [`#schema`](pathname:///api/dev/Marten/Handlers/Schema.html#schema(schema_klass)-macro) macro. Alternatively, the [`#schema_class`](pathname:///api/dev/Marten/Handlers/Schema.html#schema_class-instance-method) method can also be overridden to dynamically define the schema class as part of the request handler handling.
+La classe de modèle utilisée pour créer le nouvel enregistrement peut être configurée via la macro [`#model`](pathname:///api/dev/Marten/Handlers/RecordCreate.html#model(model_klass)-macro). Le schéma utilisé pour effectuer la validation peut être défini via la macro [`#schema`](pathname:///api/dev/Marten/Handlers/Schema.html#schema(schema_klass)-macro). Alternativement, la méthode [`#schema_class`](pathname:///api/dev/Marten/Handlers/Schema.html#schema_class-instance-method) peut également être redéfinie pour définir dynamiquement la classe de schéma dans le cadre du traitement du handler de requête.
 
-The [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) class method allows defining the name of the template to use to render the schema while the [`#success_route_name`](pathname:///api/dev/Marten/Handlers/Schema.html#success_route_name(success_route_name%3AString%3F)-class-method) method can be used to specify the name of a route to redirect to once the schema has been validated. Alternatively, the [`#success_url`](pathname:///api/dev/Marten/Handlers/Schema.html#success_url(success_url%3AString%3F)-class-method) class method can be used to provide a raw URL to redirect to. The [same method](pathname:///api/dev/Marten/Handlers/Schema.html#success_url-instance-method) can also be overridden at the instance level to rely on a custom logic to generate the success URL to redirect to.
+La méthode de classe [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) permet de définir le nom du template à utiliser pour rendre le schéma tandis que la méthode [`#success_route_name`](pathname:///api/dev/Marten/Handlers/Schema.html#success_route_name(success_route_name%3AString%3F)-class-method) peut être utilisée pour spécifier le nom d'une route vers laquelle rediriger une fois le schéma validé. Alternativement, la méthode de classe [`#success_url`](pathname:///api/dev/Marten/Handlers/Schema.html#success_url(success_url%3AString%3F)-class-method) peut être utilisée pour fournir une URL brute vers laquelle rediriger. La [même méthode](pathname:///api/dev/Marten/Handlers/Schema.html#success_url-instance-method) peut également être redéfinie au niveau de l'instance pour s'appuyer sur une logique personnalisée de génération de l'URL de succès vers laquelle rediriger.
 
-For example, if your application logic requires a success route that includes an identifier (such as a record's primary key), you can customize the success URL by overriding the `#success_url` method like this:
+Par exemple, si la logique de votre application nécessite une route de succès incluant un identifiant (comme la clé primaire d'un enregistrement), vous pouvez personnaliser l'URL de succès en redéfinissant la méthode `#success_url` comme ceci :
 
 ```crystal
 def success_url
@@ -37,16 +37,16 @@ end
 ```
 
 :::tip
-Handlers making use of the [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) generic handler can leverage additional types of callbacks. Please head over to [Schema handler callbacks](../callbacks.md#schema-handler-callbacks) to learn more about those.
+Les handlers utilisant le handler générique [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) peuvent exploiter des types supplémentaires de callbacks. Veuillez consulter [Callbacks de handler schema](../callbacks.md#callbacks-de-handler-schema) pour en savoir plus.
 :::
 
-## Deleting a record
+## Suppression d'un enregistrement
 
-**Class:** [`Marten::Handlers::RecordDelete`](pathname:///api/dev/Marten/Handlers/RecordDelete.html)
+**Classe :** [`Marten::Handlers::RecordDelete`](pathname:///api/dev/Marten/Handlers/RecordDelete.html)
 
-Handler allowing to delete a specific model record.
+Handler permettant de supprimer un enregistrement de modèle spécifique.
 
-This handler can be used to delete an existing model record by issuing a POST request. Optionally the handler can be accessed with a GET request and a template can be displayed in this case; this allows to display a confirmation page to users before deleting the record:
+Ce handler peut être utilisé pour supprimer un enregistrement de modèle existant en émettant une requête POST. Optionnellement, le handler peut être accédé via une requête GET et un template peut être affiché dans ce cas ; cela permet d'afficher une page de confirmation aux utilisateurs avant de supprimer l'enregistrement :
 
 ```crystal
 class ArticleDeleteHandler < Marten::Handlers::RecordDelete
@@ -56,12 +56,12 @@ class ArticleDeleteHandler < Marten::Handlers::RecordDelete
 end
 ```
 
-It should be noted that the redirect response issued will be a 302 (found).
+Il convient de noter que la réponse de redirection émise sera un 302 (found).
 
-The [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) class method allows defining the name of the template to use to render a deletion confirmation page while the [`#success_route_name`](pathname:///api/dev/Marten/Handlers/RecordDelete.html#success_route_name(success_route_name%3AString%3F)-class-method) method can be used to specify the name of a route to redirect to once the deletion is complete. Alternatively, the [`#success_url`](pathname:///api/dev/Marten/Handlers/RecordDelete.html#success_url(success_url%3AString%3F)-class-method) class method can be used to provide a raw URL to redirect to. The [same method](pathname:///api/dev/Marten/Handlers/RecordDelete.html#success_url-instance-method) can also be overridden at the instance level to rely on a custom logic to generate the success URL to redirect to. It's also possible to pre-filter the queryset before deleting the record by using the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) macro.
+La méthode de classe [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) permet de définir le nom du template à utiliser pour rendre une page de confirmation de suppression tandis que la méthode [`#success_route_name`](pathname:///api/dev/Marten/Handlers/RecordDelete.html#success_route_name(success_route_name%3AString%3F)-class-method) peut être utilisée pour spécifier le nom d'une route vers laquelle rediriger une fois la suppression terminée. Alternativement, la méthode de classe [`#success_url`](pathname:///api/dev/Marten/Handlers/RecordDelete.html#success_url(success_url%3AString%3F)-class-method) peut être utilisée pour fournir une URL brute vers laquelle rediriger. La [même méthode](pathname:///api/dev/Marten/Handlers/RecordDelete.html#success_url-instance-method) peut également être redéfinie au niveau de l'instance pour s'appuyer sur une logique personnalisée de génération de l'URL de succès vers laquelle rediriger. Il est également possible de pré-filtrer le queryset avant de supprimer l'enregistrement en utilisant la macro [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro).
 
-:::tip How to customize the query set?
-By default, handlers that inherit from [`Marten::Handlers::RecordDelete`](pathname:///api/dev/Marten/Handlers/RecordDelete.html) will use a query set targeting _all_ the records in order to retrieve the record that should be deleted. It should be noted that you can customize this behavior easily by leveraging the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) macro instead of the [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro) macro. For example:
+:::tip Comment personnaliser le query set ?
+Par défaut, les handlers qui héritent de [`Marten::Handlers::RecordDelete`](pathname:///api/dev/Marten/Handlers/RecordDelete.html) utiliseront un query set ciblant _tous_ les enregistrements pour récupérer l'enregistrement à supprimer. Il convient de noter que vous pouvez facilement personnaliser ce comportement en utilisant la macro [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) au lieu de la macro [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro). Par exemple :
 
 ```crystal
 class ArticleDeleteHandler < Marten::Handlers::RecordDelete
@@ -71,7 +71,7 @@ class ArticleDeleteHandler < Marten::Handlers::RecordDelete
 end
 ```
 
-Alternatively, it is also possible to override the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset-instance-method) method and apply additional filters to the default query set:
+Alternativement, il est également possible de redéfinir la méthode [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset-instance-method) et d'appliquer des filtres supplémentaires au query set par défaut :
 
 ```crystal
 class ArticleDeleteHandler < Marten::Handlers::RecordDelete
@@ -86,13 +86,13 @@ end
 ```
 :::
 
-## Displaying a record
+## Affichage d'un enregistrement
 
-**Class:** [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html)
+**Classe :** [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html)
 
-Handler allowing to display a specific model record.
+Handler permettant d'afficher un enregistrement de modèle spécifique.
 
-This handler can be used to retrieve a [model](../../models-and-databases/introduction.md) record, and to display it as part of a [rendered template](../../templates.mdx).
+Ce handler peut être utilisé pour récupérer un enregistrement de [modèle](../../models-and-databases/introduction.md), et l'afficher dans le cadre d'un [template rendu](../../templates.mdx).
 
 ```crystal
 class ArticleDetailHandler < Marten::Handlers::RecordDetail
@@ -101,12 +101,12 @@ class ArticleDetailHandler < Marten::Handlers::RecordDetail
 end
 ```
 
-The model class used to retrieve the record can be configured through the use of the [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro) macro. It's also possible to pre-filter the queryset before retrieving the record by using the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) macro. By default, a [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html) subclass will always retrieve model records by looking for a `pk` route parameter: this parameter is assumed to contain the value of the primary key field associated with the record that should be rendered. If you need to use a different route parameter name, you can also specify a different one through the use of the [`#lookup_param`](pathname:///api/dev/Marten/Handlers/RecordRetrieving/ClassMethods.html#lookup_param(lookup_param%3AString|Symbol)-instance-method) class method. Finally, the model field that is used to get the model record (defaulting to `pk`) can also be configured by leveraging the [`#lookup_param`](pathname:///api/dev/Marten/Handlers/RecordRetrieving/ClassMethods.html#lookup_param(lookup_param%3AString|Symbol)-instance-method) class method.
+La classe de modèle utilisée pour récupérer l'enregistrement peut être configurée via la macro [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro). Il est également possible de pré-filtrer le queryset avant de récupérer l'enregistrement en utilisant la macro [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro). Par défaut, une sous-classe de [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html) récupérera toujours les enregistrements de modèle en cherchant un paramètre de route `pk` : ce paramètre est supposé contenir la valeur du champ de clé primaire associé à l'enregistrement qui doit être rendu. Si vous devez utiliser un nom de paramètre de route différent, vous pouvez également en spécifier un autre via la méthode de classe [`#lookup_param`](pathname:///api/dev/Marten/Handlers/RecordRetrieving/ClassMethods.html#lookup_param(lookup_param%3AString|Symbol)-instance-method). Enfin, le champ de modèle utilisé pour obtenir l'enregistrement de modèle (par défaut `pk`) peut également être configuré en utilisant la méthode de classe [`#lookup_param`](pathname:///api/dev/Marten/Handlers/RecordRetrieving/ClassMethods.html#lookup_param(lookup_param%3AString|Symbol)-instance-method).
 
-The [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) class method allows defining the name of the template to use to render the considered model record. By default, the model record is associated with a `record` key in the template context, but this can also be configured by using the [`record_context_name`](pathname:///api/dev/Marten/Handlers/RecordDetail.html#record_context_name(name%3AString|Symbol)-class-method) class method.
+La méthode de classe [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) permet de définir le nom du template à utiliser pour rendre l'enregistrement de modèle considéré. Par défaut, l'enregistrement de modèle est associé à une clé `record` dans le contexte du template, mais cela peut également être configuré en utilisant la méthode de classe [`record_context_name`](pathname:///api/dev/Marten/Handlers/RecordDetail.html#record_context_name(name%3AString|Symbol)-class-method).
 
-:::tip How to customize the query set?
-By default, handlers that inherit from [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html) will use a query set targeting _all_ the records in order to retrieve the record that should be displayed. It should be noted that you can customize this behavior easily by leveraging the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) macro instead of the [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro) macro. For example:
+:::tip Comment personnaliser le query set ?
+Par défaut, les handlers qui héritent de [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html) utiliseront un query set ciblant _tous_ les enregistrements pour récupérer l'enregistrement à afficher. Il convient de noter que vous pouvez facilement personnaliser ce comportement en utilisant la macro [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) au lieu de la macro [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro). Par exemple :
 
 ```crystal
 class ArticleDetailHandler < Marten::Handlers::RecordDetail
@@ -115,7 +115,7 @@ class ArticleDetailHandler < Marten::Handlers::RecordDetail
 end
 ```
 
-Alternatively, it is also possible to override the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset-instance-method) method and apply additional filters to the default query set:
+Alternativement, il est également possible de redéfinir la méthode [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset-instance-method) et d'appliquer des filtres supplémentaires au query set par défaut :
 
 ```crystal
 class ArticleDetailHandler < Marten::Handlers::RecordDetail
@@ -129,13 +129,13 @@ end
 ```
 :::
 
-## Listing records
+## Liste d'enregistrements
 
-**Class:** [`Marten::Handlers::RecordList`](pathname:///api/dev/Marten/Handlers/RecordList.html)
+**Classe :** [`Marten::Handlers::RecordList`](pathname:///api/dev/Marten/Handlers/RecordList.html)
 
-Handler allowing to list model records.
+Handler permettant de lister des enregistrements de modèle.
 
-This base handler can be used to easily expose a list of model records:
+Ce handler de base peut être utilisé pour exposer facilement une liste d'enregistrements de modèle :
 
 ```crystal
 class ArticleListHandler < Marten::Handlers::RecordList
@@ -144,11 +144,11 @@ class ArticleListHandler < Marten::Handlers::RecordList
 end
 ```
 
-The model class used to retrieve the records can be configured through the use of the [`#model`](pathname:///api/dev/Marten/Handlers/RecordListing.html#model(model_klass)-macro) macro. The [order](../../models-and-databases/reference/query-set.md#order) of these model records can also be specified by leveraging the [`#ordering`](pathname:///api/dev/Marten/Handlers/RecordListing/ClassMethods.html#page_number_param(param%3AString|Symbol)-instance-method) class method.
+La classe de modèle utilisée pour récupérer les enregistrements peut être configurée via la macro [`#model`](pathname:///api/dev/Marten/Handlers/RecordListing.html#model(model_klass)-macro). L'[ordre](../../models-and-databases/reference/query-set.md#order) de ces enregistrements de modèle peut également être spécifié en utilisant la méthode de classe [`#ordering`](pathname:///api/dev/Marten/Handlers/RecordListing/ClassMethods.html#page_number_param(param%3AString|Symbol)-instance-method).
 
-The [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) class method allows defining the name of the template to use to render the list of model records. By default, the list of model records is associated with a `records` key in the template context, but this can also be configured by using the [`list_context_name`](pathname:///api/dev/Marten/Handlers/RecordList.html#list_context_name(name%3AString|Symbol)-class-method) class method.
+La méthode de classe [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) permet de définir le nom du template à utiliser pour rendre la liste des enregistrements de modèle. Par défaut, la liste des enregistrements de modèle est associée à une clé `records` dans le contexte du template, mais cela peut également être configuré en utilisant la méthode de classe [`list_context_name`](pathname:///api/dev/Marten/Handlers/RecordList.html#list_context_name(name%3AString|Symbol)-class-method).
 
-Optionally, it is possible to configure that records should be [paginated](../../models-and-databases/reference/query-set.md#paginator) by specifying a page size through the use of the [`page_size`](pathname:///api/dev/Marten/Handlers/RecordListing/ClassMethods.html#page_size(page_size%3AInt32%3F)-instance-method) class method:
+Optionnellement, il est possible de configurer la [pagination](../../models-and-databases/reference/query-set.md#paginator) des enregistrements en spécifiant une taille de page via la méthode de classe [`page_size`](pathname:///api/dev/Marten/Handlers/RecordListing/ClassMethods.html#page_size(page_size%3AInt32%3F)-instance-method) :
 
 ```crystal
 class ArticleListHandler < Marten::Handlers::RecordList
@@ -158,10 +158,10 @@ class ArticleListHandler < Marten::Handlers::RecordList
 end
 ```
 
-When records are paginated, a [`Marten::DB::Query::Page`](pathname:///api/dev/Marten/DB/Query/Page.html) object will be exposed in the template context (instead of the raw query set). It should be noted that the page number that should be displayed is determined by looking for a `page` GET parameter by default; this parameter name can be configured as well by calling the [`page_number_param`](pathname:///api/dev/Marten/Handlers/RecordListing/ClassMethods.html#page_number_param(param%3AString|Symbol)-instance-method) class method.
+Lorsque les enregistrements sont paginés, un objet [`Marten::DB::Query::Page`](pathname:///api/dev/Marten/DB/Query/Page.html) sera exposé dans le contexte du template (au lieu du query set brut). Il convient de noter que le numéro de page à afficher est déterminé en cherchant un paramètre GET `page` par défaut ; ce nom de paramètre peut également être configuré en appelant la méthode de classe [`page_number_param`](pathname:///api/dev/Marten/Handlers/RecordListing/ClassMethods.html#page_number_param(param%3AString|Symbol)-instance-method).
 
-:::tip How to customize the query set?
-By default, handlers that inherit from [`Marten::Handlers::RecordList`](pathname:///api/dev/Marten/Handlers/RecordList.html) will use a query set targeting _all_ the records of the specified model. It should be noted that you can customize this behavior easily by leveraging the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordListing.html#queryset(queryset)-macro) macro instead of the [`#model`](pathname:///api/dev/Marten/Handlers/RecordListing.html#model(model_klass)-macro) macro. For example:
+:::tip Comment personnaliser le query set ?
+Par défaut, les handlers qui héritent de [`Marten::Handlers::RecordList`](pathname:///api/dev/Marten/Handlers/RecordList.html) utiliseront un query set ciblant _tous_ les enregistrements du modèle spécifié. Il convient de noter que vous pouvez facilement personnaliser ce comportement en utilisant la macro [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordListing.html#queryset(queryset)-macro) au lieu de la macro [`#model`](pathname:///api/dev/Marten/Handlers/RecordListing.html#model(model_klass)-macro). Par exemple :
 
 ```crystal
 class ArticleListHandler < Marten::Handlers::RecordList
@@ -170,7 +170,7 @@ class ArticleListHandler < Marten::Handlers::RecordList
 end
 ```
 
-Alternatively, it is also possible to override the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordListing.html#queryset-instance-method) method and apply additional filters to the default query set:
+Alternativement, il est également possible de redéfinir la méthode [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordListing.html#queryset-instance-method) et d'appliquer des filtres supplémentaires au query set par défaut :
 
 ```crystal
 class ArticleListHandler < Marten::Handlers::RecordList
@@ -184,13 +184,13 @@ end
 ```
 :::
 
-## Updating a record
+## Mise à jour d'un enregistrement {#updating-a-record}
 
-**Class:** [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html)
+**Classe :** [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html)
 
-Handler allowing to update a model record by processing a schema.
+Handler permettant de mettre à jour un enregistrement de modèle en traitant un schéma.
 
-This handler can be used to process a form, validate its data through the use of a [schema](../../schemas.mdx), and update an existing record by using the validated data. It is expected that the handler will be accessed through a GET request first: when this happens the configured template is rendered and displayed, and the configured schema which is initialized can be accessed from the template context to render a form for example. When the form is submitted via a POST request, the configured schema is validated using the form data. If the data is valid, the model record that was retrieved is updated and the handler returns an HTTP redirect to a configured success URL.
+Ce handler peut être utilisé pour traiter un formulaire, valider ses données via l'utilisation d'un [schéma](../../schemas.mdx), et mettre à jour un enregistrement existant en utilisant les données validées. Il est attendu que le handler sera accédé via une requête GET en premier : lorsque cela se produit, le template configuré est rendu et affiché, et le schéma configuré qui est initialisé peut être accédé depuis le contexte du template pour rendre un formulaire par exemple. Lorsque le formulaire est soumis via une requête POST, le schéma configuré est validé en utilisant les données du formulaire. Si les données sont valides, l'enregistrement de modèle récupéré est mis à jour et le handler retourne une redirection HTTP vers une URL de succès configurée.
 
 ```crystal
 class ArticleUpdateHandler < Marten::Handlers::RecordUpdate
@@ -201,20 +201,20 @@ class ArticleUpdateHandler < Marten::Handlers::RecordUpdate
 end
 ```
 
-It should be noted that the redirect response issued will be a 302 (found).
+Il convient de noter que la réponse de redirection émise sera un 302 (found).
 
-The model class used to update the new record can be configured through the use of the [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro) macro. It's also possible to pre-filter the queryset before updating the record by using the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) macro. By default, the record to update is retrieved by expecting a `pk` route parameter: this parameter is assumed to contain the value of the primary key field associated with the record that should be updated. If you need to use a different route parameter name, you can also specify a different one through the use of the [`#lookup_param`](pathname:///api/dev/Marten/Handlers/RecordRetrieving/ClassMethods.html#lookup_param(lookup_param%3AString|Symbol)-instance-method) class method. Finally, the model field that is used to get the model record (defaulting to `pk`) can also be configured by leveraging the [`#lookup_param`](pathname:///api/dev/Marten/Handlers/RecordRetrieving/ClassMethods.html#lookup_param(lookup_param%3AString|Symbol)-instance-method) class method.
+La classe de modèle utilisée pour mettre à jour le nouvel enregistrement peut être configurée via la macro [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro). Il est également possible de pré-filtrer le queryset avant de mettre à jour l'enregistrement en utilisant la macro [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro). Par défaut, l'enregistrement à mettre à jour est récupéré en attendant un paramètre de route `pk` : ce paramètre est supposé contenir la valeur du champ de clé primaire associé à l'enregistrement qui doit être mis à jour. Si vous devez utiliser un nom de paramètre de route différent, vous pouvez également en spécifier un autre via la méthode de classe [`#lookup_param`](pathname:///api/dev/Marten/Handlers/RecordRetrieving/ClassMethods.html#lookup_param(lookup_param%3AString|Symbol)-instance-method). Enfin, le champ de modèle utilisé pour obtenir l'enregistrement de modèle (par défaut `pk`) peut également être configuré en utilisant la méthode de classe [`#lookup_param`](pathname:///api/dev/Marten/Handlers/RecordRetrieving/ClassMethods.html#lookup_param(lookup_param%3AString|Symbol)-instance-method).
 
-The schema used to perform the validation can be defined through the use of the [`#schema`](pathname:///api/dev/Marten/Handlers/Schema.html#schema(schema_klass)-macro) macro. Alternatively, the [`#schema_class`](pathname:///api/dev/Marten/Handlers/Schema.html#schema_class-instance-method) method can also be overridden to dynamically define the schema class as part of the request handler handling.
+Le schéma utilisé pour effectuer la validation peut être défini via la macro [`#schema`](pathname:///api/dev/Marten/Handlers/Schema.html#schema(schema_klass)-macro). Alternativement, la méthode [`#schema_class`](pathname:///api/dev/Marten/Handlers/Schema.html#schema_class-instance-method) peut également être redéfinie pour définir dynamiquement la classe de schéma dans le cadre du traitement du handler de requête.
 
-The [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) class method allows defining the name of the template to use to render the schema while the [`#success_route_name`](pathname:///api/dev/Marten/Handlers/Schema.html#success_route_name(success_route_name%3AString%3F)-class-method) method can be used to specify the name of a route to redirect to once the schema has been validated. Alternatively, the [`#success_url`](pathname:///api/dev/Marten/Handlers/Schema.html#success_url(success_url%3AString%3F)-class-method) class method can be used to provide a raw URL to redirect to. The [same method](pathname:///api/dev/Marten/Handlers/Schema.html#success_url-instance-method) can also be overridden at the instance level to rely on a custom logic to generate the success URL to redirect to.
+La méthode de classe [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) permet de définir le nom du template à utiliser pour rendre le schéma tandis que la méthode [`#success_route_name`](pathname:///api/dev/Marten/Handlers/Schema.html#success_route_name(success_route_name%3AString%3F)-class-method) peut être utilisée pour spécifier le nom d'une route vers laquelle rediriger une fois le schéma validé. Alternativement, la méthode de classe [`#success_url`](pathname:///api/dev/Marten/Handlers/Schema.html#success_url(success_url%3AString%3F)-class-method) peut être utilisée pour fournir une URL brute vers laquelle rediriger. La [même méthode](pathname:///api/dev/Marten/Handlers/Schema.html#success_url-instance-method) peut également être redéfinie au niveau de l'instance pour s'appuyer sur une logique personnalisée de génération de l'URL de succès vers laquelle rediriger.
 
 :::tip
-Handlers making use of the [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html) generic handler can leverage additional types of callbacks. Please head over to [Schema handler callbacks](../callbacks.md#schema-handler-callbacks) to learn more about those.
+Les handlers utilisant le handler générique [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html) peuvent exploiter des types supplémentaires de callbacks. Veuillez consulter [Callbacks de handler schema](../callbacks.md#callbacks-de-handler-schema) pour en savoir plus.
 :::
 
-:::tip How to customize the query set?
-By default, handlers that inherit from [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html) will use a query set targeting _all_ the records in order to retrieve the record that should be updated. It should be noted that you can customize this behavior easily by leveraging the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) macro instead of the [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro) macro. For example:
+:::tip Comment personnaliser le query set ?
+Par défaut, les handlers qui héritent de [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html) utiliseront un query set ciblant _tous_ les enregistrements pour récupérer l'enregistrement à mettre à jour. Il convient de noter que vous pouvez facilement personnaliser ce comportement en utilisant la macro [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset(queryset)-macro) au lieu de la macro [`#model`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#model(model_klass)-macro). Par exemple :
 
 ```crystal
 class ArticleUpdateHandler < Marten::Handlers::RecordUpdate
@@ -225,7 +225,7 @@ class ArticleUpdateHandler < Marten::Handlers::RecordUpdate
 end
 ```
 
-Alternatively, it is also possible to override the [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset-instance-method) method and apply additional filters to the default query set:
+Alternativement, il est également possible de redéfinir la méthode [`#queryset`](pathname:///api/dev/Marten/Handlers/RecordRetrieving.html#queryset-instance-method) et d'appliquer des filtres supplémentaires au query set par défaut :
 
 ```crystal
 class ArticleUpdateHandler < Marten::Handlers::RecordUpdate
@@ -242,13 +242,13 @@ end
 :::
 
 
-## Performing a redirect
+## Effectuer une redirection
 
-**Class:** [`Marten::Handlers::Redirect`](pathname:///api/dev/Marten/Handlers/Redirect.html)
+**Classe :** [`Marten::Handlers::Redirect`](pathname:///api/dev/Marten/Handlers/Redirect.html)
 
-Handler allowing to conveniently return redirect responses.
+Handler permettant de retourner facilement des réponses de redirection.
 
-This handler can be used to generate a redirect response (temporary or permanent) to another location. To configure such a location, you can either leverage the [`#route_name`](pathname:///api/dev/Marten/Handlers/Redirect.html#route_name(route_name%3AString%3F)-class-method) class method (which expects a valid [route name](../routing.md#reverse-url-resolutions)) or the [`#url`](pathname:///api/dev/Marten/Handlers/Redirect.html#url(url%3AString%3F)-class-method) class method. If you need to implement a custom redirection URL logic, you can also override the [`#redirect_url`](pathname:///api/dev/Marten/Handlers/Redirect.html#redirect_url-instance-method) method.
+Ce handler peut être utilisé pour générer une réponse de redirection (temporaire ou permanente) vers un autre emplacement. Pour configurer un tel emplacement, vous pouvez soit utiliser la méthode de classe [`#route_name`](pathname:///api/dev/Marten/Handlers/Redirect.html#route_name(route_name%3AString%3F)-class-method) (qui attend un [nom de route](../routing.md#résolutions-inversées-durl) valide) soit la méthode de classe [`#url`](pathname:///api/dev/Marten/Handlers/Redirect.html#url(url%3AString%3F)-class-method). Si vous devez implémenter une logique d'URL de redirection personnalisée, vous pouvez également redéfinir la méthode [`#redirect_url`](pathname:///api/dev/Marten/Handlers/Redirect.html#redirect_url-instance-method).
 
 ```crystal
 class TestRedirectHandler < Marten::Handlers::Redirect
@@ -256,17 +256,17 @@ class TestRedirectHandler < Marten::Handlers::Redirect
 end
 ```
 
-By default, the redirect returned by this handler is a temporary one. In order to generate a permanent redirect response instead, it is possible to leverage the [`#permanent`](pathname:///api/dev/Marten/Handlers/Redirect.html#permanent(permanent%3ABool)-class-method) class method.
+Par défaut, la redirection retournée par ce handler est temporaire. Pour générer une réponse de redirection permanente à la place, il est possible d'utiliser la méthode de classe [`#permanent`](pathname:///api/dev/Marten/Handlers/Redirect.html#permanent(permanent%3ABool)-class-method).
 
-It should also be noted that by default, incoming query string parameters **are not** forwarded to the redirection URL. If you wish to ensure that these parameters are forwarded, you can make use of the [`forward_query_string`](pathname:///api/dev/Marten/Handlers/Redirect.html#forward_query_string(forward_query_string%3ABool)-class-method) class method.
+Il convient également de noter que par défaut, les paramètres de query string entrants **ne sont pas** transmis à l'URL de redirection. Si vous souhaitez vous assurer que ces paramètres sont transmis, vous pouvez utiliser la méthode de classe [`forward_query_string`](pathname:///api/dev/Marten/Handlers/Redirect.html#forward_query_string(forward_query_string%3ABool)-class-method).
 
-## Processing a schema
+## Traitement d'un schéma
 
-**Class:** [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html)
+**Classe :** [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html)
 
-Handler allowing to process a form through the use of a [schema](../../schemas.mdx).
+Handler permettant de traiter un formulaire via l'utilisation d'un [schéma](../../schemas.mdx).
 
-This handler can be used to process a form and validate its data through the use of a [schema](../../schemas.mdx). It is expected that the handler will be accessed through a GET request first: when this happens the configured template is rendered and displayed, and the configured schema which is initialized can be accessed from the template context to render a form for example. When the form is submitted via a POST request, the configured schema is validated using the form data. If the data is valid, the handler returns an HTTP redirect to a configured success URL.
+Ce handler peut être utilisé pour traiter un formulaire et valider ses données via l'utilisation d'un [schéma](../../schemas.mdx). Il est attendu que le handler sera accédé via une requête GET en premier : lorsque cela se produit, le template configuré est rendu et affiché, et le schéma configuré qui est initialisé peut être accédé depuis le contexte du template pour rendre un formulaire par exemple. Lorsque le formulaire est soumis via une requête POST, le schéma configuré est validé en utilisant les données du formulaire. Si les données sont valides, le handler retourne une redirection HTTP vers une URL de succès configurée.
 
 ```crystal
 class MyFormHandler < Marten::Handlers::Schema
@@ -276,23 +276,23 @@ class MyFormHandler < Marten::Handlers::Schema
 end
 ```
 
-It should be noted that the redirect response issued will be a 302 (found).
+Il convient de noter que la réponse de redirection émise sera un 302 (found).
 
-The schema used to perform the validation can be defined through the use of the [`#schema`](pathname:///api/dev/Marten/Handlers/Schema.html#schema(schema_klass)-macro) macro. Alternatively, the [`#schema_class`](pathname:///api/dev/Marten/Handlers/Schema.html#schema_class-instance-method) method can also be overridden to dynamically define the schema class as part of the request handler handling.
+Le schéma utilisé pour effectuer la validation peut être défini via la macro [`#schema`](pathname:///api/dev/Marten/Handlers/Schema.html#schema(schema_klass)-macro). Alternativement, la méthode [`#schema_class`](pathname:///api/dev/Marten/Handlers/Schema.html#schema_class-instance-method) peut également être redéfinie pour définir dynamiquement la classe de schéma dans le cadre du traitement du handler de requête.
 
-The [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) class method allows defining the name of the template to use to render the schema while the [`#success_route_name`](pathname:///api/dev/Marten/Handlers/Schema.html#success_route_name(success_route_name%3AString%3F)-class-method) method can be used to specify the name of a route to redirect to once the schema has been validated. Alternatively, the [`#success_url`](pathname:///api/dev/Marten/Handlers/Schema.html#success_url(success_url%3AString%3F)-class-method) class method can be used to provide a raw URL to redirect to. The [same method](pathname:///api/dev/Marten/Handlers/Schema.html#success_url-instance-method) can also be overridden at the instance level to rely on a custom logic to generate the success URL to redirect to.
+La méthode de classe [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) permet de définir le nom du template à utiliser pour rendre le schéma tandis que la méthode [`#success_route_name`](pathname:///api/dev/Marten/Handlers/Schema.html#success_route_name(success_route_name%3AString%3F)-class-method) peut être utilisée pour spécifier le nom d'une route vers laquelle rediriger une fois le schéma validé. Alternativement, la méthode de classe [`#success_url`](pathname:///api/dev/Marten/Handlers/Schema.html#success_url(success_url%3AString%3F)-class-method) peut être utilisée pour fournir une URL brute vers laquelle rediriger. La [même méthode](pathname:///api/dev/Marten/Handlers/Schema.html#success_url-instance-method) peut également être redéfinie au niveau de l'instance pour s'appuyer sur une logique personnalisée de génération de l'URL de succès vers laquelle rediriger.
 
 :::tip
-Handlers making use of the [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) generic handler can leverage additional types of callbacks. Please head over to [Schema handler callbacks](../callbacks.md#schema-handler-callbacks) to learn more about those.
+Les handlers utilisant le handler générique [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) peuvent exploiter des types supplémentaires de callbacks. Veuillez consulter [Callbacks de handler schema](../callbacks.md#callbacks-de-handler-schema) pour en savoir plus.
 :::
 
-## Rendering a template
+## Rendu d'un template
 
-**Class:** [`Marten::Handlers::Template`](pathname:///api/dev/Marten/Handlers/Template.html)
+**Classe :** [`Marten::Handlers::Template`](pathname:///api/dev/Marten/Handlers/Template.html)
 
-Handler allowing to respond to `GET` request with the content of a rendered HTML [template](../../templates.mdx).
+Handler permettant de répondre aux requêtes `GET` avec le contenu d'un [template](../../templates.mdx) HTML rendu.
 
-This handler can be used to render a specific template and returns the resulting content in the response. The template being rendered can be specified by leveraging the [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method) class method.
+Ce handler peut être utilisé pour effectuer le rendu d'un template spécifique et retourner le contenu résultant dans la réponse. Le template à rendre peut être spécifié en utilisant la méthode de classe [`#template_name`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#template_name(template_name%3AString%3F)-instance-method).
 
 ```crystal
 class HomeHandler < Marten::Handlers::Template
@@ -300,7 +300,7 @@ class HomeHandler < Marten::Handlers::Template
 end
 ```
 
-If you need to, it is possible to customize the context that is used to render the configured template. To do so, you can define a [`before_render`](../callbacks.md#before_render) callback and add new variables to the [global template context](../introduction.md#global-template-context) (which functions similarly to a hash object):
+Si nécessaire, il est possible de personnaliser le contexte utilisé pour le rendu du template configuré. Pour ce faire, vous pouvez définir un callback [`before_render`](../callbacks.md#before_render) et ajouter de nouvelles variables au [contexte de template global](../introduction.md#contexte-de-template-global) (qui fonctionne de manière similaire à un objet hash) :
 
 ```crystal
 class HomeHandler < Marten::Handlers::Template
@@ -314,10 +314,10 @@ class HomeHandler < Marten::Handlers::Template
 end
 ```
 
-Variables that are added to the global template context will automatically be available to the configured template's runtime.
+Les variables ajoutées au contexte de template global seront automatiquement disponibles au runtime du template configuré.
 
 :::tip
-The default content type of the response generated when rendering templates is `text/html`, but this can be customized using the [`#content_type`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#content_type(content_type%3AString|Nil)-instance-method) class method. For example:
+Le type de contenu par défaut de la réponse générée lors du rendu de templates est `text/html`, mais cela peut être personnalisé en utilisant la méthode de classe [`#content_type`](pathname:///api/dev/Marten/Handlers/Rendering/ClassMethods.html#content_type(content_type%3AString|Nil)-instance-method). Par exemple :
 
 ```crystal
 class MyHandler < Marten::Handlers::Template

@@ -1,29 +1,29 @@
 ---
-title: Generic handlers
-description: Learn how to leverage generic handlers to perform common tasks.
-sidebar_label: Generic handlers
+title: Handlers génériques
+description: Apprenez à exploiter les handlers génériques pour effectuer des tâches courantes.
+sidebar_label: Handlers génériques
 ---
 
-Marten includes a set of generic handlers that can be leveraged to perform common tasks. These tasks are frequently encountered when working on web applications. For example: displaying a list of records extracted from the database, or deleting a record. Generic handlers take care of these common patterns so that developers don't end up reimplementing the wheel.
+Marten inclut un ensemble de handlers génériques qui peuvent être exploités pour effectuer des tâches courantes. Ces tâches sont fréquemment rencontrées lors du développement d'applications web. Par exemple : afficher une liste d'enregistrements extraits de la base de données, ou supprimer un enregistrement. Les handlers génériques prennent en charge ces patterns courants afin que les développeurs n'aient pas à réinventer la roue.
 
-## Scope
+## Portée
 
-Marten provides generic handlers allowing to perform the following actions:
+Marten fournit des handlers génériques permettant d'effectuer les actions suivantes :
 
-* redirect to a specific URL
-* render an existing [template](../templates.mdx)
-* process a [schema](../schemas.mdx)
-* list, display, create, update, or delete [model records](../models-and-databases.mdx)
+* rediriger vers une URL spécifique
+* effectuer le rendu d'un [template](../templates.mdx) existant
+* traiter un [schéma](../schemas.mdx)
+* lister, afficher, créer, mettre à jour ou supprimer des [enregistrements de modèles](../models-and-databases.mdx)
 
-A few of these generic handlers are described below (and all of them are listed in the [dedicated reference](./reference/generic-handlers.md)). Each of these handler classes must be subclassed on a per-project basis to define the required "attributes", and optionally to override methods to customize things like objects exposed in template contexts. By doing so you are essentially defining handlers that inherit these common patterns, without having to reimplement them.
+Quelques-uns de ces handlers génériques sont décrits ci-dessous (et tous sont listés dans la [référence dédiée](./reference/generic-handlers.md)). Chacune de ces classes de handler doit être sous-classée sur la base de chaque projet pour définir les « attributs » requis, et éventuellement pour redéfinir des méthodes afin de personnaliser des éléments comme les objets exposés dans les contextes de template. En faisant cela, vous définissez essentiellement des handlers qui héritent de ces patterns courants, sans avoir à les réimplémenter.
 
-Finally, it should be noted that using generic handlers is totally optional. They provide a good starting point to implement frequently encountered use cases, but you can decide to design your own set of generic handlers to accommodate for your project needs if the built-in ones don't match your requirements.
+Enfin, il convient de noter que l'utilisation des handlers génériques est totalement optionnelle. Ils fournissent un bon point de départ pour implémenter des cas d'utilisation fréquemment rencontrés, mais vous pouvez décider de concevoir votre propre ensemble de handlers génériques pour répondre aux besoins de votre projet si ceux intégrés ne correspondent pas à vos exigences.
 
-## A few examples
+## Quelques exemples
 
-### Performing a redirect
+### Effectuer une redirection
 
-Having a handler that performs a redirect can be easily achieved by subclassing the [`Marten::Handlers::Redirect`](pathname:///api/dev/Marten/Handlers/Redirect.html) generic handler. For example, you could easily define a handler that redirects to a `articles:list` route with the following snippet:
+Avoir un handler qui effectue une redirection peut être facilement réalisé en sous-classant le handler générique [`Marten::Handlers::Redirect`](pathname:///api/dev/Marten/Handlers/Redirect.html). Par exemple, vous pourriez facilement définir un handler qui redirige vers une route `articles:list` avec l'extrait suivant :
 
 ```crystal
 class ArticlesRedirectHandler < Marten::Handlers::Redirect
@@ -31,9 +31,9 @@ class ArticlesRedirectHandler < Marten::Handlers::Redirect
 end
 ```
 
-The above handler will perform a reverse resolution of `articles:list` in order to get the corresponding URL and will return a 302 HTTP response (temporary redirect).
+Le handler ci-dessus effectuera une résolution inversée de `articles:list` pour obtenir l'URL correspondante et retournera une réponse HTTP 302 (redirection temporaire).
 
-Subclasses of this generic handler can also redirect to a plain URL and decide to return a permanent redirect (301) instead of a temporary one, for example:
+Les sous-classes de ce handler générique peuvent également rediriger vers une URL simple et décider de retourner une redirection permanente (301) au lieu d'une temporaire, par exemple :
 
 ```crystal
 class TestRedirectHandler < Marten::Handlers::Redirect
@@ -42,7 +42,7 @@ class TestRedirectHandler < Marten::Handlers::Redirect
 end
 ```
 
-Finally, you can even implement your own logic in order to compute the redirection URL by overriding the `#redirect_url` method:
+Enfin, vous pouvez même implémenter votre propre logique pour calculer l'URL de redirection en redéfinissant la méthode `#redirect_url` :
 
 ```crystal
 class ArticleRedirectHandler < Marten::Handlers::Redirect
@@ -57,11 +57,11 @@ class ArticleRedirectHandler < Marten::Handlers::Redirect
 end
 ```
 
-### Rendering a template
+### Rendu d'un template
 
-One of the most frequent things you will want to do when writing handlers is to return HTML responses containing rendered [templates](../templates.mdx). To do so, you can obviously define a regular handler and make use of the [`#render`](./introduction.md#render) helper. But, you may also want to leverage the [`Marten::Handlers::Template`](pathname:///api/dev/Marten/Handlers/Template.html) generic handler.
+L'une des choses les plus fréquentes que vous voudrez faire lors de l'écriture de handlers est de retourner des réponses HTML contenant des [templates](../templates.mdx) rendus. Pour ce faire, vous pouvez évidemment définir un handler classique et utiliser la méthode d'aide [`#render`](./introduction.md#render). Mais vous pouvez également vouloir exploiter le handler générique [`Marten::Handlers::Template`](pathname:///api/dev/Marten/Handlers/Template.html).
 
-This generic handler will return a 200 OK HTTP response containing a rendered HTML template. To make use of it, you can simply define a subclass of it and ensure that you call the `#template_name` class method in order to define the template that will be rendered:
+Ce handler générique retournera une réponse HTTP 200 OK contenant un template HTML rendu. Pour l'utiliser, vous pouvez simplement définir une sous-classe et vous assurer d'appeler la méthode de classe `#template_name` pour définir le template qui sera rendu :
 
 ```crystal
 class HomeHandler < Marten::Handlers::Template
@@ -69,7 +69,7 @@ class HomeHandler < Marten::Handlers::Template
 end
 ```
 
-If you need to, it is possible to customize the context that is used to render the configured template. To do so, you can define a [`before_render`](./callbacks.md#before_render) callback and add new variables to the [global template context](./introduction.md#global-template-context) (which functions similarly to a hash object):
+Si nécessaire, il est possible de personnaliser le contexte utilisé pour le rendu du template configuré. Pour ce faire, vous pouvez définir un callback [`before_render`](./callbacks.md#before_render) et ajouter de nouvelles variables au [contexte de template global](./introduction.md#contexte-de-template-global) (qui fonctionne de manière similaire à un objet hash) :
 
 ```crystal
 class HomeHandler < Marten::Handlers::Template
@@ -83,13 +83,13 @@ class HomeHandler < Marten::Handlers::Template
 end
 ```
 
-Variables that are added to the global template context will automatically be available to the configured template's runtime.
+Les variables ajoutées au contexte de template global seront automatiquement disponibles au runtime du template configuré.
 
-### Displaying a model record
+### Afficher un enregistrement de modèle
 
-It is possible to render a template that showcases a specific model record by leveraging the [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html) generic handler.
+Il est possible d'effectuer le rendu d'un template qui présente un enregistrement de modèle spécifique en exploitant le handler générique [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html).
 
-For example, it would be possible to render an `articles/detail.html` template showcasing a specific `Article` model record with the following handler:
+Par exemple, il serait possible d'effectuer le rendu d'un template `articles/detail.html` présentant un enregistrement de modèle `Article` spécifique avec le handler suivant :
 
 ```crystal
 class ArticleDetailHandler < Marten::Handlers::RecordDetail
@@ -98,9 +98,9 @@ class ArticleDetailHandler < Marten::Handlers::RecordDetail
 end
 ```
 
-By assuming that the route path associated with this handler is something like `/articles/<pk:int>`, this handler will automatically retrieve the right `Article` record by using the primary key provided in the `pk` route parameter. If the record does not exist, a `Marten::HTTP::Errors::NotFound` exception will be raised (which will lead to the default "not found" error page being displayed to the user), and otherwise the configured template will be rendered (with the `Article` record exposed in the context under the `record` key).
+En supposant que le chemin de route associé à ce handler est quelque chose comme `/articles/<pk:int>`, ce handler récupérera automatiquement le bon enregistrement `Article` en utilisant la clé primaire fournie dans le paramètre de route `pk`. Si l'enregistrement n'existe pas, une exception `Marten::HTTP::Errors::NotFound` sera levée (ce qui conduira à l'affichage de la page d'erreur « not found » par défaut à l'utilisateur), sinon le template configuré sera rendu (avec l'enregistrement `Article` exposé dans le contexte sous la clé `record`).
 
-For example, the template associated with this handler could be something like this:
+Par exemple, le template associé à ce handler pourrait ressembler à ceci :
 
 ```html
 <ul>
@@ -109,17 +109,17 @@ For example, the template associated with this handler could be something like t
 </ul>
 ```
 
-### Processing a form
+### Traiter un formulaire
 
-It is possible to use the [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) generic handler in order to process form data with a [schema](../schemas.mdx).
+Il est possible d'utiliser le handler générique [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) pour traiter les données d'un formulaire avec un [schéma](../schemas.mdx).
 
-To do so, it is necessary:
+Pour ce faire, il est nécessaire :
 
-* to specify the schema class to use to validate the incoming POST data through the use of the `#schema` macro
-* to specify the template to render by using the `#template_name` class method: this template will likely generate an HTML form
-* to specify the route to redirect to when the schema is valid via the `#success_route_name` class method
+* de spécifier la classe de schéma à utiliser pour valider les données POST entrantes via la macro `#schema`
+* de spécifier le template à rendre en utilisant la méthode de classe `#template_name` : ce template génèrera probablement un formulaire HTML
+* de spécifier la route vers laquelle rediriger lorsque le schéma est valide via la méthode de classe `#success_route_name`
 
-For example:
+Par exemple :
 
 ```crystal
 class MyFormHandler < Marten::Handlers::Schema
@@ -140,10 +140,10 @@ class MyFormHandler < Marten::Handlers::Schema
 end
 ```
 
-By default, such a handler will render the configured template when the incoming request is a GET or for POST requests if the data cannot be validated using the specified schema (in that case, the template is expected to use the invalid schema to display a form with the right errored inputs). The specified template can have access to the configured schema through the use of the `schema` object in the template context.
+Par défaut, un tel handler effectuera le rendu du template configuré lorsque la requête entrante est un GET ou pour les requêtes POST si les données ne peuvent pas être validées en utilisant le schéma spécifié (dans ce cas, le template est censé utiliser le schéma invalide pour afficher un formulaire avec les champs en erreur). Le template spécifié peut accéder au schéma configuré via l'objet `schema` dans le contexte du template.
 
-If the schema is valid, a temporary redirect is issued by using the URL corresponding to the `#success_route_name` value (although it should be noted that the way to generate this success URL can be overridden by defining a `#success_url` method). By default, the handler does nothing when the processed schema is valid (except redirecting to the success URL).
+Si le schéma est valide, une redirection temporaire est émise en utilisant l'URL correspondant à la valeur de `#success_route_name` (bien qu'il convienne de noter que la manière de générer cette URL de succès peut être redéfinie en définissant une méthode `#success_url`). Par défaut, le handler ne fait rien lorsque le schéma traité est valide (hormis rediriger vers l'URL de succès).
 
 :::tip
-Handlers making use of the [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) generic handler can leverage additional types of callbacks. Please head over to [Schema handler callbacks](./callbacks.md#schema-handler-callbacks) to learn more about those.
+Les handlers utilisant le handler générique [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) peuvent exploiter des types supplémentaires de callbacks. Veuillez consulter [Callbacks de handler schema](./callbacks.md#callbacks-de-handler-schema) pour en savoir plus.
 :::

@@ -1,18 +1,18 @@
 ---
-title: Caching stores
-description: Caching stores reference.
+title: Stores de mise en cache
+description: Référence des stores de mise en cache.
 sidebar_label: Stores
 ---
 
-## Built-in stores
+## Stores intégrés
 
-### In-memory store
+### Store en mémoire
 
-This is the default store used as part of the [`cache_store`](../../development/reference/settings.md#cache_store) setting.
+C'est le store par défaut utilisé dans le cadre du paramètre [`cache_store`](../../development/reference/settings.md#cache_store).
 
-This cache store is implemented as part of the [`Marten::Cache::Store::Memory`](pathname:///api/dev/Marten/Cache/Store/Memory.html) class. This cache stores all data in memory within the same process, making it a fast and reliable option for caching in single process environments. However, it's worth noting that if you're running multiple instances of your application, the cache data will not be shared between them.
+Ce cache store est implémenté dans la classe [`Marten::Cache::Store::Memory`](pathname:///api/dev/Marten/Cache/Store/Memory.html). Ce cache stocke toutes les données en mémoire au sein du même processus, ce qui en fait une option rapide et fiable pour la mise en cache dans des environnements à processus unique. Cependant, il est important de noter que si vous exécutez plusieurs instances de votre application, les données du cache ne seront pas partagées entre elles.
 
-For example:
+Par exemple :
 
 ```crystal
 Marten.configure do |config|
@@ -20,13 +20,13 @@ Marten.configure do |config|
 end
 ```
 
-### Null store
+### Store null
 
-A cache store implementation doesn't store any data.
+Une implémentation de cache store qui ne stocke aucune donnée.
 
-This cache store is implemented as part of the [`Marten::Cache::Store::Null`](pathname:///api/dev/Marten/Cache/Store/Null.html) class. This cache store does not store any data, but provides a way to go through the caching interface. This can be useful in development and testing environments when caching is not desired.
+Ce cache store est implémenté dans la classe [`Marten::Cache::Store::Null`](pathname:///api/dev/Marten/Cache/Store/Null.html). Ce cache store ne stocke aucune donnée, mais fournit un moyen de passer par l'interface de mise en cache. Cela peut être utile dans les environnements de développement et de test lorsque la mise en cache n'est pas souhaitée.
 
-For example:
+Par exemple :
 
 ```crystal
 Marten.configure do |config|
@@ -34,13 +34,13 @@ Marten.configure do |config|
 end
 ```
 
-## Other stores
+## Autres stores
 
-Additional cache stores shards are also maintained under the umbrella of the Marten project or by the community itself and can be used as part of your application depending on your specific caching requirements:
+Des shards de cache store supplémentaires sont également maintenus sous l'égide du projet Marten ou par la communauté elle-même et peuvent être utilisés dans votre application selon vos besoins spécifiques de mise en cache :
 
-* [`marten-memcached-cache`](https://github.com/martenframework/marten-memcached-cache) provides a [Memcached](https://memcached.org) cache store
-* [`marten-redis-cache`](https://github.com/martenframework/marten-redis-cache) provides a [Redis](https://redis.io) cache store
+* [`marten-memcached-cache`](https://github.com/martenframework/marten-memcached-cache) fournit un cache store [Memcached](https://memcached.org)
+* [`marten-redis-cache`](https://github.com/martenframework/marten-redis-cache) fournit un cache store [Redis](https://redis.io)
 
 :::info
-Feel free to contribute to this page and add links to your shards if you've created cache stores that are not listed here!
+N'hésitez pas à contribuer à cette page et à ajouter des liens vers vos shards si vous avez créé des cache stores qui ne sont pas listés ici !
 :::

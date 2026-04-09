@@ -1,79 +1,79 @@
 ---
 title: Middlewares
-description: Middlewares reference
+description: Référence des middlewares
 ---
 
-This page provides a reference for all the available [middlewares](../middlewares.md).
+Cette page fournit une référence pour tous les [middlewares](../middlewares.md) disponibles.
 
-## Asset serving middleware
+## Middleware de service des assets
 
-**Class:** [`Marten::Middleware::AssetServing`](pathname:///api/dev/Marten/Middleware/AssetServing.html)
+**Classe :** [`Marten::Middleware::AssetServing`](pathname:///api/dev/Marten/Middleware/AssetServing.html)
 
-The purpose of this middleware is to handle the distribution of collected assets, which are stored under the configured assets root ([`assets.root`](../../development/reference/settings.md#root) setting). The assumption is that these assets have been "collected" using the [`collectassets`](../../development/reference/management-commands.md#collectassets) management command and that the file system storage ([`Marten::Core::Storage::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)) is being used.
+Le but de ce middleware est de gérer la distribution des assets collectés, qui sont stockés sous la racine des assets configurée (paramètre [`assets.root`](../../development/reference/settings.md#root)). L'hypothèse est que ces assets ont été « collectés » en utilisant la commande de gestion [`collectassets`](../../development/reference/management-commands.md#collectassets) et que le stockage sur système de fichiers ([`Marten::Core::Storage::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)) est utilisé.
 
-Additionally, the [`assets.url`](../../development/reference/settings.md#url) setting must either align with the domain of your Marten application or correspond to a relative URL path, such as `/assets/`. This ensures proper mapping and accessibility of the assets within your application (so that they can be served by this middleware).
+De plus, le paramètre [`assets.url`](../../development/reference/settings.md#url) doit soit correspondre au domaine de votre application Marten, soit correspondre à un chemin d'URL relatif, tel que `/assets/`. Cela garantit un mappage correct et l'accessibilité des assets au sein de votre application (afin qu'ils puissent être servis par ce middleware).
 
-It is important to mention that this middleware automatically applies compression to the served assets, utilizing GZip or deflate based on the Accept-Encoding header of the incoming request. Additionally, the middleware sets the Cache-Control header and defines a max-age of 3600 seconds, ensuring efficient caching of the assets.
+Il est important de mentionner que ce middleware applique automatiquement la compression aux assets servis, en utilisant GZip ou deflate en fonction de l'en-tête Accept-Encoding de la requête entrante. De plus, le middleware définit l'en-tête Cache-Control et définit un max-age de 3600 secondes, assurant une mise en cache efficace des assets.
 
 :::info
-This middleware should be placed at the first position in the [`middleware`](../../development/reference/settings.md#middleware) setting (ie. before all other configured middlewares).
+Ce middleware doit être placé en première position dans le paramètre [`middleware`](../../development/reference/settings.md#middleware) (c'est-à-dire avant tous les autres middlewares configurés).
 :::
 
 :::tip
-This middleware is provided to make it easy to serve assets in situations where you can't easily configure a web server such as [Nginx](https://nginx.org) or a third-party service (like Amazon's S3 or GCS) to serve your assets directly.
+Ce middleware est fourni pour faciliter le service des assets dans les situations où vous ne pouvez pas facilement configurer un serveur web tel que [Nginx](https://nginx.org) ou un service tiers (comme Amazon S3 ou GCS) pour servir vos assets directement.
 :::
 
-## Content-Security-Policy middleware
+## Middleware Content-Security-Policy
 
-**Class:** [`Marten::Middleware::ContentSecurityPolicy`](pathname:///api/dev/Marten/Middleware/ContentSecurityPolicy.html)
+**Classe :** [`Marten::Middleware::ContentSecurityPolicy`](pathname:///api/dev/Marten/Middleware/ContentSecurityPolicy.html)
 
-This middleware guarantees the presence of the Content-Security-Policy header in the response's headers. This header provides clients with the ability to limit the allowed sources of different types of content.
+Ce middleware garantit la présence de l'en-tête Content-Security-Policy dans les en-têtes de la réponse. Cet en-tête offre aux clients la possibilité de limiter les sources autorisées de différents types de contenu.
 
-By default, the middleware will include a Content-Security-Policy header that corresponds to the policy defined in the [`content_security_policy`](../../development/reference/settings.md#content-security-policy-settings) settings. However, if a [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) object is explicitly assigned to the request object, it will take precedence over the default policy and be used instead.
+Par défaut, le middleware inclura un en-tête Content-Security-Policy qui correspond à la politique définie dans les paramètres [`content_security_policy`](../../development/reference/settings.md#content-security-policy-settings). Cependant, si un objet [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) est explicitement assigné à l'objet de requête, il prendra le pas sur la politique par défaut et sera utilisé à la place.
 
-Please refer to [Content Security Policy](../../security/content-security-policy.md) to learn more about the Content-Security-Policy header and how to configure it.
+Veuillez vous référer à [Content Security Policy](../../security/content-security-policy.md) pour en savoir plus sur l'en-tête Content-Security-Policy et comment le configurer.
 
-## Flash middleware
+## Middleware Flash
 
-**Class:** [`Marten::Middleware::Flash`](pathname:///api/dev/Marten/Middleware/Flash.html)
+**Classe :** [`Marten::Middleware::Flash`](pathname:///api/dev/Marten/Middleware/Flash.html)
 
-Enables the use of [flash messages](../introduction.md#using-the-flash-store).
+Active l'utilisation des [messages flash](../introduction.md#utiliser-le-magasin-flash).
 
-When this middleware is used, each request will have a flash store initialized and populated from the request's session store. This flash store is a hash-like object that allows to fetch or set values that are associated with specific keys, and that will only be available to the next request (after that they are cleared out).
+Lorsque ce middleware est utilisé, chaque requête aura un magasin flash initialisé et peuplé depuis le magasin de sessions de la requête. Ce magasin flash est un objet de type hash qui permet de récupérer ou de définir des valeurs associées à des clés spécifiques, et qui ne seront disponibles que pour la prochaine requête (après quoi elles seront effacées).
 
-The flash store depends on the presence of a working session store. As such, the [Session middleware](#session-middleware) MUST be used along with this middleware. Moreover, this middleware must be placed _after_ the [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html) in the [`middleware`](../../development/reference/settings.md#middleware) setting.
+Le magasin flash dépend de la présence d'un magasin de sessions fonctionnel. À ce titre, le [middleware Session](#middleware-session) DOIT être utilisé conjointement avec ce middleware. De plus, ce middleware doit être placé _après_ le [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html) dans le paramètre [`middleware`](../../development/reference/settings.md#middleware).
 
-## GZip middleware
+## Middleware GZip
 
-**Class:** [`Marten::Middleware::GZip`](pathname:///api/dev/Marten/Middleware/GZip.html)
+**Classe :** [`Marten::Middleware::GZip`](pathname:///api/dev/Marten/Middleware/GZip.html)
 
-Compresses the content of the response if the browser supports GZip compression.
+Compresse le contenu de la réponse si le navigateur prend en charge la compression GZip.
 
-This middleware will compress responses that are big enough (200 bytes or more) if they don't already contain an Accept-Encoding header. It will also set the Vary header correctly by including Accept-Encoding in it so that caches take into account the fact that the content can be compressed or not.
+Ce middleware compressera les réponses suffisamment volumineuses (200 octets ou plus) si elles ne contiennent pas déjà un en-tête Accept-Encoding. Il définira également correctement l'en-tête Vary en incluant Accept-Encoding afin que les caches tiennent compte du fait que le contenu peut être compressé ou non.
 
-The GZip middleware should be positioned before any other middleware that needs to interact with the response content in the [`middleware`](../../development/reference/settings.md#middleware) setting. This is to ensure that the compression happens only when the response content is no longer accessed.
+Le middleware GZip doit être positionné avant tout autre middleware ayant besoin d'interagir avec le contenu de la réponse dans le paramètre [`middleware`](../../development/reference/settings.md#middleware). Cela permet de s'assurer que la compression n'intervient que lorsque le contenu de la réponse n'est plus accédé.
 
 :::note
-The GZip middleware incorporates a mitigation strategy against the [BREACH attack](https://www.breachattack.com/). This strategy (described in the [Heal The Breach paper](https://ieeexplore.ieee.org/document/9754554)) involves introducing up to 100 random bytes into GZip responses to enhance the security against such attacks.
+Le middleware GZip intègre une stratégie d'atténuation contre l'[attaque BREACH](https://www.breachattack.com/). Cette stratégie (décrite dans le [document Heal The Breach](https://ieeexplore.ieee.org/document/9754554)) consiste à introduire jusqu'à 100 octets aléatoires dans les réponses GZip pour renforcer la sécurité contre ce type d'attaques.
 :::
 
-## I18n middleware
+## Middleware I18n
 
-**Class:** [`Marten::Middleware::I18n`](pathname:///api/dev/Marten/Middleware/I18n.html)
+**Classe :** [`Marten::Middleware::I18n`](pathname:///api/dev/Marten/Middleware/I18n.html)
 
-Activates the right I18n locale based on incoming requests.
+Active la bonne locale I18n en fonction des requêtes entrantes.
 
-This middleware will activate the right locale based on the Accept-Language header or the value provided by the [locale cookie](../../development/reference/settings.md#locale_cookie_name). Only explicitly-configured locales can be activated by this middleware (that is, locales that are specified in the [`i18n.available_locales`](../../development/reference/settings.md#available_locales) and [`i18n.default_locale`](../../development/reference/settings.md#default_locale) settings). If the incoming locale can't be found in the project configuration, the default locale will be used instead.
+Ce middleware activera la bonne locale en fonction de l'en-tête Accept-Language ou de la valeur fournie par le [cookie de locale](../../development/reference/settings.md#locale_cookie_name). Seules les locales explicitement configurées peuvent être activées par ce middleware (c'est-à-dire les locales spécifiées dans les paramètres [`i18n.available_locales`](../../development/reference/settings.md#available_locales) et [`i18n.default_locale`](../../development/reference/settings.md#default_locale)). Si la locale entrante ne peut pas être trouvée dans la configuration du projet, la locale par défaut sera utilisée à la place.
 
-Additionally, if (and only if) [localized routes](../../i18n/localized-routes.md) are being used, the middleware will use the locale prefix specified in the incoming paths with priority over the rules mentioned previously in order to identify the locale to activate. For example if the request's path is `/fr/bonjour`, then the activated locale will be the `fr` one.
+De plus, si (et seulement si) des [routes localisées](../../i18n/localized-routes.md) sont utilisées, le middleware utilisera le préfixe de locale spécifié dans les chemins entrants avec priorité sur les règles mentionnées précédemment pour identifier la locale à activer. Par exemple, si le chemin de la requête est `/fr/bonjour`, alors la locale activée sera `fr`.
 
-## Method Override middleware
+## Middleware Method Override {#method-override-middleware}
 
-**Class:** [`Marten::Middleware::MethodOverride`](pathname:///api/dev/Marten/Middleware/MethodOverride.html)
+**Classe :** [`Marten::Middleware::MethodOverride`](pathname:///api/dev/Marten/Middleware/MethodOverride.html)
 
-This middleware enables support for overriding HTTP methods in HTML forms that natively only support GET and POST. It does this by inspecting requests and looking for a `_method` parameter, allowing to simulate methods like  PUT, DELETE, and others. It's also possible to change the parameter name and the allowed override methods in the [method override configuration](../../development/reference/settings.md#method-overriding-settings).
+Ce middleware active la prise en charge du remplacement des méthodes HTTP dans les formulaires HTML qui ne supportent nativement que GET et POST. Il le fait en inspectant les requêtes et en cherchant un paramètre `_method`, permettant de simuler des méthodes comme PUT, DELETE, et d'autres. Il est également possible de changer le nom du paramètre et les méthodes de remplacement autorisées dans la [configuration de remplacement de méthode](../../development/reference/settings.md#method-overriding-settings).
 
-For example:
+Par exemple :
 
 ```html
 <form action="{% url 'articles:delete' %}" method="post">
@@ -84,60 +84,60 @@ For example:
 </form>
 ```
 
-With the `MethodOverride` middleware, the form submission would effectively be treated as a `DELETE` request instead of `POST`.
+Avec le middleware `MethodOverride`, la soumission du formulaire serait effectivement traitée comme une requête `DELETE` au lieu de `POST`.
 
 :::info
-The middleware should be placed as far as possible at the beginning of the array of the [`middlewares`](../../development/reference/settings.md#middleware) setting so that other middlewares already recognise the overridden method.
+Le middleware devrait être placé aussi loin que possible au début du tableau du paramètre [`middlewares`](../../development/reference/settings.md#middleware) afin que les autres middlewares reconnaissent déjà la méthode remplacée.
 :::
 
-## Referrer-Policy middleware
+## Middleware Referrer-Policy
 
-**Class:** [`Marten::Middleware::ReferrerPolicy`](pathname:///api/dev/Marten/Middleware/ReferrerPolicy.html)
+**Classe :** [`Marten::Middleware::ReferrerPolicy`](pathname:///api/dev/Marten/Middleware/ReferrerPolicy.html)
 
-Sets the [Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy) header in the response if it wasn't already set.
+Définit l'en-tête [Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy) dans la réponse s'il n'était pas déjà défini.
 
-When this middleware is used, a Referrer-Policy header will be inserted into the HTTP response. The value for this header is configurable via the [`referrer_policy`](../../development/reference/settings.md#referrer_policy) setting. This header controls the amount of referrer information sent along with requests from your site to other origins, enhancing user privacy and security.
+Lorsque ce middleware est utilisé, un en-tête Referrer-Policy sera inséré dans la réponse HTTP. La valeur de cet en-tête est configurable via le paramètre [`referrer_policy`](../../development/reference/settings.md#referrer_policy). Cet en-tête contrôle la quantité d'informations de référent envoyées avec les requêtes depuis votre site vers d'autres origines, améliorant la confidentialité et la sécurité des utilisateurs.
 
-## Session middleware
+## Middleware Session
 
-**Class:** [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html)
+**Classe :** [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html)
 
-Enables the use of [sessions](../sessions.md).
+Active l'utilisation des [sessions](../sessions.md).
 
-When this middleware is used, each request will have a session store initialized according to the [sessions configuration](../../development/reference/settings.md#sessions-settings). This session store is a hash-like object that allows to fetch or set values that are associated with specific keys.
+Lorsque ce middleware est utilisé, chaque requête aura un magasin de sessions initialisé selon la [configuration des sessions](../../development/reference/settings.md#sessions-settings). Ce magasin de sessions est un objet de type hash qui permet de récupérer ou de définir des valeurs associées à des clés spécifiques.
 
-The session store is initialized from a session key that is stored as a regular cookie. If the session store ends up being empty after a request's handling, the associated cookie is deleted. Otherwise, the cookie is refreshed if the session store is modified as part of the considered request. Each session cookie is set to expire according to a configured cookie max age (the default cookie max age is 2 weeks).
+Le magasin de sessions est initialisé à partir d'une clé de session stockée comme un cookie classique. Si le magasin de sessions finit par être vide après le traitement d'une requête, le cookie associé est supprimé. Sinon, le cookie est rafraîchi si le magasin de sessions est modifié dans le cadre de la requête considérée. Chaque cookie de session est configuré pour expirer selon un âge maximum de cookie configuré (l'âge maximum par défaut du cookie est de 2 semaines).
 
-## SSL redirect middleware
+## Middleware de redirection SSL
 
-**Class:** [`Marten::Middleware::SSLRedirect`](pathname:///api/dev/Marten/Middleware/SSLRedirect.html)
+**Classe :** [`Marten::Middleware::SSLRedirect`](pathname:///api/dev/Marten/Middleware/SSLRedirect.html)
 
-Redirects all non-HTTPS requests to HTTPS.
+Redirige toutes les requêtes non-HTTPS vers HTTPS.
 
-This middleware will permanently redirect all non-HTTP requests to HTTPS. By default the middleware will redirect to the incoming request's host, but a different host to redirect to can be configured with the [`ssl_redirect.host`](../../development/reference/settings.md#host-2) setting. Additionally, specific request paths can also be exempted from this SSL redirect if the corresponding strings or regexes are specified in the [`ssl_redirect.exempted_paths`](../../development/reference/settings.md#exempted_paths) setting.
+Ce middleware redirigera de manière permanente toutes les requêtes non-HTTPS vers HTTPS. Par défaut, le middleware redirigera vers l'hôte de la requête entrante, mais un hôte différent vers lequel rediriger peut être configuré avec le paramètre [`ssl_redirect.host`](../../development/reference/settings.md#host-2). De plus, des chemins de requête spécifiques peuvent également être exemptés de cette redirection SSL si les chaînes ou expressions régulières correspondantes sont spécifiées dans le paramètre [`ssl_redirect.exempted_paths`](../../development/reference/settings.md#exempted_paths).
 
-## Strict-Transport-Security middleware
+## Middleware Strict-Transport-Security
 
-**Class:** [`Marten::Middleware::StrictTransportSecurity`](pathname:///api/dev/Marten/Middleware/StrictTransportSecurity.html)
+**Classe :** [`Marten::Middleware::StrictTransportSecurity`](pathname:///api/dev/Marten/Middleware/StrictTransportSecurity.html)
 
-Sets the Strict-Transport-Security header in the response if it wasn't already set.
+Définit l'en-tête Strict-Transport-Security dans la réponse s'il n'était pas déjà défini.
 
-This middleware automatically sets the HTTP Strict-Transport-Security (HSTS) response header for all responses unless it was already specified in the response headers. This allows to let browsers know that the considered website should only be accessed using HTTPS, which results in future HTTP requests being automatically converted to HTTPS (up until the configured strict transport policy max age is reached).
+Ce middleware définit automatiquement l'en-tête de réponse HTTP Strict-Transport-Security (HSTS) pour toutes les réponses sauf s'il était déjà spécifié dans les en-têtes de réponse. Cela permet d'informer les navigateurs que le site web considéré ne doit être accédé qu'en HTTPS, ce qui entraîne la conversion automatique des futures requêtes HTTP en HTTPS (jusqu'à ce que l'âge maximum de la politique de transport strict configuré soit atteint).
 
-Browsers ensure that this policy is applied for a specific duration because a `max-age` directive is embedded into the header value. This max age duration is expressed in seconds and can be configured using the [`strict_security_policy.max_age`](../../development/reference/settings.md#max_age) setting.
+Les navigateurs s'assurent que cette politique est appliquée pendant une durée spécifique car une directive `max-age` est intégrée dans la valeur de l'en-tête. Cette durée d'âge maximum est exprimée en secondes et peut être configurée en utilisant le paramètre [`strict_security_policy.max_age`](../../development/reference/settings.md#max_age).
 
 :::caution
-When enabling this middleware, you should probably start with small values for the [`strict_security_policy.max_age`](../../development/reference/settings.md#max_age) setting (for example `3600` - one hour). Indeed, when browsers are aware of the Strict-Transport-Security header they will refuse to connect to your website using HTTP until the expiry time corresponding to the configured max age is reached.
+Lorsque vous activez ce middleware, vous devriez probablement commencer avec de petites valeurs pour le paramètre [`strict_security_policy.max_age`](../../development/reference/settings.md#max_age) (par exemple `3600` - une heure). En effet, lorsque les navigateurs ont connaissance de l'en-tête Strict-Transport-Security, ils refuseront de se connecter à votre site web en HTTP jusqu'à ce que le délai d'expiration correspondant à l'âge maximum configuré soit atteint.
 
-This is why the value of the [`strict_security_policy.max_age`](../../development/reference/settings.md#max_age) setting is `nil` by default: this prevents the middleware from inserting the Strict-Transport-Security response header until you actually specify a max age.
+C'est pourquoi la valeur du paramètre [`strict_security_policy.max_age`](../../development/reference/settings.md#max_age) est `nil` par défaut : cela empêche le middleware d'insérer l'en-tête de réponse Strict-Transport-Security tant que vous n'avez pas effectivement spécifié un âge maximum.
 :::
 
-## X-Frame-Options middleware
+## Middleware X-Frame-Options
 
-**Class:** [`Marten::Middleware::XFrameOptions`](pathname:///api/dev/Marten/Middleware/XFrameOptions.html)
+**Classe :** [`Marten::Middleware::XFrameOptions`](pathname:///api/dev/Marten/Middleware/XFrameOptions.html)
 
-Sets the X-Frame-Options header in the response if it wasn't already set.
+Définit l'en-tête X-Frame-Options dans la réponse s'il n'était pas déjà défini.
 
-When this middleware is used, a X-Frame-Options header will be inserted into the HTTP response. The default value for this header (which is configurable via the [`x_frame_options`](../../development/reference/settings.md#x_frame_options) setting) is "DENY", which means that the response cannot be displayed in a frame. This allows preventing click-jacking attacks, by ensuring that the web app cannot be embedded into other sites.
+Lorsque ce middleware est utilisé, un en-tête X-Frame-Options sera inséré dans la réponse HTTP. La valeur par défaut de cet en-tête (qui est configurable via le paramètre [`x_frame_options`](../../development/reference/settings.md#x_frame_options)) est "DENY", ce qui signifie que la réponse ne peut pas être affichée dans un cadre. Cela permet de prévenir les attaques par clickjacking, en s'assurant que l'application web ne peut pas être intégrée dans d'autres sites.
 
-On the other hand, if the `x_frame_options` is set to "SAMEORIGIN", the page can be displayed in a frame if the including site is the same as the one serving the page.
+D'autre part, si `x_frame_options` est défini à "SAMEORIGIN", la page peut être affichée dans un cadre si le site l'incluant est le même que celui servant la page.

@@ -1,34 +1,34 @@
 ---
-title: Create custom model fields
-description: How to create custom model fields.
+title: Créer des fields de modèle personnalisés
+description: Guide pratique pour créer des fields de modèle personnalisés.
 ---
 
-Marten gives you the ability to create your own custom model field implementations, which can involve custom validation logics, errors, and custom behaviors. You can choose to leverage these custom fields as part of your project's model definitions, and you can even distribute them to let other projects use them.
+Marten vous donne la possibilité de créer vos propres implémentations de fields de modèle personnalisés, qui peuvent impliquer des logiques de validation personnalisées, des erreurs et des comportements personnalisés. Vous pouvez choisir d'utiliser ces fields personnalisés dans les définitions de modèles de votre projet, et vous pouvez même les distribuer pour permettre à d'autres projets de les utiliser.
 
-## Model fields: scope and responsibilities
+## Fields de modèle : portée et responsabilités
 
-Model fields have the following responsibilities:
+Les fields de modèle ont les responsabilités suivantes :
 
-* they define the type and properties of the underlying column at the database level
-* they define the necessary Crystal bindings at the model class level: this means that they can contribute custom methods or instance variables to the models making use of them (eg. getters, setters, etc)
-* they define how field values are validated and/or sanitized
+* ils définissent le type et les propriétés de la colonne sous-jacente au niveau de la base de données
+* ils définissent les bindings Crystal nécessaires au niveau de la classe de modèle : cela signifie qu'ils peuvent contribuer des méthodes personnalisées ou des variables d'instance aux modèles qui les utilisent (par ex. getters, setters, etc.)
+* ils définissent comment les valeurs des fields sont validées et/ou assainies
 
-Creating a custom model field does not necessarily mean that all of these responsibilities need to be taken care of as part of the custom field implementation. It really depends on whether you want to:
+Créer un field de modèle personnalisé ne signifie pas nécessairement que toutes ces responsabilités doivent être prises en charge dans l'implémentation du field personnalisé. Cela dépend vraiment de si vous souhaitez :
 
-* leverage an existing built-in model field (eg. integer, string, etc)
-* or create a new model field from scratch.
+* utiliser un field de modèle intégré existant (par ex. integer, string, etc.)
+* ou créer un nouveau field de modèle à partir de zéro.
 
-## Registering new model fields
+## Enregistrer de nouveaux fields de modèle
 
-Regardless of the approach you take in order to define new model field classes ([subclassing built-in fields](#subclassing-existing-model-fields), or [creating new ones from scratch](#creating-new-model-fields-from-scratch)), these classes must be registered to the Marten's global fields registry in order to make them available for use when defining models.
+Quelle que soit l'approche que vous adoptez pour définir de nouvelles classes de fields de modèle ([sous-classer des fields intégrés](#sous-classer-des-fields-de-modèle-existants) ou [en créer de nouveaux à partir de zéro](#créer-de-nouveaux-fields-de-modèle-à-partir-de-zéro)), ces classes doivent être enregistrées dans le registre global de fields de Marten afin de les rendre disponibles pour utilisation lors de la définition de modèles.
 
-To do so, you will have to call the [`Marten::DB::Field#register`](pathname:///api/dev/Marten/DB/Field.html#register(id%2Cfield_klass)-macro) method with the identifier of the field you wish to use, and the actual field class. For example:
+Pour ce faire, vous devrez appeler la méthode [`Marten::DB::Field#register`](pathname:///api/dev/Marten/DB/Field.html#register(id%2Cfield_klass)-macro) avec l'identifiant du field que vous souhaitez utiliser et la classe de field réelle. Par exemple :
 
 ```crystal
 Marten::DB::Field.register(:foo, FooField)
 ```
 
-The identifier you pass to `#register` can be a symbol or a string. This is the identifier that is then made available to model classes in order to define their fields:
+L'identifiant que vous passez à `#register` peut être un symbole ou une chaîne. C'est l'identifiant qui est ensuite mis à disposition des classes de modèles pour définir leurs fields :
 
 ```crystal
 class MyModel < Marten::DB::Model
@@ -38,13 +38,13 @@ class MyModel < Marten::DB::Model
 end
 ```
 
-The call to `#register` can be made from anywhere in your codebase, but obviously, you will want to ensure that it is done before requiring your model classes: indeed, Marten will make the compilation of your project fail if it can't find the field type you are trying to use as part of a model definition.
+L'appel à `#register` peut être fait depuis n'importe où dans votre code, mais évidemment, vous voudrez vous assurer qu'il est fait avant de requérir vos classes de modèles : en effet, Marten fera échouer la compilation de votre projet s'il ne peut pas trouver le type de field que vous essayez d'utiliser dans une définition de modèle.
 
-## Subclassing existing model fields
+## Sous-classer des fields de modèle existants
 
-The easiest way to introduce a model field is probably to subclass one of the [built-in model fields](../reference/fields.md) provided by Marten. This can make a lot of sense if the "type" of the field you are trying to implement is already supported by Marten.
+La manière la plus simple d'introduire un field de modèle est probablement de sous-classer l'un des [fields de modèle intégrés](../reference/fields.md) fournis par Marten. Cela peut avoir beaucoup de sens si le "type" du field que vous essayez d'implémenter est déjà supporté par Marten.
 
-For example, implementing a custom "email" field could be done by subclassing the existing [`Marten::DB::Field::String`](pathname:///api/dev/Marten/DB/Field/String.html) class. Indeed, an "email" field is essentially a string with a pre-defined maximum size and some additional validation logic:
+Par exemple, implémenter un field "email" personnalisé pourrait être fait en sous-classant la classe existante [`Marten::DB::Field::String`](pathname:///api/dev/Marten/DB/Field/String.html). En effet, un field "email" est essentiellement une chaîne avec une taille maximale prédéfinie et une logique de validation supplémentaire :
 
 ```crystal
 class EmailField < Marten::DB::Field::String
@@ -78,17 +78,17 @@ class EmailField < Marten::DB::Field::String
 end
 ```
 
-Everything that is described in the following section about [creating model fields from scratch](#creating-new-model-fields-from-scratch) also applies to the case of subclassing existing model fields: the same methods can be overridden if necessary, but leveraging an existing class can save you some work.
+Tout ce qui est décrit dans la section suivante sur la [création de fields de modèle à partir de zéro](#créer-de-nouveaux-fields-de-modèle-à-partir-de-zéro) s'applique également au cas du sous-classement de fields existants : les mêmes méthodes peuvent être redéfinies si nécessaire, mais utiliser une classe existante peut vous économiser du travail.
 
-## Creating new model fields from scratch
+## Créer de nouveaux fields de modèle à partir de zéro
 
-Creating new model fields from scratch involves subclassing the [`Marten::DB::Field::Base`](pathname:///api/dev/Marten/DB/Field/Base.html) abstract class. Because of this, the new field class is required to implement a set of mandatory methods. These mandatory methods, and some other ones that are optional (but interesting in terms of capabilities), are described in the following sections.
+Créer de nouveaux fields de modèle à partir de zéro implique de sous-classer la classe abstraite [`Marten::DB::Field::Base`](pathname:///api/dev/Marten/DB/Field/Base.html). Pour cette raison, la nouvelle classe de field doit implémenter un ensemble de méthodes obligatoires. Ces méthodes obligatoires, et d'autres qui sont optionnelles (mais intéressantes en termes de capacités), sont décrites dans les sections suivantes.
 
-### Mandatory methods
+### Méthodes obligatoires
 
 #### `default`
 
-The `#default` method is responsible for returning the field's default value, if any. Not all fields support default values; if this does not apply to your field use case, you can simply "no-op" this method:
+La méthode `#default` est responsable de retourner la valeur par défaut du field, le cas échéant. Tous les fields ne supportent pas les valeurs par défaut ; si cela ne s'applique pas à votre cas d'utilisation de field, vous pouvez simplement faire un "no-op" de cette méthode :
 
 ```crystal
 def default
@@ -96,7 +96,7 @@ def default
 end
 ```
 
-On the other hand, if your field can be initialized with a `default` argument (and if it defines a `@default` instance variable), another possibility is to define a `#default` getter:
+D'un autre côté, si votre field peut être initialisé avec un argument `default` (et s'il définit une variable d'instance `@default`), une autre possibilité est de définir un getter `#default` :
 
 ```crystal
 getter default
@@ -104,7 +104,7 @@ getter default
 
 #### `from_db`
 
-The `#from_db` method is responsible for converting the passed raw DB value to the right field value. Indeed, the value that is read from the database will usually need to be converted to another format. For example, a `uuid` field might need to convert a `String` value to a proper `UUID` object:
+La méthode `#from_db` est responsable de convertir la valeur brute DB passée vers la bonne valeur de field. En effet, la valeur lue depuis la base de données devra généralement être convertie dans un autre format. Par exemple, un field `uuid` pourrait avoir besoin de convertir une valeur `String` en un objet `UUID` approprié :
 
 ```crystal
 def from_db(value) : ::UUID?
@@ -121,15 +121,15 @@ def from_db(value) : ::UUID?
 end
 ```
 
-It should be noted that you will usually want to handle the case of `nil` values as part of this method since fields can be configured as nullable via the [`null: true`](../reference/fields.md#null) option. 
+Il est à noter que vous voudrez généralement gérer le cas des valeurs `nil` dans cette méthode puisque les fields peuvent être configurés comme nullable via l'option [`null: true`](../reference/fields.md#null).
 
-If the value can't be processed properly by your field class, then it may be necessary to raise an exception. To do that you can leverage the `#raise_unexpected_field_value` method, which will raise a `Marten::DB::Errors::UnexpectedFieldValue` exception.
+Si la valeur ne peut pas être traitée correctement par votre classe de field, il peut être nécessaire de lever une exception. Pour cela, vous pouvez utiliser la méthode `#raise_unexpected_field_value`, qui lèvera une exception `Marten::DB::Errors::UnexpectedFieldValue`.
 
 #### `from_db_result_set`
 
-The `#from_db_result_set` method is responsible for extracting the field value from a DB result set and returning the right object corresponding to this value. This method will usually be called when retrieving your field's value from the database (when using the Marten ORM). The method takes a standard `DB::ResultSet` object as argument and it is expected that you use `#read` to retrieve the intended column value. See the [Crystal reference documentation](https://crystal-lang.org/reference/1.5/database/index.html#reading-query-results) for more details around these objects and methods.
+La méthode `#from_db_result_set` est responsable d'extraire la valeur du field d'un ensemble de résultats DB et de retourner le bon objet correspondant à cette valeur. Cette méthode sera généralement appelée lors de la récupération de la valeur de votre field depuis la base de données (lors de l'utilisation de l'ORM Marten). La méthode prend un objet standard `DB::ResultSet` comme argument et il est attendu que vous utilisiez `#read` pour récupérer la valeur de colonne visée. Voir la [documentation de référence Crystal](https://crystal-lang.org/reference/1.5/database/index.html#reading-query-results) pour plus de détails sur ces objets et méthodes.
 
-For example:
+Par exemple :
 
 ```crystal
 def from_db_result_set(result_set : ::DB::ResultSet) : ::UUID?
@@ -137,13 +137,13 @@ def from_db_result_set(result_set : ::DB::ResultSet) : ::UUID?
 end
 ```
 
-The `#from_db_result_set` method is supposed to return the read value into the right "representation", that is the final object representing the field value that users will interact with when manipulating model records (for example a `UUID` object created from a string). As such, you will usually want to call [`#from_db`](#from_db) once you get the value from the database result set in order to return the final value.
+La méthode `#from_db_result_set` est supposée retourner la valeur lue dans la bonne "représentation", c'est-à-dire l'objet final représentant la valeur du field avec laquelle les utilisateurs interagiront lors de la manipulation des enregistrements de modèles (par exemple un objet `UUID` créé à partir d'une chaîne). Ainsi, vous voudrez généralement appeler [`#from_db`](#from_db) une fois que vous aurez obtenu la valeur de l'ensemble de résultats de la base de données afin de retourner la valeur finale.
 
 #### `to_column`
 
-Most model fields will contribute a corresponding column at the database level; these columns are read by Marten in order to generate migrations from model definitions. The column returned by the `#to_column` method should be an instance of a subclass of [`Marten::DB::Management::Column::Base`](pathname:///api/dev/Marten/DB/Management/Column/Base.html).
+La plupart des fields de modèle contribueront une colonne correspondante au niveau de la base de données ; ces colonnes sont lues par Marten afin de générer des migrations à partir des définitions de modèles. La colonne retournée par la méthode `#to_column` doit être une instance d'une sous-classe de [`Marten::DB::Management::Column::Base`](pathname:///api/dev/Marten/DB/Management/Column/Base.html).
 
-For example, an "email" field could return a string column as part of its `#to_column` method:
+Par exemple, un field "email" pourrait retourner une colonne string dans sa méthode `#to_column` :
 
 ```crystal
 def to_column : Marten::DB::Management::Column::Base?
@@ -159,13 +159,13 @@ def to_column : Marten::DB::Management::Column::Base?
 end
 ```
 
-If for some reason your custom field does not contribute any columns to the database model, it is possible to simply "no-op" the `#to_column` method by returning `nil` instead.
+Si pour une raison quelconque votre field personnalisé ne contribue aucune colonne au modèle de base de données, il est possible de simplement faire un "no-op" de la méthode `#to_column` en retournant `nil` à la place.
 
 #### `to_db`
 
-The `#to_db` method converts a field value from the "Crystal" representation to the database representation. As such, this method performs the reverse operation of the [`#from_db`](#from_db) method.
+La méthode `#to_db` convertit une valeur de field de la représentation "Crystal" vers la représentation base de données. Ainsi, cette méthode effectue l'opération inverse de la méthode [`#from_db`](#from_db).
 
-For example, this method could return the string representation of a `UUID` object:
+Par exemple, cette méthode pourrait retourner la représentation en chaîne d'un objet `UUID` :
 
 ```crystal
 def to_db(value) : ::DB::Any
@@ -180,13 +180,13 @@ def to_db(value) : ::DB::Any
 end
 ```
 
-Again, if the value can't be processed properly by the field class, it may be necessary to raise an exception. To do that you can leverage the `#raise_unexpected_field_value` method, which will raise a `Marten::DB::Errors::UnexpectedFieldValue` exception.
+Encore une fois, si la valeur ne peut pas être traitée correctement par la classe de field, il peut être nécessaire de lever une exception. Pour cela, vous pouvez utiliser la méthode `#raise_unexpected_field_value`, qui lèvera une exception `Marten::DB::Errors::UnexpectedFieldValue`.
 
-### Other useful methods
+### Autres méthodes utiles
 
 #### `initialize`
 
-The default `#initialize` method that is provided by the [`Marten::DB::Field::Base`](pathname:///api/dev/Marten/DB/Field/Base.html) is fairly simply and looks like this:
+La méthode `#initialize` par défaut fournie par [`Marten::DB::Field::Base`](pathname:///api/dev/Marten/DB/Field/Base.html) est assez simple et ressemble à ceci :
 
 ```crystal
 def initialize(
@@ -201,13 +201,13 @@ def initialize(
 end
 ```
 
-Depending on your field requirements, you might want to override this method completely in order to support additional parameters (such as default values, max sizes, validation-related options, etc).
+Selon les exigences de votre field, vous pourriez vouloir redéfinir complètement cette méthode afin de supporter des paramètres supplémentaires (tels que des valeurs par défaut, des tailles maximales, des options liées à la validation, etc.).
 
 #### `validate`
 
-The `#validate` method does nothing by default and can be overridden on a per-field class basis in order to implement custom validation logic. This method takes the model record being validated and the field value as arguments, which allows you to easily run validation checks and to add [validation errors](../validations.md) to the model record.
+La méthode `#validate` ne fait rien par défaut et peut être redéfinie par classe de field afin d'implémenter une logique de validation personnalisée. Cette méthode prend l'enregistrement de modèle en cours de validation et la valeur du field comme arguments, ce qui vous permet d'exécuter facilement des vérifications de validation et d'ajouter des [erreurs de validation](../validations.md) à l'enregistrement de modèle.
 
-For example:
+Par exemple :
 
 ```crystal
 def validate(record, value)
@@ -219,9 +219,9 @@ def validate(record, value)
 end
 ```
 
-### An example
+### Un exemple
 
-Let's consider the use case of the "email" field highlighted in [Subclassing existing model fields](#subclassing-existing-model-fields). The exact same field could be implemented from scratch with the following snippet:
+Considérons le cas d'utilisation du field "email" mis en évidence dans [Sous-classer des fields de modèle existants](#sous-classer-des-fields-de-modèle-existants). Le même field pourrait être implémenté à partir de zéro avec l'extrait suivant :
 
 ```crystal
 class EmailField < Marten::DB::Field::Base

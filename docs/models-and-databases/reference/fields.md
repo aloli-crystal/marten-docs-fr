@@ -1,53 +1,53 @@
 ---
-title: Model fields
-description: Model fields reference.
+title: Fields de modèle
+description: Référence des fields de modèle.
 ---
 
-This page provides a reference for all the available field options and field types that can be used when defining models.
+Cette page fournit une référence pour toutes les options de field et types de field disponibles qui peuvent être utilisés lors de la définition de modèles.
 
-## Common field options
+## Options communes des fields
 
-The following field options can be used for all the available field types when declaring model fields using the `field` macro.
+Les options de field suivantes peuvent être utilisées pour tous les types de field disponibles lors de la déclaration de fields de modèle avec la macro `field`.
 
 ### `blank`
 
-The `blank` argument allows to define whether a field is allowed to receive blank values from a validation perspective. The fields with `blank: false` that receive blank values will make their associated model record validation fail. The default value for this argument is `false`.
+L'argument `blank` permet de définir si un field est autorisé à recevoir des valeurs vides du point de vue de la validation. Les fields avec `blank: false` qui reçoivent des valeurs vides feront échouer la validation de l'enregistrement de modèle associé. La valeur par défaut de cet argument est `false`.
 
 ### `db_column`
 
-The `db_column` argument can be used to specify the name of the column corresponding to the field at the database level. Unless specified, the database column name will correspond to the field name.
+L'argument `db_column` peut être utilisé pour spécifier le nom de la colonne correspondant au field au niveau de la base de données. Sauf spécification contraire, le nom de la colonne de base de données correspondra au nom du field.
 
 ### `default`
 
-The `default` argument allows to define a default value for a given field. The default value for this argument is `nil`.
+L'argument `default` permet de définir une valeur par défaut pour un field donné. La valeur par défaut de cet argument est `nil`.
 
 ### `index`
 
-The `index` argument can be used to specify that a database index must be created for the corresponding column. The default value for this argument is `false`.
+L'argument `index` peut être utilisé pour spécifier qu'un index de base de données doit être créé pour la colonne correspondante. La valeur par défaut de cet argument est `false`.
 
 ### `primary_key`
 
-The `primary_key` argument can be used to specify that a field corresponds to the primary key of the considered model table. The default value for this argument is `false`.
+L'argument `primary_key` peut être utilisé pour spécifier qu'un field correspond à la clé primaire de la table du modèle considéré. La valeur par défaut de cet argument est `false`.
 
 ### `null`
 
-The `null` argument allows to define whether a field is allowed to store `NULL` values in the database. The default value for this argument is `false`.
+L'argument `null` permet de définir si un field est autorisé à stocker des valeurs `NULL` dans la base de données. La valeur par défaut de cet argument est `false`.
 
 ### `unique`
 
-The `unique` argument allows to define that values for a specific field must be unique throughout the associated table. The default value for this argument is `false`.
+L'argument `unique` permet de définir que les valeurs d'un field spécifique doivent être uniques dans toute la table associée. La valeur par défaut de cet argument est `false`.
 
-## Field types
+## Types de field
 
 ### `big_int`
 
-A `big_int` field allows persisting 64-bit integers. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `big_int` permet de persister des entiers 64 bits. En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `auto`
 
-The `auto` argument auto-increment for the considered database column. Defaults to `false`.
+L'argument `auto` active l'auto-incrémentation pour la colonne de base de données considérée. Par défaut : `false`.
 
-This argument will be used mainly when defining integer IDs that automatically increment:
+Cet argument sera principalement utilisé lors de la définition d'ID entiers qui s'incrémentent automatiquement :
 
 ```crystal
 class MyModel < Marten::Model
@@ -58,47 +58,47 @@ end
 
 ### `bool`
 
-A `bool` field allows persisting booleans.
+Un field `bool` permet de persister des booléens.
 
 ### `date`
 
-A `date` field allows persisting date values, which map to `Time` objects in Crystal. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `date` permet de persister des valeurs de date, qui correspondent à des objets `Time` en Crystal. En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `auto_now`
 
-The `auto_now` argument allows ensuring that the corresponding field value is automatically set to the current time every time a record is saved. This provides a convenient way to define `updated_at` fields. Defaults to `false`.
+L'argument `auto_now` permet de s'assurer que la valeur du field correspondant est automatiquement définie à l'heure actuelle chaque fois qu'un enregistrement est sauvegardé. Cela fournit un moyen pratique de définir des fields `updated_at`. Par défaut : `false`.
 
 #### `auto_now_add`
 
-The `auto_now_add` argument allows ensuring that the corresponding field value is automatically set to the current time every time a record is created. This provides a convenient way to define `created_at` fields. Defaults to `false`.
+L'argument `auto_now_add` permet de s'assurer que la valeur du field correspondant est automatiquement définie à l'heure actuelle chaque fois qu'un enregistrement est créé. Cela fournit un moyen pratique de définir des fields `created_at`. Par défaut : `false`.
 
 ### `date_time`
 
-A `date_time` field allows persisting date-time values, which map to `Time` objects in Crystal. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `date_time` permet de persister des valeurs date-heure, qui correspondent à des objets `Time` en Crystal. En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `auto_now`
 
-The `auto_now` argument allows ensuring that the corresponding field value is automatically set to the current time every time a record is saved. This provides a convenient way to define `updated_at` fields. Defaults to `false`.
+L'argument `auto_now` permet de s'assurer que la valeur du field correspondant est automatiquement définie à l'heure actuelle chaque fois qu'un enregistrement est sauvegardé. Cela fournit un moyen pratique de définir des fields `updated_at`. Par défaut : `false`.
 
 #### `auto_now_add`
 
-The `auto_now_add` argument allows ensuring that the corresponding field value is automatically set to the current time every time a record is created. This provides a convenient way to define `created_at` fields. Defaults to `false`.
+L'argument `auto_now_add` permet de s'assurer que la valeur du field correspondant est automatiquement définie à l'heure actuelle chaque fois qu'un enregistrement est créé. Cela fournit un moyen pratique de définir des fields `created_at`. Par défaut : `false`.
 
 ### `duration`
 
-A `duration` field allows persisting duration values, which map to [`Time::Span`](https://crystal-lang.org/api/Time/Span.html) objects in Crystal. `duration` fields are persisted as big integer values (number of nanoseconds) at the database level.
+Un field `duration` permet de persister des valeurs de durée, qui correspondent à des objets [`Time::Span`](https://crystal-lang.org/api/Time/Span.html) en Crystal. Les fields `duration` sont persistés comme des valeurs entières longues (nombre de nanosecondes) au niveau de la base de données.
 
 ### `email`
 
-An `email` field allows to persist _valid_ email addresses. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `email` permet de persister des adresses email _valides_. En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `max_size`
 
-The `max_size` argument is optional and defaults to 254 characters (in accordance with RFCs 3696 and 5321). It allows to specify the maximum size of the persisted email addresses. This maximum size is used for the corresponding column definition and when it comes to validating field values.
+L'argument `max_size` est optionnel et par défaut à 254 caractères (conformément aux RFC 3696 et 5321). Il permet de spécifier la taille maximale des adresses email persistées. Cette taille maximale est utilisée pour la définition de colonne correspondante et lors de la validation des valeurs de field.
 
 ### `enum`
 
-An `enum` field allows persisting the value of an [`Enum`](https://crystal-lang.org/api/Enum.html). When defining `enum` fields, it's necessary to specify a `values` argument that matches the actual enum:
+Un field `enum` permet de persister la valeur d'un [`Enum`](https://crystal-lang.org/api/Enum.html). Lors de la définition de fields `enum`, il est nécessaire de spécifier un argument `values` qui correspond à l'enum réel :
 
 ```crystal
 enum Category
@@ -116,26 +116,26 @@ article.category # => Category::BLOG
 ```
 
 :::info
-The way enums are handled at the database level depends on the database backend being used. Indeed, an ENUM type is used for MySQL databases while column checks are used for SQLite and PostgreSQL databases.
+La manière dont les enums sont gérés au niveau de la base de données dépend du backend de base de données utilisé. En effet, un type ENUM est utilisé pour les bases de données MySQL tandis que des vérifications de colonnes sont utilisées pour les bases de données SQLite et PostgreSQL.
 :::
 
-In addition to the [common field options](#common-field-options), such fields support the following arguments:
+En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `values`
 
-The `values` argument **is required** and allows to specify the actual enum class that should be used for the field. It is worth mentioning that the configured enum will impact the values allowed for the corresponding column at the database level.
+L'argument `values` **est requis** et permet de spécifier la classe d'enum réelle qui doit être utilisée pour le field. Il est intéressant de mentionner que l'enum configuré impactera les valeurs autorisées pour la colonne correspondante au niveau de la base de données.
 
 ### `file`
 
-A `file` field allows persisting the reference to an uploaded file.
+Un field `file` permet de persister la référence à un fichier téléchargé.
 
 :::warning
-`file` fields can't be configured as primary keys.
+Les fields `file` ne peuvent pas être configurés comme clés primaires.
 :::
 
 #### `storage`
 
-This optional argument can be used to configure the storage that will be used to persist the actual files. It defaults to the media files storage (configured via the `media_files.storage` setting), but can be overridden on a per-field basis if needed:
+Cet argument optionnel peut être utilisé pour configurer le stockage qui sera utilisé pour persister les fichiers réels. Il est par défaut le stockage des fichiers média (configuré via le paramètre `media_files.storage`), mais peut être remplacé par field si nécessaire :
 
 ```crystal
 my_storage = Marten::Core::Storage::FileSystem.new(root: "files", base_url: "/files/")
@@ -146,13 +146,13 @@ class Attachment < Marten::Model
 end
 ```
 
-Please refer to [Managing files](../../files/managing-files.md) for more details on how to manage uploaded files and the associated storages.
+Veuillez vous référer à [Gestion des fichiers](../../files/managing-files.md) pour plus de détails sur la gestion des fichiers téléchargés et les stockages associés.
 
 #### `upload_to`
 
-This optional argument can be used to configure where the uploaded files are persisted in the storage. It defaults to an empty string and can be set to either a string or a proc.
+Cet argument optionnel peut être utilisé pour configurer l'emplacement de persistance des fichiers téléchargés dans le stockage. Il est par défaut une chaîne vide et peut être défini comme une chaîne ou un proc.
 
-If set to a string, it allows to define in which directory of the underlying storage files will be persisted:
+S'il est défini comme une chaîne, il permet de définir dans quel répertoire du stockage sous-jacent les fichiers seront persistés :
 
 ```crystal
 class Attachment < Marten::Model
@@ -161,7 +161,7 @@ class Attachment < Marten::Model
 end
 ```
 
-If set to a proc, it allows to customize the logic allowing to generate the resulting path _and_ filename:
+S'il est défini comme un proc, il permet de personnaliser la logique permettant de générer le chemin _et_ le nom de fichier résultants :
 
 ```crystal
 class Attachment < Marten::Model
@@ -172,18 +172,18 @@ end
 
 ### `float`
 
-A `float` field allows persisting floating point numbers (`Float64` objects).
+Un field `float` permet de persister des nombres à virgule flottante (objets `Float64`).
 
 ### `image`
 
-An `image` field allows persisting the reference to an uploaded image file.
+Un field `image` permet de persister la référence à un fichier image téléchargé.
 
 :::info
-The [crystal-vips](https://github.com/naqvis/crystal-vips) shard is required for defining `image` model fields. If this shard is not installed and required by your project, it will not be possible to use `image` model fields and compilation errors will be raised.
+Le shard [crystal-vips](https://github.com/naqvis/crystal-vips) est requis pour définir des fields de modèle `image`. Si ce shard n'est pas installé et requis par votre projet, il ne sera pas possible d'utiliser des fields de modèle `image` et des erreurs de compilation seront levées.
 
-As such, make sure that:
+Assurez-vous donc que :
 
-1. Your project's `shard.yml` includes:
+1. Le `shard.yml` de votre projet inclut :
 
 ```yaml
 dependencies:
@@ -191,7 +191,7 @@ dependencies:
     github: naqvis/crystal-vips
 ```
 
-2. Your project's `src/project.cr` includes:
+2. Le fichier `src/project.cr` de votre projet inclut :
 
 ```crystal
 require "vips"
@@ -199,12 +199,12 @@ require "vips"
 :::
 
 :::warning
-`image` fields can't be configured as primary keys.
+Les fields `image` ne peuvent pas être configurés comme clés primaires.
 :::
 
 #### `storage`
 
-This optional argument can be used to configure the storage that will be used to persist the actual image files. It defaults to the media files storage (configured via the `media_files.storage` setting), but can be overridden on a per-field basis if needed:
+Cet argument optionnel peut être utilisé pour configurer le stockage qui sera utilisé pour persister les fichiers image réels. Il est par défaut le stockage des fichiers média (configuré via le paramètre `media_files.storage`), mais peut être remplacé par field si nécessaire :
 
 ```crystal
 my_storage = Marten::Core::Storage::FileSystem.new(root: "files", base_url: "/files/")
@@ -215,13 +215,13 @@ class Attachment < Marten::Model
 end
 ```
 
-Please refer to [Managing files](../../files/managing-files.md) for more details on how to manage uploaded files and the associated storages.
+Veuillez vous référer à [Gestion des fichiers](../../files/managing-files.md) pour plus de détails sur la gestion des fichiers téléchargés et les stockages associés.
 
 #### `upload_to`
 
-This optional argument can be used to configure where the uploaded images files are persisted in the storage. It defaults to an empty string and can be set to either a string or a proc.
+Cet argument optionnel peut être utilisé pour configurer l'emplacement de persistance des fichiers image téléchargés dans le stockage. Il est par défaut une chaîne vide et peut être défini comme une chaîne ou un proc.
 
-If set to a string, it allows to define in which directory of the underlying storage files will be persisted:
+S'il est défini comme une chaîne, il permet de définir dans quel répertoire du stockage sous-jacent les fichiers seront persistés :
 
 ```crystal
 class Attachment < Marten::Model
@@ -230,7 +230,7 @@ class Attachment < Marten::Model
 end
 ```
 
-If set to a proc, it allows to customize the logic allowing to generate the resulting path _and_ filename:
+S'il est défini comme un proc, il permet de personnaliser la logique permettant de générer le chemin _et_ le nom de fichier résultants :
 
 ```crystal
 class Attachment < Marten::Model
@@ -241,13 +241,13 @@ end
 
 ### `int`
 
-An `int` field allows persisting 32-bit integers. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `int` permet de persister des entiers 32 bits. En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `auto`
 
-The `auto` argument auto-increment for the considered database column. Defaults to `false`.
+L'argument `auto` active l'auto-incrémentation pour la colonne de base de données considérée. Par défaut : `false`.
 
-This argument will be used mainly when defining integer IDs that automatically increment:
+Cet argument sera principalement utilisé lors de la définition d'ID entiers qui s'incrémentent automatiquement :
 
 ```crystal
 class MyModel < Marten::Model
@@ -258,9 +258,9 @@ end
 
 ### `json`
 
-A `json` field allows persisting JSON values to the database.
+Un field `json` permet de persister des valeurs JSON dans la base de données.
 
-JSON values are automatically parsed from the underlying database column and exposed as a [`JSON::Any`](https://crystal-lang.org/api/JSON/Any.html) object (or `nil` if no values are available) by default in Crystal:
+Les valeurs JSON sont automatiquement analysées depuis la colonne de base de données sous-jacente et exposées comme un objet [`JSON::Any`](https://crystal-lang.org/api/JSON/Any.html) (ou `nil` si aucune valeur n'est disponible) par défaut en Crystal :
 
 ```crystal
 class MyModel < Marten::Model
@@ -271,7 +271,7 @@ end
 MyModel.last!.metadata # => JSON::Any object
 ```
 
-Additionally, it is also possible to specify a [`serializable`](#serializable) option in order to specify a class that makes use of [`JSON::Serializable`](https://crystal-lang.org/api/JSON/Serializable.html). When doing so, the parsing of the JSON values will result in the initialization of the corresponding serializable objects:
+De plus, il est également possible de spécifier une option [`serializable`](#serializable) afin de spécifier une classe qui utilise [`JSON::Serializable`](https://crystal-lang.org/api/JSON/Serializable.html). Ce faisant, l'analyse des valeurs JSON résultera en l'initialisation des objets sérialisables correspondants :
 
 ```crystal
 class MySerializable
@@ -290,32 +290,32 @@ MyModel.last!.metadata # => MySerializable object
 ```
 
 :::info
-It should be noted that `json` fields are mapped to:
+Il est à noter que les fields `json` sont mappés à :
 
-* `jsonb` columns in PostgreSQL databases
-* `text` columns in MySQL databases
-* `text` columns in SQLite databases
+* des colonnes `jsonb` dans les bases de données PostgreSQL
+* des colonnes `text` dans les bases de données MySQL
+* des colonnes `text` dans les bases de données SQLite
 :::
 
 #### `serializable`
 
-The `serializable` arguments allows to specify that a class making use of [`JSON::Serializable`](https://crystal-lang.org/api/JSON/Serializable.html) should be used in order to parse the JSON values for the model field at hand. When specifying a `serializable` class, the values returned for the considered model fields will be instances of that class instead of [`JSON::Any`](https://crystal-lang.org/api/JSON/Any.html) objects.
+L'argument `serializable` permet de spécifier qu'une classe utilisant [`JSON::Serializable`](https://crystal-lang.org/api/JSON/Serializable.html) doit être utilisée pour analyser les valeurs JSON du field de modèle considéré. Lors de la spécification d'une classe `serializable`, les valeurs retournées pour les fields de modèle considérés seront des instances de cette classe au lieu d'objets [`JSON::Any`](https://crystal-lang.org/api/JSON/Any.html).
 
 ### `slug`
 
-A `slug` field allows to persist _valid_ slug values (ie. strings that can only include characters, numbers, dashes, and underscores). In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `slug` permet de persister des valeurs de slug _valides_ (c'est-à-dire des chaînes qui ne peuvent contenir que des caractères, des chiffres, des tirets et des underscores). En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 :::info
-Since slug fields are usually used to query records, they are indexed by default. You can use the [`index`](#index) option (`index: false`) to disable auto-indexing.
+Puisque les fields slug sont généralement utilisés pour interroger des enregistrements, ils sont indexés par défaut. Vous pouvez utiliser l'option [`index`](#index) (`index: false`) pour désactiver l'indexation automatique.
 :::
 
 #### `max_size`
 
-The `max_size` argument is optional and defaults to 50 characters. It allows to specify the maximum size of the persisted email addresses. This maximum size is used for the corresponding column definition and when it comes to validate field values.
+L'argument `max_size` est optionnel et par défaut à 50 caractères. Il permet de spécifier la taille maximale des valeurs de slug persistées. Cette taille maximale est utilisée pour la définition de colonne correspondante et lors de la validation des valeurs de field.
 
 #### `slugify`
 
-The `slugify` argument allows specifying the field from which the slug should be generated. This is useful when you want the slug to be automatically derived from another field.
+L'argument `slugify` permet de spécifier le field à partir duquel le slug doit être généré. Ceci est utile lorsque vous souhaitez que le slug soit automatiquement dérivé d'un autre field.
 
 ```crystal
 class Article < Marten::Model
@@ -328,10 +328,10 @@ article = Article.create!(title: "My Article")
 article.slug # => "my-article"
 ```
 
-When an `Article` object is saved, the slug field will automatically generate a slug based on the title field if no custom slug is provided.
+Lorsqu'un objet `Article` est sauvegardé, le field slug générera automatiquement un slug basé sur le field title si aucun slug personnalisé n'est fourni.
 
 :::warning
-The slugification functionality also transforms Unicode characters and symbols. When filtering a model by the query parameter, it may be necessary to decode the slug parameter first, because although the browser may show you the unicode characters, it will send the encoded characters in the HTTP request:
+La fonctionnalité de slugification transforme également les caractères Unicode et les symboles. Lors du filtrage d'un modèle par le paramètre de requête, il peut être nécessaire de décoder le paramètre slug au préalable, car bien que le navigateur puisse vous montrer les caractères Unicode, il enverra les caractères encodés dans la requête HTTP :
 
 ```crystal
 class ArticleDetailsHandler < Marten::Handler
@@ -346,43 +346,43 @@ end
 
 ### `string`
 
-A `string` field allows to persist small or medium string values. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `string` permet de persister des valeurs de chaînes de petite ou moyenne taille. En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `max_size`
 
-The `max_size` argument **is required** and allows to specify the maximum size of the persisted string. This maximum size is used for the corresponding column definition and when it comes to validate field values.
+L'argument `max_size` **est requis** et permet de spécifier la taille maximale de la chaîne persistée. Cette taille maximale est utilisée pour la définition de colonne correspondante et lors de la validation des valeurs de field.
 
 #### `min_size`
 
-The `min_size` argument allows defining the minimum size allowed for the persisted string. The default value for this argument is `nil`, which means that the minimum size is not validated by default.
+L'argument `min_size` permet de définir la taille minimale autorisée pour la chaîne persistée. La valeur par défaut de cet argument est `nil`, ce qui signifie que la taille minimale n'est pas validée par défaut.
 
 ### `text`
 
-A `text` field allows to persist large text values. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `text` permet de persister des valeurs de texte volumineuses. En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `max_size`
 
-The `max_size` argument allows to specify the maximum size of the persisted string. This maximum size is used when it comes to validate field values. Defaults to `nil`.
+L'argument `max_size` permet de spécifier la taille maximale de la chaîne persistée. Cette taille maximale est utilisée lors de la validation des valeurs de field. Par défaut : `nil`.
 
 ### `url`
 
-A `url` field allows persisting _valid_ URL addresses. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un field `url` permet de persister des adresses URL _valides_. En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `max_size`
 
-The `max_size` argument is optional and defaults to 200 characters. It allows to specify the maximum size of the persisted URLs. This maximum size is used for the corresponding column definition and when it comes to validate field values.
+L'argument `max_size` est optionnel et par défaut à 200 caractères. Il permet de spécifier la taille maximale des URL persistées. Cette taille maximale est utilisée pour la définition de colonne correspondante et lors de la validation des valeurs de field.
 
 ### `uuid`
 
-A `uuid` field allows persisting Universally Unique IDentifiers (`UUID` objects).
+Un field `uuid` permet de persister des identifiants universellement uniques (objets `UUID`).
 
-## Relationship field types
+## Types de field de relation
 
 ### `many_to_many`
 
-A `many_to_many` field allows to define a many-to-many relationship. This special field type requires the use of a special `to` argument in order to specify the model class to which the current model is related.
+Un field `many_to_many` permet de définir une relation many-to-many. Ce type de field spécial nécessite l'utilisation d'un argument spécial `to` afin de spécifier la classe de modèle à laquelle le modèle actuel est relié.
 
-For example, an `Article` model could have a many-to-many field towards a `Tag` model. In such case, an `Article` record could have many associated `Tag` records, and every `Tag` records could be associated to many `Article` records as well:
+Par exemple, un modèle `Article` pourrait avoir un field many-to-many vers un modèle `Tag`. Dans ce cas, un enregistrement `Article` pourrait avoir de nombreux enregistrements `Tag` associés, et chaque enregistrement `Tag` pourrait également être associé à de nombreux enregistrements `Article` :
 
 ```crystal
 class Tag < Marten::Model
@@ -395,15 +395,15 @@ class Article < Marten::Model
 end
 ```
 
-In addition to the [common field options](#common-field-options), such fields support the following arguments:
+En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `to`
 
-The `to` argument **is required** and allows to specify the model class that is related to the model where the `many_to_many` field is defined.
+L'argument `to` **est requis** et permet de spécifier la classe de modèle qui est reliée au modèle où le field `many_to_many` est défini.
 
 #### `related`
 
-The `related` argument allows defining the name of the reverse (or backward) relation on the targeted model. If we consider the previous example, it could be possible to define an `articles` backward relation in order to let `Tag` records expose their related `Article` records:
+L'argument `related` permet de définir le nom de la relation inverse (ou backward) sur le modèle ciblé. Si nous considérons l'exemple précédent, il serait possible de définir une relation inverse `articles` afin de permettre aux enregistrements `Tag` d'exposer leurs enregistrements `Article` liés :
 
 ```crystal
 class Tag < Marten::Model
@@ -416,15 +416,15 @@ class Article < Marten::Model
 end
 ```
 
-When the `related` argument is used, a method will be automatically created on the targeted model by using the chosen argument's value. For example, this means that all the `Article` records using a specific `Tag` record could be accessed through the use of the `Tag#articles` method in the previous snippet.
+Lorsque l'argument `related` est utilisé, une méthode sera automatiquement créée sur le modèle ciblé en utilisant la valeur de l'argument choisi. Par exemple, cela signifie que tous les enregistrements `Article` utilisant un enregistrement `Tag` spécifique pourraient être accessibles via l'utilisation de la méthode `Tag#articles` dans l'extrait précédent.
 
-The default value is `nil`, which means that no reverse relation is defined on the targeted model by default.
+La valeur par défaut est `nil`, ce qui signifie qu'aucune relation inverse n'est définie sur le modèle ciblé par défaut.
 
 ### `many_to_one`
 
-A `many_to_one` field allows defining a many-to-one relationship. This special field type requires the use of a special `to` argument in order to specify the model class to which the current model is related.
+Un field `many_to_one` permet de définir une relation many-to-one. Ce type de field spécial nécessite l'utilisation d'un argument spécial `to` afin de spécifier la classe de modèle à laquelle le modèle actuel est relié.
 
-For example, an `Article` model could have a many-to-one field towards an `Author` model. In such case, an `Article` record would only have one associated `Author` record, but every `Author` record could be associated to many `Article` records:
+Par exemple, un modèle `Article` pourrait avoir un field many-to-one vers un modèle `Author`. Dans ce cas, un enregistrement `Article` n'aurait qu'un seul enregistrement `Author` associé, mais chaque enregistrement `Author` pourrait être associé à de nombreux enregistrements `Article` :
 
 ```crystal
 class Author < Marten::Model
@@ -437,15 +437,15 @@ class Article < Marten::Model
 end
 ```
 
-In addition to the [common field options](#common-field-options), such fields support the following arguments:
+En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `to`
 
-The `to` argument **is required** and allows to specify the model class that is related to the model where the `many_to_one` field is defined.
+L'argument `to` **est requis** et permet de spécifier la classe de modèle qui est reliée au modèle où le field `many_to_one` est défini.
 
 #### `related`
 
-The `related` argument allows defining the name of the reverse (or backward) relation on the targeted model. If we consider the previous example, it could be possible to define an `articles` backward relation in order to let `Author` records expose their related `Article` records:
+L'argument `related` permet de définir le nom de la relation inverse (ou backward) sur le modèle ciblé. Si nous considérons l'exemple précédent, il serait possible de définir une relation inverse `articles` afin de permettre aux enregistrements `Author` d'exposer leurs enregistrements `Article` liés :
 
 ```crystal
 class Author < Marten::Model
@@ -458,24 +458,24 @@ class Article < Marten::Model
 end
 ```
 
-When the `related` argument is used, a method will be automatically created on the targeted model by using the chosen argument's value. For example, this means that all the `Article` records associated with a specific `Author` record could be accessed through the use of the `Author#articles` method in the previous snippet.
+Lorsque l'argument `related` est utilisé, une méthode sera automatiquement créée sur le modèle ciblé en utilisant la valeur de l'argument choisi. Par exemple, cela signifie que tous les enregistrements `Article` associés à un enregistrement `Author` spécifique pourraient être accessibles via l'utilisation de la méthode `Author#articles` dans l'extrait précédent.
 
-The default value is `nil`, which means that no reverse relation is defined on the targeted model by default.
+La valeur par défaut est `nil`, ce qui signifie qu'aucune relation inverse n'est définie sur le modèle ciblé par défaut.
 
 #### `on_delete`
 
-The `on_delete` argument allows to specify the deletion strategy to adopt when a related record (one that is targeted by the `many_to_one` field) is deleted. The following strategies can be specified (as symbols):
+L'argument `on_delete` permet de spécifier la stratégie de suppression à adopter lorsqu'un enregistrement lié (celui qui est ciblé par le field `many_to_one`) est supprimé. Les stratégies suivantes peuvent être spécifiées (en tant que symboles) :
 
-* `:do_nothing`: is the default strategy. With this strategy, Marten won't do anything to ensure that records referencing the record being deleted are deleted or updated. If the database enforces referential integrity (which will be the case for foreign key fields), this means that deleting a record could result in database errors.
-* `:cascade`: this strategy can be used to perform cascade deletions. When deleting a record, Marten will try to first destroy the other records that reference the object being deleted.
-* `:protect`: this strategy allows to explicitly prevent the deletion of records if they are referenced by other records. This means that attempting to delete a "protected" record will result in a `Marten::DB::Errors::ProtectedRecord` error.
-* `:set_null`: this strategy will set the reference column to `null` when the related record is deleted.
+* `:do_nothing` : c'est la stratégie par défaut. Avec cette stratégie, Marten ne fera rien pour s'assurer que les enregistrements référençant l'enregistrement supprimé sont supprimés ou mis à jour. Si la base de données applique l'intégrité référentielle (ce qui sera le cas pour les fields de clé étrangère), cela signifie que supprimer un enregistrement pourrait entraîner des erreurs de base de données.
+* `:cascade` : cette stratégie peut être utilisée pour effectuer des suppressions en cascade. Lors de la suppression d'un enregistrement, Marten essaiera d'abord de détruire les autres enregistrements qui référencent l'objet supprimé.
+* `:protect` : cette stratégie permet d'empêcher explicitement la suppression d'enregistrements s'ils sont référencés par d'autres enregistrements. Cela signifie que tenter de supprimer un enregistrement "protégé" entraînera une erreur `Marten::DB::Errors::ProtectedRecord`.
+* `:set_null` : cette stratégie mettra la colonne de référence à `null` lorsque l'enregistrement lié est supprimé.
 
 ### `one_to_one`
 
-A `one_to_one` field allows defining a one-to-one relationship. This special field type requires the use of a special `to` argument in order to specify the model class to which the current model is related.
+Un field `one_to_one` permet de définir une relation one-to-one. Ce type de field spécial nécessite l'utilisation d'un argument spécial `to` afin de spécifier la classe de modèle à laquelle le modèle actuel est relié.
 
-For example, a `User` model could have a one-to-one field towards a `Profile` model. In such case, the `User` model could only have one associated `Profile` record, and the reverse would be true as well (a `Profile` record could only have one associated `User` record). In fact, a one-to-one field is really similar to a many-to-one field, but with an additional unicity constraint:
+Par exemple, un modèle `User` pourrait avoir un field one-to-one vers un modèle `Profile`. Dans ce cas, le modèle `User` ne pourrait avoir qu'un seul enregistrement `Profile` associé, et l'inverse serait également vrai (un enregistrement `Profile` ne pourrait avoir qu'un seul enregistrement `User` associé). En fait, un field one-to-one est très similaire à un field many-to-one, mais avec une contrainte d'unicité supplémentaire :
 
 ```crystal
 class Profile < Marten::Model
@@ -488,15 +488,15 @@ class User < Marten::Model
 end
 ```
 
-In addition to the [common field options](#common-field-options), such fields support the following arguments:
+En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `to`
 
-The `to` argument **is required** and allows to specify the model class that is related to the model where the `one_to_one` field is defined.
+L'argument `to` **est requis** et permet de spécifier la classe de modèle qui est reliée au modèle où le field `one_to_one` est défini.
 
 #### `related`
 
-The `related` argument allows defining the name of the reverse (or backward) relation on the targeted model. If we consider the previous example, it could be possible to define a `user` backward relation in order to let `Profile` records expose their related `User` record:
+L'argument `related` permet de définir le nom de la relation inverse (ou backward) sur le modèle ciblé. Si nous considérons l'exemple précédent, il serait possible de définir une relation inverse `user` afin de permettre aux enregistrements `Profile` d'exposer leur enregistrement `User` lié :
 
 ```crystal
 class Profile < Marten::Model
@@ -509,19 +509,19 @@ class User < Marten::Model
 end
 ```
 
-When the `related` argument is used, a method will be automatically created on the targeted model by using the chosen argument's value. For example, this means that the `User` record associated with a specific `Profile` record could be accessed through the use of the `Profile#user` method in the previous snippet.
+Lorsque l'argument `related` est utilisé, une méthode sera automatiquement créée sur le modèle ciblé en utilisant la valeur de l'argument choisi. Par exemple, cela signifie que l'enregistrement `User` associé à un enregistrement `Profile` spécifique pourrait être accessible via l'utilisation de la méthode `Profile#user` dans l'extrait précédent.
 
-The default value is `nil`, which means that no reverse relation is defined on the targeted model by default.
+La valeur par défaut est `nil`, ce qui signifie qu'aucune relation inverse n'est définie sur le modèle ciblé par défaut.
 
 #### `on_delete`
 
-Same as [the similar option for the `#many_to_one` field](#on_delete).
+Identique à [l'option similaire pour le field `#many_to_one`](#on_delete).
 
 ### `polymorphic`
 
-A `polymorphic` field allows defining a polymorphic relationship. This special field type requires the use of a special `to` argument in order to specify the model classes to which the current model can be related.
+Un field `polymorphic` permet de définir une relation polymorphique. Ce type de field spécial nécessite l'utilisation d'un argument spécial `to` afin de spécifier les classes de modèle auxquelles le modèle actuel peut être relié.
 
-For example, a `Comment` model could have a polymorphic field towards an `Article` or a `Recipe` model. In such case, a `Comment` record could be associated with an `Article` or a `Recipe` record:
+Par exemple, un modèle `Comment` pourrait avoir un field polymorphique vers un modèle `Article` ou un modèle `Recipe`. Dans ce cas, un enregistrement `Comment` pourrait être associé à un enregistrement `Article` ou `Recipe` :
 
 ```crystal
 class Article < Marten::Model
@@ -538,15 +538,15 @@ class Comment < Marten::Model
 end
 ```
 
-In addition to the [common field options](#common-field-options), such fields support the following arguments:
+En plus des [options communes des fields](#options-communes-des-fields), ces fields supportent les arguments suivants :
 
 #### `to`
 
-The `to` argument **is required** and allows to specify the model classes that can be related to the model where the `polymorphic` field is defined.
+L'argument `to` **est requis** et permet de spécifier les classes de modèle qui peuvent être reliées au modèle où le field `polymorphic` est défini.
 
 #### `related`
 
-The `related` argument allows defining the name of the reverse (or backward) relation on the targeted model. If we consider the previous example, it could be possible to define a `comments` backward relation in order to let `Article` and `Recipe` records access their related `Comment` records:
+L'argument `related` permet de définir le nom de la relation inverse (ou backward) sur le modèle ciblé. Si nous considérons l'exemple précédent, il serait possible de définir une relation inverse `comments` afin de permettre aux enregistrements `Article` et `Recipe` d'accéder à leurs enregistrements `Comment` liés :
 
 ```crystal
 class Article < Marten::Model
@@ -563,6 +563,6 @@ class Comment < Marten::Model
 end
 ```
 
-When the `related` argument is used, a method will be automatically created on the associated models by using the chosen argument's value. For example, this means that all the `Comment` records associated with a specific `Article` or `Recipe` record could be accessed through the use of the `Article#comments` or `Recipe#comments` methods in the previous snippet.
+Lorsque l'argument `related` est utilisé, une méthode sera automatiquement créée sur les modèles associés en utilisant la valeur de l'argument choisi. Par exemple, cela signifie que tous les enregistrements `Comment` associés à un enregistrement `Article` ou `Recipe` spécifique pourraient être accessibles via l'utilisation des méthodes `Article#comments` ou `Recipe#comments` dans l'extrait précédent.
 
-The default value is `nil`, which means that no reverse relation is defined on the associated models by default.
+La valeur par défaut est `nil`, ce qui signifie qu'aucune relation inverse n'est définie sur les modèles associés par défaut.

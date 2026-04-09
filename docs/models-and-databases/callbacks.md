@@ -1,16 +1,16 @@
 ---
-title: Model callbacks
-description: Learn how to define model callbacks.
+title: Callbacks de modèles
+description: Apprenez à définir des callbacks de modèles.
 sidebar_label: Callbacks
 ---
 
-Models callbacks let you define logic that is triggered before or after a record's state alteration. They are methods that get called at specific stages of a record's lifecycle. For example, callbacks can be called when model instances are created, updated, or deleted. This documents covers the available callbacks and introduces you to the associated API, which you can use to define hooks in your models.
+Les callbacks de modèles vous permettent de définir une logique déclenchée avant ou après l'altération de l'état d'un enregistrement. Ce sont des méthodes qui sont appelées à des étapes spécifiques du cycle de vie d'un enregistrement. Par exemple, les callbacks peuvent être appelés lorsque des instances de modèles sont créées, mises à jour ou supprimées. Ce document couvre les callbacks disponibles et vous présente l'API associée, que vous pouvez utiliser pour définir des hooks dans vos modèles.
 
-## Overview
+## Vue d'ensemble
 
-As stated above, callbacks are methods that will be called when specific events occur for a specific model instance. They need to be registered explicitly as part your model definitions. There are [many types of callbacks](#available-callbacks), and it is possible to register "before" or "after" callbacks for most of these types.
+Comme indiqué ci-dessus, les callbacks sont des méthodes qui seront appelées lorsque des événements spécifiques se produisent pour une instance de modèle donnée. Ils doivent être enregistrés explicitement dans vos définitions de modèles. Il existe [de nombreux types de callbacks](#callbacks-disponibles), et il est possible d'enregistrer des callbacks "before" ou "after" pour la plupart de ces types.
 
-Registering a callback is as simple as calling the right callback macro (eg. `#before_validation`) with a symbol of the name of the method to call when the callback is executed. For example:
+Enregistrer un callback est aussi simple qu'appeler la bonne macro de callback (par ex. `#before_validation`) avec un symbole du nom de la méthode à appeler lorsque le callback est exécuté. Par exemple :
 
 ```crystal
 class User < Marten::Model
@@ -25,96 +25,96 @@ class User < Marten::Model
 end
 ```
 
-In the above snippet, a `before_validation` callback is registered to ensure that the `username` of a `User` instance is downcased before any validation.
+Dans l'extrait ci-dessus, un callback `before_validation` est enregistré pour s'assurer que le `username` d'une instance `User` est en minuscules avant toute validation.
 
-This technique of callback registration is shared by all types of callbacks.
+Cette technique d'enregistrement de callback est partagée par tous les types de callbacks.
 
-It should be noted that the order in which callback methods are registered for a given callback type (eg. `before_update`) matters: callbacks will be called in the order in which they were registered.
+Il est à noter que l'ordre dans lequel les méthodes de callback sont enregistrées pour un type de callback donné (par ex. `before_update`) est important : les callbacks seront appelés dans l'ordre dans lequel ils ont été enregistrés.
 
-## Available callbacks
+## Callbacks disponibles
 
 ### `after_initialize`
 
-`after_initialize` callbacks are called right after a model instance is initialized. They will be called automatically when new model instances are initialized through the use of `new` or when records are retrieved from the database.
+Les callbacks `after_initialize` sont appelés juste après l'initialisation d'une instance de modèle. Ils seront appelés automatiquement lorsque de nouvelles instances de modèles sont initialisées via l'utilisation de `new` ou lorsque des enregistrements sont récupérés de la base de données.
 
-### `before_validation` and `after_validation`
+### `before_validation` et `after_validation`
 
-`before_validation` callbacks are called before running validation rules for a given model instance while `after_validation` callbacks are executed after. They can be used to sanitize model instance attributes for example.
+Les callbacks `before_validation` sont appelés avant l'exécution des règles de validation pour une instance de modèle donnée, tandis que les callbacks `after_validation` sont exécutés après. Ils peuvent être utilisés pour assainir les attributs d'une instance de modèle, par exemple.
 
-The use of methods like `#valid?` or `#invalid?`, or any other methods involving validations (`#save`, `#save!`, `#create`, or `#create!`), will trigger validation callbacks. See [Model validations](./validations.md) for more details.
+L'utilisation de méthodes comme `#valid?` ou `#invalid?`, ou toute autre méthode impliquant des validations (`#save`, `#save!`, `#create` ou `#create!`), déclenchera les callbacks de validation. Voir [Validations de modèles](./validations.md) pour plus de détails.
 
-### `before_create` and `after_create`
+### `before_create` et `after_create`
 
-`before_create` callbacks are called before a new record is inserted into the database. `after_create` callbacks are called after a new record has been created at the database level.
+Les callbacks `before_create` sont appelés avant qu'un nouvel enregistrement ne soit inséré dans la base de données. Les callbacks `after_create` sont appelés après qu'un nouvel enregistrement a été créé au niveau de la base de données.
 
-The use of the `#save` method (or `#save!`) on a new model instance will trigger the execution of creation callbacks. The use of the `#create` / `#create!` methods will also trigger these callbacks.
+L'utilisation de la méthode `#save` (ou `#save!`) sur une nouvelle instance de modèle déclenchera l'exécution des callbacks de création. L'utilisation des méthodes `#create` / `#create!` déclenchera également ces callbacks.
 
-### `before_update` and `after_update`
+### `before_update` et `after_update`
 
-`before_update` callbacks are called before an existing record is updated while `after_update` callbacks are called after.
+Les callbacks `before_update` sont appelés avant qu'un enregistrement existant ne soit mis à jour, tandis que les callbacks `after_update` sont appelés après.
 
-The use of the `#save` method (or `#save!`) on an existing model record will trigger the execution of update callbacks.
+L'utilisation de la méthode `#save` (ou `#save!`) sur un enregistrement de modèle existant déclenchera l'exécution des callbacks de mise à jour.
 
-### `before_save` and `after_save`
+### `before_save` et `after_save`
 
-`before_save` callbacks are called before a record (existing or new) is saved to the database while `after_save` callbacks are called after.
+Les callbacks `before_save` sont appelés avant qu'un enregistrement (existant ou nouveau) ne soit sauvegardé dans la base de données, tandis que les callbacks `after_save` sont appelés après.
 
-The use of the `#save` / `#save!` and the `#create` / `#create!` methods will trigger the execution of save callbacks.
+L'utilisation des méthodes `#save` / `#save!` et `#create` / `#create!` déclenchera l'exécution des callbacks de sauvegarde.
 
 :::info
-`before_save` and `after_save` are called for both new and existing records. `before_save` callbacks are always executed _before_ `before_create` or `before_update` callbacks. `after_save` callbacks on the other hand are always executed _after_ `after_create` or `after_update` callbacks.
+`before_save` et `after_save` sont appelés à la fois pour les enregistrements nouveaux et existants. Les callbacks `before_save` sont toujours exécutés _avant_ les callbacks `before_create` ou `before_update`. Les callbacks `after_save`, en revanche, sont toujours exécutés _après_ les callbacks `after_create` ou `after_update`.
 :::
 
-### `before_delete` and `after_delete`
+### `before_delete` et `after_delete`
 
-`before_delete` callbacks are called before a record gets deleted while `after_delete` callbacks are called after.
+Les callbacks `before_delete` sont appelés avant qu'un enregistrement ne soit supprimé, tandis que les callbacks `after_delete` sont appelés après.
 
-The use of the `#delete` method will trigger these callbacks.
+L'utilisation de la méthode `#delete` déclenchera ces callbacks.
 
 ### `after_commit`
 
-`after_commit` callbacks are called after a record is created, updated, or deleted, but only after the corresponding SQL transaction has been committed to the database (which isn't the case for other `after_*` callbacks - See [Transactions](./transactions.md) for more details). For example:
+Les callbacks `after_commit` sont appelés après qu'un enregistrement est créé, mis à jour ou supprimé, mais uniquement après que la transaction SQL correspondante a été validée dans la base de données (ce qui n'est pas le cas pour les autres callbacks `after_*` - Voir [Transactions](./transactions.md) pour plus de détails). Par exemple :
 
 ```crystal
 after_commit :do_something
 ```
 
-As mentioned previously, by default such callbacks will run in the context of record creations, updates, and deletions. That being said it is also possible to associate these callbacks with one or more specific actions only by using the `on` argument. For example:
+Comme mentionné précédemment, par défaut ces callbacks s'exécuteront dans le contexte des créations, mises à jour et suppressions d'enregistrements. Cela dit, il est également possible d'associer ces callbacks à une ou plusieurs actions spécifiques uniquement en utilisant l'argument `on`. Par exemple :
 
 ```crystal
-after_commit :do_something, on: :create # Will run after creations only
-after_commit :do_something, on: :update # Will run after updates only
-after_commit :do_something, on: :update # Will run after saves (creations or updates) only
-after_commit :do_something, on: :delete # Will run after deletions only
-after_commit :do_something_else, on: [:create, :delete] # Will run after creations and deletions only
+after_commit :do_something, on: :create # S'exécutera après les créations uniquement
+after_commit :do_something, on: :update # S'exécutera après les mises à jour uniquement
+after_commit :do_something, on: :update # S'exécutera après les sauvegardes (créations ou mises à jour) uniquement
+after_commit :do_something, on: :delete # S'exécutera après les suppressions uniquement
+after_commit :do_something_else, on: [:create, :delete] # S'exécutera après les créations et suppressions uniquement
 ```
 
-The actions supported by the `on` argument are `create`, `update`, `save`, and `delete`.
+Les actions supportées par l'argument `on` sont `create`, `update`, `save` et `delete`.
 
 ### `after_rollback`
 
-`after_rollback` callbacks are called after a transaction is rolled back when a record is created, updated, or deleted. For example:
+Les callbacks `after_rollback` sont appelés après qu'une transaction est annulée lorsqu'un enregistrement est créé, mis à jour ou supprimé. Par exemple :
 
 ```crystal
 after_rollback :do_something
 ```
 
-As mentioned previously, by default such callbacks will run in the context of record creations, updates, and deletions. That being said it is also possible to associate these callbacks with one or more specific actions only by using the `on` argument. For example:
+Comme mentionné précédemment, par défaut ces callbacks s'exécuteront dans le contexte des créations, mises à jour et suppressions d'enregistrements. Cela dit, il est également possible d'associer ces callbacks à une ou plusieurs actions spécifiques uniquement en utilisant l'argument `on`. Par exemple :
 
 ```crystal
-after_rollback :do_something, on: :create # Will run after rolled back creations only
-after_rollback :do_something, on: :update # Will run after rolled back updates only
-after_rollback :do_something, on: :update # Will run after rolled back saves (creations or updates) only
-after_rollback :do_something, on: :delete # Will run after rolled back deletions only
-after_rollback :do_something_else, on: [:create, :delete] # Will run after rolled back creations and deletions only
+after_rollback :do_something, on: :create # S'exécutera après les créations annulées uniquement
+after_rollback :do_something, on: :update # S'exécutera après les mises à jour annulées uniquement
+after_rollback :do_something, on: :update # S'exécutera après les sauvegardes annulées (créations ou mises à jour) uniquement
+after_rollback :do_something, on: :delete # S'exécutera après les suppressions annulées uniquement
+after_rollback :do_something_else, on: [:create, :delete] # S'exécutera après les créations et suppressions annulées uniquement
 ```
 
-The actions supported by the `on` argument are `create`, `update`, `save`, and `delete`.
+Les actions supportées par l'argument `on` sont `create`, `update`, `save` et `delete`.
 
-## Methods that bypass callbacks
+## Méthodes qui contournent les callbacks
 
-Some model methods intentionally bypass callbacks for performance or specific use cases. The following methods do **not** trigger callbacks:
+Certaines méthodes de modèle contournent intentionnellement les callbacks pour des raisons de performance ou des cas d'utilisation spécifiques. Les méthodes suivantes ne déclenchent **pas** de callbacks :
 
-* `#update_columns` and `#update_columns!` - These methods update specific columns directly in the database without running validations or any lifecycle callbacks. They are useful for performance-critical updates where you want to avoid the overhead of the full save lifecycle.
+* `#update_columns` et `#update_columns!` - Ces méthodes mettent à jour des colonnes spécifiques directement dans la base de données sans exécuter les validations ni aucun callback du cycle de vie. Elles sont utiles pour les mises à jour critiques en termes de performance où vous souhaitez éviter la surcharge du cycle de vie complet de sauvegarde.
 
-If you need to update records while ensuring that callbacks are executed, use the standard `#save`, `#save!`, `#update`, or `#update!` methods instead.
+Si vous devez mettre à jour des enregistrements tout en vous assurant que les callbacks sont exécutés, utilisez plutôt les méthodes standard `#save`, `#save!`, `#update` ou `#update!`.

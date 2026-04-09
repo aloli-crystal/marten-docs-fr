@@ -1,60 +1,60 @@
 ---
-title: Generated files
-description: Generated files reference.
+title: Fichiers générés
+description: Référence des fichiers générés.
 ---
 
-This page provides a reference of the files that are generated for the `auth` application when running the [`new`](../../development/reference/management-commands.md#new) management command with the `--with-auth` option or when using the [`auth`](../../development/reference/generators.md#auth) generator.
+Cette page fournit une référence des fichiers qui sont générés pour l'application `auth` lors de l'exécution de la commande de gestion [`new`](../../development/reference/management-commands.md#new) avec l'option `--with-auth` ou lors de l'utilisation du générateur [`auth`](../../development/reference/generators.md#auth).
 
 ## Application
 
-The `auth` application is generated under the `src` or `src/apps` folder. In addition to the abstractions mentioned below, this folder defines the following top-level files:
+L'application `auth` est générée sous le dossier `src` ou `src/apps`. En plus des abstractions mentionnées ci-dessous, ce dossier définit les fichiers de niveau supérieur suivants :
 
-* `app.cr` - The entrypoint of the `auth` application, where all the other abstractions are required
-* `cli.cr` - The CLI entrypoint of the `auth` application, where CLI-related abstractions (like migrations) are required
-* `routes.cr` - The `auth` application routes map
+* `app.cr` - Le point d'entrée de l'application `auth`, où toutes les autres abstractions sont requises
+* `cli.cr` - Le point d'entrée CLI de l'application `auth`, où les abstractions liées au CLI (comme les migrations) sont requises
+* `routes.cr` - La carte de routes de l'application `auth`
 
 ### Emails
 
-* `password_reset_email.cr` - Defines the [email](../../emailing.mdx) that is sent as part of the user password reset flow
+* `password_reset_email.cr` - Définit l'[email](../../emailing.mdx) qui est envoyé dans le cadre du flux de réinitialisation de mot de passe de l'utilisateur
 
 ### Handlers
 
-* `handlers/concerns/require_anonymous_user.cr` - A concern that ensures that a handler can only be accessed by anonymous users
-* `handlers/concerns/require_signed_in_user.cr` - A concern that ensures that a handler can only be accessed by signed-in users
-* `handlers/password_reset_confirm_handler.cr` - A handler that handles resetting a user's password as part of the password reset flow
-* `handlers/password_reset_initiate_handler.cr` - A handler that initiates the password reset flow for a given user
-* `handlers/password_update_handler.cr` - A handler that allows to update the user's password
-* `handlers/profile_handler.cr` - A handler that displays the currently signed-in user profile
-* `handlers/sign_in_handler.cr` - A handler that allows users to sign in
-* `handlers/sign_out_handler.cr` - A handler that allows users to sign out
-* `handlers/sign_up_handler.cr` - A handler that allows users to sign up
+* `handlers/concerns/require_anonymous_user.cr` - Un concern qui garantit qu'un handler ne peut être accédé que par des utilisateurs anonymes
+* `handlers/concerns/require_signed_in_user.cr` - Un concern qui garantit qu'un handler ne peut être accédé que par des utilisateurs connectés
+* `handlers/password_reset_confirm_handler.cr` - Un handler qui gère la réinitialisation du mot de passe d'un utilisateur dans le cadre du flux de réinitialisation de mot de passe
+* `handlers/password_reset_initiate_handler.cr` - Un handler qui initie le flux de réinitialisation de mot de passe pour un utilisateur donné
+* `handlers/password_update_handler.cr` - Un handler qui permet de mettre à jour le mot de passe de l'utilisateur
+* `handlers/profile_handler.cr` - Un handler qui affiche le profil de l'utilisateur actuellement connecté
+* `handlers/sign_in_handler.cr` - Un handler qui permet aux utilisateurs de se connecter
+* `handlers/sign_out_handler.cr` - Un handler qui permet aux utilisateurs de se déconnecter
+* `handlers/sign_up_handler.cr` - Un handler qui permet aux utilisateurs de s'inscrire
 
 ### Migrations
 
-* `migrations/0001_create_auth_user_table.cr` - Allows to create the table of the `Auth::User` model
+* `migrations/0001_create_auth_user_table.cr` - Permet de créer la table du modèle `Auth::User`
 
-### Models
+### Modèles
 
-* `models/user.cr` - Defines the main `Auth::User` model
+* `models/user.cr` - Définit le modèle principal `Auth::User`
 
 ### Schemas
 
-* `schemas/password_reset_confirm_schema.cr` - A schema that allows a user to reset their password
-* `schemas/password_reset_initiate_schema.cr` - A schema that allows a user to initiate the password reset flow
-* `schemas/password_update_schema.cr` - A schema that allows a user to update their password
-* `schemas/sign_in_schema.cr` - A schema used to sign in users
-* `schemas/sign_up_schema.cr` - A schema used to sign up users
+* `schemas/password_reset_confirm_schema.cr` - Un schema qui permet à un utilisateur de réinitialiser son mot de passe
+* `schemas/password_reset_initiate_schema.cr` - Un schema qui permet à un utilisateur d'initier le flux de réinitialisation de mot de passe
+* `schemas/password_update_schema.cr` - Un schema qui permet à un utilisateur de mettre à jour son mot de passe
+* `schemas/sign_in_schema.cr` - Un schema utilisé pour connecter les utilisateurs
+* `schemas/sign_up_schema.cr` - Un schema utilisé pour inscrire les utilisateurs
 
 ### Templates
 
-* `templates/auth/emails/password_reset.html` - The template of the password reset email
-* `templates/auth/password_reset_confirm.html` - The template used to let users reset their passwords
-* `templates/auth/password_reset_initiate.html` - The template used to let users initiate the password reset flow
-* `templates/auth/password_update.html` - The template used to let users update their password
-* `templates/auth/profile.html` - The template of the user profile
-* `templates/auth/sign_in.html` - The sign in page template
-* `templates/auth/sign_up.html` - The sign up page template
+* `templates/auth/emails/password_reset.html` - Le template de l'email de réinitialisation de mot de passe
+* `templates/auth/password_reset_confirm.html` - Le template utilisé pour permettre aux utilisateurs de réinitialiser leur mot de passe
+* `templates/auth/password_reset_initiate.html` - Le template utilisé pour permettre aux utilisateurs d'initier le flux de réinitialisation de mot de passe
+* `templates/auth/password_update.html` - Le template utilisé pour permettre aux utilisateurs de mettre à jour leur mot de passe
+* `templates/auth/profile.html` - Le template du profil utilisateur
+* `templates/auth/sign_in.html` - Le template de la page de connexion
+* `templates/auth/sign_up.html` - Le template de la page d'inscription
 
 ## Specs
 
-All the previously mentioned abstractions have associated specs that are defined under the `spec/apps/auth` folder.
+Toutes les abstractions mentionnées précédemment ont des specs associées qui sont définies sous le dossier `spec/apps/auth`.

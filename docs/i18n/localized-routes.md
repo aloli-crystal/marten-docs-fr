@@ -1,21 +1,21 @@
 ---
-title: Localized routes
-description: Learn how to define localized routes.
+title: Routes localisées
+description: Apprenez à définir des routes localisées.
 ---
 
-Marten enables route internationalization through two mechanisms: automatically adding locale prefixes to your routes and activating the appropriate locale based on the prefix, and translating the routes themselves to provide a seamless multilingual experience. These mechanisms can be used independently or in combination.
+Marten permet l'internationalisation des routes à travers deux mécanismes : l'ajout automatique de préfixes de locale à vos routes et l'activation de la locale appropriée en fonction du préfixe, et la traduction des routes elles-mêmes pour offrir une expérience multilingue transparente. Ces mécanismes peuvent être utilisés indépendamment ou en combinaison.
 
-## Requirements
+## Prérequis
 
-The features described below require the correct locale to be automatically activated for each user when processing incoming requests. To achieve this, you must either use the [I18n middleware](../handlers-and-http/reference/middlewares.md#i18n-middleware) or implement your [own middleware](../handlers-and-http/middlewares.md#how-middlewares-work) that activates the appropriate locale based on a custom logic (eg. based on specific domains).
+Les fonctionnalités décrites ci-dessous nécessitent que la locale correcte soit automatiquement activée pour chaque utilisateur lors du traitement des requêtes entrantes. Pour y parvenir, vous devez soit utiliser le [middleware I18n](../handlers-and-http/reference/middlewares.md#i18n-middleware) soit implémenter votre [propre middleware](../handlers-and-http/middlewares.md#how-middlewares-work) qui active la locale appropriée en fonction d'une logique personnalisée (ex. basée sur des domaines spécifiques).
 
-## Prefixing routes with locales
+## Préfixer les routes avec des locales
 
-Prefixing routes with locales allows to activate specific locales based on the accessed route paths when the [I18n middleware](../handlers-and-http/reference/middlewares.md#i18n-middleware) is used.
+Le préfixage des routes avec des locales permet d'activer des locales spécifiques en fonction des chemins de routes accédés lorsque le [middleware I18n](../handlers-and-http/reference/middlewares.md#i18n-middleware) est utilisé.
 
-Defining localized routes involves wrapping route path definitions by a call to the [`#localized`](pathname:///api/dev/Marten/Routing/Map.html#localized(prefix_default_locale%3Dtrue%2C%26)%3ANil-instance-method) method. When such routes are defined, the current locale will be automatically prepended to the path of the localized routes and the routes map will be able to resolve paths in a locale-aware manner.
+La définition de routes localisées implique d'encapsuler les définitions de chemins de route par un appel à la méthode [`#localized`](pathname:///api/dev/Marten/Routing/Map.html#localized(prefix_default_locale%3Dtrue%2C%26)%3ANil-instance-method). Lorsque de telles routes sont définies, la locale actuelle sera automatiquement préfixée au chemin des routes localisées et la carte de routes sera capable de résoudre les chemins de manière consciente de la locale.
 
-For example:
+Par exemple :
 
 ```crystal
 ARTICLE_ROUTES = Marten::Routing::Map.draw do
@@ -34,7 +34,7 @@ Marten.routes.draw do
 end
 ```
 
-After defining these routes, Marten automatically prepends the locale prefix to the paths of all routes included within the [`#localized`](pathname:///api/dev/Marten/Routing/Map.html#localized(prefix_default_locale%3Dtrue%2C%26)%3ANil-instance-method) method block.
+Après avoir défini ces routes, Marten préfixe automatiquement le préfixe de locale aux chemins de toutes les routes incluses dans le bloc de la méthode [`#localized`](pathname:///api/dev/Marten/Routing/Map.html#localized(prefix_default_locale%3Dtrue%2C%26)%3ANil-instance-method).
 
 ```crystal
 I18n.activate("en")
@@ -43,7 +43,7 @@ Marten.routes.reverse("articles:create") # => "/en/articles/create"
 ```
 
 :::tip
-You can choose not to prefix routes for the [default locale](../development/reference/settings.md#default_locale). To achieve this, set the `prefix_default_locale` argument to `false` when defining the `#localized` block:
+Vous pouvez choisir de ne pas préfixer les routes pour la [locale par défaut](../development/reference/settings.md#default_locale). Pour y parvenir, définissez l'argument `prefix_default_locale` sur `false` lors de la définition du bloc `#localized` :
 
 ```crystal
 Marten.routes.draw do
@@ -56,16 +56,16 @@ end
 :::
 
 :::warning
-The `#localized` method can only be used within your root routes map, defined in your project's `config/routes.cr` file. Additionally, only one `#localized` block is allowed per project. Violating these requirements will result in a `Marten::Routing::Errors::InvalidRouteMap` exception being raised.
+La méthode `#localized` ne peut être utilisée que dans votre carte de routes racine, définie dans le fichier `config/routes.cr` de votre projet. De plus, un seul bloc `#localized` est autorisé par projet. Le non-respect de ces exigences entraînera une exception `Marten::Routing::Errors::InvalidRouteMap`.
 :::
 
-## Translating route paths
+## Traduire les chemins de routes
 
-You can translate route paths whether or not they use [locale prefixes](#prefixing-routes-with-locales). Indeed, it is possible to define routes whose paths reference specific translation keys that map to predefined translations (translations which store the actual route paths for each locale).
+Vous pouvez traduire les chemins de routes qu'ils utilisent ou non des [préfixes de locale](#préfixer-les-routes-avec-des-locales). En effet, il est possible de définir des routes dont les chemins référencent des clés de traduction spécifiques qui correspondent à des traductions prédéfinies (traductions qui stockent les chemins de routes réels pour chaque locale).
 
-To do so, instead of specifying the paths of your routes as regular strings, you need to use the [`#t`](pathname:///api/dev/Marten/Routing/Map.html#t(path%3AString)%3ATranslatedPath-instance-method) method to specify a translation key that will dynamically be used to generate a route's path for a given locale. This method takes a single argument: the translation key that should be used to dynamically determine the path of the considered route.
+Pour ce faire, au lieu de spécifier les chemins de vos routes comme des chaînes régulières, vous devez utiliser la méthode [`#t`](pathname:///api/dev/Marten/Routing/Map.html#t(path%3AString)%3ATranslatedPath-instance-method) pour spécifier une clé de traduction qui sera dynamiquement utilisée pour générer le chemin d'une route pour une locale donnée. Cette méthode prend un seul argument : la clé de traduction qui devrait être utilisée pour déterminer dynamiquement le chemin de la route considérée.
 
-For example, let's consider the following [translation file](./introduction.md#defining-translations):
+Par exemple, considérons le [fichier de traduction](./introduction.md#définir-des-traductions) suivant :
 
 ```yaml
 en:
@@ -89,7 +89,7 @@ fr:
       delete: "/<pk:int>/supprimer"
 ```
 
-As you can see, route path translations can contain [route parameters](../handlers-and-http/routing.md#specifying-route-parameters). Considering these translations, we could define the following routes map:
+Comme vous pouvez le voir, les traductions de chemins de routes peuvent contenir des [paramètres de route](../handlers-and-http/routing.md#specifying-route-parameters). En considérant ces traductions, nous pourrions définir la carte de routes suivante :
 
 ```crystal
 ARTICLE_ROUTES = Marten::Routing::Map.draw do
@@ -107,14 +107,14 @@ end
 ```
 
 :::warning
-When using translated paths, the entirety of the path **must** be defined in locale files (including [route parameters](../handlers-and-http/routing.md#specifying-route-parameters)). As such, interpolating the return values of the [`#t`](pathname:///api/dev/Marten/Routing/Map.html#t(path%3AString)%3ATranslatedPath-instance-method) method is not allowed and will result in `Marten::Routing::Errors::InvalidRouteMap` exceptions to be raised. For example, the following route is not permitted:
+Lorsque vous utilisez des chemins traduits, l'intégralité du chemin **doit** être définie dans les fichiers de locale (y compris les [paramètres de route](../handlers-and-http/routing.md#specifying-route-parameters)). Ainsi, interpoler les valeurs de retour de la méthode [`#t`](pathname:///api/dev/Marten/Routing/Map.html#t(path%3AString)%3ATranslatedPath-instance-method) n'est pas autorisé et entraînera des exceptions `Marten::Routing::Errors::InvalidRouteMap`. Par exemple, la route suivante n'est pas permise :
 
 ```crystal
   path "#{t("routes.articles.detail")}/<pk:int>", ArticleDetailHandler, name: "detail"
 ```
 :::
 
-As highlighted above, all the paths of these routes will be dynamically determined by resolving the corresponding translation key for the current locale. For example:
+Comme souligné ci-dessus, tous les chemins de ces routes seront dynamiquement déterminés en résolvant la clé de traduction correspondante pour la locale actuelle. Par exemple :
 
 ```crystal
 I18n.activate("en")
@@ -127,7 +127,7 @@ Marten.routes.reverse("articles:create") # => "/articles/creer"
 ```
 
 :::tip
-It is possible to combine translated route paths and [locale prefixes](#prefixing-routes-with-locales). This allows to benefit from fully translated routes that are prefixed by a locale that is automatically activated by the [I18n middleware](../handlers-and-http/reference/middlewares.md#i18n-middleware) if it is used. For example:
+Il est possible de combiner des chemins de routes traduits et des [préfixes de locale](#préfixer-les-routes-avec-des-locales). Cela permet de bénéficier de routes entièrement traduites qui sont préfixées par une locale qui est automatiquement activée par le [middleware I18n](../handlers-and-http/reference/middlewares.md#i18n-middleware) s'il est utilisé. Par exemple :
 
 ```crystal
 ARTICLE_ROUTES = Marten::Routing::Map.draw do
@@ -156,5 +156,5 @@ Marten.routes.reverse("articles:create") # => "/fr/articles/creer"
 :::
 
 :::warning
-To avoid potential collisions between translated and non-translated route paths, it is generally best to translate route paths while also [incorporating locale prefixes](#prefixing-routes-with-locales). This ensures a clear distinction between different locales and minimizes the risk of conflicts.
+Pour éviter les collisions potentielles entre les chemins de routes traduits et non traduits, il est généralement préférable de traduire les chemins de routes tout en [incorporant des préfixes de locale](#préfixer-les-routes-avec-des-locales). Cela garantit une distinction claire entre les différentes locales et minimise le risque de conflits.
 :::

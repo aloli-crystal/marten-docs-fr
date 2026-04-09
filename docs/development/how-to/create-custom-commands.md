@@ -1,15 +1,15 @@
 ---
-title: Create custom commands
-description: How to create custom management commands.
+title: Créer des commandes personnalisées
+description: Comment créer des commandes de gestion personnalisées.
 ---
 
-Marten lets you create custom management commands as part of your [applications](../applications.md). This allows you to contribute new features and behaviors to the Marten CLI.
+Marten vous permet de créer des commandes de gestion personnalisées dans le cadre de vos [applications](../applications.md). Cela vous permet de contribuer de nouvelles fonctionnalités et comportements au CLI Marten.
 
-## Basic management command definition
+## Définition basique d'une commande de gestion
 
-Custom management commands are defined as subclasses of the [`Marten::CLI::Command`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html) abstract class. Such subclasses should be defined in a `cli/` folder at the root of the application, and it should be ensured that they are required by your `cli.cr` file (see [Creating applications](../applications.md#creating-applications) for more details regarding the structure of an application).
+Les commandes de gestion personnalisées sont définies comme des sous-classes de la classe abstraite [`Marten::CLI::Command`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html). Ces sous-classes doivent être définies dans un dossier `cli/` à la racine de l'application, et il faut s'assurer qu'elles sont requises par votre fichier `cli.cr` (voir [Créer des applications](../applications.md#créer-des-applications) pour plus de détails sur la structure d'une application).
 
-Management command classes must at least define a [`#run`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#run-instance-method) method, which will be called when the subcommand is executed:
+Les classes de commandes de gestion doivent au minimum définir une méthode [`#run`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#run-instance-method), qui sera appelée lorsque la sous-commande est exécutée :
 
 ```crystal
 class MyCommand < Marten::CLI::Command
@@ -21,26 +21,26 @@ class MyCommand < Marten::CLI::Command
 end
 ```
 
-As you can see in the previous example, the [`#help`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#help(help%3AString)-class-method) class method allows setting a "help text" that will be displayed when the help information of the command is requested.
+Comme vous pouvez le voir dans l'exemple précédent, la méthode de classe [`#help`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#help(help%3AString)-class-method) permet de définir un "texte d'aide" qui sera affiché lorsque les informations d'aide de la commande sont demandées.
 
-If the above command was part of an installed application, it could be executed by using the Marten CLI as follows:
+Si la commande ci-dessus faisait partie d'une application installée, elle pourrait être exécutée en utilisant le CLI Marten comme suit :
 
 ```bash
 marten my_command
 ```
 
-## Accepting options and arguments
+## Accepter des options et arguments
 
-Marten management commands can accept options and arguments. These differ and may be used for different use cases:
+Les commandes de gestion Marten peuvent accepter des options et des arguments. Ceux-ci diffèrent et peuvent être utilisés pour différents cas d'usage :
 
-* options usually use the `-h` / `--help` style and can receive arguments if needed. They can be specified in any order
-* arguments are _positional_ and only their values must be specified
+* les options utilisent généralement le style `-h` / `--help` et peuvent recevoir des arguments si nécessaire. Elles peuvent être spécifiées dans n'importe quel ordre
+* les arguments sont _positionnels_ et seules leurs valeurs doivent être spécifiées
 
-By default options and arguments are always optional. That being said, they can be made mandatory in the command execution logic if needed.
+Par défaut, les options et arguments sont toujours optionnels. Cela dit, ils peuvent être rendus obligatoires dans la logique d'exécution de la commande si nécessaire.
 
-Both options and arguments must be specified in the optional [`#setup`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#setup-instance-method) method: this method will be called to prepare the definition of the command, including its arguments and options.
+Les options et arguments doivent être spécifiés dans la méthode optionnelle [`#setup`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#setup-instance-method) : cette méthode sera appelée pour préparer la définition de la commande, y compris ses arguments et options.
 
-For example:
+Par exemple :
 
 ```crystal
 class MyCommand < Marten::CLI::Command
@@ -60,9 +60,9 @@ class MyCommand < Marten::CLI::Command
 end
 ```
 
-In the above example, the [`#on_argument`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_argument(name%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) instance method is used to define an `arg1` argument. This method requires an argument name, an associated help text, and a proc where the value of the argument will be forwarded at execution time (which allows you to assign it to an instance variable or process it if you wish to). Similarly, the [`#on_option`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_option(flag%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) instance method is used to define an `example` option.  In this case, the name of the option and its associated help text must be specified, and a proc can be defined to identify that the option was specified at execution time (which can be used to set a related boolean instance variable for example).
+Dans l'exemple ci-dessus, la méthode d'instance [`#on_argument`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_argument(name%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) est utilisée pour définir un argument `arg1`. Cette méthode nécessite un nom d'argument, un texte d'aide associé, et un proc où la valeur de l'argument sera transmise au moment de l'exécution (ce qui vous permet de l'assigner à une variable d'instance ou de la traiter si vous le souhaitez). De même, la méthode d'instance [`#on_option`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_option(flag%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) est utilisée pour définir une option `example`. Dans ce cas, le nom de l'option et son texte d'aide associé doivent être spécifiés, et un proc peut être défini pour identifier que l'option a été spécifiée au moment de l'exécution (ce qui peut être utilisé pour définir une variable d'instance booléenne associée par exemple).
 
-The above command would produce the following help information:
+La commande ci-dessus produirait les informations d'aide suivantes :
 
 ```
 Usage: marten my_command [options] [arg1]
@@ -79,51 +79,51 @@ Options:
     -h, --help                       Show this help
 ```
 
-### Configuring options
+### Configurer les options
 
-As mentioned previously, it is possible to make use of the [`#on_option`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_option(flag%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) instance method to configure a specific command option (eg. `--option`). It expects a flag name and a description, and it yields a block to let the command properly assign the option value to the command object at execution time:
+Comme mentionné précédemment, il est possible d'utiliser la méthode d'instance [`#on_option`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_option(flag%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) pour configurer une option de commande spécifique (ex. `--option`). Elle attend un nom de flag et une description, et exécute un bloc pour permettre à la commande d'assigner correctement la valeur de l'option à l'objet de commande au moment de l'exécution :
 
 ```crystal
 on_option("example", "An example option") { @example = true }
 ```
 
-Note that the `--` must not be included in the option name.
+Notez que le `--` ne doit pas être inclus dans le nom de l'option.
 
-Alternatively, it is possible to specify options that accept both a short flag (eg. `-h`) and a long flag (eg. `--help`):
+Alternativement, il est possible de spécifier des options qui acceptent à la fois un flag court (ex. `-h`) et un flag long (ex. `--help`) :
 
 ```crystal
 on_option("e", "example", "An example option") { @example = true }
 ```
 
-### Configuring options that accept arguments
+### Configurer des options qui acceptent des arguments
 
-It is possible to make use of the [`#on_option_with_arg`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_option_with_arg(flag%3AString|Symbol%2Carg%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) instance method to configure a specific command option with an associated argument. This method will configure a command option (eg. `--option`) and an associated argument. It expects a flag name, an argument name, and a description. It yields a block to let the command properly assign the option to the command object at execution time:
+Il est possible d'utiliser la méthode d'instance [`#on_option_with_arg`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_option_with_arg(flag%3AString|Symbol%2Carg%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) pour configurer une option de commande spécifique avec un argument associé. Cette méthode configure une option de commande (ex. `--option`) et un argument associé. Elle attend un nom de flag, un nom d'argument et une description. Elle exécute un bloc pour permettre à la commande d'assigner correctement l'option à l'objet de commande au moment de l'exécution :
 
 ```crystal
 on_option_with_arg(:option, :arg, "The name of the option") { @arg = arg }
 ```
 
-Alternatively, it is possible to specify options that accept both a short flag (eg. `-h`) and a long flag (eg. `--help`):
+Alternativement, il est possible de spécifier des options qui acceptent à la fois un flag court (ex. `-h`) et un flag long (ex. `--help`) :
 
 ```crystal
 on_option_with_arg("o", "option", "arg", "The name of the option") { |arg| @arg = arg }
 ```
 
-### Configuring arguments
+### Configurer les arguments
 
-As mentioned previously, it is possible to make use of the [`#on_argument`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_argument(name%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) instance method in order to configure a specific command argument. This method expects an argument name and a description, and it yields a block to let the command properly assign the argument value to the command object at execution time:
+Comme mentionné précédemment, il est possible d'utiliser la méthode d'instance [`#on_argument`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#on_argument(name%3AString|Symbol%2Cdescription%3AString%2C%26block%3AString->)-instance-method) afin de configurer un argument de commande spécifique. Cette méthode attend un nom d'argument et une description, et exécute un bloc pour permettre à la commande d'assigner correctement la valeur de l'argument à l'objet de commande au moment de l'exécution :
 
 ```crystal
 on_argument(:arg, "The name of the argument") { |value| @arg_var = value }
 ```
 
 :::caution
-It should be noted that the order in which arguments are defined is important: this order corresponds to the order in which arguments will need to be specified when invoking the subcommand.
+Il convient de noter que l'ordre dans lequel les arguments sont définis est important : cet ordre correspond à l'ordre dans lequel les arguments devront être spécifiés lors de l'invocation de la sous-commande.
 :::
 
-## Outputting text contents
+## Afficher du contenu textuel
 
-When writing management commands, you will likely need to write text contents to the output file descriptor. To do so, you can make use of the [`#print`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#print(msg%2Cending%3D"\n")-instance-method) instance method:
+Lors de l'écriture de commandes de gestion, vous aurez probablement besoin d'écrire du contenu textuel vers le descripteur de fichier de sortie. Pour ce faire, vous pouvez utiliser la méthode d'instance [`#print`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#print(msg%2Cending%3D"\n")-instance-method) :
 
 ```crystal
 class HelloWorldCommand < Marten::CLI::Command
@@ -135,7 +135,7 @@ class HelloWorldCommand < Marten::CLI::Command
 end
 ```
 
-It should be noted that you can also choose to "style" the content you specify to [`#print`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#print(msg%2Cending%3D"\n")-instance-method) by wrapping your string with a call to the [`#style`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#style(msg%2Cfore%3Dnil%2Cmode%3Dnil)-instance-method) method. For example:
+Il convient de noter que vous pouvez également choisir de "styliser" le contenu que vous spécifiez à [`#print`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#print(msg%2Cending%3D"\n")-instance-method) en encapsulant votre chaîne avec un appel à la méthode [`#style`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#style(msg%2Cfore%3Dnil%2Cmode%3Dnil)-instance-method). Par exemple :
 
 ```crystal
 class HelloWorldCommand < Marten::CLI::Command
@@ -147,11 +147,11 @@ class HelloWorldCommand < Marten::CLI::Command
 end
 ```
 
-As you can see, the [`#style`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#style(msg%2Cfore%3Dnil%2Cmode%3Dnil)-instance-method) method can be used to apply `fore` and `mode` styles to a specific text value. The values you can use for the `fore` and `mode` arguments are the same as the ones that you can use with the [`Colorize`](https://crystal-lang.org/api/Colorize.html) module (which comes with the standard library).
+Comme vous pouvez le voir, la méthode [`#style`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#style(msg%2Cfore%3Dnil%2Cmode%3Dnil)-instance-method) peut être utilisée pour appliquer des styles `fore` et `mode` à une valeur textuelle spécifique. Les valeurs que vous pouvez utiliser pour les arguments `fore` et `mode` sont les mêmes que celles que vous pouvez utiliser avec le module [`Colorize`](https://crystal-lang.org/api/Colorize.html) (qui fait partie de la bibliothèque standard).
 
-## Handling error cases
+## Gérer les cas d'erreur
 
-You will likely want to handle error situations when writing management commands. For example, to return error messages if a specified argument is not provided or if it is invalid. To do so you can make use of the [`#print_error`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#print_error(msg)-instance-method) helper method, which will print the passed string to the error file descriptor:
+Vous voudrez probablement gérer les situations d'erreur lors de l'écriture de commandes de gestion. Par exemple, pour retourner des messages d'erreur si un argument spécifié n'est pas fourni ou s'il est invalide. Pour ce faire, vous pouvez utiliser la méthode helper [`#print_error`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#print_error(msg)-instance-method), qui affichera la chaîne passée vers le descripteur de fichier d'erreur :
 
 ```crystal
 class HelloWorldCommand < Marten::CLI::Command
@@ -173,11 +173,11 @@ class HelloWorldCommand < Marten::CLI::Command
 end
 ```
 
-Alternatively, you can make use of the [`#print_error_and_exit`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#print_error_and_exit(msg%2Cexit_code%3D1)-instance-method) method to print a message to the error file descriptor and to exit the execution of the command.
+Alternativement, vous pouvez utiliser la méthode [`#print_error_and_exit`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#print_error_and_exit(msg%2Cexit_code%3D1)-instance-method) pour afficher un message vers le descripteur de fichier d'erreur et quitter l'exécution de la commande.
 
-## Customizing the subcommand name
+## Personnaliser le nom de la sous-commande
 
-By default, management command names are inferred by using their associated class names (eg. a `MyCommand` command class would translate to a `my_command` subcommand). That being said, it should be noted that you can define a custom subcommand name by leveraging the [`#command_name`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#command_name(name%3AString|Symbol)-class-method) class method:
+Par défaut, les noms des commandes de gestion sont déduits en utilisant les noms de classes associés (ex. une classe de commande `MyCommand` se traduirait par une sous-commande `my_command`). Cela dit, il convient de noter que vous pouvez définir un nom de sous-commande personnalisé en utilisant la méthode de classe [`#command_name`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#command_name(name%3AString|Symbol)-class-method) :
 
 ```crystal
 class MyCommand < Marten::CLI::Command
@@ -190,7 +190,7 @@ class MyCommand < Marten::CLI::Command
 end
 ```
 
-It is also worth mentioning that command aliases can be configured easily by using the [`#command_aliases`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#command_aliases(*aliases%3AString|Symbol)-class-method) helper method. For example:
+Il est également intéressant de mentionner que des alias de commande peuvent être configurés facilement en utilisant la méthode helper [`#command_aliases`](pathname:///api/dev/Marten/CLI/Manage/Command/Base.html#command_aliases(*aliases%3AString|Symbol)-class-method). Par exemple :
 
 ```crystal
 class MyCommand < Marten::CLI::Command

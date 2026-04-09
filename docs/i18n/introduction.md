@@ -1,61 +1,61 @@
 ---
-title: Introduction to internationalization
-description: Learn how to leverage translations and localized contents in your Marten projects.
+title: Introduction à l'internationalisation
+description: Apprenez à utiliser les traductions et les contenus localisés dans vos projets Marten.
 sidebar_label: Introduction
 ---
 
-Marten provides integration with [crystal-i18n](https://crystal-i18n.github.io/) to make it possible to leverage translations and localized content in your Marten projects.
+Marten fournit une intégration avec [crystal-i18n](https://crystal-i18n.github.io/) pour rendre possible l'utilisation de traductions et de contenu localisé dans vos projets Marten.
 
-## Overview
+## Vue d'ensemble
 
-Internationalization and localization are techniques allowing a website to provide content using languages and formats that are adapted to specific audiences.
+L'internationalisation et la localisation sont des techniques permettant à un site web de fournir du contenu en utilisant des langues et des formats adaptés à des audiences spécifiques.
 
-Marten's internationalization and localization integration rely on the use of the [crystal-i18n](https://crystal-i18n.github.io/) shard, which provides a unified interface allowing to leverage translations and localized contents in a Crystal project. You don't have to manually install this shard in your projects: it is a dependency of the framework itself, and as such, it is automatically installed with Marten.
+L'intégration d'internationalisation et de localisation de Marten repose sur l'utilisation du shard [crystal-i18n](https://crystal-i18n.github.io/), qui fournit une interface unifiée permettant d'utiliser des traductions et du contenu localisé dans un projet Crystal. Vous n'avez pas besoin d'installer manuellement ce shard dans vos projets : c'est une dépendance du framework lui-même, et en tant que tel, il est automatiquement installé avec Marten.
 
-Crystal-I18n makes it easy to configure translations and formats for a specific set of locales. These can be used to perform translation lookups and localization. With this library, translations can be defined through the use of dedicated "loaders" (abstractions that load the translations from a specific source and make them available to the I18n API). For example, translations can be loaded from a YAML file, a JSON file, or something entirely different if needed.
+Crystal-I18n facilite la configuration de traductions et de formats pour un ensemble spécifique de locales. Ceux-ci peuvent être utilisés pour effectuer des recherches de traduction et de la localisation. Avec cette bibliothèque, les traductions peuvent être définies via l'utilisation de "loaders" dédiés (des abstractions qui chargent les traductions depuis une source spécifique et les rendent disponibles à l'API I18n). Par exemple, les traductions peuvent être chargées depuis un fichier YAML, un fichier JSON, ou quelque chose d'entièrement différent si nécessaire.
 
-Marten itself defines a set of translated contents for things that should be internationalized (eg. model field errors or schema field errors) that are loaded through the use of the regular YAML loader. Other [app-specific translations](#locales-and-apps) must also be defined as YAML files since they are loaded using a YAML loader as well.
+Marten lui-même définit un ensemble de contenus traduits pour les choses qui doivent être internationalisées (ex. les erreurs de champs de modèle ou les erreurs de champs de schema) qui sont chargés via l'utilisation du loader YAML standard. Les autres [traductions spécifiques aux applications](#locales-et-applications) doivent également être définies comme des fichiers YAML puisqu'elles sont chargées en utilisant un loader YAML également.
 
 ## Configuration
 
-Marten provides an integration allowing to configure internationalization-related settings. These settings are available under the [`i18n`](../development/reference/settings.md#i18n-settings) namespace and allow to define things like the default locale and the available locales:
+Marten fournit une intégration permettant de configurer les paramètres liés à l'internationalisation. Ces paramètres sont disponibles sous le namespace [`i18n`](../development/reference/settings.md#i18n-settings) et permettent de définir des choses comme la locale par défaut et les locales disponibles :
 
 ```crystal
 config.i18n.default_locale = :fr
 config.i18n.available_locales = [:en, :fr]
 ```
 
-You can also leverage the [various configuration options](https://crystal-i18n.github.io/configuration.html) that are provided by this shard to further configure how translations should be performed. By doing so you can add more custom I18n backend loaders for example.
+Vous pouvez également utiliser les [diverses options de configuration](https://crystal-i18n.github.io/configuration.html) fournies par ce shard pour configurer davantage la façon dont les traductions doivent être effectuées. Ce faisant, vous pouvez ajouter plus de loaders de backend I18n personnalisés par exemple.
 
 :::tip
-If you need to further [configure Crystal I18n](https://crystal-i18n.github.io/configuration.html), you should probably define a dedicated initializer file under the `config/initializers` folder.
+Si vous avez besoin de [configurer Crystal I18n](https://crystal-i18n.github.io/configuration.html) davantage, vous devriez probablement définir un fichier d'initialisation dédié sous le dossier `config/initializers`.
 :::
 
-## Basic usage
+## Utilisation basique
 
-As stated before, Marten relies on the [crystal-i18n](https://crystal-i18n.github.io/) shard, which means that you can also look at the dedicated documentation to learn more about this shard and its configuration options. The following section mainly highlights some of the main features of this library.
+Comme indiqué précédemment, Marten s'appuie sur le shard [crystal-i18n](https://crystal-i18n.github.io/), ce qui signifie que vous pouvez également consulter la documentation dédiée pour en savoir plus sur ce shard et ses options de configuration. La section suivante met principalement en évidence certaines des principales fonctionnalités de cette bibliothèque.
 
-### Defining translations
+### Définir des traductions {#defining-translations}
 
-Translations are defined as YML files that must be placed in `locales` folders, which can be located in different parts of a project:
+Les traductions sont définies comme des fichiers YML qui doivent être placés dans des dossiers `locales`, qui peuvent être situés à différents endroits d'un projet :
 
-* Within the `config` directory (`config/locales` folder).
-* At the root of the [main application](../development/applications.md#the-main-application)'s directory (`src/locales` folder).
-* At the root of an [application](../development/applications.md#creating-applications)'s directory.
+* Dans le répertoire `config` (dossier `config/locales`).
+* À la racine du répertoire de l'[application principale](../development/applications.md#lapplication-principale) (dossier `src/locales`).
+* À la racine du répertoire d'une [application](../development/applications.md#créer-des-applications).
 
-For example, if you are using the standard `config` directory and the [main application](../development/applications.md#the-main-application) (which corresponds to the standard `src` folder) you could define `config/locales` and `src/locales` folders containing `en.yml` files as follows:
+Par exemple, si vous utilisez le répertoire `config` standard et l'[application principale](../development/applications.md#lapplication-principale) (qui correspond au dossier standard `src`) vous pourriez définir des dossiers `config/locales` et `src/locales` contenant des fichiers `en.yml` comme suit :
 
 ```
 myproject/
 ├── config
-│   ├── locales
-│   │   ├── en.yml
+│   ├── locales
+│   │   ├── en.yml
 ├── src
-│   ├── locales
-│   │   ├── en.yml
+│   ├── locales
+│   │   ├── en.yml
 ```
 
-Translations inside a YAML file must be namespaced to the locale they are associated with (`en` in this case). Example content for our `en.yml` file could look like this:
+Les traductions à l'intérieur d'un fichier YAML doivent être namespacées avec la locale à laquelle elles sont associées (`en` dans ce cas). Un exemple de contenu pour notre fichier `en.yml` pourrait ressembler à ceci :
 
 ```yaml title=src/en.yml
 en:
@@ -65,20 +65,20 @@ en:
     interpolation: "Hello, %{name}!"
 ```
 
-The "path" leading to a translation in such files is important because it corresponds to the key that should be used when performing [translation lookups](#translations-lookups). For example, `simple.translation` would be the key to use in order to translate the corresponding message.
+Le "chemin" menant à une traduction dans de tels fichiers est important car il correspond à la clé qui doit être utilisée lors des [recherches de traduction](#recherches-de-traduction). Par exemple, `simple.translation` serait la clé à utiliser pour traduire le message correspondant.
 
-It should be noted that the `%{var}` syntax in the above example is used to define _interpolations_: these variables must be specified when performing translation lookups so that their values are inserted in the translated strings.
+Il convient de noter que la syntaxe `%{var}` dans l'exemple ci-dessus est utilisée pour définir des _interpolations_ : ces variables doivent être spécifiées lors des recherches de traduction afin que leurs valeurs soient insérées dans les chaînes traduites.
 
-### Translations lookups
+### Recherches de traduction
 
-Translation lookups can be performed by leveraging the `I18n#translate` or `I18n#translate!` methods. Those methods try to find a matching translation for a specific key, which can be comprised of multiple namespaces or scopes separated by a dot (.): this key corresponds to the "path" leading to the actual translation (as mentioned before).
+Les recherches de traduction peuvent être effectuées en utilisant les méthodes `I18n#translate` ou `I18n#translate!`. Ces méthodes essaient de trouver une traduction correspondante pour une clé spécifique, qui peut être composée de plusieurs namespaces ou portées séparés par un point (.) : cette clé correspond au "chemin" menant à la traduction réelle (comme mentionné précédemment).
 
-The `I18n#translate` and `I18n#translate!` methods differ in regards to how they handle missing translations:
+Les méthodes `I18n#translate` et `I18n#translate!` diffèrent dans leur façon de gérer les traductions manquantes :
 
-* `I18n#translate` returns a message indicating that the translation is missing
-* `I18n#translate!` raises a specific exception
+* `I18n#translate` retourne un message indiquant que la traduction est manquante
+* `I18n#translate!` lève une exception spécifique
 
-For example, given the translations defined in [Defining translations](#defining-translations), we could perform the following translation lookups:
+Par exemple, étant donné les traductions définies dans [Définir des traductions](#définir-des-traductions), nous pourrions effectuer les recherches de traduction suivantes :
 
 ```crystal
 I18n.translate(:message)                                 # => "This is a message"
@@ -86,11 +86,11 @@ I18n.translate("simple.translation")                     # => "This is a simple 
 I18n.translate("simple.interpolation", name: "John Doe") # => "Hello, John Doe!"
 ```
 
-This only scratches the surface of what's possible in terms of translation lookups. You can refer to the [dedicated documentation](https://crystal-i18n.github.io/translation_lookups.html), and more specifically the [interpolations](https://crystal-i18n.github.io/translation_lookups.html#interpolations) and [pluralizations](https://crystal-i18n.github.io/translation_lookups.html#pluralization) sections, to learn about these capabilities.
+Cela ne fait qu'effleurer la surface de ce qui est possible en termes de recherches de traduction. Vous pouvez consulter la [documentation dédiée](https://crystal-i18n.github.io/translation_lookups.html), et plus spécifiquement les sections [interpolations](https://crystal-i18n.github.io/translation_lookups.html#interpolations) et [pluralisations](https://crystal-i18n.github.io/translation_lookups.html#pluralization), pour en savoir plus sur ces capacités.
 
-### Localization
+### Localisation
 
-Localization of datetimes and numbers can be achieved through the use of the `I18n#localize` method. In both cases, localization _formats_ need to be defined in your locale files. There are a lot of available formats at your disposal (and all of them are documented in the [related documentation](https://crystal-i18n.github.io/localization.html)). For example, the following translations could be used to format dates in English:
+La localisation des dates/heures et des nombres peut être réalisée via l'utilisation de la méthode `I18n#localize`. Dans les deux cas, des _formats_ de localisation doivent être définis dans vos fichiers de locale. Il existe de nombreux formats disponibles à votre disposition (et tous sont documentés dans la [documentation associée](https://crystal-i18n.github.io/localization.html)). Par exemple, les traductions suivantes pourraient être utilisées pour formater les dates en anglais :
 
 ```yaml
 en:
@@ -103,42 +103,42 @@ en:
         long: "%B %d, %Y"
 ```
 
-The above structure is expected by Crystal I18n and defines basic translations for the relevant directives that can be outputted when localizing dates. It also defines a few formats under the `i18n.date.formats` scope: among these formats, only the default one is really mandatory since this is the one that is used by default if no other format is explicitly provided to the `I18n#localize` method. All these formats make use of the directives defined by the [`Time::Format`](https://crystal-lang.org/api/Time/Format.html) struct.
+La structure ci-dessus est attendue par Crystal I18n et définit des traductions basiques pour les directives pertinentes qui peuvent être produites lors de la localisation de dates. Elle définit également quelques formats sous la portée `i18n.date.formats` : parmi ces formats, seul celui par défaut est vraiment obligatoire puisque c'est celui qui est utilisé par défaut si aucun autre format n'est explicitement fourni à la méthode `I18n#localize`. Tous ces formats utilisent les directives définies par le struct [`Time::Format`](https://crystal-lang.org/api/Time/Format.html).
 
-Given the above translations, you could localize date objects as follows:
+Étant donné les traductions ci-dessus, vous pourriez localiser les objets date comme suit :
 
 ```crystal
 I18n.localize(Time.local.date)        # outputs "2020-12-13"
 I18n.localize(Time.local.date, :long) # outputs "December 13, 2020"
 ```
 
-### Switching locales
+### Changer de locale
 
-Once you have defined translations, it is generally needed to explicitly "activate" the use of a specific locale in order to ensure that the right translations are generated for your users. In this light, the current locale can be specified using the `I18n#activate` method:
+Une fois que vous avez défini des traductions, il est généralement nécessaire d'"activer" explicitement l'utilisation d'une locale spécifique afin de s'assurer que les bonnes traductions sont générées pour vos utilisateurs. Dans cette optique, la locale actuelle peut être spécifiée en utilisant la méthode `I18n#activate` :
 
 ```crystal
 I18n.activate(:fr)
 ```
 
-When activating a locale with `I18n#activate`, all further translations or localizations will be done using the specified locale.
+Lors de l'activation d'une locale avec `I18n#activate`, toutes les traductions ou localisations ultérieures seront effectuées en utilisant la locale spécifiée.
 
-Note that it is also possible to execute a block with a specific locale activated. This can be done by using the `I18n#with_locale` method:
+Notez qu'il est également possible d'exécuter un bloc avec une locale spécifique activée. Cela peut être fait en utilisant la méthode `I18n#with_locale` :
 
 ```crystal
 I18n.with_locale(:fr) do
-  I18n.t("simple.translation") # Will output a text in french
+  I18n.t("simple.translation") # Affichera un texte en français
 end
 ```
 
-Finally, it should be noted that Marten provides an [I18n middleware](../handlers-and-http/reference/middlewares.md#i18n-middleware) that activates the right locale based on the Accept-Language header. Only explicitly-configured locales can be activated by this middleware (that is, locales that are specified in the [`i18n.available_locales`](../development/reference/settings.md#available_locales) and [`i18n.default_locale`](../development/reference/settings.md#default_locale) settings). If the incoming locale can't be found in the project configuration, the default locale will be used instead. By leveraging this middleware, you can be sure that the right locale is automatically enabled for your users, so you don't need to take care of it.
+Enfin, il convient de noter que Marten fournit un [middleware I18n](../handlers-and-http/reference/middlewares.md#i18n-middleware) qui active la bonne locale en se basant sur l'en-tête Accept-Language. Seules les locales explicitement configurées peuvent être activées par ce middleware (c'est-à-dire les locales spécifiées dans les paramètres [`i18n.available_locales`](../development/reference/settings.md#available_locales) et [`i18n.default_locale`](../development/reference/settings.md#default_locale)). Si la locale entrante ne peut pas être trouvée dans la configuration du projet, la locale par défaut sera utilisée à la place. En utilisant ce middleware, vous pouvez être sûr que la bonne locale est automatiquement activée pour vos utilisateurs, vous n'avez donc pas besoin de vous en occuper.
 
-## Locales and apps
+## Locales et applications
 
-As mentioned previously, each [application](../development/applications.md) can define translations inside a `locales` folder that must be located at the root of the application's directory. This `locales` folder should contain YAML files defining the translations that are required by the application.
+Comme mentionné précédemment, chaque [application](../development/applications.md) peut définir des traductions dans un dossier `locales` qui doit être situé à la racine du répertoire de l'application. Ce dossier `locales` doit contenir des fichiers YAML définissant les traductions requises par l'application.
 
-The way to organize translations inside this folder is left to application developers. That being said, it is necessary to ensure that all the YAML files containing translations are namespaced with the targeted locale (eg. `en`, `fr`, etc). 
+La façon d'organiser les traductions à l'intérieur de ce dossier est laissée aux développeurs d'applications. Cela dit, il est nécessaire de s'assurer que tous les fichiers YAML contenant des traductions sont namespacés avec la locale ciblée (ex. `en`, `fr`, etc).
 
-Moreover, it is also recommended to explicitly namespace an application's translations by using an identifier that is unique for the considered application. For example, a `foo` application could define a `message` translation and another `bar` application could define a `message` translation as well. If these translation keys are not properly namespaced, one of the translations will be overridden by the one of the other application. The best way to avoid this is to namespace all the translations of an application with the identifier of the application itself. For example:
+De plus, il est également recommandé de namespacer explicitement les traductions d'une application en utilisant un identifiant unique pour l'application considérée. Par exemple, une application `foo` pourrait définir une traduction `message` et une autre application `bar` pourrait définir une traduction `message` également. Si ces clés de traduction ne sont pas correctement namespacées, l'une des traductions sera écrasée par celle de l'autre application. La meilleure façon d'éviter cela est de namespacer toutes les traductions d'une application avec l'identifiant de l'application elle-même. Par exemple :
 
 ```yaml
 en:
@@ -146,25 +146,25 @@ en:
     message: This is a message
 ```
 
-In this case, the `foo` application's codebase would request translations using the `foo.message` key, which makes it impossible to encounter conflict issues with other application translations.
+Dans ce cas, le codebase de l'application `foo` demanderait des traductions en utilisant la clé `foo.message`, ce qui rend impossible les problèmes de conflit avec les traductions d'autres applications.
 
-## How Marten resolves the current locale
+## Comment Marten résout la locale actuelle
 
-Marten will attempt to determine the "current" locale for activation only when the [I18n middleware](../handlers-and-http/reference/middlewares.md#i18n-middleware) is used.
+Marten tentera de déterminer la locale "actuelle" pour l'activation uniquement lorsque le [middleware I18n](../handlers-and-http/reference/middlewares.md#i18n-middleware) est utilisé.
 
-This middleware can activate the appropriate locale by considering the following:
+Ce middleware peut activer la locale appropriée en considérant les éléments suivants :
 
-* The value of the Accept-Language header.
-* The value of a cookie, with its name defined by the [`i18n.locale_cookie_name`](../development/reference/settings.md#locale_cookie_name) setting.
+* La valeur de l'en-tête Accept-Language.
+* La valeur d'un cookie, dont le nom est défini par le paramètre [`i18n.locale_cookie_name`](../development/reference/settings.md#locale_cookie_name).
 
 
-The [I18n middleware](../handlers-and-http/reference/middlewares.md#i18n-middleware) only allows activation of explicitly configured locales, which are specified in the  [`i18n.available_locales`](../development/reference/settings.md#available_locales) and [`i18n.default_locale`](../development/reference/settings.md#default_locale) settings. If the incoming locale is not found in the project configuration, the default locale will be used instead. By utilizing this middleware, you can be sure that the right locale is automatically enabled for your users, so that you don't need to take care of it.
+Le [middleware I18n](../handlers-and-http/reference/middlewares.md#i18n-middleware) n'autorise l'activation que des locales explicitement configurées, qui sont spécifiées dans les paramètres [`i18n.available_locales`](../development/reference/settings.md#available_locales) et [`i18n.default_locale`](../development/reference/settings.md#default_locale). Si la locale entrante n'est pas trouvée dans la configuration du projet, la locale par défaut sera utilisée à la place. En utilisant ce middleware, vous pouvez être sûr que la bonne locale est automatiquement activée pour vos utilisateurs, de sorte que vous n'avez pas besoin de vous en occuper.
 
 ## Limitations
 
-It's important to be aware of a few limitations when working with translations powered by [Crystal I18n](https://crystal-i18n.github.io/) within a Marten project:
+Il est important d'être conscient de quelques limitations lorsque vous travaillez avec des traductions alimentées par [Crystal I18n](https://crystal-i18n.github.io/) au sein d'un projet Marten :
 
-1. Marten automatically configures YAML translation loaders for applications, and it is not currently possible to use other loader types (such as JSON) presently
-2. Marten does not allow the use of "embedded" translations for applications since those are discovered and configured at runtime: as such application translations are treated as "assets" that must be deployed along with the compiled binary
+1. Marten configure automatiquement les loaders de traduction YAML pour les applications, et il n'est actuellement pas possible d'utiliser d'autres types de loaders (comme JSON) pour le moment
+2. Marten ne permet pas l'utilisation de traductions "embarquées" pour les applications puisque celles-ci sont découvertes et configurées à l'exécution : ainsi les traductions d'application sont traitées comme des "assets" qui doivent être déployés avec le binaire compilé
 
-Note that these restrictions do not prevent the use of custom translation backends if necessary. Please refer to the [related documentation](https://crystal-i18n.github.io/configuration.html#loaders) if you need to use custom translation loaders in your projects.
+Notez que ces restrictions n'empêchent pas l'utilisation de backends de traduction personnalisés si nécessaire. Veuillez consulter la [documentation associée](https://crystal-i18n.github.io/configuration.html#loaders) si vous avez besoin d'utiliser des loaders de traduction personnalisés dans vos projets.

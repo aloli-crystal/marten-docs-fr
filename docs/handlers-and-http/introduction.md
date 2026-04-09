@@ -1,14 +1,14 @@
 ---
-title: Introduction to handlers
-description: Learn how to define handlers and respond to HTTP requests.
+title: Introduction aux handlers
+description: Apprenez à définir des handlers et à répondre aux requêtes HTTP.
 sidebar_label: Introduction
 ---
 
-Handlers are classes whose responsibility is to process web requests and to return responses. They implement the necessary logic allowing to return this response, which can involve processing form data through the use of [schemas](../schemas.mdx) for example, retrieving [model records](../models-and-databases.mdx) from the database, etc. They can return responses corresponding to HTML pages, JSON objects, redirects, ...
+Les handlers sont des classes dont la responsabilité est de traiter les requêtes web et de retourner des réponses. Ils implémentent la logique nécessaire permettant de retourner cette réponse, ce qui peut impliquer le traitement de données de formulaire via l'utilisation de [schémas](../schemas.mdx) par exemple, la récupération d'[enregistrements de modèles](../models-and-databases.mdx) depuis la base de données, etc. Ils peuvent retourner des réponses correspondant à des pages HTML, des objets JSON, des redirections, ...
 
-## Writing handlers
+## Écrire des handlers
 
-At their core, handlers are subclasses of the [`Marten::Handler`](pathname:///api/dev/Marten/Handlers/Base.html) class. These classes are usually defined under a `handlers` folder, at the root of a Marten project or application. Here is an example of a very simple handler:
+À leur base, les handlers sont des sous-classes de la classe [`Marten::Handler`](pathname:///api/dev/Marten/Handlers/Base.html). Ces classes sont généralement définies dans un dossier `handlers`, à la racine d'un projet ou d'une application Marten. Voici un exemple de handler très simple :
 
 ```crystal
 class SimpleHandler < Marten::Handler
@@ -18,11 +18,11 @@ class SimpleHandler < Marten::Handler
 end
 ```
 
-The above handler returns a `200 OK` response containing a short text, regardless of the incoming HTTP request method.
+Le handler ci-dessus retourne une réponse `200 OK` contenant un court texte, quelle que soit la méthode de la requête HTTP entrante.
 
-Handlers are initialized from a [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html) object and an optional set of routing parameters. Their inner logic is executed when calling the `#dispatch` method, which _must_ return a [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) object.
+Les handlers sont initialisés à partir d'un objet [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html) et d'un ensemble optionnel de paramètres de routage. Leur logique interne est exécutée lors de l'appel de la méthode `#dispatch`, qui _doit_ retourner un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html).
 
-When the `#dispatch` method is explicitly overridden, it is responsible for applying different logics in order to handle the various incoming HTTP request methods. For example, a handler might display an HTML page containing a form when handling a `GET` request, and it might process possible form data when handling a `POST` request:
+Lorsque la méthode `#dispatch` est explicitement redéfinie, elle est responsable de l'application de différentes logiques pour gérer les diverses méthodes de requête HTTP entrantes. Par exemple, un handler peut afficher une page HTML contenant un formulaire lors du traitement d'une requête `GET`, et traiter les éventuelles données du formulaire lors du traitement d'une requête `POST` :
 
 ```crystal
 class FormHandler < Marten::Handler
@@ -36,7 +36,7 @@ class FormHandler < Marten::Handler
 end
 ```
 
-It should be noted that this "dispatching" logic based on the incoming request method does not have to live inside an overridden `#dispatch` method. By default, each handler provides methods whose names match HTTP method verbs. This allows writing the logic allowing to process `GET` requests by overriding the `#get` method for example, or to process `POST` requests by overriding the `#post` method:
+Il convient de noter que cette logique de « dispatching » basée sur la méthode de la requête entrante n'a pas besoin de résider dans une méthode `#dispatch` redéfinie. Par défaut, chaque handler fournit des méthodes dont les noms correspondent aux verbes des méthodes HTTP. Cela permet d'écrire la logique de traitement des requêtes `GET` en redéfinissant la méthode `#get` par exemple, ou de traiter les requêtes `POST` en redéfinissant la méthode `#post` :
 
 ```crystal
 class FormHandler < Marten::Handler
@@ -51,42 +51,42 @@ end
 ```
 
 :::info
-If a handler's logic is defined like in the above example, trying to access such handler via another HTTP verb (eg. `DELETE`) will automatically result in a "Not allowed" response (405).
+Si la logique d'un handler est définie comme dans l'exemple ci-dessus, tenter d'accéder à ce handler via un autre verbe HTTP (par ex. `DELETE`) entraînera automatiquement une réponse "Not allowed" (405).
 :::
 
-### The `request` and `response` objects
+### Les objets `request` et `response`
 
-As mentioned previously, a handler is always initialized from an incoming HTTP request object (instance of [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)) and is required to return an HTTP response object (instance of [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html)) as part of its `#dispatch` method.
+Comme mentionné précédemment, un handler est toujours initialisé à partir d'un objet de requête HTTP entrante (instance de [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)) et doit retourner un objet de réponse HTTP (instance de [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html)) dans le cadre de sa méthode `#dispatch`.
 
-The `request` object gives access to a set of useful information and attributes associated with the incoming request. Things like the HTTP request verb, headers, or query parameters can be accessed through this object. The most common methods that you can use are listed below:
+L'objet `request` donne accès à un ensemble d'informations et d'attributs utiles associés à la requête entrante. Des éléments comme le verbe de la requête HTTP, les en-têtes ou les paramètres de requête sont accessibles via cet objet. Les méthodes les plus courantes que vous pouvez utiliser sont listées ci-dessous :
 
-| Method | Description |
+| Méthode | Description |
 | ----------- | ----------- |
-| `#body` | Returns the raw body of the request as a string. |
-| `#cookies` | Returns a hash-like object (instance of [`Marten::HTTP::Cookies`](pathname:///api/dev/Marten/HTTP/Cookies.html)) containing the cookies associated with the request. |
-| `#data` | Returns a hash-like object (instance of [`Marten::HTTP::Params::Data`](pathname:///api/dev/Marten/HTTP/Params/Data.html)) containing the request data. |
-| `#flash` | Returns a hash-like object (instance of [`Marten::HTTP::FlashStore`](pathname:///api/dev/Marten/HTTP/FlashStore.html)) containing the flash messages available to the current request. |
-| `#headers` | Returns a hash-like object (instance of [`Marten::HTTP::Headers`](pathname:///api/dev/Marten/HTTP/Headers.html)) containing the headers embedded in the request. |
-| `#host` | Returns the host associated with the considered request. |
-| `#method` | Returns the considered HTTP request method (`GET`, `POST`, `PUT`, etc). |
-| `#query_params` | Returns a hash-like object (instance of [`Marten::HTTP::Params::Query`](pathname:///api/dev/Marten/HTTP/Params/Query.html)) containing the HTTP GET parameters embedded in the request. |
-| `#session` | Returns a hash-like object (instance of [`Marten::HTTP::Session::Store::Base`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html)) corresponding to the session store for the current request. |
+| `#body` | Retourne le corps brut de la requête sous forme de chaîne de caractères. |
+| `#cookies` | Retourne un objet de type hash (instance de [`Marten::HTTP::Cookies`](pathname:///api/dev/Marten/HTTP/Cookies.html)) contenant les cookies associés à la requête. |
+| `#data` | Retourne un objet de type hash (instance de [`Marten::HTTP::Params::Data`](pathname:///api/dev/Marten/HTTP/Params/Data.html)) contenant les données de la requête. |
+| `#flash` | Retourne un objet de type hash (instance de [`Marten::HTTP::FlashStore`](pathname:///api/dev/Marten/HTTP/FlashStore.html)) contenant les messages flash disponibles pour la requête en cours. |
+| `#headers` | Retourne un objet de type hash (instance de [`Marten::HTTP::Headers`](pathname:///api/dev/Marten/HTTP/Headers.html)) contenant les en-têtes inclus dans la requête. |
+| `#host` | Retourne l'hôte associé à la requête considérée. |
+| `#method` | Retourne la méthode de la requête HTTP considérée (`GET`, `POST`, `PUT`, etc). |
+| `#query_params` | Retourne un objet de type hash (instance de [`Marten::HTTP::Params::Query`](pathname:///api/dev/Marten/HTTP/Params/Query.html)) contenant les paramètres HTTP GET inclus dans la requête. |
+| `#session` | Retourne un objet de type hash (instance de [`Marten::HTTP::Session::Store::Base`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html)) correspondant au magasin de sessions pour la requête en cours. |
 
-The `response` object corresponds to the HTTP response that is returned to the client. Response objects can be created by initializing the [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) class directly (or one of its subclasses) or by using [response helper methods](#response-helper-methods). Once initialized, these objects can be mutated to further configure what is sent back to the browser. The most common methods that you can use in this regard are listed below:
+L'objet `response` correspond à la réponse HTTP qui est retournée au client. Les objets de réponse peuvent être créés en instanciant directement la classe [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) (ou l'une de ses sous-classes) ou en utilisant les [méthodes d'aide pour les réponses](#méthodes-daide-pour-les-réponses). Une fois initialisés, ces objets peuvent être modifiés pour configurer davantage ce qui est renvoyé au navigateur. Les méthodes les plus courantes que vous pouvez utiliser à cet égard sont listées ci-dessous :
 
-| Method | Description |
+| Méthode | Description |
 | ----------- | ----------- |
-| `#content` | Returns the content of the response as a string. |
-| `#content_type` | Returns the content type of the response as a string. |
-| `#cookies` | Returns a hash-like object (instance of [`Marten::HTTP::Cookies`](pathname:///api/dev/Marten/HTTP/Cookies.html)) containing the cookies that will be sent with the response. |
-| `#headers` | Returns a hash-like object (instance of [`Marten::HTTP::Headers`](pathname:///api/dev/Marten/HTTP/Headers.html)) containing the headers that will be used for the response. |
-| `#status` | Returns the status of the response (eg. 200 or 404). |
+| `#content` | Retourne le contenu de la réponse sous forme de chaîne de caractères. |
+| `#content_type` | Retourne le type de contenu de la réponse sous forme de chaîne de caractères. |
+| `#cookies` | Retourne un objet de type hash (instance de [`Marten::HTTP::Cookies`](pathname:///api/dev/Marten/HTTP/Cookies.html)) contenant les cookies qui seront envoyés avec la réponse. |
+| `#headers` | Retourne un objet de type hash (instance de [`Marten::HTTP::Headers`](pathname:///api/dev/Marten/HTTP/Headers.html)) contenant les en-têtes qui seront utilisés pour la réponse. |
+| `#status` | Retourne le statut de la réponse (par ex. 200 ou 404). |
 
-### Parameters
+### Paramètres
 
-Handlers are mapped to URLs through a [routing configuration](#mapping-handlers-to-urls). Some routes require parameters that are used by the handler to retrieve objects or perform any arbitrary logic. These parameters can be accessed by using the `#params` method, which returns a hash of all the parameters that were used to initialize the considered handler.
+Les handlers sont associés à des URLs via une [configuration de routage](#associer-les-handlers-aux-urls). Certaines routes nécessitent des paramètres qui sont utilisés par le handler pour récupérer des objets ou effectuer toute logique arbitraire. Ces paramètres sont accessibles en utilisant la méthode `#params`, qui retourne un hash de tous les paramètres utilisés pour initialiser le handler considéré.
 
-For example such parameters can be used to retrieve a specific model instance:
+Par exemple, ces paramètres peuvent être utilisés pour récupérer une instance de modèle spécifique :
 
 ```crystal
 class FormHandler < Marten::Handler
@@ -101,25 +101,25 @@ end
 ```
 
 :::tip
-Note that you can use either strings or symbols when interacting with the routing parameters returned by the `#params` method.
+Notez que vous pouvez utiliser aussi bien des chaînes de caractères que des symboles lors de l'interaction avec les paramètres de routage retournés par la méthode `#params`.
 :::
 
-### Response helper methods
+### Méthodes d'aide pour les réponses
 
-Technically, it is possible to forge HTTP responses by instantiating the [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) class directly (or one of its subclasses such as [`Marten::HTTP::Response::Found`](pathname:///api/dev/Marten/HTTP/Response/Found.html) for example). That being said, Marten provides a set of helper methods that can be used to conveniently forge responses for various use cases:
+Techniquement, il est possible de construire des réponses HTTP en instanciant directement la classe [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) (ou l'une de ses sous-classes comme [`Marten::HTTP::Response::Found`](pathname:///api/dev/Marten/HTTP/Response/Found.html) par exemple). Cela dit, Marten fournit un ensemble de méthodes d'aide qui peuvent être utilisées pour construire facilement des réponses pour divers cas d'utilisation :
 
 #### `respond`
 
-You already saw `#respond` in action in the [first example](#writing-handlers). Basically, `#respond` allows forging an HTTP response by specifying a content, a content type, and a status code:
+Vous avez déjà vu `#respond` en action dans le [premier exemple](#écrire-des-handlers). En résumé, `#respond` permet de construire une réponse HTTP en spécifiant un contenu, un type de contenu et un code de statut :
 
 ```crystal
 respond("Response content", content_type: "text/html", status: 200)
 ```
 
-Unless specified, the `content_type` is set to `text/html` and the `status` is set to `200`.
+Sauf indication contraire, le `content_type` est défini à `text/html` et le `status` est défini à `200`.
 
 :::tip
-You can also express the `status` of the response as a symbol that must comply with the values of the [`HTTP::Status`](https://crystal-lang.org/api/HTTP/Status.html) enum. For example:
+Vous pouvez également exprimer le `status` de la réponse sous forme de symbole qui doit correspondre aux valeurs de l'énumération [`HTTP::Status`](https://crystal-lang.org/api/HTTP/Status.html). Par exemple :
 
 ```crystal
 respond("Response content", content_type: "text/html", status: :ok)
@@ -128,16 +128,16 @@ respond("Response content", content_type: "text/html", status: :ok)
 
 #### `render`
 
-`render` allows returning an HTTP response whose content is generated by rendering a specific [template](../templates.mdx). The template can be rendered by specifying a context hash or named tuple. For example:
+`render` permet de retourner une réponse HTTP dont le contenu est généré en effectuant le rendu d'un [template](../templates.mdx) spécifique. Le template peut être rendu en spécifiant un hash ou un named tuple de contexte. Par exemple :
 
 ```crystal
 render("path/to/template.html", context: { foo: "bar" }, content_type: "text/html", status: 200)
 ```
 
-Unless specified, the `content_type` is set to `text/html` and the `status` is set to `200`.
+Sauf indication contraire, le `content_type` est défini à `text/html` et le `status` est défini à `200`.
 
 :::tip
-You can also express the `status` of the response as a symbol that must comply with the values of the [`HTTP::Status`](https://crystal-lang.org/api/HTTP/Status.html) enum. For example:
+Vous pouvez également exprimer le `status` de la réponse sous forme de symbole qui doit correspondre aux valeurs de l'énumération [`HTTP::Status`](https://crystal-lang.org/api/HTTP/Status.html). Par exemple :
 
 ```crystal
 render("path/to/template.html", context: { foo: "bar" }, content_type: "text/html", status: :ok)
@@ -146,24 +146,24 @@ render("path/to/template.html", context: { foo: "bar" }, content_type: "text/htm
 
 #### `redirect`
 
-`#redirect` allows forging a redirect HTTP response. It requires a `url` and accepts an optional `permanent` argument in order to define whether a permanent redirect is returned (301 Moved Permanently) or a temporary one (302 Found):
+`#redirect` permet de construire une réponse HTTP de redirection. Il nécessite une `url` et accepte un argument optionnel `permanent` pour définir si une redirection permanente est retournée (301 Moved Permanently) ou une redirection temporaire (302 Found) :
 
 ```crystal
 redirect("https://example.com", permanent: true)
 ```
 
-Unless explicitly specified, `permanent` will automatically be set to `false`.
+Sauf indication contraire explicite, `permanent` sera automatiquement défini à `false`.
 
 #### `#head`
 
-`#head` allows constructing a response containing headers but without actual content. The method accepts a status code only:
+`#head` permet de construire une réponse contenant des en-têtes mais sans contenu réel. La méthode accepte uniquement un code de statut :
 
 ```crystal
 head(404)
 ```
 
 :::tip
-You can also express the `status` of the response as a symbol that must comply with the values of the [`HTTP::Status`](https://crystal-lang.org/api/HTTP/Status.html) enum. For example:
+Vous pouvez également exprimer le `status` de la réponse sous forme de symbole qui doit correspondre aux valeurs de l'énumération [`HTTP::Status`](https://crystal-lang.org/api/HTTP/Status.html). Par exemple :
 
 ```crystal
 head :not_found
@@ -172,16 +172,16 @@ head :not_found
 
 #### `json`
 
-`json` allows forging an HTTP response with the `application/json` content type. It can be used with a raw JSON string, or any serializable object:
+`json` permet de construire une réponse HTTP avec le type de contenu `application/json`. Il peut être utilisé avec une chaîne JSON brute ou tout objet sérialisable :
 
 ```crystal
 json({ foo: "bar" }, status: 200)
 ```
 
-Unless specified, the `status` is set to `200`.
+Sauf indication contraire, le `status` est défini à `200`.
 
 :::tip
-You can also express the `status` of the response as a symbol that must comply with the values of the [`HTTP::Status`](https://crystal-lang.org/api/HTTP/Status.html) enum. For example:
+Vous pouvez également exprimer le `status` de la réponse sous forme de symbole qui doit correspondre aux valeurs de l'énumération [`HTTP::Status`](https://crystal-lang.org/api/HTTP/Status.html). Par exemple :
 
 ```crystal
 json({ foo: "bar" }, status: :ok)
@@ -190,21 +190,21 @@ json({ foo: "bar" }, status: :ok)
 
 ### Callbacks
 
-It is possible to define callbacks in order to bind methods and logics to specific events in the lifecycle of your handlers. For example, it is possible to define callbacks that run before a handler's `#dispatch` method gets executed, or after it!
+Il est possible de définir des callbacks afin de lier des méthodes et des logiques à des événements spécifiques du cycle de vie de vos handlers. Par exemple, il est possible de définir des callbacks qui s'exécutent avant l'exécution de la méthode `#dispatch` d'un handler, ou après !
 
-Please head over to the [Handler callbacks](./callbacks.md) guide in order to learn more about handler callbacks.
+Veuillez consulter le guide [Callbacks de handler](./callbacks.md) pour en savoir plus sur les callbacks de handler.
 
-### Generic handlers
+### Handlers génériques
 
-Marten provides a set of generic handlers that can be used to perform common application tasks such as displaying lists of records, deleting entries, or rendering [templates](../templates/introduction.md). This saves developers from reinventing common patterns.
+Marten fournit un ensemble de handlers génériques qui peuvent être utilisés pour effectuer des tâches courantes d'application telles que l'affichage de listes d'enregistrements, la suppression d'entrées ou le rendu de [templates](../templates/introduction.md). Cela évite aux développeurs de réinventer des patterns courants.
 
-Please head over to the [Generic handlers](./generic-handlers.md) guide in order to learn more about available generic handlers.
+Veuillez consulter le guide [Handlers génériques](./generic-handlers.md) pour en savoir plus sur les handlers génériques disponibles.
 
-### Global template context
+### Contexte de template global
 
-All handlers have access to a [`#context`](pathname:///api/dev/Marten/Handlers/Base.html#context-instance-method) method that returns a [template](../templates/introduction.md) context object. This "global" context object is available for the lifetime of the considered handler and can be mutated in order to define which variables are made available to the template runtime when rendering templates through the use of the [`#render`](#render) helper method or when rendering templates as part of subclasses of the [`Marten::Handlers::Template`](./generic-handlers.md#rendering-a-template) generic handler. 
+Tous les handlers ont accès à une méthode [`#context`](pathname:///api/dev/Marten/Handlers/Base.html#context-instance-method) qui retourne un objet de contexte de [template](../templates/introduction.md). Cet objet de contexte « global » est disponible pendant toute la durée de vie du handler considéré et peut être modifié pour définir quelles variables sont rendues disponibles au runtime du template lors du rendu de templates via la méthode d'aide [`#render`](#render) ou lors du rendu de templates dans le cadre de sous-classes du handler générique [`Marten::Handlers::Template`](./generic-handlers.md#rendu-dun-template). 
 
-To modify this context object effectively, it's recommended to utilize [`before_render`](./callbacks.md#before_render) callbacks, which are invoked just before rendering a template within a handler. For example, this can be achieved as follows when using a [`Marten::Handlers::Template`](./generic-handlers.md#rendering-a-template) subclass:
+Pour modifier efficacement cet objet de contexte, il est recommandé d'utiliser les callbacks [`before_render`](./callbacks.md#before_render), qui sont invoqués juste avant le rendu d'un template dans un handler. Par exemple, cela peut être réalisé comme suit lors de l'utilisation d'une sous-classe de [`Marten::Handlers::Template`](./generic-handlers.md#rendu-dun-template) :
 
 ```crystal
 class MyHandler < Marten::Handlers::Template
@@ -217,9 +217,9 @@ class MyHandler < Marten::Handlers::Template
 end
 ```
 
-### Returning errors
+### Retourner des erreurs
 
-It is easy to forge any error response by leveraging the `#respond` or `#head` helpers that were mentioned [previously](#response-helper-methods). Using these helpers, it is possible to forge HTTP responses that are associated with specific error status codes and specific contents. For example:
+Il est facile de construire n'importe quelle réponse d'erreur en exploitant les aides `#respond` ou `#head` mentionnées [précédemment](#méthodes-daide-pour-les-réponses). En utilisant ces aides, il est possible de construire des réponses HTTP associées à des codes de statut d'erreur spécifiques et des contenus spécifiques. Par exemple :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -229,13 +229,13 @@ class MyHandler < Marten::Handler
 end
 ```
 
-It should be noted that Marten also support a couple of exceptions that can be raised to automatically trigger default error handlers. For example [`Marten::HTTP::Errors::NotFound`](pathname:///api/dev/Marten/HTTP/Errors/NotFound.html) can be raised from any handler to force a 404 Not Found response to be returned. Default error handlers can be returned automatically by the framework in many situations (eg. a record is not found, or an unhandled exception is raised); you can learn more about them in [Error handlers](./error-handlers.md).
+Il convient de noter que Marten prend également en charge quelques exceptions qui peuvent être levées pour déclencher automatiquement les handlers d'erreur par défaut. Par exemple, [`Marten::HTTP::Errors::NotFound`](pathname:///api/dev/Marten/HTTP/Errors/NotFound.html) peut être levée depuis n'importe quel handler pour forcer le retour d'une réponse 404 Not Found. Les handlers d'erreur par défaut peuvent être retournés automatiquement par le framework dans de nombreuses situations (par ex. un enregistrement n'est pas trouvé, ou une exception non gérée est levée) ; vous pouvez en apprendre davantage à ce sujet dans [Handlers d'erreur](./error-handlers.md).
 
-### Exceptions handling
+### Gestion des exceptions
 
-Marten lets you define callback methods that are invoked when certain exceptions are encountered during the execution of your handler's `#dispatch` method. These exception handling callbacks can be defined by using the [`#rescue_from`](pathname:///api/dev/Marten/Handlers/ExceptionHandling.html#rescue_from(*exception_klasses%2C**kwargs%2C%26block)-macro) macro, which accepts one or more exception classes and an exception handler that can be specified by a trailing `:with` option containing the name of a method to invoke or a block containing the exception handling logic.
+Marten vous permet de définir des méthodes de callback qui sont invoquées lorsque certaines exceptions sont rencontrées durant l'exécution de la méthode `#dispatch` de votre handler. Ces callbacks de gestion d'exceptions peuvent être définis en utilisant la macro [`#rescue_from`](pathname:///api/dev/Marten/Handlers/ExceptionHandling.html#rescue_from(*exception_klasses%2C**kwargs%2C%26block)-macro), qui accepte une ou plusieurs classes d'exception et un gestionnaire d'exception qui peut être spécifié par une option `:with` contenant le nom d'une méthode à invoquer ou un bloc contenant la logique de gestion de l'exception.
 
-For example, the following handler will react to possible `Auth::UnauthorizedUser` exceptions by calling the `#handle_unauthorized_user` private method:
+Par exemple, le handler suivant réagira aux éventuelles exceptions `Auth::UnauthorizedUser` en appelant la méthode privée `#handle_unauthorized_user` :
 
 ```crystal
 class ProfileHandler < Marten::Handlers::Template
@@ -251,7 +251,7 @@ class ProfileHandler < Marten::Handlers::Template
 end
 ```
 
-And the following handler will do exactly the same by invoking the specified block:
+Et le handler suivant fera exactement la même chose en invoquant le bloc spécifié :
 
 ```crystal
 class ProfileHandler < Marten::Handlers::Template
@@ -265,15 +265,15 @@ class ProfileHandler < Marten::Handlers::Template
 end
 ```
 
-It is worth mentioning that exception handling callbacks are inherited and that they are searched bottom-up in the inheritance hierarchy.
+Il est important de mentionner que les callbacks de gestion d'exceptions sont hérités et qu'ils sont recherchés de bas en haut dans la hiérarchie d'héritage.
 
 :::warning
-Your exception handling callbacks should return [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) objects. If that's not the case, then your exception handling callback logic will be executed but the original exception will be allowed to "bubble up" (which will likely result in a server error).
+Vos callbacks de gestion d'exceptions doivent retourner des objets [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). Si ce n'est pas le cas, la logique de votre callback de gestion d'exception sera exécutée mais l'exception originale sera autorisée à « remonter » (ce qui entraînera probablement une erreur serveur).
 :::
 
-## Mapping handlers to URLs
+## Associer les handlers aux URLs
 
-Handlers define the logic allowing to handle incoming HTTP requests and return corresponding HTTP responses. In order to define which handler gets called for a specific URL (and what are the expected URL parameters), handlers need to be associated with a specific route. This configuration usually takes place in the `config/routes.rb` configuration file, where you can define "paths" and associate them to your handler classes:
+Les handlers définissent la logique permettant de gérer les requêtes HTTP entrantes et de retourner les réponses HTTP correspondantes. Pour définir quel handler est appelé pour une URL spécifique (et quels sont les paramètres d'URL attendus), les handlers doivent être associés à une route spécifique. Cette configuration se fait généralement dans le fichier de configuration `config/routes.rb`, où vous pouvez définir des « chemins » et les associer à vos classes de handler :
 
 ```crystal title="config/routes.cr"
 Marten.routes.draw do
@@ -283,13 +283,13 @@ Marten.routes.draw do
 end
 ```
 
-Please refer to [Routing](./routing.md) for more information regarding routes configuration.
+Veuillez vous référer à [Routage](./routing.md) pour plus d'informations concernant la configuration des routes.
 
-## Using cookies
+## Utiliser les cookies
 
-Handlers are able to interact with a cookies store, that you can use to store small amounts of data on the client. This data will be persisted across requests, and will be made accessible with every incoming request.
+Les handlers peuvent interagir avec un magasin de cookies, que vous pouvez utiliser pour stocker de petites quantités de données côté client. Ces données seront persistées entre les requêtes et seront rendues accessibles à chaque requête entrante.
 
-The cookies store is an instance of [`Marten::HTTP::Cookies`](pathname:///api/dev/Marten/HTTP/Cookies.html) and provides a hash-like interface allowing to retrieve and store data. Handlers can access it through the use of the `#cookies` method. Here is a very simple example of how to interact with cookies:
+Le magasin de cookies est une instance de [`Marten::HTTP::Cookies`](pathname:///api/dev/Marten/HTTP/Cookies.html) et fournit une interface de type hash permettant de récupérer et stocker des données. Les handlers peuvent y accéder via la méthode `#cookies`. Voici un exemple très simple d'interaction avec les cookies :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -300,27 +300,27 @@ class MyHandler < Marten::Handler
 end
 ```
 
-It should be noted that the cookies store gives access to two sub stores: an encrypted one and a signed one.
+Il convient de noter que le magasin de cookies donne accès à deux sous-magasins : un chiffré et un signé.
 
-`cookies.encrypted` allows defining cookies that will be signed and encrypted. Whenever a cookie is requested from this store, the raw value of the cookie will be decrypted. This is useful to create cookies whose values can't be read nor tampered by users:
+`cookies.encrypted` permet de définir des cookies qui seront signés et chiffrés. Lorsqu'un cookie est demandé depuis ce magasin, la valeur brute du cookie sera déchiffrée. Cela est utile pour créer des cookies dont les valeurs ne peuvent être ni lues ni falsifiées par les utilisateurs :
 
 ```crystal
 cookies.encrypted[:secret_message] = "Hello!"
 ```
 
-`cookies.signed` allows defining cookies that will be signed but not encrypted. This means that whenever a cookie is requested from this store, the signed representation of the corresponding value will be verified. This is useful to create cookies that can't be tampered by users, but it should be noted that the actual data can still be read by the client.
+`cookies.signed` permet de définir des cookies qui seront signés mais non chiffrés. Cela signifie que lorsqu'un cookie est demandé depuis ce magasin, la représentation signée de la valeur correspondante sera vérifiée. Cela est utile pour créer des cookies qui ne peuvent pas être falsifiés par les utilisateurs, mais il convient de noter que les données réelles peuvent toujours être lues par le client.
 
 ```crystal
 cookies.signed[:signed_message] = "Hello!"
 ```
 
-Please refer to [Cookies](./cookies.md) for more information around using cookies.
+Veuillez vous référer à [Cookies](./cookies.md) pour plus d'informations sur l'utilisation des cookies.
 
-## Using sessions
+## Utiliser les sessions
 
-Handlers can interact with a session store, which you can use to store small amounts of data that will be persisted between requests. How much data you can persist in this store depends on the session backend being used. The default backend persists session data using an encrypted cookie. Cookies have a 4K size limit, which is usually sufficient in order to persist things like a user ID and flash messages.
+Les handlers peuvent interagir avec un magasin de sessions, que vous pouvez utiliser pour stocker de petites quantités de données qui seront persistées entre les requêtes. La quantité de données que vous pouvez persister dans ce magasin dépend du backend de session utilisé. Le backend par défaut persiste les données de session en utilisant un cookie chiffré. Les cookies ont une limite de taille de 4K, ce qui est généralement suffisant pour persister des éléments comme un identifiant utilisateur et des messages flash.
 
-The session store is an instance of [`Marten::HTTP::Session::Store::Base`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html) and provides a hash-like interface. Handlers can access it through the use of the `#session` method. For example:
+Le magasin de sessions est une instance de [`Marten::HTTP::Session::Store::Base`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html) et fournit une interface de type hash. Les handlers peuvent y accéder via la méthode `#session`. Par exemple :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -331,13 +331,13 @@ class MyHandler < Marten::Handler
 end
 ```
 
-Please refer to [Sessions](./sessions.md) for more information regarding configuring sessions and the available backends.
+Veuillez vous référer à [Sessions](./sessions.md) pour plus d'informations concernant la configuration des sessions et les backends disponibles.
 
-## Using the flash store
+## Utiliser le magasin flash {#using-the-flash-store}
 
-The flash store provides a way to pass basic string messages from one handler to the next one. Any string value that is set in this store will be available to the next handler processing the next request, and then it will be cleared out. Such mechanism provides a convenient way of creating one-time notification messages (such as alerts or notices).
+Le magasin flash fournit un moyen de transmettre des messages simples sous forme de chaînes de caractères d'un handler au suivant. Toute valeur de type chaîne définie dans ce magasin sera disponible pour le prochain handler traitant la prochaine requête, puis elle sera effacée. Un tel mécanisme offre un moyen pratique de créer des messages de notification ponctuels (tels que des alertes ou des avis).
 
-The flash store is an instance [`Marten::HTTP::FlashStore`](pathname:///api/dev/Marten/HTTP/FlashStore.html) and provides a hash-like interface. Handlers can access it through the use of the `#flash` method. For example:
+Le magasin flash est une instance de [`Marten::HTTP::FlashStore`](pathname:///api/dev/Marten/HTTP/FlashStore.html) et fournit une interface de type hash. Les handlers peuvent y accéder via la méthode `#flash`. Par exemple :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -348,34 +348,34 @@ class MyHandler < Marten::Handler
 end
 ```
 
-In the above example, the handler creates a flash message before returning a redirect response to another URL. It is up to the handler processing this URL to decide what to do with the flash message; this can involve rendering it as part of a base template for example.
+Dans l'exemple ci-dessus, le handler crée un message flash avant de retourner une réponse de redirection vers une autre URL. C'est au handler traitant cette URL de décider quoi faire avec le message flash ; cela peut impliquer de l'afficher dans un template de base par exemple.
 
-Note that it is possible to explicitly keep the current flash messages so that they remain all accessible to the next handler processing the next request. This can be done by using the `flash.keep` method, which can take an optional argument in order to keep the message associated with a specific key only.
+Notez qu'il est possible de conserver explicitement les messages flash actuels pour qu'ils restent tous accessibles au prochain handler traitant la prochaine requête. Cela peut être fait en utilisant la méthode `flash.keep`, qui peut prendre un argument optionnel pour conserver uniquement le message associé à une clé spécifique.
 
 ```crystal
 flash.keep       # keeps all the flash messages for the next request
 flash.keep(:foo) # keeps the message associated with the "foo" key only
 ```
 
-The reverse operation is also possible: you can decide to discard all the current flash messages so that none of them will remain accessible to the next handler processing the next request. This can be done by using the `flash.discard` method, which can take an optional argument in order to discard the message associated with a specific key only.
+L'opération inverse est également possible : vous pouvez décider de rejeter tous les messages flash actuels pour qu'aucun d'entre eux ne reste accessible au prochain handler traitant la prochaine requête. Cela peut être fait en utilisant la méthode `flash.discard`, qui peut prendre un argument optionnel pour rejeter uniquement le message associé à une clé spécifique.
 
 ```crystal
 flash.discard       # discards all the flash messages
 flash.discard(:foo) # discards the message associated with the "foo" key only
 ```
 
-## Streaming responses
+## Réponses en streaming
 
-The [`Marten::HTTP::Response::Streaming`](pathname:///api/dev/Marten/HTTP/Response/Streaming.html) response class gives you the ability to stream a response from Marten to the browser. However, unlike a standard response, this specialized class requires initialization from an [iterator](https://crystal-lang.org/api/Iterator.html) of strings instead of a content string. This approach proves to be beneficial if you intend to generate lengthy responses or responses that consume excessive memory (a classic example of this is the generation of large CSV files).
+La classe de réponse [`Marten::HTTP::Response::Streaming`](pathname:///api/dev/Marten/HTTP/Response/Streaming.html) vous donne la possibilité de diffuser une réponse depuis Marten vers le navigateur. Cependant, contrairement à une réponse standard, cette classe spécialisée nécessite une initialisation à partir d'un [itérateur](https://crystal-lang.org/api/Iterator.html) de chaînes de caractères au lieu d'une chaîne de contenu. Cette approche s'avère bénéfique si vous avez l'intention de générer de longues réponses ou des réponses qui consomment une mémoire excessive (un exemple classique étant la génération de fichiers CSV volumineux).
 
-Compared to a regular [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) object, the [`Marten::HTTP::Response::Streaming`](pathname:///api/dev/Marten/HTTP/Response/Streaming.html) class operates differently in two ways:
+Comparée à un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) classique, la classe [`Marten::HTTP::Response::Streaming`](pathname:///api/dev/Marten/HTTP/Response/Streaming.html) fonctionne différemment de deux manières :
 
-* Instead of initializing it with a content string, it requires initialization from an [iterator](https://crystal-lang.org/api/Iterator.html) of strings.
-* The response content is not directly accessible. The only way to obtain the actual response content is by iterating through the streamed content iterator, which can be accessed through the [`Marten::HTTP::Response::Streaming#streamed_content`](pathname:///api/dev/Marten/HTTP/Response/Streaming.html#streamed_content%3AIterator(String)-instance-method) method. However, this is handled by Marten itself when sending the response to the browser, so you shouldn't need to worry about it.
+* Au lieu de l'initialiser avec une chaîne de contenu, elle nécessite une initialisation à partir d'un [itérateur](https://crystal-lang.org/api/Iterator.html) de chaînes de caractères.
+* Le contenu de la réponse n'est pas directement accessible. La seule façon d'obtenir le contenu réel de la réponse est d'itérer à travers l'itérateur de contenu diffusé, accessible via la méthode [`Marten::HTTP::Response::Streaming#streamed_content`](pathname:///api/dev/Marten/HTTP/Response/Streaming.html#streamed_content%3AIterator(String)-instance-method). Cependant, cela est géré par Marten lui-même lors de l'envoi de la réponse au navigateur, donc vous ne devriez pas avoir à vous en soucier.
 
-To generate streaming responses, you can either instantiate [`Marten::HTTP::Response::Streaming`](pathname:///api/dev/Marten/HTTP/Response/Streaming.html) objects directly, or you can also leverage the [`#respond`](pathname:///api/dev/Marten/Handlers/Base.html#respond(streamed_content%3AIterator(String)%2Ccontent_type%3DHTTP%3A%3AResponse%3A%3ADEFAULT_CONTENT_TYPE%2Cstatus%3D200)-instance-method) helper method, which works similarly to the [`#respond`](#respond) variant for response content strings.
+Pour générer des réponses en streaming, vous pouvez soit instancier directement des objets [`Marten::HTTP::Response::Streaming`](pathname:///api/dev/Marten/HTTP/Response/Streaming.html), soit exploiter la méthode d'aide [`#respond`](pathname:///api/dev/Marten/Handlers/Base.html#respond(streamed_content%3AIterator(String)%2Ccontent_type%3DHTTP%3A%3AResponse%3A%3ADEFAULT_CONTENT_TYPE%2Cstatus%3D200)-instance-method), qui fonctionne de manière similaire à la variante [`#respond`](#respond) pour les chaînes de contenu de réponse.
 
-For example, the following handler generates a CSV and streams its content by leveraging the [`#respond`](pathname:///api/dev/Marten/Handlers/Base.html#respond(streamed_content%3AIterator(String)%2Ccontent_type%3DHTTP%3A%3AResponse%3A%3ADEFAULT_CONTENT_TYPE%2Cstatus%3D200)-instance-method) helper method:
+Par exemple, le handler suivant génère un CSV et diffuse son contenu en exploitant la méthode d'aide [`#respond`](pathname:///api/dev/Marten/Handlers/Base.html#respond(streamed_content%3AIterator(String)%2Ccontent_type%3DHTTP%3A%3AResponse%3A%3ADEFAULT_CONTENT_TYPE%2Cstatus%3D200)-instance-method) :
 
 ```crystal
 require "csv"
@@ -404,5 +404,5 @@ end
 ```
 
 :::caution
-When considering streaming responses, it is crucial to understand that the process of streaming ties up a worker process for the entire response duration. This can significantly impact your worker's performance, so it's essential to use this approach only when necessary. Generally, it's better to carry out expensive content generation tasks outside the request-response cycle to avoid any negative impact on your worker's performance.
+Lorsque vous envisagez des réponses en streaming, il est crucial de comprendre que le processus de diffusion mobilise un processus worker pendant toute la durée de la réponse. Cela peut avoir un impact significatif sur les performances de votre worker, il est donc essentiel de n'utiliser cette approche que lorsque c'est nécessaire. En général, il est préférable d'effectuer les tâches de génération de contenu coûteuses en dehors du cycle requête-réponse pour éviter tout impact négatif sur les performances de votre worker.
 :::

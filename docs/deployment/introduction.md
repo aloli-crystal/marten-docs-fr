@@ -1,95 +1,95 @@
 ---
-title: Deploying Marten projects
-description: Learn about the things to consider when deploying Marten web applications.
+title: Déployer des projets Marten
+description: Découvrez les éléments à considérer lors du déploiement d'applications web Marten.
 sidebar_label: Introduction
 ---
 
-This section describes what's involved when it comes to deploying a Marten web application and highlights some important things to consider before performing deploys.
+Cette section décrit ce qui est impliqué lors du déploiement d'une application web Marten et met en évidence certaines choses importantes à considérer avant d'effectuer des déploiements.
 
-## Overview
+## Vue d'ensemble
 
-Each deployment pipeline is unique and will vary from one project to another. That being said, a few things and requirements will be commonly encountered when it comes to deploying a Marten project:
+Chaque pipeline de déploiement est unique et variera d'un projet à l'autre. Cela dit, quelques éléments et exigences seront couramment rencontrés lors du déploiement d'un projet Marten :
 
-1. installing your project's dependencies
-2. compiling your project's server and [management CLI](../development/management-commands.md)
-3. collecting your project's [assets](../assets/introduction.md)
-4. applying any pending migrations to your database
-5. starting the compiled server
+1. installer les dépendances de votre projet
+2. compiler le serveur de votre projet et le [CLI de gestion](../development/management-commands.md)
+3. collecter les [assets](../assets/introduction.md) de votre projet
+4. appliquer les migrations en attente à votre base de données
+5. démarrer le serveur compilé
 
-Where, when, and how these steps are performed will vary from one project to another. Each of these steps is highlighted below along with some recommendations.
+Où, quand et comment ces étapes sont effectuées variera d'un projet à l'autre. Chacune de ces étapes est détaillée ci-dessous avec quelques recommandations.
 
-It should also be noted that a few guides highlighting common deployment strategies can be leveraged if necessary:
+Il convient également de noter que quelques guides mettant en évidence des stratégies de déploiement courantes peuvent être utilisés si nécessaire :
 
-* [Deploying to an Ubuntu server](./how-to/deploy-to-an-ubuntu-server)
+* [Déployer sur un serveur Ubuntu](./how-to/deploy-to-an-ubuntu-server)
 
-### Installing dependencies
+### Installer les dépendances
 
-One of the first things you need to do when deploying a Marten project is to ensure that the dependencies of the projects are available. In this light, you can leverage the `shards install` command to install your project's Crystal dependencies (assuming that Crystal is installed on your destination machine). Obviously, your project may require the installation of other types of dependencies (such as Node.js dependencies for example), which you have to take care of as well.
+L'une des premières choses à faire lors du déploiement d'un projet Marten est de s'assurer que les dépendances du projet sont disponibles. Dans cette optique, vous pouvez utiliser la commande `shards install` pour installer les dépendances Crystal de votre projet (en supposant que Crystal est installé sur votre machine de destination). Évidemment, votre projet peut nécessiter l'installation d'autres types de dépendances (comme des dépendances Node.js par exemple), dont vous devez vous occuper également.
 
-### Compiling your project
+### Compiler votre projet
 
-Your project server and [management CLI](../development/management-commands.md) need to be compiled to run your project's server and to execute additional deployment-related management commands (eg. to [collect assets](#collecting-assets) or [apply migrations](#applying-migrations)).
+Le serveur de votre projet et le [CLI de gestion](../development/management-commands.md) doivent être compilés pour exécuter le serveur de votre projet et pour exécuter des commandes de gestion supplémentaires liées au déploiement (ex. pour [collecter les assets](#collecter-les-assets) ou [appliquer les migrations](#appliquer-les-migrations)).
 
-When it comes to your project server, you will usually need to compile the `src/server.cr` file (which is automatically created when generating new projects via the [`new`](../development/reference/management-commands.md#new) management command). This can be achieved with the following command:
+Concernant le serveur de votre projet, vous devrez généralement compiler le fichier `src/server.cr` (qui est automatiquement créé lors de la génération de nouveaux projets via la commande de gestion [`new`](../development/reference/management-commands.md#new)). Cela peut être réalisé avec la commande suivante :
 
 ```bash
 crystal build src/server.cr -o bin/server --release
 ```
 
 :::tip
-In the above example, the server binary is compiled using the `-o bin/server` option, which ensures that the compiled binary will be named `server` and stored under the related `bin` folder. You should obviously adapt this to your production environment.
+Dans l'exemple ci-dessus, le binaire du serveur est compilé en utilisant l'option `-o bin/server`, ce qui garantit que le binaire compilé sera nommé `server` et stocké dans le dossier `bin` associé. Vous devriez évidemment adapter cela à votre environnement de production.
 :::
 
-The [management CLI](../development/management-commands.md) is provided by the `manage.cr` file located at the root of your project. As usual, this file is also automatically generated for you when creating Marten projects through the use of the [`new`](../development/reference/management-commands.md#new) management command. Compiling this binary can be done with the following command:
+Le [CLI de gestion](../development/management-commands.md) est fourni par le fichier `manage.cr` situé à la racine de votre projet. Comme d'habitude, ce fichier est également généré automatiquement pour vous lors de la création de projets Marten via la commande de gestion [`new`](../development/reference/management-commands.md#new). La compilation de ce binaire peut être effectuée avec la commande suivante :
 
 ```bash
 crystal build manage.cr -o bin/manage --release
 ```
 
 :::info
-The above compilation commands make use of the `--release` flag, which enables compiler optimizations. As a result, the compilation of the final binaries may take quite some time depending on your project. You can also avoid using `--release` if needed but technically performances could be impacted. See [Release builds](https://crystal-lang.org/reference/man/crystal/index.html#release-builds) for more details on this subject.
+Les commandes de compilation ci-dessus utilisent le flag `--release`, qui active les optimisations du compilateur. En conséquence, la compilation des binaires finaux peut prendre un certain temps selon votre projet. Vous pouvez également éviter d'utiliser `--release` si nécessaire mais techniquement les performances pourraient être impactées. Voir [Release builds](https://crystal-lang.org/reference/man/crystal/index.html#release-builds) pour plus de détails sur ce sujet.
 :::
 
-### Collecting assets
+### Collecter les assets
 
-You need to ensure that your project and applications assets (eg. JavaScripts, CSS files, etc) are "collected" at deploy time so that they are placed at the final destination from which they will be served: this operation is made available through the use of the [`collectassets`](../development/reference/management-commands.md#collectassets) management command. This "destination" depends on your deployment strategy and your configured [assets settings](../development/reference/settings.md#assets-settings): it can be as simple as moving all these assets to a dedicated folder in your server (so that they can be served by your web server), or it can involve uploading these assets to an S3 or GCS bucket for example.
+Vous devez vous assurer que les assets de votre projet et de vos applications (ex. JavaScripts, fichiers CSS, etc.) sont "collectés" au moment du déploiement afin qu'ils soient placés à la destination finale depuis laquelle ils seront servis : cette opération est rendue disponible via la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets). Cette "destination" dépend de votre stratégie de déploiement et de vos [paramètres d'assets](../development/reference/settings.md#assets-settings) configurés : cela peut être aussi simple que de déplacer tous ces assets dans un dossier dédié sur votre serveur (afin qu'ils puissent être servis par votre serveur web), ou cela peut impliquer le téléchargement de ces assets vers un bucket S3 ou GCS par exemple.
 
-In order to collect assets at deploy time, you will want to use the compiled `manage` binary and run the [`collectassets`](../development/reference/management-commands.md#collectassets) management command (as mentioned previously) with the `--no-input` flag set in order to disable user prompts:
+Pour collecter les assets au moment du déploiement, vous voudrez utiliser le binaire `manage` compilé et exécuter la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets) (comme mentionné précédemment) avec le flag `--no-input` défini pour désactiver les invites utilisateur :
 
 ```bash
 bin/manage collectassets --no-input
 ```
 
 :::info
-The assets handling documentation also provides a few [guidelines](../assets/introduction.md#serving-assets-in-production) on how to serve asset files in production that may be worth reading.
+La documentation sur la gestion des assets fournit également quelques [directives](../assets/introduction.md#serving-assets-in-production) sur la façon de servir les fichiers d'assets en production qui méritent d'être lues.
 :::
 
-### Applying migrations
+### Appliquer les migrations
 
-Your projects will likely make use of models, which means that you will need to ensure that those are properly created at your configured database level by running the associated migrations.
+Vos projets utiliseront probablement des modèles, ce qui signifie que vous devrez vous assurer que ceux-ci sont correctement créés au niveau de votre base de données configurée en exécutant les migrations associées.
 
-To do so, you can use the compiled `manage` binary and run the [`migrate`](../development/reference/management-commands.md#migrate) management command:
+Pour ce faire, vous pouvez utiliser le binaire `manage` compilé et exécuter la commande de gestion [`migrate`](../development/reference/management-commands.md#migrate) :
 
 ```bash
 bin/manage migrate
 ```
 
-Please refer to [Migrations](../models-and-databases/migrations.md) to learn more about model migrations.
+Veuillez consulter [Migrations](../models-and-databases/migrations.md) pour en savoir plus sur les migrations de modèles.
 
-### Running the server
+### Exécuter le serveur
 
-You can run the compiled Marten server using the following command (obviously the location of the binary depends on [how the compilation was actually performed](#compiling-your-project)):
+Vous pouvez exécuter le serveur Marten compilé en utilisant la commande suivante (évidemment l'emplacement du binaire dépend de [la façon dont la compilation a été effectuée](#compiler-votre-projet)) :
 
 ```bash
 bin/server
 ```
 
-It's important to note that the Marten server is intended to be used behind a reverse proxy such as [Nginx](https://www.nginx.com/) or [Apache](https://httpd.apache.org/): you will usually want to configure such reverse proxy so that it targets your configured Marten server host and port. In this light, you should ensure that your Marten server is not using the HTTP port 80 (instead it could use something like 8080 or 8000 for example).
+Il est important de noter que le serveur Marten est destiné à être utilisé derrière un reverse proxy tel que [Nginx](https://www.nginx.com/) ou [Apache](https://httpd.apache.org/) : vous voudrez généralement configurer un tel reverse proxy pour qu'il cible l'hôte et le port de votre serveur Marten configuré. Dans cette optique, vous devriez vous assurer que votre serveur Marten n'utilise pas le port HTTP 80 (il pourrait plutôt utiliser quelque chose comme 8080 ou 8000 par exemple).
 
-Depending on your use cases, a reverse proxy will also allow you to easily serve other contents such as [assets](../assets/introduction.md) or [uploaded files](../files/managing-files.md), and to use SSL/TLS.
+Selon vos cas d'utilisation, un reverse proxy vous permettra également de servir facilement d'autres contenus tels que des [assets](../assets/introduction.md) ou des [fichiers téléchargés](../files/managing-files.md), et d'utiliser SSL/TLS.
 
 :::tip
-It is possible to run multiple processes of the same server behind a reverse proxy such as Nginx. Indeed, each compiled server can accept optional parameters to override the host and/or port being used. These parameters are respectively `--bind` (or `-b`) and `--port` (or `-p`). For example:
+Il est possible d'exécuter plusieurs processus du même serveur derrière un reverse proxy tel que Nginx. En effet, chaque serveur compilé peut accepter des paramètres optionnels pour surcharger l'hôte et/ou le port utilisés. Ces paramètres sont respectivement `--bind` (ou `-b`) et `--port` (ou `-p`). Par exemple :
 
 ```bash
 bin/server -b 127.0.0.1
@@ -97,21 +97,21 @@ bin/server -p 8080
 ```
 :::
 
-## Additional tips
+## Conseils supplémentaires
 
-This section lists a few additional things to consider when deploying Marten projects.
+Cette section liste quelques éléments supplémentaires à considérer lors du déploiement de projets Marten.
 
-### Secure critical setting values
+### Sécuriser les valeurs de paramètres critiques
 
-You should pay attention to the value of some of your settings in production environments.
+Vous devriez prêter attention à la valeur de certains de vos paramètres dans les environnements de production.
 
-#### Debug mode
+#### Mode debug
 
-You should ensure that the [`debug`](../development/reference/settings.md#debug) setting is always set to `false` in production environments. Indeed, the debug mode can help for development purposes because it outputs useful tracebacks and site-related information. But there is a risk that all this information leaks somewhere if you enable this mode in production.
+Vous devriez vous assurer que le paramètre [`debug`](../development/reference/settings.md#debug) est toujours défini sur `false` dans les environnements de production. En effet, le mode debug peut aider à des fins de développement car il affiche des tracebacks utiles et des informations liées au site. Mais il y a un risque que toutes ces informations fuient quelque part si vous activez ce mode en production.
 
-#### Secret key
+#### Clé secrète
 
-You should ensure that the value of the [`secret_key`](../development/reference/settings.md#secret_key) setting is not hardcoded in your [config files](../development/settings.md). Indeed, this setting value must be kept secret and you should ensure that it's loaded dynamically instead. For example, this setting's value could be set in a dedicated environment variable (or dotenv file) and loaded as follows:
+Vous devriez vous assurer que la valeur du paramètre [`secret_key`](../development/reference/settings.md#secret_key) n'est pas codée en dur dans vos [fichiers de configuration](../development/settings.md). En effet, cette valeur de paramètre doit être gardée secrète et vous devriez vous assurer qu'elle est chargée dynamiquement à la place. Par exemple, la valeur de ce paramètre pourrait être définie dans une variable d'environnement dédiée (ou un fichier dotenv) et chargée comme suit :
 
 ```crystal
 Marten.configure do |config|
@@ -122,8 +122,8 @@ end
 ```
 
 :::tip
-It is possible to generate a new secret key using the tools available.
-Marten provides a secret key generator which can be used to generate a random key which can then be stored in an environment variable.
+Il est possible de générer une nouvelle clé secrète en utilisant les outils disponibles.
+Marten fournit un générateur de clé secrète qui peut être utilisé pour générer une clé aléatoire qui peut ensuite être stockée dans une variable d'environnement.
 
 ```bash
 bin/manage gen secretkey

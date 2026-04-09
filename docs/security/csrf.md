@@ -1,33 +1,33 @@
 ---
-title: Cross-Site Request Forgery protection
-description: Learn about Cross-Site Request Forgeries (CSRF) attacks and how to protect your application from them.
-sidebar_label: CSRF protection
+title: Protection contre les Cross-Site Request Forgery
+description: Découvrez les attaques Cross-Site Request Forgery (CSRF) et comment protéger votre application contre celles-ci.
+sidebar_label: Protection CSRF
 ---
 
-This document describes Marten's Cross-Site Request Forgery (CSRF) protection mechanism as well as the various tools that you can use in order to configure and make use of it.
+Ce document décrit le mécanisme de protection contre les Cross-Site Request Forgery (CSRF) de Marten ainsi que les divers outils que vous pouvez utiliser pour le configurer et l'utiliser.
 
-## Overview
+## Vue d'ensemble
 
-Cross-Site Request Forgery (CSRF) attacks generally involve a malicious website trying to perform actions on a web application on behalf of an already authenticated user. Marten provides a built-in mechanism in order to protect your applications from this kind of attack. This mechanism is useful for protecting endpoints that handle "unsafe" HTTP requests (ie. requests whose methods are not `GET`, `HEAD`, `OPTIONS`, or `TRACE`).
+Les attaques Cross-Site Request Forgery (CSRF) impliquent généralement un site web malveillant essayant d'effectuer des actions sur une application web au nom d'un utilisateur déjà authentifié. Marten fournit un mécanisme intégré pour protéger vos applications contre ce type d'attaque. Ce mécanisme est utile pour protéger les points de terminaison qui traitent des requêtes HTTP "non sûres" (c'est-à-dire les requêtes dont les méthodes ne sont pas `GET`, `HEAD`, `OPTIONS` ou `TRACE`).
 
 :::caution
-The CSRF protection ignores safe HTTP requests. As such, you should ensure that those are side effect free.
+La protection CSRF ignore les requêtes HTTP sûres. Ainsi, vous devez vous assurer que celles-ci sont exemptes d'effets secondaires.
 :::
 
-The CSRF protection provided by Marten is based on the verification of a token that must be provided for each unsafe HTTP request. This token is stored in the client: Marten sends a token cookie with every HTTP response when the token value is requested in handlers ([`#get_csrf_token`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection.html#get_csrf_token-instance-method) method) or templates (eg. through the use of the [`csrf_input`](../templates/reference/tags.md#csrf_input) or [`csrf_token`](../templates/reference/tags.md#csrf_token) template tags). It should be noted that the actual value of the token cookie changes every time an HTTP response is returned to the client: this is because the actual secret token is scrambled using a mask that changes for every request where the CSRF token is requested and used.
+La protection CSRF fournie par Marten est basée sur la vérification d'un token qui doit être fourni pour chaque requête HTTP non sûre. Ce token est stocké chez le client : Marten envoie un cookie de token avec chaque réponse HTTP lorsque la valeur du token est demandée dans les handlers (méthode [`#get_csrf_token`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection.html#get_csrf_token-instance-method)) ou les templates (par exemple via l'utilisation des tags de template [`csrf_input`](../templates/reference/tags.md#csrf_input) ou [`csrf_token`](../templates/reference/tags.md#csrf_token)). Il convient de noter que la valeur réelle du cookie de token change chaque fois qu'une réponse HTTP est retournée au client : c'est parce que le token secret réel est brouillé en utilisant un masque qui change pour chaque requête où le token CSRF est demandé et utilisé.
 
-The token value must be specified when submitting unsafe HTTP requests: this can be done either in the data itself (by specifying a `csrftoken` input) or by using a specific header (X-CSRF-Token). When receiving this value, Marten compares it to the token cookie value: if the tokens are not valid, or if there is a mismatch, then this means that the request is malicious and that it must be rejected (which will result in a 403 error).
+La valeur du token doit être spécifiée lors de la soumission de requêtes HTTP non sûres : cela peut être fait soit dans les données elles-mêmes (en spécifiant un input `csrftoken`) soit en utilisant un en-tête spécifique (X-CSRF-Token). Lors de la réception de cette valeur, Marten la compare à la valeur du cookie de token : si les tokens ne sont pas valides, ou s'il y a une non-correspondance, alors cela signifie que la requête est malveillante et qu'elle doit être rejetée (ce qui résultera en une erreur 403).
 
-Finally, it should be noted that a few additional checks can be performed in addition to the token verification:
+Enfin, il convient de noter que quelques vérifications supplémentaires peuvent être effectuées en plus de la vérification du token :
 
-* in order to protect against cross-subdomain attacks, the HTTP request host will be verified in order to ensure that it is either part of the allowed hosts ([`allowed_hosts`](../development/reference/settings.md#allowed_hosts) setting) or that the value of the Origin header matches the configured trusted origins ([`csrf.trusted_origins`](../development/reference/settings.md#trusted_origins) setting)
-* the Referer header will also be checked for HTTPS requests (if the Origin header is not set) in order to prevent subdomains to perform unsafe HTTP requests on the protected web applications (unless those subdomains are explicitly allowed as part of the [`csrf.trusted_origins`](../development/reference/settings.md#trusted_origins) setting)
+* afin de protéger contre les attaques cross-subdomain, l'hôte de la requête HTTP sera vérifié pour s'assurer qu'il fait partie des hôtes autorisés (paramètre [`allowed_hosts`](../development/reference/settings.md#allowed_hosts)) ou que la valeur de l'en-tête Origin correspond aux origines de confiance configurées (paramètre [`csrf.trusted_origins`](../development/reference/settings.md#trusted_origins))
+* l'en-tête Referer sera également vérifié pour les requêtes HTTPS (si l'en-tête Origin n'est pas défini) afin d'empêcher les sous-domaines d'effectuer des requêtes HTTP non sûres sur les applications web protégées (sauf si ces sous-domaines sont explicitement autorisés dans le paramètre [`csrf.trusted_origins`](../development/reference/settings.md#trusted_origins))
 
-The Cross-Site Request Forgery protection provided by Marten happens at the handler level automatically. This protection is implemented in the [`Marten::Handlers::RequestForgeryProtection`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection.html) module.
+La protection Cross-Site Request Forgery fournie par Marten se produit automatiquement au niveau du handler. Cette protection est implémentée dans le module [`Marten::Handlers::RequestForgeryProtection`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection.html).
 
-## Basic usage
+## Utilisation basique
 
-You should first ensure that the CSRF protection is enabled, which is the case by default when projects are generated through the use of the [`new`](../development/reference/management-commands.md#new) management command. That being said, if the CSRF protection is globally disabled (when the [`csrf.protection_enabled`](../development/reference/settings.md#protection_enabled) setting is set to `false`) you need to ensure that your handler enables it _locally_. For example:
+Vous devez d'abord vous assurer que la protection CSRF est activée, ce qui est le cas par défaut lorsque les projets sont générés via la commande de gestion [`new`](../development/reference/management-commands.md#new). Cela dit, si la protection CSRF est globalement désactivée (lorsque le paramètre [`csrf.protection_enabled`](../development/reference/settings.md#protection_enabled) est défini sur `false`) vous devez vous assurer que votre handler l'active _localement_. Par exemple :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -37,13 +37,13 @@ class MyHandler < Marten::Handler
 end
 ```
 
-Then all you need to do is to ensure that you include the CSRF token when submitting unsafe HTTP requests to your web application. How to do that depends on _how_ you intend to submit these requests.
+Ensuite, tout ce que vous devez faire est de vous assurer que vous incluez le token CSRF lors de la soumission de requêtes HTTP non sûres à votre application web. La façon de procéder dépend de _comment_ vous avez l'intention de soumettre ces requêtes.
 
-### Using CSRF protection with forms
+### Utiliser la protection CSRF avec les formulaires
 
-If you need to embed the CSRF token into a form that is generated by a [template](../templates.mdx), then you can make use of the [`csrf_input`](../templates/reference/tags.md#csrf_input) template tag in order to ensure that a hidden `csrftoken` input containing the CSRF token is present in the form.
+Si vous devez intégrer le token CSRF dans un formulaire généré par un [template](../templates.mdx), alors vous pouvez utiliser le tag de template [`csrf_input`](../templates/reference/tags.md#csrf_input) afin de vous assurer qu'un input caché `csrftoken` contenant le token CSRF est présent dans le formulaire.
 
-For example:
+Par exemple :
 
 ```html
 <form method="post" action="" novalidate>
@@ -57,7 +57,7 @@ For example:
 </form>
 ```
 
-Alternatively, you can use the [`csrf_token`](../templates/reference/tags.md#csrf_token) template tag to insert the raw value of the CSRF token directly into your templates. This approach is particularly useful if you need to manually create a hidden CSRF form input. For example:
+Alternativement, vous pouvez utiliser le tag de template [`csrf_token`](../templates/reference/tags.md#csrf_token) pour insérer la valeur brute du token CSRF directement dans vos templates. Cette approche est particulièrement utile si vous devez créer manuellement un input de formulaire CSRF caché. Par exemple :
 
 ```html
 <form method="post" action="" novalidate>
@@ -72,23 +72,23 @@ Alternatively, you can use the [`csrf_token`](../templates/reference/tags.md#csr
 ```
 
 :::caution
-You should never define a hidden `csrftoken` input in a form that does not target your application directly. This is to prevent your CSRF token from being leaked.
+Vous ne devriez jamais définir un input caché `csrftoken` dans un formulaire qui ne cible pas directement votre application. C'est pour empêcher la fuite de votre token CSRF.
 :::
 
-### Using the CSRF protection with AJAX
+### Utiliser la protection CSRF avec AJAX
 
-If you need to submit unsafe HTTP requests on the client side using AJAX, then you also need to ensure that the CSRF token is specified in the request. In this light, you can generate requests that include a X-CSRF-Token header with the token value. But you first need to retrieve the CSRF token. To get it you can either:
+Si vous devez soumettre des requêtes HTTP non sûres côté client en utilisant AJAX, alors vous devez également vous assurer que le token CSRF est spécifié dans la requête. Dans cette optique, vous pouvez générer des requêtes qui incluent un en-tête X-CSRF-Token avec la valeur du token. Mais vous devez d'abord récupérer le token CSRF. Pour l'obtenir, vous pouvez soit :
 
-* retrieve the CSRF token from the cookies (which can be done only if the [`csrf.cookie_http_only`](../development/reference/settings.md#cookie_http_only) setting is set to `false`)
-* or insert the CSRF token somewhere in your HTML markup (which is the way to go if the [`csrf.cookie_http_only`](../development/reference/settings.md#cookie_http_only) setting is set to `true`)
+* récupérer le token CSRF depuis les cookies (ce qui ne peut être fait que si le paramètre [`csrf.cookie_http_only`](../development/reference/settings.md#cookie_http_only) est défini sur `false`)
+* ou insérer le token CSRF quelque part dans votre balisage HTML (ce qui est la méthode à privilégier si le paramètre [`csrf.cookie_http_only`](../development/reference/settings.md#cookie_http_only) est défini sur `true`)
 
-Retrieving the CSRF token from the cookies on the client side can be easily done by using a dedicated library such as the [JavaScript Cookie](https://www.npmjs.com/package/cookie) one:
+Récupérer le token CSRF depuis les cookies côté client peut être facilement fait en utilisant une bibliothèque dédiée comme [JavaScript Cookie](https://www.npmjs.com/package/cookie) :
 
 ```javascript
 const csrfToken = Cookies.get("csrftoken");
 ```
 
-If you can't leverage this technique because the [`csrf.cookie_http_only`](../development/reference/settings.md#cookie_http_only) setting is set to `true`, then you can also define the CSRF token as a JavaScript variable on the template side (by using the [`csrf_token`](../templates/reference/tags.md#csrf_token) template tag):
+Si vous ne pouvez pas utiliser cette technique parce que le paramètre [`csrf.cookie_http_only`](../development/reference/settings.md#cookie_http_only) est défini sur `true`, alors vous pouvez également définir le token CSRF comme une variable JavaScript côté template (en utilisant le tag de template [`csrf_token`](../templates/reference/tags.md#csrf_token)) :
 
 ```html
 <script>
@@ -96,7 +96,7 @@ const csrfToken = "{% csrf_token %}";
 </script>
 ```
 
-An alternative approach could also involve defining an invisible tag with a data attribute, and retrieving this value in order to define a JavaScript variable containing the token value:
+Une approche alternative pourrait également impliquer la définition d'un tag invisible avec un attribut data, et la récupération de cette valeur afin de définir une variable JavaScript contenant la valeur du token :
 
 ```html
 <div id="csrf_token" data-csrf-token="{% csrf_token %}"></div>
@@ -105,15 +105,15 @@ const csrfToken = document.getElementById("csrf_token").dataset.csrfToken;
 </script>
 ```
 
-Once you have the CSRF token value, all you need to do is to ensure that a X-CSRF-Token header is set with this value in all the unsafe HTTP requests you are issuing.
+Une fois que vous avez la valeur du token CSRF, tout ce que vous devez faire est de vous assurer qu'un en-tête X-CSRF-Token est défini avec cette valeur dans toutes les requêtes HTTP non sûres que vous émettez.
 
-## Configuring the CSRF protection
+## Configurer la protection CSRF
 
-The CSRF protection is enabled by default and can be configured through the use of a [dedicated set of settings](../development/reference/settings.md#csrf-settings). These settings can be used to enable or disable the protection globally, tweak some of the parameters of the CSRF token cookie, change the trusted origins, etc.
+La protection CSRF est activée par défaut et peut être configurée via l'utilisation d'un [ensemble dédié de paramètres](../development/reference/settings.md#csrf-settings). Ces paramètres peuvent être utilisés pour activer ou désactiver la protection globalement, ajuster certains des paramètres du cookie de token CSRF, changer les origines de confiance, etc.
 
-## Enabling or disabling the protection on a per-handler basis
+## Activer ou désactiver la protection par handler
 
-Regardless of the value of the [`csrf.protection_enabled`](../development/reference/settings.md#protection_enabled) setting, it is possible to enable or disable the CSRF protection on a per-handler basis. This can be achieved through the use of the [`#protect_from_forgery`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection/ClassMethods.html#protect_from_forgery(protect%3ABool)%3ANil-instance-method) class method, which takes a single boolean as arguments:
+Indépendamment de la valeur du paramètre [`csrf.protection_enabled`](../development/reference/settings.md#protection_enabled), il est possible d'activer ou de désactiver la protection CSRF par handler. Cela peut être réalisé via l'utilisation de la méthode de classe [`#protect_from_forgery`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection/ClassMethods.html#protect_from_forgery(protect%3ABool)%3ANil-instance-method), qui prend un seul booléen comme argument :
 
 ```crystal
 class ProtectedHandler < Marten::Handler

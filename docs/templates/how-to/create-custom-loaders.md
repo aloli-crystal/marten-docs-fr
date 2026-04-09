@@ -1,20 +1,20 @@
 ---
-title: Create custom template loaders
-sidebar_label: Create custom loaders
-description: How to create custom template loaders.
+title: Créer des loaders de template personnalisés
+sidebar_label: Créer des loaders personnalisés
+description: Comment créer des loaders de template personnalisés.
 ---
 
-Marten has built-in support for [common template loaders](../reference/loaders.md), but the framework also allows you to write your own template loader that you can leverage as part of your project's templates.
+Marten dispose d'un support intégré pour les [loaders de template courants](../reference/loaders.md), mais le framework vous permet également d'écrire votre propre loader de template que vous pouvez utiliser dans les templates de votre projet.
 
-## Defining a template loaders
+## Définir un loader de template
 
-Template loaders are subclasses of the [`Marten::Template::Loader::Base`](pathname:///api/dev/Marten/Template/Loader/Base.html) abstract class. They must implement a single `#get_template_source` method: this method returns the raw content of a template from a provided template name.
+Les loaders de template sont des sous-classes de la classe abstraite [`Marten::Template::Loader::Base`](pathname:///api/dev/Marten/Template/Loader/Base.html). Ils doivent implémenter une seule méthode `#get_template_source` : cette méthode retourne le contenu brut d'un template à partir d'un nom de template fourni.
 
-For example, rendering the template `content.html` with a file system loader initialised with `Marten::Template::Loader::FileSystem.new("/app/custom_dir/templates")` would return the content defined in `/app/custom_dir/templates/content.html`.
+Par exemple, rendre le template `content.html` avec un loader de système de fichiers initialisé avec `Marten::Template::Loader::FileSystem.new("/app/custom_dir/templates")` retournerait le contenu défini dans `/app/custom_dir/templates/content.html`.
 
-Let's say we want to write a `DatabaseTemplate` template loader: we first have to define a new class which inherits from `Marten::Template::Loader::Base`. This new class needs to define a `#get_template_source` method which takes a `template_name` string argument and also returns a string.
+Supposons que nous voulions écrire un loader de template `DatabaseTemplate` : nous devons d'abord définir une nouvelle classe qui hérite de `Marten::Template::Loader::Base`. Cette nouvelle classe doit définir une méthode `#get_template_source` qui prend un argument de type chaîne `template_name` et retourne également une chaîne.
 
-For simplicity we assume that there already exists an `HtmlTemplate` model, featuring a `name` field and `content` field:
+Pour simplifier, nous supposons qu'il existe déjà un modèle `HtmlTemplate`, comportant un champ `name` et un champ `content` :
 
 ```crystal
 class DatabaseTemplate < Marten::Template::Loader::Base

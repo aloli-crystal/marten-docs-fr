@@ -1,59 +1,59 @@
 ---
-title: Tutorial
-description: Learn how to use Marten by creating a simple web application.
+title: Tutoriel
+description: Apprenez à utiliser Marten en créant une application web simple.
 ---
 
-This guide will walk you through the creation of a simple weblog application, which will help you learn the basics of the Marten web framework. It is designed for beginners who want to get started by creating a Marten web project, so no prior experience with the framework is required.
+Ce guide vous accompagnera dans la création d'une application de blog simple, qui vous aidera à apprendre les bases du framework web Marten. Il est conçu pour les débutants qui souhaitent démarrer en créant un projet web Marten, aucune expérience préalable avec le framework n'est donc requise.
 
-## Requirements
+## Prérequis
 
-This guide assumes that [Crystal and the Marten CLI are properly installed already](./installation.md). You can verify that the Marten CLI is properly installed by running the following command:
+Ce guide suppose que [Crystal et le CLI Marten sont déjà correctement installés](./installation.md). Vous pouvez vérifier que le CLI Marten est correctement installé en exécutant la commande suivante :
 
 ```bash
 marten -v
 ```
 
-This should output the version of your Marten installation.
+Cela devrait afficher la version de votre installation Marten.
 
-## What is Marten?
+## Qu'est-ce que Marten ?
 
-Marten is a web application framework written in the Crystal programming language. It is designed to make developing web applications easy and fun; and it does so by making some assumptions regarding the common needs that developers may encounter when building web applications.
+Marten est un framework d'application web écrit dans le langage de programmation Crystal. Il est conçu pour rendre le développement d'applications web facile et agréable ; et il y parvient en faisant certaines hypothèses concernant les besoins courants que les développeurs peuvent rencontrer lors de la création d'applications web.
 
-## Creating a project
+## Créer un projet
 
-Creating a project is the first thing to do in order to start working on a Marten web application. This creation process can be done through the use of the `marten` command, and it will ensure that the basic structure of a Marten project is properly generated.
+La création d'un projet est la première chose à faire pour commencer à travailler sur une application web Marten. Ce processus de création peut être effectué via la commande `marten`, et il garantira que la structure de base d'un projet Marten est correctement générée.
 
-This can be achieved from the command line, where you can run the following command to create your first Marten project:
+Cela peut être fait depuis la ligne de commande, où vous pouvez exécuter la commande suivante pour créer votre premier projet Marten :
 
 ```bash
 marten new project myblog
 ```
 
-The above command will create a `myblog` directory inside your current directory. This new folder should have the following content:
+La commande ci-dessus créera un répertoire `myblog` dans votre répertoire actuel. Ce nouveau dossier devrait avoir le contenu suivant :
 
 ```
 myblog/
 ├── config
-│   ├── initializers
-│   ├── settings
-│   │   ├── base.cr
-│   │   ├── development.cr
-│   │   ├── production.cr
-│   │   └── test.cr
-│   └── routes.cr
+│   ├── initializers
+│   ├── settings
+│   │   ├── base.cr
+│   │   ├── development.cr
+│   │   ├── production.cr
+│   │   └── test.cr
+│   └── routes.cr
 ├── spec
-│   └── spec_helper.cr
+│   └── spec_helper.cr
 ├── src
-│   ├── assets
-│   ├── emails
-│   ├── handlers
-│   ├── migrations
-│   ├── models
-│   ├── schemas
-│   ├── templates
-│   ├── cli.cr
-│   ├── project.cr
-│   └── server.cr
+│   ├── assets
+│   ├── emails
+│   ├── handlers
+│   ├── migrations
+│   ├── models
+│   ├── schemas
+│   ├── templates
+│   ├── cli.cr
+│   ├── project.cr
+│   └── server.cr
 ├── .editorconfig
 ├── .gitignore
 ├── manage.cr
@@ -61,47 +61,47 @@ myblog/
 └── shard.yml
 ```
 
-These files and folders are described below:
+Ces fichiers et dossiers sont décrits ci-dessous :
 
-| Path | Description |
+| Chemin | Description |
 | ----------- | ----------- |
-| config/ | Contains the configuration of the project. This includes environment-specific Marten configuration settings, initializers, and web application routes. |
-| spec/ | Contains the project specs, allowing you to test your application. | 
-| src/ | Contains the source code of the application. By default this folder will include a `project.cr` file (where all dependencies - including Marten itself - are required), a `server.cr` file (which starts the Marten web server), a `cli.cr` file (where migrations and CLI-related abstractions are required), and `assets`, `emails`, `handlers`, `migrations`, `models`, `schemas`, and `templates` folders. |
-| .editorconfig | Regular `.editorconfig` which file defines basic indentation coding styles for Crystal. |
-| .gitignore | Regular `.gitignore` file which tells git the files and directories that should be ignored. |
-| manage.cr | This file defines a CLI that lets you interact with your Marten project in order to perform various actions (e.g. running database migrations, collecting assets, etc). |
-| seed.cr | This file can be used to define logics for populating your project's database with initial or default data. |
-| shard.yml | The standard [shard.yml](https://crystal-lang.org/reference/the_shards_command/index.html) file, that lists the dependencies that are required to build your application. |
+| config/ | Contient la configuration du projet. Cela inclut les paramètres de configuration Marten spécifiques à l'environnement, les initialiseurs et les routes de l'application web. |
+| spec/ | Contient les specs du projet, vous permettant de tester votre application. | 
+| src/ | Contient le code source de l'application. Par défaut, ce dossier inclura un fichier `project.cr` (où toutes les dépendances - y compris Marten lui-même - sont requises), un fichier `server.cr` (qui démarre le serveur web Marten), un fichier `cli.cr` (où les migrations et les abstractions liées au CLI sont requises), ainsi que les dossiers `assets`, `emails`, `handlers`, `migrations`, `models`, `schemas` et `templates`. |
+| .editorconfig | Fichier `.editorconfig` standard qui définit les styles d'indentation de base pour Crystal. |
+| .gitignore | Fichier `.gitignore` standard qui indique à git les fichiers et répertoires à ignorer. |
+| manage.cr | Ce fichier définit un CLI qui vous permet d'interagir avec votre projet Marten pour effectuer diverses actions (par ex. exécuter les migrations de base de données, collecter les assets, etc). |
+| seed.cr | Ce fichier peut être utilisé pour définir la logique de peuplement de la base de données de votre projet avec des données initiales ou par défaut. |
+| shard.yml | Le fichier standard [shard.yml](https://crystal-lang.org/reference/the_shards_command/index.html), qui liste les dépendances nécessaires à la construction de votre application. |
 
-Now that the project structure is created, you can change into the `myblog` directory (if you haven't already) in order to install the project dependencies by running the following command:
+Maintenant que la structure du projet est créée, vous pouvez vous rendre dans le répertoire `myblog` (si ce n'est pas déjà fait) afin d'installer les dépendances du projet en exécutant la commande suivante :
 
 ```bash
 shards install
 ```
 
 :::info
-Marten projects are organized around the concept of "apps". A Marten app is a set of abstractions (usually defined under a unique folder) that contributes specific behaviours to a project. For example, apps can provide [models](../models-and-databases.mdx) or [handlers](../handlers-and-http.mdx). They allow to separate a project into a set of logical and reusable components. Another interesting benefit of apps is that they can be extracted and distributed as external shards. This pattern allows third-party libraries to easily contribute models, migrations, handlers, or templates to other projects. The use of apps is activated by simply adding app classes to the [`installed_apps`](../development/reference/settings.md#installed_apps) setting.
+Les projets Marten sont organisés autour du concept d'« apps ». Une app Marten est un ensemble d'abstractions (généralement définies dans un dossier unique) qui apporte des comportements spécifiques à un projet. Par exemple, les apps peuvent fournir des [modèles](../models-and-databases.mdx) ou des [handlers](../handlers-and-http.mdx). Elles permettent de séparer un projet en un ensemble de composants logiques et réutilisables. Un autre avantage intéressant des apps est qu'elles peuvent être extraites et distribuées en tant que shards externes. Ce pattern permet aux bibliothèques tierces de contribuer facilement des modèles, migrations, handlers ou templates à d'autres projets. L'utilisation des apps est activée en ajoutant simplement les classes d'app au paramètre [`installed_apps`](../development/reference/settings.md#installed_apps).
 
-By default, when creating a new project through the use of the [`new`](../development/reference/management-commands.md#new) command, no explicit app will be created nor installed. This is because each Marten project comes with a default "main" app that corresponds to your standard `src` folder. Models, migrations, or other classes defined in this folder are associated with the main app by default, unless they are part of another explicitly defined application.
+Par défaut, lors de la création d'un nouveau projet via la commande [`new`](../development/reference/management-commands.md#new), aucune app explicite ne sera créée ni installée. Cela s'explique par le fait que chaque projet Marten dispose d'une app « main » par défaut qui correspond à votre dossier `src` standard. Les modèles, migrations ou autres classes définies dans ce dossier sont associés à l'app main par défaut, sauf s'ils font partie d'une autre application explicitement définie.
 
-As projects grow in size and scope, it is generally encouraged to start thinking in terms of apps and how to split models, handlers, or features across multiple apps depending on their intended responsibilities. Please refer to [Applications](../development/applications.md) to learn more about applications and how to structure your projects using them.
+Au fur et à mesure que les projets grandissent en taille et en portée, il est généralement encouragé de commencer à raisonner en termes d'apps et de réfléchir à la répartition des modèles, handlers ou fonctionnalités entre plusieurs apps en fonction de leurs responsabilités respectives. Veuillez consulter [Applications](../development/applications.md) pour en savoir plus sur les applications et comment structurer vos projets en les utilisant.
 :::
 
-## Running the development server
+## Lancer le serveur de développement
 
-Now that you have a fully functional web project, you can start a development server by using the following command:
+Maintenant que vous disposez d'un projet web entièrement fonctionnel, vous pouvez démarrer un serveur de développement en utilisant la commande suivante :
 
 ```bash
 marten serve
 ```
 
-This will start a Marten development server. To verify that it's working as expected, you can open a browser and navigate to [http://localhost:8000](http://localhost:8000). When doing so, you should be greeted by the Marten "welcome" page:
+Cela lancera un serveur de développement Marten. Pour vérifier qu'il fonctionne correctement, vous pouvez ouvrir un navigateur et accéder à [http://localhost:8000](http://localhost:8000). Ce faisant, vous devriez être accueilli par la page de « bienvenue » de Marten :
 
-![Marten welcome page](../static/img/getting-started/tutorial/marten_welcome_page.png)
+![Page de bienvenue Marten](../static/img/getting-started/tutorial/marten_welcome_page.png)
 
 :::info
-Your project development server will automatically be available on the internal IP at port 8000. The server port and IP can be changed easily by modifying the `config/settings/development.cr` file:
+Votre serveur de développement sera automatiquement disponible sur l'IP interne au port 8000. Le port et l'IP du serveur peuvent être facilement modifiés en éditant le fichier `config/settings/development.cr` :
 
 ```crystal
 Marten.configure :development do |config|
@@ -112,11 +112,11 @@ end
 ```
 :::
 
-Once started, the development server will watch your project source files and will automatically recompile them when they are updated; it will also take care of restarting your project server. As such, you don't have to manually restart the server when making changes to your application source files.
+Une fois démarré, le serveur de développement surveillera les fichiers sources de votre projet et les recompilera automatiquement lorsqu'ils seront modifiés ; il prendra également en charge le redémarrage du serveur de votre projet. Ainsi, vous n'avez pas besoin de redémarrer manuellement le serveur lorsque vous apportez des modifications aux fichiers sources de votre application.
 
-## Writing a first handler
+## Écrire un premier handler
 
-Let's start by creating the first handler for your project. To do so, create a `src/handlers/home_handler.cr` file with the following content:
+Commençons par créer le premier handler de votre projet. Pour ce faire, créez un fichier `src/handlers/home_handler.cr` avec le contenu suivant :
 
 ```crystal title="src/handlers/home_handler.cr"
 class HomeHandler < Marten::Handler
@@ -126,9 +126,9 @@ class HomeHandler < Marten::Handler
 end
 ```
 
-Handlers are classes that process a web request in order to produce a web response. This response can be rendered HTML content or a redirection for example.
+Les handlers sont des classes qui traitent une requête web afin de produire une réponse web. Cette réponse peut être du contenu HTML rendu ou une redirection par exemple.
 
-In the above example, the `HomeHandler` handler explicitly processes a `GET` HTTP request and returns a very simple `200 OK` response containing a short text. But in order to access this handler via a browser, it is necessary to map it to a URL route. To do so, you can edit the `config/routes.cr` file as follows:
+Dans l'exemple ci-dessus, le handler `HomeHandler` traite explicitement une requête HTTP `GET` et retourne une réponse `200 OK` très simple contenant un court texte. Mais pour accéder à ce handler via un navigateur, il est nécessaire de l'associer à une route URL. Pour ce faire, vous pouvez éditer le fichier `config/routes.cr` comme suit :
 
 ```crystal title="config/routes.cr"
 Marten.routes.draw do
@@ -143,29 +143,29 @@ Marten.routes.draw do
 end
 ```
 
-The `config/routes.cr` file was automatically created earlier when you initialized the project structure. By using the `#path` method you wired the `HomeHandler` into the routes configuration. 
+Le fichier `config/routes.cr` a été automatiquement créé précédemment lors de l'initialisation de la structure du projet. En utilisant la méthode `#path`, vous avez connecté le `HomeHandler` dans la configuration des routes.
 
-The `#path` method accepts three arguments:
+La méthode `#path` accepte trois arguments :
 
-* the first argument is the route pattern, which is a string like `/foo/bar`. When Marten needs to resolve a route, it starts at the beginning of the routes array and compares each of the configured routes until it finds a matching one
-* the second argument is the handler class associated with the specified route. When a request URL is matched to a specific route, Marten executes the handler that is associated with it
-* the last argument is the route name. This is an identifier that can later be used in your codebase to generate the full URL for a specific route, and optionally inject parameters in it
+* le premier argument est le pattern de route, qui est une chaîne de caractères comme `/foo/bar`. Lorsque Marten doit résoudre une route, il commence au début du tableau de routes et compare chacune des routes configurées jusqu'à en trouver une correspondante
+* le deuxième argument est la classe de handler associée à la route spécifiée. Lorsqu'une URL de requête correspond à une route spécifique, Marten exécute le handler qui lui est associé
+* le dernier argument est le nom de la route. C'est un identifiant qui peut être utilisé ultérieurement dans votre code pour générer l'URL complète d'une route spécifique, et éventuellement y injecter des paramètres
 
-Now if you go to [http://localhost:8000](http://localhost:8000), you will get the `Hello World!` response that is generated by the handler you just wrote.
+Maintenant, si vous accédez à [http://localhost:8000](http://localhost:8000), vous obtiendrez la réponse `Hello World!` générée par le handler que vous venez d'écrire.
 
 :::tip
-Multiple routes can map to the same handler class if necessary.
+Plusieurs routes peuvent correspondre à la même classe de handler si nécessaire.
 :::
 
 :::info
-Please refer to [Routing](../handlers-and-http/routing.md) to learn more about Marten's routing mechanism.
+Veuillez consulter [Routage](../handlers-and-http/routing.md) pour en savoir plus sur le mécanisme de routage de Marten.
 :::
 
-## Creating the Article model
+## Créer le modèle Article
 
-[Models](../models-and-databases/introduction.md) are classes that define what data can be persisted and manipulated by a Marten application. They explicitly specify fields and rules that map to database tables and columns. Model records can be queried and interacted with through a mechanism called [Query sets](../models-and-databases/queries.md).
+Les [modèles](../models-and-databases/introduction.md) sont des classes qui définissent quelles données peuvent être persistées et manipulées par une application Marten. Ils spécifient explicitement les champs et les règles qui correspondent aux tables et colonnes de la base de données. Les enregistrements de modèles peuvent être interrogés et manipulés via un mécanisme appelé [Query sets](../models-and-databases/queries.md).
 
-Let's define an `Article` model, which is the linchpin of any weblog application. To do set, let's create a `src/models/article.cr` file with the following content:
+Définissons un modèle `Article`, qui est la pièce maîtresse de toute application de blog. Pour ce faire, créons un fichier `src/models/article.cr` avec le contenu suivant :
 
 ```crystal title="src/models/article.cr"
 class Article < Marten::Model
@@ -175,27 +175,27 @@ class Article < Marten::Model
 end
 ```
 
-As you can see, Marten models are defined as subclasses of the `Marten::Model` base class, and they explicitly define "fields" through the use of a `field` macro.
+Comme vous pouvez le voir, les modèles Marten sont définis comme des sous-classes de la classe de base `Marten::Model`, et ils définissent explicitement des « champs » via l'utilisation d'une macro `field`.
 
-In its current state, our `Article` model contains the following three fields:
+Dans son état actuel, notre modèle `Article` contient les trois champs suivants :
 
-* `id` is a big integer that will hold the unique identifier of an article (primary key of the underlying table record)
-* `title` is a string column (`VARCHAR(255)`) that will hold the title of an article
-* `content` is a text column (`TEXT`) that will hold the textual content of an article
+* `id` est un entier long qui contiendra l'identifiant unique d'un article (clé primaire de l'enregistrement de la table sous-jacente)
+* `title` est une colonne de type chaîne (`VARCHAR(255)`) qui contiendra le titre d'un article
+* `content` est une colonne de type texte (`TEXT`) qui contiendra le contenu textuel d'un article
 
-## Generating and running migrations
+## Générer et exécuter les migrations
 
-Our `Article` model above is defined but is not "applied" at the database level yet. In order to create the corresponding table and columns, we will need to generate a [migration](../models-and-databases/migrations.md) for it.
+Notre modèle `Article` ci-dessus est défini mais n'est pas encore « appliqué » au niveau de la base de données. Pour créer la table et les colonnes correspondantes, nous devrons générer une [migration](../models-and-databases/migrations.md) pour celui-ci.
 
-Marten provides a migrations mechanism that is designed to be automatic: this means that migrations will be automatically derived from your model definitions. This allows to ensure that the definition of your model and its fields (and underlying columns) is done in one place only, which helps keep your project DRY.
+Marten fournit un mécanisme de migrations conçu pour être automatique : cela signifie que les migrations seront automatiquement dérivées de vos définitions de modèles. Cela permet de s'assurer que la définition de votre modèle et de ses champs (et des colonnes sous-jacentes) se fait en un seul endroit, ce qui contribue à garder votre projet DRY.
 
-In order to generate the migration file for the model we created previously, all we need to do is to run the following Marten command:
+Pour générer le fichier de migration du modèle que nous avons créé précédemment, il suffit d'exécuter la commande Marten suivante :
 
 ```shell
 marten genmigrations
 ```
 
-This will output something along those lines:
+Cela produira une sortie similaire à ceci :
 
 ```shell
 Generating migrations for app 'main':
@@ -203,29 +203,29 @@ Generating migrations for app 'main':
       ○ Create main_article table
 ```
 
-The `genmigrations` command is a way to tell Marten to introspect your project in order to identify whether you added, removed, or modified models. The changes identified by this command are persisted in migration files (living under `migrations/` folders in each Marten application), that you can run later on in order to apply them at the database level.
+La commande `genmigrations` indique à Marten d'introspecter votre projet afin d'identifier si vous avez ajouté, supprimé ou modifié des modèles. Les changements identifiés par cette commande sont persistés dans des fichiers de migration (situés dans les dossiers `migrations/` de chaque application Marten), que vous pouvez exécuter ultérieurement pour les appliquer au niveau de la base de données.
 
-Now that we have generated a migration file for our `Article` model, we can apply it at the database level by running the following command:
+Maintenant que nous avons généré un fichier de migration pour notre modèle `Article`, nous pouvons l'appliquer au niveau de la base de données en exécutant la commande suivante :
 
 ```shell
 marten migrate
 ```
 
-Which will output the following content:
+Ce qui produira le contenu suivant :
 
 ```shell
 Running migrations:
   › Applying main_202208072015231_create_main_article_table... DONE
 ```
 
-The `migrate` command will identify all the migration files that weren't applied to your database yet, and will run them one by one. By doing so, Marten will ensure that the changes you made to your model definitions are applied at the database level, in the corresponding tables.
+La commande `migrate` identifiera tous les fichiers de migration qui n'ont pas encore été appliqués à votre base de données, et les exécutera un par un. Ce faisant, Marten s'assurera que les modifications apportées à vos définitions de modèles sont appliquées au niveau de la base de données, dans les tables correspondantes.
 
 :::info
-Please refer to [Migrations](../models-and-databases/migrations.md) to learn more about migrations.
+Veuillez consulter [Migrations](../models-and-databases/migrations.md) pour en savoir plus sur les migrations.
 :::
 
 :::note
-For new projects, Marten uses a SQLite database by default. In our case, if we look at the `config/settings/base.cr` file, we can see that the current database configuration looks something like this:
+Pour les nouveaux projets, Marten utilise une base de données SQLite par défaut. Dans notre cas, si nous examinons le fichier `config/settings/base.cr`, nous pouvons voir que la configuration actuelle de la base de données ressemble à ceci :
 
 ```crystal
 config.database do |db|
@@ -234,20 +234,20 @@ config.database do |db|
 end
 ```
 
-An SQLite database is a good choice in order to try Marten and experiment with it (since SQLite is already pre-installed on most systems). That being said, if you need to use another database backend (for example, PostgreSQL, MariaDB, or MySQL), feel free to have a look at the [databases configuration reference](../development/reference/settings.md#database-settings).
+Une base de données SQLite est un bon choix pour essayer Marten et expérimenter avec (puisque SQLite est déjà pré-installé sur la plupart des systèmes). Cela dit, si vous avez besoin d'utiliser un autre backend de base de données (par exemple, PostgreSQL, MariaDB ou MySQL), n'hésitez pas à consulter la [référence de configuration des bases de données](../development/reference/settings.md#database-settings).
 :::
 
-## Interacting with model records
+## Interagir avec les enregistrements de modèles
 
-Now that our `Article` model table has been created at the database level, let's try to make use of the Marten ORM to create and query article records.
+Maintenant que la table de notre modèle `Article` a été créée au niveau de la base de données, essayons d'utiliser l'ORM de Marten pour créer et interroger des enregistrements d'articles.
 
-To do so, we can launch an instance of the [Crystal playground](https://crystal-lang.org/reference/master/using_the_compiler/index.html#crystal-play) as follows:
+Pour ce faire, nous pouvons lancer une instance du [Crystal playground](https://crystal-lang.org/reference/master/using_the_compiler/index.html#crystal-play) comme suit :
 
 ```shell
 marten play
 ```
 
-You should be able to navigate to [http://localhost:8080](http://localhost:8080) and see a Crystal editor containing the following snippet:
+Vous devriez pouvoir accéder à [http://localhost:8080](http://localhost:8080) et voir un éditeur Crystal contenant le snippet suivant :
 
 ```crystal
 require "./src/project"
@@ -258,56 +258,56 @@ Marten.setup
 # Write your code here.
 ```
 
-These lines basically require your project dependencies and ensure that Marten is properly set up. You should keep those in the editor when playing with the following examples. Each of the following snippets is assumed to be copied/pasted below the previous one. The output of these examples is highlighted next to the `# =>` comment line.
+Ces lignes requièrent essentiellement les dépendances de votre projet et s'assurent que Marten est correctement configuré. Vous devriez les conserver dans l'éditeur lorsque vous expérimentez avec les exemples suivants. Chacun des snippets suivants est supposé être copié/collé à la suite du précédent. La sortie de ces exemples est indiquée à côté du commentaire `# =>`.
 
-Let's start by initializing a new `Article` object:
+Commençons par initialiser un nouvel objet `Article` :
 
 ```crystal
 article = Article.new(title: "My article", content: "This is my article.")
 # => #<Article:0x102c4dbe0 id: nil, title: "My article", content: "This is my article.">
 ```
 
-As you can see, by using `#new`, we are initializing a new `Article` object by specifying its field values (`title` and `content`). It should be noted that so far, the object is only _initialized_ and is not saved to the database yet (this is why `id` is set to `nil` in the above snippet). In order to persist the new object at the database level, you can make use of the `#save` method:
+Comme vous pouvez le voir, en utilisant `#new`, nous initialisons un nouvel objet `Article` en spécifiant les valeurs de ses champs (`title` et `content`). Il convient de noter que pour l'instant, l'objet est uniquement _initialisé_ et n'est pas encore enregistré dans la base de données (c'est pourquoi `id` est à `nil` dans le snippet ci-dessus). Pour persister le nouvel objet au niveau de la base de données, vous pouvez utiliser la méthode `#save` :
 
 ```crystal
 article.save
 # => true
 ```
 
-The output of the `#save` method is a boolean indicating the result of the object validation: in our case, `true` means that the `Article` object was successfully validated and that the corresponding record was created at the database level.
+La sortie de la méthode `#save` est un booléen indiquant le résultat de la validation de l'objet : dans notre cas, `true` signifie que l'objet `Article` a été validé avec succès et que l'enregistrement correspondant a été créé au niveau de la base de données.
 
-Now if we inspect the `article` object again, we should observe that an `id` has been set for the record at hand:
+Maintenant, si nous inspectons à nouveau l'objet `article`, nous devrions observer qu'un `id` a été attribué à l'enregistrement en question :
 
 ```crystal
 article
 # => #<Article:0x104ee1c30 id: 1, title: "My article", content: "This is my article.">
 ```
 
-If we want to fetch this record from the database again, we can use the [`#get`](../models-and-databases/reference/query-set.md#get) method and specify the identifier value of the record we want to retrieve. For example:
+Si nous voulons récupérer cet enregistrement depuis la base de données à nouveau, nous pouvons utiliser la méthode [`#get`](../models-and-databases/reference/query-set.md#get) et spécifier la valeur de l'identifiant de l'enregistrement que nous voulons récupérer. Par exemple :
 
 ```crystal
 article = Article.get(id: 1)
 # => #<Article:0x104c699b0 id: 1, title: "My article", content: "This is my article.">
 ```
 
-Now we can try to retrieve all the `Article` records that we currently have in the database. This is done by calling the `#all` method on the `Article` model:
+Nous pouvons maintenant essayer de récupérer tous les enregistrements `Article` que nous avons actuellement dans la base de données. Cela se fait en appelant la méthode `#all` sur le modèle `Article` :
 
 ```crystal
 Article.all
 # => <Article::QuerySet [#<Article:0x1039296e0 id: 1, title: "My article", content: "This is my article.">]>
 ```
 
-This method returns an `Article::QuerySet` object, which is commonly referred to as a "query set". A query set is a representation of records collections from the database that can be filtered, and iterated over. The `Article::QuerySet` class, automatically generated for the `Article` model, is a subclass of `Marten::DB::Query::Set`.
+Cette méthode retourne un objet `Article::QuerySet`, communément appelé « query set ». Un query set est une représentation de collections d'enregistrements de la base de données qui peut être filtrée et itérée. La classe `Article::QuerySet`, automatiquement générée pour le modèle `Article`, est une sous-classe de `Marten::DB::Query::Set`.
 
 :::info
-Please refer to [Queries](../models-and-databases/queries.md) to learn more about Marten's querying capabilities.
+Veuillez consulter [Requêtes](../models-and-databases/queries.md) pour en savoir plus sur les capacités de requêtage de Marten.
 :::
 
-## Showing a list of articles
+## Afficher une liste d'articles
 
-Let's revisit our initial implementation of the `HomeHandler` handler we defined [earlier](#writing-a-first-handler).
+Reprenons notre implémentation initiale du handler `HomeHandler` que nous avons défini [précédemment](#écrire-un-premier-handler).
 
-Since we are building a weblog application, it would make sense to display a list of all our `Article` objects on the index page. To do so, let's update the existing `src/handlers/home_handler.cr` file with the following content:
+Puisque nous construisons une application de blog, il serait logique d'afficher la liste de tous nos objets `Article` sur la page d'accueil. Pour ce faire, mettons à jour le fichier existant `src/handlers/home_handler.cr` avec le contenu suivant :
 
 ```crystal title="src/handlers/home_handler.cr"
 class HomeHandler < Marten::Handler
@@ -317,13 +317,13 @@ class HomeHandler < Marten::Handler
 end
 ```
 
-The `#render` method that is used above allows to return an HTTP response whose content is generated by rendering a specific [template](../templates.mdx). The template can be rendered by specifying a context hash or a named tuple. In our case the template context contains an `articles` key that maps to a query set of all the `Article` records.
+La méthode `#render` utilisée ci-dessus permet de retourner une réponse HTTP dont le contenu est généré en rendant un [template](../templates.mdx) spécifique. Le template peut être rendu en spécifiant un hash de contexte ou un named tuple. Dans notre cas, le contexte du template contient une clé `articles` qui correspond à un query set de tous les enregistrements `Article`.
 
-Now if you start the Marten development server again and then try to access the home page ([http://localhost:8000](http://localhost:8000)), you should get an error stating that the `home.html` template does not exist. This is normal: we need to create it.
+Maintenant, si vous relancez le serveur de développement Marten puis essayez d'accéder à la page d'accueil ([http://localhost:8000](http://localhost:8000)), vous devriez obtenir une erreur indiquant que le template `home.html` n'existe pas. C'est normal : nous devons le créer.
 
-Templates provide a convenient way for defining the presentation logic of a web application. They allow to write HTML content that is rendered dynamically by using variables that you specify in a "template context". This rendering process can involve model records or any other variables you define.
+Les templates offrent un moyen pratique de définir la logique de présentation d'une application web. Ils permettent d'écrire du contenu HTML qui est rendu dynamiquement en utilisant des variables que vous spécifiez dans un « contexte de template ». Ce processus de rendu peut impliquer des enregistrements de modèles ou toute autre variable que vous définissez.
 
-Let's define the expected template for our home handler by creating a `src/templates/home.html` file with the following content:
+Définissons le template attendu pour notre handler home en créant un fichier `src/templates/home.html` avec le contenu suivant :
 
 ```html title="src/templates/home.html"
 {% extend "base.html" %}
@@ -339,36 +339,36 @@ Let's define the expected template for our home handler by creating a `src/templ
 {% endblock %}
 ```
 
-As you can see, Marten's templating system relies on variables that are surrounded by **`{{`** and **`}}`**. Each variable can involve lookups in order to access specific object attributes. In the above example `{{ article.title }}` means that the `title` attribute of the `article` variable should be outputted.
+Comme vous pouvez le voir, le système de templates de Marten repose sur des variables entourées de **`{{`** et **`}}`**. Chaque variable peut impliquer des lookups pour accéder à des attributs spécifiques d'un objet. Dans l'exemple ci-dessus, `{{ article.title }}` signifie que l'attribut `title` de la variable `article` doit être affiché.
 
-Method-calling is done by using statements (also called "template tags") delimited by **`{%`** and **`%}`**. Such statements can involve for loops, if conditions, etc. In the above example we are using a for loop to iterate over the `Article` records in the `articles` query set that is "passed" to the template context in our `HomeHandler` handler.
+L'appel de méthodes se fait en utilisant des instructions (également appelées « tags de template ») délimitées par **`{%`** et **`%}`**. Ces instructions peuvent impliquer des boucles for, des conditions if, etc. Dans l'exemple ci-dessus, nous utilisons une boucle for pour itérer sur les enregistrements `Article` du query set `articles` qui est « passé » au contexte du template dans notre handler `HomeHandler`.
 
 :::info
-Please refer to [Templates](../templates/introduction.md) to learn more about Marten's templating system.
+Veuillez consulter [Templates](../templates/introduction.md) pour en savoir plus sur le système de templates de Marten.
 :::
 
 :::info
-What about the `extend` and `block` tags in the previous snippet? These tags allow to "extend" a "base" template that usually contains the layout of an application (`base.html` in the above snippet) and to explicitly define the contents of the "blocks" that are expected by this base template. New marten projects are created with a simple `base.html` template that defines a very basic HTML document, whose body is filled with the content of a `content` block. This is why templates in this tutorial extend a `base.html` and override the content of the `content` block.
+Que signifient les tags `extend` et `block` dans le snippet précédent ? Ces tags permettent d'« étendre » un template « de base » qui contient généralement la mise en page d'une application (`base.html` dans le snippet ci-dessus) et de définir explicitement le contenu des « blocs » attendus par ce template de base. Les nouveaux projets Marten sont créés avec un simple template `base.html` qui définit un document HTML très basique, dont le corps est rempli avec le contenu d'un bloc `content`. C'est pourquoi les templates de ce tutoriel étendent un `base.html` et redéfinissent le contenu du bloc `content`.
 
-You can learn more about these capabilities in [Template inheritance](../templates/introduction.md#template-inheritance).
+Vous pouvez en savoir plus sur ces capacités dans [Héritage de templates](../templates/introduction.md#template-inheritance).
 :::
 
-If you go back to the home page ([http://localhost:8000](http://localhost:8000)), you should be able to see a list of article titles corresponding to all the `Article` records you created previously.
+Si vous retournez sur la page d'accueil ([http://localhost:8000](http://localhost:8000)), vous devriez pouvoir voir une liste de titres d'articles correspondant à tous les enregistrements `Article` que vous avez créés précédemment.
 
-We have now pieced together the main components of the Marten web framework (Models, Handlers, Templates). When accessing the home page of our application, the following steps are taken care of by the framework:
+Nous avons maintenant assemblé les composants principaux du framework web Marten (Modèles, Handlers, Templates). Lors de l'accès à la page d'accueil de notre application, les étapes suivantes sont prises en charge par le framework :
 
-1. the browser issues a GET request to `http://localhost:8000` 
-2. the Marten web application that is currently running receives the request
-3. the Marten routing system maps the path of the incoming request to the `HomeHandler` handler
-4. the handler is initialized and executed, which involves fetching all the `Article` records
-5. the handler renders the `home.html` template and returns a `200 OK` response containing the rendered content
-6. the Marten server sends the response with the HTML content back to the browser
+1. le navigateur émet une requête GET vers `http://localhost:8000`
+2. l'application web Marten qui est en cours d'exécution reçoit la requête
+3. le système de routage de Marten associe le chemin de la requête entrante au handler `HomeHandler`
+4. le handler est initialisé et exécuté, ce qui implique la récupération de tous les enregistrements `Article`
+5. le handler rend le template `home.html` et retourne une réponse `200 OK` contenant le contenu rendu
+6. le serveur Marten renvoie la réponse avec le contenu HTML au navigateur
 
-## Showing a single article
+## Afficher un seul article
 
-We presently have a handler that lists all the existing `Article` records, but it would be nice to be able to actually see the content of each article individually.
+Nous avons actuellement un handler qui liste tous les enregistrements `Article` existants, mais il serait agréable de pouvoir voir le contenu de chaque article individuellement.
 
-To do so, let's create a new `src/handlers/article_detail_handler.cr` handler file with the following content:
+Pour ce faire, créons un nouveau fichier handler `src/handlers/article_detail_handler.cr` avec le contenu suivant :
 
 ```crystal title="src/handlers/article_detail_handler.cr"
 class ArticleDetailHandler < Marten::Handler
@@ -380,13 +380,13 @@ class ArticleDetailHandler < Marten::Handler
 end
 ```
 
-Like in the previous example, we will be relying on the `#render` method to render a template and return the corresponding HTTP response. But this time we will be retrieving a specific record whose parameter will be specified in a `pk` route parameter.
+Comme dans l'exemple précédent, nous nous appuierons sur la méthode `#render` pour rendre un template et retourner la réponse HTTP correspondante. Mais cette fois, nous récupérerons un enregistrement spécifique dont le paramètre sera spécifié dans un paramètre de route `pk`.
 
 :::note
-You will note that we are making use of the `#get!` method to retrieve the model record in the above example. This method behaves similarly to the `#get` method we saw earlier, but it will raise a "record not found" exception if no record can be found for the specified parameters. In that case we can "rescue" this error in order to raise an "Not Found" HTTP exception that will result in a 404 response to be returned.
+Vous remarquerez que nous utilisons la méthode `#get!` pour récupérer l'enregistrement du modèle dans l'exemple ci-dessus. Cette méthode se comporte de manière similaire à la méthode `#get` que nous avons vue précédemment, mais elle lèvera une exception « enregistrement non trouvé » si aucun enregistrement ne peut être trouvé pour les paramètres spécifiés. Dans ce cas, nous pouvons « rescuer » cette erreur afin de lever une exception HTTP « Not Found » qui entraînera le retour d'une réponse 404.
 :::
 
-Let's now map this handler to a new route by adding the following line to the `config/routes.cr` file:
+Associons maintenant ce handler à une nouvelle route en ajoutant la ligne suivante au fichier `config/routes.cr` :
 
 ```crystal title="config/routes.cr"
 Marten.routes.draw do
@@ -401,9 +401,9 @@ Marten.routes.draw do
 end
 ```
 
-As you can see above, the new route we mapped to the `ArticleDetailHandler` handler requires a `pk` - _primary key_ - integer (`int`) parameter. Route parameters are defined using angle brackets, and the name of the parameter and its type are separated by a `:` character (`<name:type>` format).
+Comme vous pouvez le voir ci-dessus, la nouvelle route que nous avons associée au handler `ArticleDetailHandler` nécessite un paramètre entier (`int`) `pk` - _clé primaire_. Les paramètres de route sont définis à l'aide de chevrons, et le nom du paramètre et son type sont séparés par un caractère `:` (format `<nom:type>`).
 
-Obviously, we also need to define the `article_detail.html` template. To do so, let's create a `src/templates/article_detail.html` with the following content:
+Évidemment, nous devons également définir le template `article_detail.html`. Pour ce faire, créons un fichier `src/templates/article_detail.html` avec le contenu suivant :
 
 ```html title="src/templates/article_detail.html"
 {% extend "base.html" %}
@@ -414,9 +414,9 @@ Obviously, we also need to define the `article_detail.html` template. To do so, 
 {% endblock %}
 ```
 
-Now if you try to access [http://localhost:8000/article/1](http://localhost:8000/article/1), you will be able to see the content of the `Article` record with ID 1.
+Maintenant, si vous essayez d'accéder à [http://localhost:8000/article/1](http://localhost:8000/article/1), vous pourrez voir le contenu de l'enregistrement `Article` avec l'ID 1.
 
-There is something missing though: the home page does not link to the "detail" page of each article. To remediate this, we can modify the `src/templates/home.html` template file as follows:
+Il manque cependant quelque chose : la page d'accueil ne contient pas de lien vers la page de « détail » de chaque article. Pour remédier à cela, nous pouvons modifier le fichier template `src/templates/home.html` comme suit :
 
 ```html title="src/templates/home.html"
 {% extend "base.html" %}
@@ -439,17 +439,17 @@ There is something missing though: the home page does not link to the "detail" p
 {% endblock %}
 ```
 
-The `url` tag used in the above snippet allows to perform a reverse URL resolution. This allows to generate the final URL associated with a specific route name (the `article_detail` route name we defined earlier in this case). This reverse resolution can involve parameters if the considered route require ones.
+Le tag `url` utilisé dans le snippet ci-dessus permet d'effectuer une résolution inverse d'URL. Cela permet de générer l'URL finale associée à un nom de route spécifique (le nom de route `article_detail` que nous avons défini précédemment dans ce cas). Cette résolution inverse peut impliquer des paramètres si la route concernée en requiert.
 
 :::info
-Please refer to [Routing](../handlers-and-http/routing.md) to learn more about Marten's routing system.
+Veuillez consulter [Routage](../handlers-and-http/routing.md) pour en savoir plus sur le système de routage de Marten.
 :::
 
-## Creating a new article
+## Créer un nouvel article
 
-So far we only implemented support for "read" operations: we made it possible to list all the available articles in the home page, and we added the ability to see the content of a specific article in the "detail" page. The next step will be to make it possible to create new articles in order to populate our weblog.
+Jusqu'à présent, nous n'avons implémenté que des opérations de « lecture » : nous avons rendu possible l'affichage de la liste de tous les articles disponibles sur la page d'accueil, et nous avons ajouté la possibilité de voir le contenu d'un article spécifique sur la page de « détail ». L'étape suivante sera de permettre la création de nouveaux articles pour alimenter notre blog.
 
-To do so, let's start by creating a new `src/schemas/article_schema.cr` schema file with the following content:
+Pour ce faire, commençons par créer un nouveau fichier schema `src/schemas/article_schema.cr` avec le contenu suivant :
 
 ```crystal title="src/schemas/article_schema.cr"
 class ArticleSchema < Marten::Schema
@@ -458,9 +458,9 @@ class ArticleSchema < Marten::Schema
 end
 ```
 
-We just defined a "schema". Schemas are classes that define how input data should be serialized / deserialized, and validated. Schemas are usually used when processing web requests containing form data or pre-defined payloads. Like models, they contain a set of pre-defined fields that indicate what parameters are expected, what are their types, and how they should be validated.
+Nous venons de définir un « schema ». Les schemas sont des classes qui définissent comment les données d'entrée doivent être sérialisées / désérialisées et validées. Les schemas sont généralement utilisés lors du traitement de requêtes web contenant des données de formulaire ou des charges utiles prédéfinies. Comme les modèles, ils contiennent un ensemble de champs prédéfinis qui indiquent quels paramètres sont attendus, quels sont leurs types et comment ils doivent être validés.
 
-Let's see how we can use this schema in a handler. In this light, let's create a new `src/handlers/article_create_handler.cr` file:
+Voyons comment nous pouvons utiliser ce schema dans un handler. Dans cette optique, créons un nouveau fichier `src/handlers/article_create_handler.cr` :
 
 ```crystal title="src/handlers/article_create_handler.cr"
 class ArticleCreateHandler < Marten::Handler
@@ -487,14 +487,14 @@ class ArticleCreateHandler < Marten::Handler
 end
 ```
 
-This handler is able to handle both GET and POST requests:
+Ce handler est capable de traiter à la fois les requêtes GET et POST :
 
-* when the incoming request is a GET, it will simply render the `article_create.html` template, and initialize the schema (instance of `ArticleSchema`) with any data currently present in the request object (which is returned by the `#request` method). This schema object is made available to the template context
-* when the incoming request is a POST, it will initialize the schema and try to see if it is valid considering the incoming data. If it's valid, then the new `Article` record will be created using the schema's validated data, and the user will be redirect to the home page. Otherwise, the `article_create.html` template will be rendered again with the invalid schema in the associated context
+* lorsque la requête entrante est un GET, il rendra simplement le template `article_create.html`, et initialisera le schema (instance de `ArticleSchema`) avec les données actuellement présentes dans l'objet de requête (qui est retourné par la méthode `#request`). Cet objet schema est mis à disposition dans le contexte du template
+* lorsque la requête entrante est un POST, il initialisera le schema et tentera de voir s'il est valide compte tenu des données entrantes. S'il est valide, alors le nouvel enregistrement `Article` sera créé en utilisant les données validées du schema, et l'utilisateur sera redirigé vers la page d'accueil. Sinon, le template `article_create.html` sera rendu à nouveau avec le schema invalide dans le contexte associé
 
-In the above snippet, we make use of `#redirect` in order to indicate that we want to return a 302 Found HTTP response, and we generate the redirection URL by performing a reverse resolution of the `home` route we introduced earlier by using the `#reverse` method (which is similar to the `url` template tag we encountered in the previous section).
+Dans le snippet ci-dessus, nous utilisons `#redirect` pour indiquer que nous voulons retourner une réponse HTTP 302 Found, et nous générons l'URL de redirection en effectuant une résolution inverse de la route `home` que nous avons introduite précédemment en utilisant la méthode `#reverse` (qui est similaire au tag de template `url` que nous avons rencontré dans la section précédente).
 
-We can now create the `article_create.html` template file with the following content:
+Nous pouvons maintenant créer le fichier template `article_create.html` avec le contenu suivant :
 
 ```html title="src/templates/article_create.html"
 {% extend "base.html" %}
@@ -517,13 +517,13 @@ We can now create the `article_create.html` template file with the following con
 {% endblock %}
 ```
 
-As you can see, the above snippet defines a form that includes two fields: one for the `title` schema field and the other one for the `content` schema field. Each schema field can be errored depending on the result of a validation, and this is why specific field errors are (optionally) displayed as well.
+Comme vous pouvez le voir, le snippet ci-dessus définit un formulaire qui inclut deux champs : un pour le champ de schema `title` et l'autre pour le champ de schema `content`. Chaque champ de schema peut être en erreur selon le résultat d'une validation, et c'est pourquoi les erreurs spécifiques aux champs sont (optionnellement) affichées également.
 
-:::tip What about the hidden CSRF token input?
-The `csrftoken` input in the above example is mandatory because every unsafe request (eg. POST) is automatically protected by a CSRF (Cross-Site Request Forgeries) check. Please refer to [Cross-Site Request Forgery protection](../security/csrf.md) to learn more about this.
+:::tip Qu'en est-il de l'input caché du jeton CSRF ?
+L'input `csrftoken` dans l'exemple ci-dessus est obligatoire car chaque requête non sécurisée (par ex. POST) est automatiquement protégée par une vérification CSRF (Cross-Site Request Forgeries). Veuillez consulter [Protection contre les falsifications de requêtes inter-sites](../security/csrf.md) pour en savoir plus à ce sujet.
 :::
 
-Finally, we need to map the `ArticleCreateHandler` handler to a proper route. We can do this by editing the `config/routes.cr` file as follows:
+Enfin, nous devons associer le handler `ArticleCreateHandler` à une route appropriée. Nous pouvons le faire en éditant le fichier `config/routes.cr` comme suit :
 
 ```crystal title="config/routes.cr"
 Marten.routes.draw do
@@ -539,9 +539,9 @@ Marten.routes.draw do
 end
 ```
 
-Now if you open your browser at [http://localhost:8000/article/create](http://localhost:8000/article/create), you should be able to see a very rough form allowing to create a new `Article` record and to redirect to it.
+Maintenant, si vous ouvrez votre navigateur à [http://localhost:8000/article/create](http://localhost:8000/article/create), vous devriez pouvoir voir un formulaire très basique permettant de créer un nouvel enregistrement `Article` et d'être redirigé vers celui-ci.
 
-Obviously, we still need to a link somewhere in our application to be able to easily access the article creation form. In this light, we can modify the `home.html` template file as follows:
+Évidemment, nous avons encore besoin d'un lien quelque part dans notre application pour pouvoir accéder facilement au formulaire de création d'article. Dans cette optique, nous pouvons modifier le fichier template `home.html` comme suit :
 
 ```html title="src/templates/home.html"
 {% extend "base.html" %}
@@ -563,14 +563,14 @@ Obviously, we still need to a link somewhere in our application to be able to ea
 ```
 
 :::info
-Please refer to [Schemas](../schemas/introduction.md) to learn more about schemas.
+Veuillez consulter [Schemas](../schemas/introduction.md) pour en savoir plus sur les schemas.
 :::
 
-## Updating an article
+## Mettre à jour un article
 
-Now that we are able to create new `Article` records, let's add the ability to update existing records. To do so, we will implement a handler that works similarly to the `ArticleCreateHandler` handler we defined earlier: it should be able to process GET requests in order to display an "update" form, and it should validate the incoming data (and update the right record) when POST requests are submitted through an HTML form.
+Maintenant que nous sommes en mesure de créer de nouveaux enregistrements `Article`, ajoutons la possibilité de mettre à jour les enregistrements existants. Pour ce faire, nous allons implémenter un handler qui fonctionne de manière similaire au handler `ArticleCreateHandler` que nous avons défini précédemment : il devrait être capable de traiter les requêtes GET pour afficher un formulaire de « mise à jour », et il devrait valider les données entrantes (et mettre à jour le bon enregistrement) lorsque des requêtes POST sont soumises via un formulaire HTML.
 
-In this light, let's define the `src/handlers/article_update_handler.cr` file with the following content:
+Dans cette optique, définissons le fichier `src/handlers/article_update_handler.cr` avec le contenu suivant :
 
 ```crystal title="src/handlers/article_update_handler.cr"
 class ArticleUpdateHandler < Marten::Handler
@@ -606,9 +606,9 @@ class ArticleUpdateHandler < Marten::Handler
 end
 ```
 
-Here the `#get` and `#post` method implementations look similar to what was introduced for the `ArticleCreateHandler` handler. The main difference is that a specific `Article` record needs to be retrieved. Moreover the `ArticleSchema` schema is initialized with some "initial data" (`Marten::Schema::DataHash` hash-like object) that corresponds to the current `title` and `content` field values of the considered record. When a valid schema is processed, instead of creating a new record, we simply update the considered one through the use of the `#update!` method.
+Ici, les implémentations des méthodes `#get` et `#post` ressemblent à ce qui a été introduit pour le handler `ArticleCreateHandler`. La principale différence est qu'un enregistrement `Article` spécifique doit être récupéré. De plus, le schema `ArticleSchema` est initialisé avec des « données initiales » (objet de type hash `Marten::Schema::DataHash`) qui correspondent aux valeurs actuelles des champs `title` et `content` de l'enregistrement considéré. Lorsqu'un schema valide est traité, au lieu de créer un nouvel enregistrement, nous mettons simplement à jour celui considéré via l'utilisation de la méthode `#update!`.
 
-We can now create the `article_update.html` template file with the following content:
+Nous pouvons maintenant créer le fichier template `article_update.html` avec le contenu suivant :
 
 ```html title="src/templates/article_update.html"
 {% extend "base.html" %}
@@ -631,9 +631,9 @@ We can now create the `article_update.html` template file with the following con
 {% endblock %}
 ```
 
-As you can see, this looks very similar to what we did previously with the `article_create.html` template file.
+Comme vous pouvez le voir, cela ressemble beaucoup à ce que nous avons fait précédemment avec le fichier template `article_create.html`.
 
-Let's now map the `ArticleUpdateHandler` handler to a proper route. We can do this by editing the `config/routes.cr` file as follows:
+Associons maintenant le handler `ArticleUpdateHandler` à une route appropriée. Nous pouvons le faire en éditant le fichier `config/routes.cr` comme suit :
 
 ```crystal title="config/routes.cr"
 Marten.routes.draw do
@@ -650,9 +650,9 @@ Marten.routes.draw do
 end
 ```
 
-Now if you open your browser at [http://localhost:8000/article/1/update](http://localhost:8000/article/1/update), you should be able to see a very rough form allowing to update the `Article` record with ID 1.
+Maintenant, si vous ouvrez votre navigateur à [http://localhost:8000/article/1/update](http://localhost:8000/article/1/update), vous devriez pouvoir voir un formulaire très basique permettant de mettre à jour l'enregistrement `Article` avec l'ID 1.
 
-We can also add a link somewhere in the home page of the application to be able to easily access the update form for existing articles. In this light, we can modify the `home.html` template file as follows:
+Nous pouvons également ajouter un lien quelque part dans la page d'accueil de l'application pour pouvoir accéder facilement au formulaire de mise à jour des articles existants. Dans cette optique, nous pouvons modifier le fichier template `home.html` comme suit :
 
 ```html title="src/templates/home.html"
 {% extend "base.html" %}
@@ -674,11 +674,11 @@ We can also add a link somewhere in the home page of the application to be able 
 {% endblock %}
 ```
 
-## Deleting an article
+## Supprimer un article
 
-Finally, the last missing feature we could add is the ability to delete an article. To do so, let's introduce a handler that works as follows: when processing a GET request the handler will ask the user to confirm that they want to indeed delete the considered `Article` record, and when processing a POST request the handler will actually delete the record and then redirect to the home page of the application.
+Enfin, la dernière fonctionnalité manquante que nous pourrions ajouter est la possibilité de supprimer un article. Pour ce faire, introduisons un handler qui fonctionne comme suit : lors du traitement d'une requête GET, le handler demandera à l'utilisateur de confirmer qu'il souhaite effectivement supprimer l'enregistrement `Article` considéré, et lors du traitement d'une requête POST, le handler supprimera réellement l'enregistrement puis redirigera vers la page d'accueil de l'application.
 
-In this light, let's define the `src/handlers/article_delete_handler.cr` file:
+Dans cette optique, définissons le fichier `src/handlers/article_delete_handler.cr` :
 
 ```crystal title="src/handlers/article_delete_handler.cr"
 class ArticleDeleteHandler < Marten::Handler
@@ -701,9 +701,9 @@ class ArticleDeleteHandler < Marten::Handler
 end
 ```
 
-In the above snippet, the `#get` method simply fetches the `Article` record by using the `pk` parameter value and renders the `article_delete.html` template (with the article in the associated context). The `#post` method fetches the `Article` record as well and deletes it before redirecting the user to the home page.
+Dans le snippet ci-dessus, la méthode `#get` récupère simplement l'enregistrement `Article` en utilisant la valeur du paramètre `pk` et rend le template `article_delete.html` (avec l'article dans le contexte associé). La méthode `#post` récupère également l'enregistrement `Article` et le supprime avant de rediriger l'utilisateur vers la page d'accueil.
 
-Let's now create the `article_delete.html` template file with the following content:
+Créons maintenant le fichier template `article_delete.html` avec le contenu suivant :
 
 ```html title="src/templates/article_delete.html"
 {% extend "base.html" %}
@@ -718,9 +718,9 @@ Let's now create the `article_delete.html` template file with the following cont
 {% endblock %}
 ```
 
-This template simply asks the user for confirmation and displays a confirmation button embedded in a form to issue the POST request that will actually delete the record.
+Ce template demande simplement une confirmation à l'utilisateur et affiche un bouton de confirmation intégré dans un formulaire pour émettre la requête POST qui supprimera réellement l'enregistrement.
 
-Let's now map the `ArticleDeleteHandler` handler to a proper route. We can do this by editing the `config/routes.cr` file as follows:
+Associons maintenant le handler `ArticleDeleteHandler` à une route appropriée. Nous pouvons le faire en éditant le fichier `config/routes.cr` comme suit :
 
 ```crystal title="config/routes.cr"
 Marten.routes.draw do
@@ -738,9 +738,9 @@ Marten.routes.draw do
 end
 ```
 
-Now if you open your browser at [http://localhost:8000/article/1/delete](http://localhost:8000/article/1/delete), you should be able to see a the confirmation page allowing to delete the `Article` record with ID 1.
+Maintenant, si vous ouvrez votre navigateur à [http://localhost:8000/article/1/delete](http://localhost:8000/article/1/delete), vous devriez pouvoir voir la page de confirmation permettant de supprimer l'enregistrement `Article` avec l'ID 1.
 
-We can also add a link somewhere in the home page of the application to be able to easily access the delete confirmation page for existing articles. In this light, we can modify the `home.html` template file as follows:
+Nous pouvons également ajouter un lien quelque part dans la page d'accueil de l'application pour pouvoir accéder facilement à la page de confirmation de suppression des articles existants. Dans cette optique, nous pouvons modifier le fichier template `home.html` comme suit :
 
 ```html title="src/templates/home.html"
 {% extend "base.html" %}
@@ -763,11 +763,11 @@ We can also add a link somewhere in the home page of the application to be able 
 {% endblock %}
 ```
 
-## Refactoring: using template partials
+## Refactorisation : utiliser des partials de templates
 
-The templates used for creating and updating an article look the same: they both make use of the same schema in order to create or update articles. It would be interesting to be able to reuse this form for both templates. This is where template "partials" came in handy: these are template snippets that can be easily "included" into other templates to avoid duplications of code.
+Les templates utilisés pour la création et la mise à jour d'un article se ressemblent : ils utilisent tous deux le même schema pour créer ou mettre à jour des articles. Il serait intéressant de pouvoir réutiliser ce formulaire pour les deux templates. C'est là que les « partials » de templates sont utiles : ce sont des fragments de templates qui peuvent être facilement « inclus » dans d'autres templates pour éviter les duplications de code.
 
-Let's create a `src/templates/partials/article_form.html` partial with the following content:
+Créons un partial `src/templates/partials/article_form.html` avec le contenu suivant :
 
 ```html title="src/templates/partials/article_form.html"
 <form method="post" action="" novalidate>
@@ -785,9 +785,9 @@ Let's create a `src/templates/partials/article_form.html` partial with the follo
 </form>
 ```
 
-This partial template contains the exact same form that we used in the creation and update templates.
+Ce partial de template contient exactement le même formulaire que celui utilisé dans les templates de création et de mise à jour.
 
-Let's now make use of this partial in the `src/templates/article_create.html` and `src/templates/article_update.html` templates by leveraging the [`include`](../templates/reference/tags.md#include) template tag:
+Utilisons maintenant ce partial dans les templates `src/templates/article_create.html` et `src/templates/article_update.html` en exploitant le tag de template [`include`](../templates/reference/tags.md#include) :
 
 ```html title="src/templates/article_create.html"
 {% extend "base.html" %}
@@ -807,19 +807,19 @@ Let's now make use of this partial in the `src/templates/article_create.html` an
 {% endblock %}
 ```
 
-As you can see, the creation and update templates are now much more simple.
+Comme vous pouvez le voir, les templates de création et de mise à jour sont maintenant beaucoup plus simples.
 
 :::tip
-The `include` template tag provides additional options like the ability to assign variables that are specific to the included template. Please refer to the [`include` template tag reference](../templates/reference/tags.md#include) to learn more about this mechanism.
+Le tag de template `include` offre des options supplémentaires comme la possibilité d'assigner des variables spécifiques au template inclus. Veuillez consulter la [référence du tag de template `include`](../templates/reference/tags.md#include) pour en savoir plus sur ce mécanisme.
 :::
 
-## Refactoring: using generic handlers
+## Refactorisation : utiliser des handlers génériques
 
-The handlers we implemented previously map to common web development use cases: retrieving data from the database - from a specific URL parameter - and displaying it, listing multiple objects, creating or updating records, etc. These use cases are so frequently encountered that Marten provides a set of "generic handlers" that allow to easily implement them. These generic handlers take care of these common patterns so that developers don't end up reimplementing the wheel.
+Les handlers que nous avons implémentés précédemment correspondent à des cas d'utilisation courants du développement web : récupérer des données de la base de données - à partir d'un paramètre URL spécifique - et les afficher, lister plusieurs objets, créer ou mettre à jour des enregistrements, etc. Ces cas d'utilisation sont si fréquemment rencontrés que Marten fournit un ensemble de « handlers génériques » qui permettent de les implémenter facilement. Ces handlers génériques prennent en charge ces patterns courants afin que les développeurs n'aient pas à réinventer la roue.
 
-We could definitely leverage these generic handlers as part of our weblog application.
+Nous pourrions certainement exploiter ces handlers génériques dans notre application de blog.
 
-In this light, let's start with the `HomeHandler` class we implemented earlier: this handler essentially retrieves all the `Article` records and makes this list available to the `home.html` template. This pattern is enabled by the [`Marten::Handlers::RecordList`](pathname:///api/dev/Marten/Handlers/RecordList.html) generic handler. In order to use it, let's modify the `src/handlers/home_handler.cr` file as follows:
+Dans cette optique, commençons par la classe `HomeHandler` que nous avons implémentée précédemment : ce handler récupère essentiellement tous les enregistrements `Article` et rend cette liste disponible dans le template `home.html`. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordList`](pathname:///api/dev/Marten/Handlers/RecordList.html). Pour l'utiliser, modifions le fichier `src/handlers/home_handler.cr` comme suit :
 
 ```crystal title="src/handlers/home_handler.cr"
 class HomeHandler < Marten::Handlers::RecordList
@@ -829,9 +829,9 @@ class HomeHandler < Marten::Handlers::RecordList
 end
 ```
 
-In the above snippet we use a few class methods in order to define how the handler should behave: `#model` allows to define the model class that should be used to retrieve the record, `#template_name` allows to define the name of the template to render, and `#list_context_name` allows to define the name of the record list variable in the template context.
+Dans le snippet ci-dessus, nous utilisons quelques méthodes de classe pour définir comment le handler doit se comporter : `#model` permet de définir la classe de modèle qui doit être utilisée pour récupérer les enregistrements, `#template_name` permet de définir le nom du template à rendre, et `#list_context_name` permet de définir le nom de la variable de la liste d'enregistrements dans le contexte du template.
 
-Let's continue with the `ArticleDetailHandler` class: this handler retrieves a specific `Article` record from a `pk` route parameter, and "renders" it using a specific template. This pattern is enabled by the [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html) generic handler. In order to use it, let's modify the `src/handlers/article_detail_handler.cr` file as follows:
+Continuons avec la classe `ArticleDetailHandler` : ce handler récupère un enregistrement `Article` spécifique à partir d'un paramètre de route `pk`, et le « rend » en utilisant un template spécifique. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html). Pour l'utiliser, modifions le fichier `src/handlers/article_detail_handler.cr` comme suit :
 
 ```crystal title="src/handlers/article_detail_handler.cr"
 class ArticleDetailHandler < Marten::Handlers::RecordDetail
@@ -841,9 +841,9 @@ class ArticleDetailHandler < Marten::Handlers::RecordDetail
 end
 ```
 
-In order to configure how the handler should behave, we make use of a few class methods here as well: `#model` allows to define the model class of the record that should be retrieved, `#template_name` defines the template to render, and `#record_context_name` defines the name of the record variable in the template context.
+Pour configurer le comportement du handler, nous utilisons ici aussi quelques méthodes de classe : `#model` permet de définir la classe de modèle de l'enregistrement à récupérer, `#template_name` définit le template à rendre, et `#record_context_name` définit le nom de la variable de l'enregistrement dans le contexte du template.
 
-Now let's look at the `ArticleCreateHandler` class: this class displays a form when processing GET requests, and it validates a schema that is used to create a specific record when processing POST requests. This exact pattern is enabled by the [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) generic handler. In order to use it, we can modify the `src/handlers/article_create_handler.cr` file as follows:
+Examinons maintenant la classe `ArticleCreateHandler` : cette classe affiche un formulaire lors du traitement des requêtes GET, et valide un schema utilisé pour créer un enregistrement spécifique lors du traitement des requêtes POST. Ce pattern exact est rendu possible par le handler générique [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html). Pour l'utiliser, nous pouvons modifier le fichier `src/handlers/article_create_handler.cr` comme suit :
 
 ```crystal title="src/handlers/article_create_handler.cr"
 class ArticleCreateHandler < Marten::Handlers::RecordCreate
@@ -854,9 +854,9 @@ class ArticleCreateHandler < Marten::Handlers::RecordCreate
 end
 ```
 
-Here, `#model` allows to define the model class to use to create the new record, `#schema` is the schema class that should be used to validated the incoming data, `#template_name` defines the name of the template to render, and `#success_route_name` is the name of the route to redirect to after a successful record creation.
+Ici, `#model` permet de définir la classe de modèle à utiliser pour créer le nouvel enregistrement, `#schema` est la classe de schema qui doit être utilisée pour valider les données entrantes, `#template_name` définit le nom du template à rendre, et `#success_route_name` est le nom de la route vers laquelle rediriger après une création d'enregistrement réussie.
 
-We can now look at the `ArticleUpdateHandler` class: this class retrieves a specific record and displays a form when processing GET requests, and it validates a schema whose data is used to update the record when processing POST requests. This pattern is enabled by the [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html) generic handler. Let's use it and let's modify the `src/handlers/article_update_handler.cr` file as follows:
+Nous pouvons maintenant examiner la classe `ArticleUpdateHandler` : cette classe récupère un enregistrement spécifique et affiche un formulaire lors du traitement des requêtes GET, et valide un schema dont les données sont utilisées pour mettre à jour l'enregistrement lors du traitement des requêtes POST. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html). Utilisons-le et modifions le fichier `src/handlers/article_update_handler.cr` comme suit :
 
 ```crystal title="src/handlers/article_update_handler.cr"
 class ArticleUpdateHandler < Marten::Handlers::RecordUpdate
@@ -868,9 +868,9 @@ class ArticleUpdateHandler < Marten::Handlers::RecordUpdate
 end
 ```
 
-Here, `#model` allows to define the model class to use to retrieve and update the record, `#schema` is the schema class that should be used to validated the incoming data, `#template_name` defines the name of the template to render, `#success_route_name` is the name of the route to redirect to after a successful record update, and `#record_context_name` is the name of the record variable in the template context.
+Ici, `#model` permet de définir la classe de modèle à utiliser pour récupérer et mettre à jour l'enregistrement, `#schema` est la classe de schema qui doit être utilisée pour valider les données entrantes, `#template_name` définit le nom du template à rendre, `#success_route_name` est le nom de la route vers laquelle rediriger après une mise à jour réussie, et `#record_context_name` est le nom de la variable de l'enregistrement dans le contexte du template.
 
-Finally, let's look at the `ArticleDeleteHandler` class: this handler renders a template when processing GET requests, and performs the deletion of the considered record when processing POST requests. This pattern is provided by the [`Marten::Handlers::RecordDelete`](pathname:///api/dev/Marten/Handlers/RecordDelete.html) generic handler. In order to use it, let's modify the `src/handlers/article_delete_handler.cr` file as follows:
+Enfin, examinons la classe `ArticleDeleteHandler` : ce handler rend un template lors du traitement des requêtes GET, et effectue la suppression de l'enregistrement considéré lors du traitement des requêtes POST. Ce pattern est fourni par le handler générique [`Marten::Handlers::RecordDelete`](pathname:///api/dev/Marten/Handlers/RecordDelete.html). Pour l'utiliser, modifions le fichier `src/handlers/article_delete_handler.cr` comme suit :
 
 ```crystal title="src/handlers/article_delete_handler.cr"
 class ArticleDeleteHandler < Marten::Handlers::RecordDelete
@@ -881,22 +881,22 @@ class ArticleDeleteHandler < Marten::Handlers::RecordDelete
 end
 ```
 
-In order to configure how the handler should behave, we make use of a few class methods here as well: `#model` allows to define the model class of the record that should be retrieved and deleted, `#template_name` defines the template to render, and `#success_route_name` defines the name of the route to redirect to once the record is deleted.
+Pour configurer le comportement du handler, nous utilisons ici aussi quelques méthodes de classe : `#model` permet de définir la classe de modèle de l'enregistrement à récupérer et supprimer, `#template_name` définit le template à rendre, et `#success_route_name` définit le nom de la route vers laquelle rediriger une fois l'enregistrement supprimé.
 
-Now if you go to your application again at [http://localhost:8000](http://localhost:8000), you will notice that everything is working like it used to do before we introduced these changes (but with less code!).
+Maintenant, si vous retournez sur votre application à [http://localhost:8000](http://localhost:8000), vous constaterez que tout fonctionne comme avant l'introduction de ces modifications (mais avec moins de code !).
 
 :::info
-Please refer to [Generic handlers](../handlers-and-http/generic-handlers.md) to learn more about generic handlers.
+Veuillez consulter [Handlers génériques](../handlers-and-http/generic-handlers.md) pour en savoir plus sur les handlers génériques.
 :::
 
-## What's next?
+## Et ensuite ?
 
-As part of this tutorial, we covered the main features of the Marten web framework by implementing a very simple application: 
+Dans le cadre de ce tutoriel, nous avons couvert les principales fonctionnalités du framework web Marten en implémentant une application très simple :
 
-* we learned to define [models](../models-and-databases.mdx) in order to interact with the database
-* we learned to create [handlers](../handlers-and-http.mdx) and to map URLs to these in order to process HTTP requests
-* we learned to render [templates](../templates.mdx) in order to define the presentation logic of an application
+* nous avons appris à définir des [modèles](../models-and-databases.mdx) pour interagir avec la base de données
+* nous avons appris à créer des [handlers](../handlers-and-http.mdx) et à associer des URL à ceux-ci pour traiter les requêtes HTTP
+* nous avons appris à rendre des [templates](../templates.mdx) pour définir la logique de présentation d'une application
 
-Now that you've experimented with these core concepts of the framework, you should not hesitate to update the application we just created in order to experiment further and add new features to it.
+Maintenant que vous avez expérimenté avec ces concepts fondamentaux du framework, n'hésitez pas à mettre à jour l'application que nous venons de créer pour expérimenter davantage et y ajouter de nouvelles fonctionnalités.
 
-The Marten documentation also contains plenty of additional guides allowing you to keep exploring and learning more about other areas of the framework. These may be useful depending on the specific needs of your application: [Testing](../development/testing.md), [Applications](../development/applications.md), [Security](../security.mdx), [Internationalization](../i18n.mdx), etc.
+La documentation de Marten contient également de nombreux guides supplémentaires vous permettant de continuer à explorer et à en apprendre davantage sur d'autres aspects du framework. Ceux-ci peuvent être utiles en fonction des besoins spécifiques de votre application : [Tests](../development/testing.md), [Applications](../development/applications.md), [Sécurité](../security.mdx), [Internationalisation](../i18n.mdx), etc.

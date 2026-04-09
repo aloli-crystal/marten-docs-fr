@@ -1,40 +1,40 @@
 ---
-title: Acknowledgements
-description: Thanks and attributions related to the projects and concepts that inspired the Marten web framework.
+title: Remerciements
+description: Remerciements et attributions relatifs aux projets et concepts qui ont inspiré le framework web Marten.
 ---
 
-This section lists and acknowledges the various projects that inspired the Marten web framework, as well as notable contributions.
+Cette section répertorie et reconnaît les différents projets qui ont inspiré le framework web Marten, ainsi que les contributions notables.
 
 ## Inspirations
 
-The Marten web framework implements a set of ideas and APIs that are inspired by the awesome work that was put into two particular frameworks: [Django](https://www.djangoproject.com/) and [Ruby on Rails](https://rubyonrails.org/). It can be easy to take for granted what these frameworks provide, and we should not forget to give credit where credit is due.
+Le framework web Marten implémente un ensemble d'idées et d'API qui sont inspirées par l'excellent travail réalisé dans deux frameworks en particulier : [Django](https://www.djangoproject.com/) et [Ruby on Rails](https://rubyonrails.org/). Il peut être facile de tenir pour acquis ce que ces frameworks fournissent, et nous ne devons pas oublier de rendre à César ce qui appartient à César.
 
 ### Django
 
-The Marten web framework takes a lot from [Django](https://www.djangoproject.com/) - its biggest source of inspiration:
+Le framework web Marten emprunte beaucoup à [Django](https://www.djangoproject.com/) - sa plus grande source d'inspiration :
 
-* The [Model](../models-and-databases.mdx)-[Handler](../handlers-and-http.mdx)-[Template](../templates.mdx) triptych is Marten's vision of the Model-View-Template (MVT) pattern provided by Django
-* The [auto-generated migrations](../models-and-databases/migrations.md) mechanism is inspired by a similar mechanism within Django
-* [Generic handlers](../handlers-and-http/generic-handlers.md) are inspired by Django's generic class-based views
-* The template syntax is inspired by Django's templating language
-* The concept of [apps](../development/applications.md) and projects is inherited from Django as well
+* Le triptyque [Model](../models-and-databases.mdx)-[Handler](../handlers-and-http.mdx)-[Template](../templates.mdx) est la vision de Marten du pattern Model-View-Template (MVT) fourni par Django
+* Le mécanisme de [migrations auto-générées](../models-and-databases/migrations.md) est inspiré d'un mécanisme similaire dans Django
+* Les [handlers génériques](../handlers-and-http/generic-handlers.md) sont inspirés des vues génériques basées sur des classes de Django
+* La syntaxe des templates est inspirée du langage de templates de Django
+* Le concept d'[applications](../development/applications.md) et de projets est également hérité de Django
 
-Needless to say that this is a non-exhaustive list.
+Inutile de dire que ceci est une liste non exhaustive.
 
 ### Ruby on Rails
 
-The Marten web framework is also inspired by [Ruby on Rails](https://rubyonrails.org/) in some aspects. Among those we can mention:
+Le framework web Marten est également inspiré par [Ruby on Rails](https://rubyonrails.org/) sur certains aspects. Parmi ceux-ci, nous pouvons mentionner :
 
-* The [generic validation DSL](../models-and-databases/validations.md)
-* Most [model callbacks](../models-and-databases/callbacks.md)
-* The idea of [message encryptors](pathname:///api/dev/Marten/Core/Encryptor.html) and [message signers](pathname:///api/dev/Marten/Core/Signer.html)
+* Le [DSL générique de validation](../models-and-databases/validations.md)
+* La plupart des [callbacks de modèle](../models-and-databases/callbacks.md)
+* L'idée des [encrypteurs de messages](pathname:///api/dev/Marten/Core/Encryptor.html) et des [signeurs de messages](pathname:///api/dev/Marten/Core/Signer.html)
 
-### But also...
+### Mais aussi...
 
-* The exception page displayed while in [debug](../development/reference/settings.md#debug) mode is inspired by the [Exception Page](https://github.com/crystal-loot/exception_page) shard
-* The way to [handle custom objects](../templates/introduction.md#using-custom-objects-in-contexts) in Marten templates is inspired by a similar mechanism within [Crinja](https://github.com/straight-shoota/crinja)
-* The idea of class-based [email definitions](../emailing/introduction.md) is borrowed from [Carbon](https://github.com/luckyframework/carbon)
+* La page d'exception affichée en mode [debug](../development/reference/settings.md#debug) est inspirée du shard [Exception Page](https://github.com/crystal-loot/exception_page)
+* La manière de [gérer les objets personnalisés](../templates/introduction.md#using-custom-objects-in-contexts) dans les templates Marten est inspirée d'un mécanisme similaire dans [Crinja](https://github.com/straight-shoota/crinja)
+* L'idée de [définitions d'emails](../emailing/introduction.md) basées sur des classes est empruntée à [Carbon](https://github.com/luckyframework/carbon)
 
-## Contributors
+## Contributeurs
 
-Thanks to all the [contributors](https://github.com/martenframework/marten/contributors) of the project!
+Merci à tous les [contributeurs](https://github.com/martenframework/marten/contributors) du projet !

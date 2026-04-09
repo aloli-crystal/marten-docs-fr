@@ -1,17 +1,17 @@
 ---
-title: Multiple databases
-description: Learn how to leverage multiple databases in a Marten project.
+title: Bases de données multiples
+description: Apprenez à utiliser plusieurs bases de données dans un projet Marten.
 ---
 
-This section covers how to leverage multiple databases within a Marten project: how to configure these additional databases and how to query them.
+Cette section explique comment utiliser plusieurs bases de données au sein d'un projet Marten : comment configurer ces bases de données supplémentaires et comment les interroger.
 
 :::caution
-Support for multi-database projects is still experimental and lacking features such as DB routing.
+Le support des projets multi-bases de données est encore expérimental et manque de fonctionnalités telles que le routage de base de données.
 :::
 
-## Defining multiple databases
+## Définir plusieurs bases de données
 
-Each Marten project leveraging a single database uses what is called a "default" database. This is the database whose configuration is defined when calling the [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2C%26)-instance-method) configuration method:
+Chaque projet Marten utilisant une seule base de données utilise ce qu'on appelle une base de données "par défaut". C'est la base de données dont la configuration est définie lors de l'appel à la méthode de configuration [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2C%26)-instance-method) :
 
 ```crystal
 config.database do |db|
@@ -20,9 +20,9 @@ config.database do |db|
 end
 ```
 
-The "default" database is implied whenever you interact with the database (eg. by performing queries, creating records, etc), unless specified otherwise.
+La base de données "par défaut" est implicite chaque fois que vous interagissez avec la base de données (par ex. en effectuant des requêtes, en créant des enregistrements, etc.), sauf indication contraire.
 
-The [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2C%26)-instance-method) configuration method can take an additional argument in order to define additional databases. For example:
+La méthode de configuration [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2C%26)-instance-method) peut prendre un argument supplémentaire afin de définir des bases de données additionnelles. Par exemple :
 
 ```crystal
 config.database :other_db do |db|
@@ -31,34 +31,34 @@ config.database :other_db do |db|
 end
 ```
 
-Think of this additional argument as a "database identifier" or alias that you can choose and that will allow you to interact with this specific database later on.
+Considérez cet argument supplémentaire comme un "identifiant de base de données" ou un alias que vous pouvez choisir et qui vous permettra d'interagir avec cette base de données spécifique ultérieurement.
 
-## Applying migrations to your databases
+## Appliquer les migrations à vos bases de données
 
-The [`migrate`](../development/reference/management-commands.md#migrate) management command operates on the "default" database by default, but it also accepts an optional `--db` option that lets you specify to which database the migrations should be applied. The value you specify for this option must correspond to the alias you configured when defining your databases in your project's configuration. For example:
+La commande de gestion [`migrate`](../development/reference/management-commands.md#migrate) opère sur la base de données "par défaut" par défaut, mais elle accepte également une option `--db` optionnelle qui vous permet de spécifier à quelle base de données les migrations doivent être appliquées. La valeur que vous spécifiez pour cette option doit correspondre à l'alias que vous avez configuré lors de la définition de vos bases de données dans la configuration de votre projet. Par exemple :
 
 ```bash
 marten migrate --db=other_db
 ```
 
-Note that running such a command would apply **all** the migrations to the `other_db` database. There is presently no way to ensure that only specific models or migrations are applied to a particular database only.
+Notez que l'exécution d'une telle commande appliquerait **toutes** les migrations à la base de données `other_db`. Il n'existe actuellement aucun moyen de s'assurer que seuls des modèles ou des migrations spécifiques sont appliqués à une base de données particulière.
 
-## Manually selecting databases
+## Sélectionner manuellement les bases de données
 
-Marten lets you select which database you want to use when performing model-related operations. Unless specified, the "default" database is always implied but it is possible to explicitly define to which database operations should be applied.
+Marten vous permet de sélectionner quelle base de données vous souhaitez utiliser lors de l'exécution d'opérations liées aux modèles. Sauf indication contraire, la base de données "par défaut" est toujours implicite, mais il est possible de définir explicitement à quelle base de données les opérations doivent être appliquées.
 
-### Querying records
+### Interroger les enregistrements
 
-When querying records, you can use the [`#using`](./reference/query-set.md#using) query set method in order to specify the target database. For example:
+Lors de l'interrogation des enregistrements, vous pouvez utiliser la méthode de query set [`#using`](./reference/query-set.md#using) afin de spécifier la base de données cible. Par exemple :
 
 ```crystal
-Article.all                  # Will target the "default" database
-Article.using(:other_db).all # Will target the "other_db" database
+Article.all                  # Ciblera la base de données "par défaut"
+Article.using(:other_db).all # Ciblera la base de données "other_db"
 ```
 
-### Persisting records
+### Persister les enregistrements
 
-When creating, updating, or deleting records, it is possible to specify to which database the operation should be applied to by using the `using` argument. For example:
+Lors de la création, la mise à jour ou la suppression d'enregistrements, il est possible de spécifier à quelle base de données l'opération doit être appliquée en utilisant l'argument `using`. Par exemple :
 
 ```crystal
 tag = Tag.new(label: "crystal")

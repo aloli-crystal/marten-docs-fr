@@ -1,15 +1,15 @@
 ---
-title: Migration operations
-description: Migration operations reference.
+title: Opérations de migration
+description: Référence des opérations de migration.
 ---
 
-This page provides a reference for all the available migration operations that can be leveraged when writing migrations.
+Cette page fournit une référence pour toutes les opérations de migration disponibles qui peuvent être utilisées lors de l'écriture de migrations.
 
 ## `add_column`
 
-The `add_column` operation allows adding a column to an existing table. It must be called with a table name as first argument, followed by a column definition (column name and attributes).
+L'opération `add_column` permet d'ajouter une colonne à une table existante. Elle doit être appelée avec un nom de table comme premier argument, suivi d'une définition de colonne (nom de colonne et attributs).
 
-For example:
+Par exemple :
 
 ```crystal
 add_column :test_table, :foo, :string, max_size: 255
@@ -18,9 +18,9 @@ add_column :test_table, :new_id, :reference, to_table: :target_table, to_column:
 
 ## `add_index`
 
-The `add_index` operation allows adding an index to an existing table. It must be called with a table name as first argument, followed by an index definition (index name and indexed column names).
+L'opération `add_index` permet d'ajouter un index à une table existante. Elle doit être appelée avec un nom de table comme premier argument, suivi d'une définition d'index (nom d'index et noms de colonnes indexées).
 
-For example:
+Par exemple :
 
 ```crystal
 add_index :test_table, :test_index, [:foo, :bar]
@@ -28,9 +28,9 @@ add_index :test_table, :test_index, [:foo, :bar]
 
 ## `add_unique_constraint`
 
-The `add_unique_constraint` operation allows adding a unique constraint to an existing table. It must be called with a table name as first argument, followed by a unique constraint definition (constraint name and targeted column names).
+L'opération `add_unique_constraint` permet d'ajouter une contrainte d'unicité à une table existante. Elle doit être appelée avec un nom de table comme premier argument, suivi d'une définition de contrainte d'unicité (nom de la contrainte et noms de colonnes ciblées).
 
-For example:
+Par exemple :
 
 ```crystal
 add_unique_constraint :test_table, :test_constraint, [:foo, :bar]
@@ -38,9 +38,9 @@ add_unique_constraint :test_table, :test_constraint, [:foo, :bar]
 
 ## `change_column`
 
-The `change_column` operation allows altering an existing column definition. It must be called with a table name as first argument, followed by a column definition (column name and attributes).
+L'opération `change_column` permet de modifier une définition de colonne existante. Elle doit être appelée avec un nom de table comme premier argument, suivi d'une définition de colonne (nom de colonne et attributs).
 
-For example:
+Par exemple :
 
 ```crystal
 change_column :test_table, :test_column, :string, max_size: 155, null: true
@@ -48,9 +48,9 @@ change_column :test_table, :test_column, :string, max_size: 155, null: true
 
 ## `create_table`
 
-The `create_table` operation allows creating a new table, which includes the underlying column definitions, indexes, and unique constraints. It must be called with a table name as first argument and requires a block where columns, indexes, and unique constraints are defined.
+L'opération `create_table` permet de créer une nouvelle table, incluant les définitions de colonnes sous-jacentes, les index et les contraintes d'unicité. Elle doit être appelée avec un nom de table comme premier argument et nécessite un bloc où les colonnes, index et contraintes d'unicité sont définis.
 
-For example:
+Par exemple :
 
 ```crystal
 create_table :test_table do
@@ -65,9 +65,9 @@ end
 
 ## `delete_table`
 
-The `delete_table` operation allows deleting an existing table. It must be called with a table name as first argument.
+L'opération `delete_table` permet de supprimer une table existante. Elle doit être appelée avec un nom de table comme premier argument.
 
-For example:
+Par exemple :
 
 ```crystal
 delete_table :test_table
@@ -75,9 +75,9 @@ delete_table :test_table
 
 ## `execute`
 
-The `execute` operation allows executing custom SQL statements as part of a migration. It must be called with a forward statement as first positional argument, and it can also take a second positional argument in order to specify the statement to execute when unapplying the migration.
+L'opération `execute` permet d'exécuter des instructions SQL personnalisées dans le cadre d'une migration. Elle doit être appelée avec une instruction d'application comme premier argument positionnel, et elle peut également prendre un second argument positionnel afin de spécifier l'instruction à exécuter lors de l'annulation de la migration.
 
-For example:
+Par exemple :
 
 ```crystal
 execute(
@@ -96,9 +96,9 @@ execute(
 
 ## `remove_column`
 
-The `remove_column` operation allows removing an existing column from a table. It must be called with a table name as first argument, followed by a column name.
+L'opération `remove_column` permet de supprimer une colonne existante d'une table. Elle doit être appelée avec un nom de table comme premier argument, suivi d'un nom de colonne.
 
-For example:
+Par exemple :
 
 ```crystal
 remove_column :test_table, :test_column
@@ -106,9 +106,9 @@ remove_column :test_table, :test_column
 
 ## `remove_index`
 
-The `remove_index` operation allows removing an existing index from a table. It must be called with a table name as first argument, followed by an index name.
+L'opération `remove_index` permet de supprimer un index existant d'une table. Elle doit être appelée avec un nom de table comme premier argument, suivi d'un nom d'index.
 
-For example:
+Par exemple :
 
 ```crystal
 remove_index :test_table, :test_index
@@ -116,9 +116,9 @@ remove_index :test_table, :test_index
 
 ## `remove_unique_constraint`
 
-The `remove_unique_constraint` operation allows removing an existing unique constraint from a table. It must be called with a table name as first argument, followed by a unique constraint name.
+L'opération `remove_unique_constraint` permet de supprimer une contrainte d'unicité existante d'une table. Elle doit être appelée avec un nom de table comme premier argument, suivi d'un nom de contrainte d'unicité.
 
-For example:
+Par exemple :
 
 ```crystal
 remove_unique_constraint :test_table, :test_constraint
@@ -126,9 +126,9 @@ remove_unique_constraint :test_table, :test_constraint
 
 ## `rename_column`
 
-The `rename_column` operation allows renaming an existing column in a table. It must be called with a table name as first argument, followed by the old column name, and the new one.
+L'opération `rename_column` permet de renommer une colonne existante dans une table. Elle doit être appelée avec un nom de table comme premier argument, suivi de l'ancien nom de colonne et du nouveau.
 
-For example:
+Par exemple :
 
 ```crystal
 rename_column :test_table, :old_column, :new_column
@@ -136,9 +136,9 @@ rename_column :test_table, :old_column, :new_column
 
 ## `rename_table`
 
-The `rename_table` operation allows renaming an existing table. It must be called with the existing table name as first argument, followed by the new table name.
+L'opération `rename_table` permet de renommer une table existante. Elle doit être appelée avec le nom de table existant comme premier argument, suivi du nouveau nom de table.
 
-For example:
+Par exemple :
 
 ```crystal
 rename_table :old_table, :new_table
@@ -146,9 +146,9 @@ rename_table :old_table, :new_table
 
 ## `run_code`
 
-The `run_code` operation allows to define that arbitrary methods will be called when applying and unapplying a migration. It must be called with a method name as first positional argument (the method that will be called when applying the migration), and it can also take an additional argument in order to specify the name of the method to execute when unapplying the migration.
+L'opération `run_code` permet de définir que des méthodes arbitraires seront appelées lors de l'application et de l'annulation d'une migration. Elle doit être appelée avec un nom de méthode comme premier argument positionnel (la méthode qui sera appelée lors de l'application de la migration), et elle peut également prendre un argument supplémentaire afin de spécifier le nom de la méthode à exécuter lors de l'annulation de la migration.
 
-For example:
+Par exemple :
 
 ```crystal
 run_code :run_forward_code, :run_backward_code

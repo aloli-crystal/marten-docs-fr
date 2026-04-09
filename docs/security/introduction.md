@@ -1,57 +1,57 @@
 ---
-title: Security in Marten
-description: Learn about the main security features provided by the Marten framework.
+title: La sécurité dans Marten
+description: Découvrez les principales fonctionnalités de sécurité fournies par le framework Marten.
 sidebar_label: Introduction
 ---
 
-This document describees the main security features that are provided by the Marten web framework.
+Ce document décrit les principales fonctionnalités de sécurité fournies par le framework web Marten.
 
-## Cross-Site Request Forgery protection
+## Protection contre les Cross-Site Request Forgery
 
-Cross-Site Request Forgery (CSRF) attacks generally involve a malicious website trying to perform actions on a web application on behalf of an already authenticated user.
+Les attaques Cross-Site Request Forgery (CSRF) impliquent généralement un site web malveillant essayant d'effectuer des actions sur une application web au nom d'un utilisateur déjà authentifié.
 
-Marten comes with a built-in [CSRF protection mechanism](./csrf.md) that is automatically enabled for your [handlers](../handlers-and-http.mdx). The use of this CSRF protection mechanism is controlled by a set of [dedicated settings](../development/reference/settings.md#csrf-settings).
+Marten dispose d'un [mécanisme de protection CSRF](./csrf.md) intégré qui est automatiquement activé pour vos [handlers](../handlers-and-http.mdx). L'utilisation de ce mécanisme de protection CSRF est contrôlée par un ensemble de [paramètres dédiés](../development/reference/settings.md#csrf-settings).
 
 :::caution
-You should be careful when tweaking those settings and avoid disabling this protection unless this is absolutely necessary.
+Vous devriez être prudent lorsque vous modifiez ces paramètres et éviter de désactiver cette protection sauf si cela est absolument nécessaire.
 :::
 
-The CSRF protection provided by Marten is based on the verification of a token that must be provided for each unsafe HTTP request (ie. requests whose methods are not `GET`, `HEAD`, `OPTIONS`, or `TRACE`). This token is stored in the client cookies and it must be specified when submitting unsafe requests (either in the data itself or using a specific header): if the tokens are not valid, or if the cookie-based token does not match the one provided in the data, then this means that the request is malicious and that it must be rejected.
+La protection CSRF fournie par Marten est basée sur la vérification d'un token qui doit être fourni pour chaque requête HTTP non sûre (c'est-à-dire les requêtes dont les méthodes ne sont pas `GET`, `HEAD`, `OPTIONS` ou `TRACE`). Ce token est stocké dans les cookies du client et il doit être spécifié lors de la soumission de requêtes non sûres (soit dans les données elles-mêmes soit en utilisant un en-tête spécifique) : si les tokens ne sont pas valides, ou si le token basé sur le cookie ne correspond pas à celui fourni dans les données, alors cela signifie que la requête est malveillante et qu'elle doit être rejetée.
 
-You can learn about the CSRF protection provided by Marten and the associated tools in the [dedicated documentation](./csrf.md).
+Vous pouvez en savoir plus sur la protection CSRF fournie par Marten et les outils associés dans la [documentation dédiée](./csrf.md).
 
-## Clickjacking protection
+## Protection contre le clickjacking
 
-Clickjacking attacks involve a malicious website embedding another unprotected website in a frame. This can lead to users performing unintended actions on the targeted website.
+Les attaques de clickjacking impliquent un site web malveillant intégrant un autre site web non protégé dans un cadre. Cela peut conduire les utilisateurs à effectuer des actions non intentionnelles sur le site ciblé.
 
-Marten comes with a built-in [clickjacking protection mechanism](./clickjacking.md), that involves using a dedicated middleware (the [X-Frame-Options middleware](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware)). This middleware is always automatically enabled for projects that are generated via the [`new`](../development/reference/management-commands.md#new) management command and, as its name implies, it involves setting the X-Frame-Options header in order to prevent the considered Marten website from being inserted into a frame.
+Marten dispose d'un [mécanisme de protection contre le clickjacking](./clickjacking.md) intégré, qui implique l'utilisation d'un middleware dédié (le [middleware X-Frame-Options](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware)). Ce middleware est toujours automatiquement activé pour les projets générés via la commande de gestion [`new`](../development/reference/management-commands.md#new) et, comme son nom l'indique, il implique la définition de l'en-tête X-Frame-Options afin d'empêcher le site Marten considéré d'être inséré dans un cadre.
 
-You can learn about the clickjacking protection provided by Marten and the associated tools in the [dedicated documentation](./clickjacking.md).
+Vous pouvez en savoir plus sur la protection contre le clickjacking fournie par Marten et les outils associés dans la [documentation dédiée](./clickjacking.md).
 
-## Cross Site Scripting protection
+## Protection contre le Cross Site Scripting
 
-Cross Site Scripting (XSS) attacks involve a malicious user injecting client-side scripts into the browser of another user. This usually happens when rendering database-stored HTML data or when generating HTML contents and displaying it in a browser: if these HTML contents are not properly sanitized, then this can allow an attacker's JavaScript to be executed in the browser.
+Les attaques Cross Site Scripting (XSS) impliquent un utilisateur malveillant injectant des scripts côté client dans le navigateur d'un autre utilisateur. Cela se produit généralement lors du rendu de données HTML stockées en base de données ou lors de la génération de contenu HTML et de son affichage dans un navigateur : si ces contenus HTML ne sont pas correctement assainis, alors cela peut permettre l'exécution du JavaScript d'un attaquant dans le navigateur.
 
-To prevent this, Marten [templates](../templates.mdx) automatically escape HTML contents in variable outputs, unless those are marked as "safe". You can learn more about this capability in [Auto-Escaping](../templates/introduction.md#auto-escaping).
+Pour prévenir cela, les [templates](../templates.mdx) Marten échappent automatiquement les contenus HTML dans les sorties de variables, sauf si ceux-ci sont marqués comme "safe". Vous pouvez en savoir plus sur cette capacité dans [Auto-Escaping](../templates/introduction.md#auto-escaping).
 
-It should be noted that this auto-escaping mechanism can be disabled using a specific [filter](../templates/reference/filters.md#safe) if needed, but you should be aware of the risks while doing so and ensure that your HTML contents are properly sanitized in order to avoid XSS vulnerabilities.
+Il convient de noter que ce mécanisme d'auto-échappement peut être désactivé en utilisant un [filtre](../templates/reference/filters.md#safe) spécifique si nécessaire, mais vous devriez être conscient des risques en le faisant et vous assurer que vos contenus HTML sont correctement assainis afin d'éviter les vulnérabilités XSS.
 
-## HTTP Host Header attacks protection
+## Protection contre les attaques par en-tête HTTP Host
 
-HTTP Host Header attacks happen when websites that handle the value of the Host header (eg. in order to generate fully qualified URLs) trust this header value implicitly and don't verify it.
+Les attaques par en-tête HTTP Host se produisent lorsque des sites web qui traitent la valeur de l'en-tête Host (par exemple pour générer des URLs pleinement qualifiées) font confiance implicitement à cette valeur d'en-tête sans la vérifier.
 
-Marten implements a protection mechanism against this type of attack by validating the Host header against a set of explicitly allowed hosts that must be specified in the [`allowed_hosts`](../development/reference/settings.md#allowed_hosts) setting. The X-Forwarded-Host header can also be used to determine the host if the use of this header is enabled ([`use_x_forwarded_host`](../development/reference/settings.md#use_x_forwarded_host) setting).
+Marten implémente un mécanisme de protection contre ce type d'attaque en validant l'en-tête Host par rapport à un ensemble d'hôtes explicitement autorisés qui doivent être spécifiés dans le paramètre [`allowed_hosts`](../development/reference/settings.md#allowed_hosts). L'en-tête X-Forwarded-Host peut également être utilisé pour déterminer l'hôte si l'utilisation de cet en-tête est activée (paramètre [`use_x_forwarded_host`](../development/reference/settings.md#use_x_forwarded_host)).
 
-## SQL injection protection
+## Protection contre l'injection SQL
 
-SQL injection attacks happen when a malicious user is able to execute arbitrary SQL queries on a database, which usually occurs when submitting input data to a web application. This can lead to database records being leaked and/or altered.
+Les attaques par injection SQL se produisent lorsqu'un utilisateur malveillant est capable d'exécuter des requêtes SQL arbitraires sur une base de données, ce qui se produit généralement lors de la soumission de données d'entrée à une application web. Cela peut entraîner la fuite et/ou l'altération des enregistrements de la base de données.
 
-The [query sets](../models-and-databases/queries.md) API provided by Marten generates SQL code by using query parameterization. This means that the actual code of a query is defined separately from its parameters, which ensures that any user-provided parameter is escaped by the considered database driver before the query is executed.
+L'API de [query sets](../models-and-databases/queries.md) fournie par Marten génère du code SQL en utilisant la paramétration des requêtes. Cela signifie que le code réel d'une requête est défini séparément de ses paramètres, ce qui garantit que tout paramètre fourni par l'utilisateur est échappé par le driver de base de données considéré avant l'exécution de la requête.
 
 ## Content Security Policy
 
-The [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) (CSP) header is a collection of guidelines that the browser follows to allow specific sources for scripts, styles, embedded content, and more. It ensures that only these approved sources are allowed while blocking all other sources.
+L'en-tête [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) (CSP) est un ensemble de directives que le navigateur suit pour autoriser des sources spécifiques pour les scripts, les styles, le contenu embarqué et plus encore. Il garantit que seules ces sources approuvées sont autorisées tout en bloquant toutes les autres sources.
 
-Marten comes with a built-in [Content Security Policy mechanism](./content-security-policy.md), that involves using a dedicated middleware (the [Content-Security-Policy middleware](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware)). This middleware guarantees the presence of the Content-Security-Policy header in the response's headers.
+Marten dispose d'un [mécanisme Content Security Policy](./content-security-policy.md) intégré, qui implique l'utilisation d'un middleware dédié (le [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware)). Ce middleware garantit la présence de l'en-tête Content-Security-Policy dans les en-têtes de la réponse.
 
-You can learn about the Content-Security-Policy header and how to configure it in the [dedicated documentation](./content-security-policy.md).
+Vous pouvez en savoir plus sur l'en-tête Content-Security-Policy et comment le configurer dans la [documentation dédiée](./content-security-policy.md).

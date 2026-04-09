@@ -1,18 +1,18 @@
 ---
-title: Handler callbacks
-description: Learn how to define handler callbacks.
+title: Callbacks de handler
+description: Apprenez à définir des callbacks de handler.
 sidebar_label: Callbacks
 ---
 
-Callbacks enable you to define logic that is triggered at different stages of a handler's lifecycle. This feature allows you to intercept incoming requests and potentially bypass the standard `#dispatch` method. This document covers the available callbacks and introduces you to the associated API, which you can use to define hooks in your handlers.
+Les callbacks vous permettent de définir une logique qui est déclenchée à différentes étapes du cycle de vie d'un handler. Cette fonctionnalité vous permet d'intercepter les requêtes entrantes et de potentiellement contourner la méthode standard `#dispatch`. Ce document couvre les callbacks disponibles et vous présente l'API associée, que vous pouvez utiliser pour définir des hooks dans vos handlers.
 
-## Overview
+## Vue d'ensemble
 
-As stated above, callbacks are methods that will be called when specific events occur for a specific handler instance. They need to be registered explicitly in your handler classes. There are many types of callbacks: some are [shared between all types of handlers](#shared-handler-callbacks) while some others are specific to some kinds of generic handlers. For most types of callbacks, it is generally possible to register "before" or "after" callbacks.
+Comme indiqué ci-dessus, les callbacks sont des méthodes qui seront appelées lorsque des événements spécifiques se produisent pour une instance de handler spécifique. Ils doivent être enregistrés explicitement dans vos classes de handler. Il existe de nombreux types de callbacks : certains sont [partagés entre tous les types de handlers](#callbacks-partagés-entre-handlers) tandis que d'autres sont spécifiques à certains types de handlers génériques. Pour la plupart des types de callbacks, il est généralement possible d'enregistrer des callbacks « before » ou « after ».
 
-Registering a callback is as simple as calling the right callback macro (eg. `#before_dispatch`) with a symbol of the name of the method to call when the callback is executed. 
+Enregistrer un callback est aussi simple que d'appeler la bonne macro de callback (par ex. `#before_dispatch`) avec un symbole du nom de la méthode à appeler lorsque le callback est exécuté. 
 
-For example, the following handler leverages the [`#before_dispatch`](#before_dispatch) callback in order to redirect the user to a login page if they are not already authenticated:
+Par exemple, le handler suivant utilise le callback [`#before_dispatch`](#before_dispatch) pour rediriger l'utilisateur vers une page de connexion s'il n'est pas déjà authentifié :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -28,13 +28,13 @@ class MyHandler < Marten::Handler
 end
 ```
 
-## Shared handler callbacks
+## Callbacks partagés entre handlers
 
-The following callbacks are shared between all types of handlers.
+Les callbacks suivants sont partagés entre tous les types de handlers.
 
 ### `before_dispatch`
 
-`before_dispatch` callbacks are executed _before_ a request is processed as part of the handler's `#dispatch` method. For example, this capability can be leveraged to inspect the incoming request and verify that a user is logged in:
+Les callbacks `before_dispatch` sont exécutés _avant_ qu'une requête ne soit traitée dans le cadre de la méthode `#dispatch` du handler. Par exemple, cette fonctionnalité peut être utilisée pour inspecter la requête entrante et vérifier qu'un utilisateur est connecté :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -50,11 +50,11 @@ class MyHandler < Marten::Handler
 end
 ```
 
-When one of the defined `before_dispatch` callbacks returns a [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) object (like this is the case in the above example), this response is always used instead of calling the handler's `#dispatch` method (the latest is thus completely bypassed).
+Lorsque l'un des callbacks `before_dispatch` définis retourne un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) (comme c'est le cas dans l'exemple ci-dessus), cette réponse est toujours utilisée au lieu d'appeler la méthode `#dispatch` du handler (cette dernière est ainsi complètement contournée).
 
 ### `after_dispatch`
 
-`after_dispatch` callbacks are executed _after_ a request is processed as part of the handler's `#dispatch` method. For example, such a callback can be leveraged to automatically add headers or cookies to the returned response.
+Les callbacks `after_dispatch` sont exécutés _après_ qu'une requête a été traitée dans le cadre de la méthode `#dispatch` du handler. Par exemple, un tel callback peut être utilisé pour ajouter automatiquement des en-têtes ou des cookies à la réponse retournée.
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -70,13 +70,13 @@ class MyHandler < Marten::Handler
 end
 ```
 
-Similarly to `#before_dispatch` callbacks, `#after_dispatch` callbacks can return a brand new [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) object. When this is the case, this response is always used instead of the one that was returned by the handler's `#dispatch` method.
+De manière similaire aux callbacks `#before_dispatch`, les callbacks `#after_dispatch` peuvent retourner un tout nouvel objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). Lorsque c'est le cas, cette réponse est toujours utilisée au lieu de celle retournée par la méthode `#dispatch` du handler.
 
 ### `before_render`
 
-`before_render` callbacks are invoked prior to rendering a template when generating a response that incorporates its content. This means that these callbacks are executed as part of the [`#render`](./introduction.md#render) helper method and when rendering templates as part of subclasses of the [`Marten::Handlers::Template`](./generic-handlers.md#rendering-a-template) generic handler.
+Les callbacks `before_render` sont invoqués avant le rendu d'un template lors de la génération d'une réponse qui incorpore son contenu. Cela signifie que ces callbacks sont exécutés dans le cadre de la méthode d'aide [`#render`](./introduction.md#render) et lors du rendu de templates dans le cadre de sous-classes du handler générique [`Marten::Handlers::Template`](./generic-handlers.md#rendu-dun-template).
 
-Typically, these callbacks are used to add new variables to the [global template context](./introduction.md#global-template-context), in order to make them accessible to the template runtime. For example:
+Typiquement, ces callbacks sont utilisés pour ajouter de nouvelles variables au [contexte de template global](./introduction.md#contexte-de-template-global), afin de les rendre accessibles au runtime du template. Par exemple :
 
 ```crystal
 class MyHandler < Marten::Handlers::Template
@@ -89,18 +89,18 @@ class MyHandler < Marten::Handlers::Template
 end
 ```
 
-Note that `before_render` callbacks can technically be used to return a [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) object. When this situation arises, this response always takes precedence over the one that would've been returned following the rendering of the template.
+Notez que les callbacks `before_render` peuvent techniquement être utilisés pour retourner un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). Lorsque cette situation se présente, cette réponse prend toujours le pas sur celle qui aurait été retournée suite au rendu du template.
 
-## Schema handler callbacks
+## Callbacks de handler schema
 
-The following callbacks are only available for handlers that inherit from the [schema handler](./reference/generic-handlers.md#processing-a-schema). That is, handlers that inherit from [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html), but also handlers that inherit from [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) and [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html).
+Les callbacks suivants ne sont disponibles que pour les handlers qui héritent du [handler schema](./reference/generic-handlers.md#traitement-dun-schéma). C'est-à-dire les handlers qui héritent de [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html), mais aussi les handlers qui héritent de [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) et [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html).
 
-These callbacks let you define logics that are triggered before or after the validation of the schema. This allows you to easily intercept validation and handle the response independently of the schema validity. All these callbacks can optionally return a [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) object. When an HTTP response is returned,
-all following callbacks are skipped and the obtained response is returned directly, thus bypassing responses that might have been returned after by the handler.
+Ces callbacks vous permettent de définir des logiques qui sont déclenchées avant ou après la validation du schéma. Cela vous permet d'intercepter facilement la validation et de gérer la réponse indépendamment de la validité du schéma. Tous ces callbacks peuvent optionnellement retourner un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). Lorsqu'une réponse HTTP est retournée,
+tous les callbacks suivants sont ignorés et la réponse obtenue est retournée directement, contournant ainsi les réponses qui auraient pu être retournées ensuite par le handler.
 
 ### `before_schema_validation`
 
-`before_schema_validation` callbacks are executed _before_ a schema is checked for validity. For example, this capability can be leveraged to set an attribute on the schema object before the schema validity is checked:
+Les callbacks `before_schema_validation` sont exécutés _avant_ qu'un schéma ne soit vérifié pour sa validité. Par exemple, cette fonctionnalité peut être utilisée pour définir un attribut sur l'objet schéma avant que la validité du schéma ne soit vérifiée :
 
 ```crystal
 class ArticleCreateHandler < Marten::Handlers::Schema
@@ -118,7 +118,7 @@ end
 
 ### `after_schema_validation`
 
-`after_schema_validation` callbacks are executed right _after_ a schema is checked for validity. For example, this capability can be leveraged to call a custom method on the schema instance:
+Les callbacks `after_schema_validation` sont exécutés juste _après_ qu'un schéma a été vérifié pour sa validité. Par exemple, cette fonctionnalité peut être utilisée pour appeler une méthode personnalisée sur l'instance du schéma :
 
 ```crystal
 class ArticleCreateHandler < Marten::Handlers::Schema
@@ -136,8 +136,8 @@ end
 
 ### `after_successful_schema_validation`
 
-`after_successful_schema_validation` callbacks are executed right _after_ a schema is checked for validity (and after possible [`after_schema_validation`](#after_schema_validation) callbacks), and only if the schema validation was successful.
-For example, this capability can be leveraged to create a flash message:
+Les callbacks `after_successful_schema_validation` sont exécutés juste _après_ qu'un schéma a été vérifié pour sa validité (et après les éventuels callbacks [`after_schema_validation`](#after_schema_validation)), et uniquement si la validation du schéma a réussi.
+Par exemple, cette fonctionnalité peut être utilisée pour créer un message flash :
 
 ```crystal
 class ArticleCreateHandler < Marten::Handlers::Schema
@@ -155,8 +155,8 @@ end
 
 ### `after_failed_schema_validation`
 
-`after_failed_schema_validation` callbacks are executed right _after_ a schema is checked for validity (and after possible
-[`after_schema_validation`](#after_schema_validation) callbacks), but only if the schema validation failed. For example, this capability can be leveraged to create a flash message:
+Les callbacks `after_failed_schema_validation` sont exécutés juste _après_ qu'un schéma a été vérifié pour sa validité (et après les éventuels callbacks
+[`after_schema_validation`](#after_schema_validation)), mais uniquement si la validation du schéma a échoué. Par exemple, cette fonctionnalité peut être utilisée pour créer un message flash :
 
 ```crystal
 class ArticleCreateHandler < Marten::Handlers::Schema

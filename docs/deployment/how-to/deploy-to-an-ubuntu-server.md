@@ -1,66 +1,66 @@
 ---
-title: Deploy to an Ubuntu server
-description: Learn how to deploy a Marten project to an Ubuntu server.
+title: Déployer sur un serveur Ubuntu
+description: Apprenez à déployer un projet Marten sur un serveur Ubuntu.
 ---
 
-This guide covers how to deploy a Marten project to an Ubuntu server.
+Ce guide couvre comment déployer un projet Marten sur un serveur Ubuntu.
 
-## Prerequisites
+## Prérequis
 
-To complete the steps in this guide, you will need:
+Pour compléter les étapes de ce guide, vous aurez besoin de :
 
-* an [Ubuntu](https://ubuntu.com) server with SSH access and `sudo` permissions
-* a working Marten project
-* a domain name targeting your server
+* un serveur [Ubuntu](https://ubuntu.com) avec un accès SSH et les permissions `sudo`
+* un projet Marten fonctionnel
+* un nom de domaine pointant vers votre serveur
 
-## Install the required dependencies
+## Installer les dépendances requises
 
-The first dependency we want to install on the server is Crystal itself. To do so, you can run the following command:
+La première dépendance que nous voulons installer sur le serveur est Crystal lui-même. Pour ce faire, vous pouvez exécuter la commande suivante :
 
 ```bash
 curl -fsSL https://crystal-lang.org/install.sh | sudo bash
 ```
 
 :::tip
-Alternatively, you can also refer to [Crystal's official installation instructions](https://crystal-lang.org/install/on_ubuntu/) for Ubuntu if the above command does not work.
+Alternativement, vous pouvez également vous référer aux [instructions officielles d'installation de Crystal](https://crystal-lang.org/install/on_ubuntu/) pour Ubuntu si la commande ci-dessus ne fonctionne pas.
 :::
 
-Secondly, we should install a few additional packages that will be required later on:
+Ensuite, nous devrions installer quelques paquets supplémentaires qui seront nécessaires plus tard :
 
-* `git` to clone the project's repository
-* `nginx` to serve the project's server behind a reverse proxy and also serve [assets](../../assets/introduction.md) and [media files](../../files/managing-files.md)
-* `postgresql` to handle our database needs
+* `git` pour cloner le dépôt du projet
+* `nginx` pour servir le serveur du projet derrière un reverse proxy et également servir les [assets](../../assets/introduction.md) et les [fichiers médias](../../files/managing-files.md)
+* `postgresql` pour gérer nos besoins en base de données
 
-This can be achieved by running the following command:
+Cela peut être réalisé en exécutant la commande suivante :
 
 ```bash
 sudo apt-get install git nginx postgresql
 ```
 
 :::info
-This guide assumes the use of [PostgreSQL](https://www.postgresql.org) but can easily be adapted if your project requires another database backend.
+Ce guide suppose l'utilisation de [PostgreSQL](https://www.postgresql.org) mais peut facilement être adapté si votre projet nécessite un autre backend de base de données.
 :::
 
-## Create a deployment user
+## Créer un utilisateur de déploiement
 
-Let's now create a deployment user. This user will have access to your project's server and will be used to run the application:
+Créons maintenant un utilisateur de déploiement. Cet utilisateur aura accès au serveur de votre projet et sera utilisé pour exécuter l'application :
 
 ```bash
 sudo adduser --disabled-login deploy
 ```
 
-## Create the project folders
+## Créer les dossiers du projet
 
-We can now create a deployment folder where we will be able to clone the project repository later on, and store collected assets or media files if necessary. While creating this folder, it is also necessary to ensure that the `deploy` user created previously has access to it:
+Nous pouvons maintenant créer un dossier de déploiement où nous pourrons cloner le dépôt du projet plus tard, et stocker les assets collectés ou les fichiers médias si nécessaire. Lors de la création de ce dossier, il est également nécessaire de s'assurer que l'utilisateur `deploy` créé précédemment y a accès :
 
 ```bash
 sudo mkdir /srv/<yourapp>
 sudo chown deploy:deploy /srv/<yourapp>
 ```
 
-## Create a database
+## Créer une base de données
 
-As mentioned previously, this guide assumes the use of [PostgreSQL](https://www.postgresql.org) for the project's database. As such, we need to create a database user and the database itself. To do so, we will need to execute the following commands:
+Comme mentionné précédemment, ce guide suppose l'utilisation de [PostgreSQL](https://www.postgresql.org) pour la base de données du projet. Ainsi, nous devons créer un utilisateur de base de données et la base de données elle-même. Pour ce faire, nous devrons exécuter les commandes suivantes :
 
 ```bash
 su - postgres -c 'createuser deploy'
@@ -68,83 +68,83 @@ su - postgres -c 'createdb -O deploy <yourapp>'
 ```
 
 :::info
-PostgreSQL management commands are usually performed as the `postgres` user, hence the use of `su` in the above commands.
+Les commandes de gestion PostgreSQL sont généralement effectuées en tant qu'utilisateur `postgres`, d'où l'utilisation de `su` dans les commandes ci-dessus.
 :::
 
-Obviously, you should also ensure that your Marten project is correctly configured to target this database in production. You can have a look at the [database settings](../../development/reference/settings.md#database-settings) to see what are the available options when it comes to configuring databases.
+Évidemment, vous devriez également vous assurer que votre projet Marten est correctement configuré pour cibler cette base de données en production. Vous pouvez consulter les [paramètres de base de données](../../development/reference/settings.md#database-settings) pour voir quelles sont les options disponibles en matière de configuration des bases de données.
 
-## Clone the project
+## Cloner le projet
 
-First, change into the `deploy` user you created previously:
+Tout d'abord, passez à l'utilisateur `deploy` que vous avez créé précédemment :
 
 ```bash
 su - deploy
 ```
 
-Then you can clone your repository and change into the corresponding folder using the following commands:
+Ensuite, vous pouvez cloner votre dépôt et accéder au dossier correspondant en utilisant les commandes suivantes :
 
 ```bash
 git clone <yourgiturl> /srv/<yourapp>/project
 cd /srv/<yourapp>/project
 ```
 
-## Install the dependencies and compile the project
+## Installer les dépendances et compiler le projet
 
-The next step is to install your project's dependencies. To do so, you can use the [`shards`](https://crystal-lang.org/reference/man/shards/index.html) command as follows:
+L'étape suivante est d'installer les dépendances de votre projet. Pour ce faire, vous pouvez utiliser la commande [`shards`](https://crystal-lang.org/reference/man/shards/index.html) comme suit :
 
 ```bash
 shards install
 ```
 
-We then need to compile the project binary and the [management CLI](../../development/management-commands.md):
+Nous devons ensuite compiler le binaire du projet et le [CLI de gestion](../../development/management-commands.md) :
 
 ```bash
 crystal build src/server.cr -o bin/server --release
 crystal build manage.cr -o bin/manage --release
 ```
 
-The management CLI binary will be helpful in order to [apply migrations](../../models-and-databases/migrations.md) and to [collect assets](../../development/reference/management-commands.md#collectassets).
+Le binaire du CLI de gestion sera utile pour [appliquer les migrations](../../models-and-databases/migrations.md) et pour [collecter les assets](../../development/reference/management-commands.md#collectassets).
 
 :::info
-Depending on how you are handling assets as part of your projects you may have to perform additional steps. For example, you may have to install Node.js, install additional dependencies, and eventually bundle assets with Webpack if this is applicable to your project!
+Selon la façon dont vous gérez les assets dans vos projets, vous pourriez avoir à effectuer des étapes supplémentaires. Par exemple, vous pourriez avoir à installer Node.js, installer des dépendances supplémentaires, et éventuellement bundler les assets avec Webpack si cela s'applique à votre projet !
 :::
 
-## Collect assets
+## Collecter les assets
 
-You will then want to collect your [assets](../../assets/introduction.md) so that they are uploaded to their final destination. To do so you can leverage the management CLI binary you compiled previously and run the [`collectassets`](../../development/reference/management-commands.md#collectassets) command:
+Vous voudrez ensuite collecter vos [assets](../../assets/introduction.md) afin qu'ils soient téléchargés vers leur destination finale. Pour ce faire, vous pouvez utiliser le binaire du CLI de gestion que vous avez compilé précédemment et exécuter la commande [`collectassets`](../../development/reference/management-commands.md#collectassets) :
 
 ```bash
 bin/manage collectassets --no-input
 ```
 
-This management command will "collect" all the available assets from the applications' assets directories and from the directories configured in the [`dirs`](../../development/reference/settings.md#dirs) setting, and ensure that they are "uploaded" to their final destination based on the [assets storage](../../assets/introduction.md#assets-storage) that is currently configured.
+Cette commande de gestion "collectera" tous les assets disponibles depuis les répertoires d'assets des applications et depuis les répertoires configurés dans le paramètre [`dirs`](../../development/reference/settings.md#dirs), et s'assurera qu'ils sont "téléchargés" vers leur destination finale en fonction du [stockage d'assets](../../assets/introduction.md#assets-storage) actuellement configuré.
 
-## Apply the project's migrations
+## Appliquer les migrations du projet
 
-Then you will want to run your project's [migrations](../../models-and-databases/migrations.md) to ensure that your models are created at the database level. To achieve this you can leverage the management CLI binary that you compiled in a previous step and run the [`migrate`](../../development/reference/management-commands.md#migrate) command:
+Ensuite, vous voudrez exécuter les [migrations](../../models-and-databases/migrations.md) de votre projet pour vous assurer que vos modèles sont créés au niveau de la base de données. Pour y parvenir, vous pouvez utiliser le binaire du CLI de gestion que vous avez compilé dans une étape précédente et exécuter la commande [`migrate`](../../development/reference/management-commands.md#migrate) :
 
 ```bash
 bin/manage migrate
 ```
 
-## Setup a SystemD service for your application
+## Configurer un service SystemD pour votre application
 
-[SystemD](https://systemd.io) is a service manager for Linux that we can leverage in order to easily start or restart our deployed application. As such, we are going to create a service for our application.
+[SystemD](https://systemd.io) est un gestionnaire de services pour Linux que nous pouvons utiliser pour démarrer ou redémarrer facilement notre application déployée. Ainsi, nous allons créer un service pour notre application.
 
-But first, create an empty `settings.env` file in the current shell session as the `deploy` user:
+Mais d'abord, créez un fichier `settings.env` vide dans la session shell actuelle en tant qu'utilisateur `deploy` :
 
 ```bash
 touch /srv/<yourapp>/settings.env
 chmod 600 /srv/<yourapp>/settings.env
 ```
 
-Exit the shell with `Ctrl-D` or by entering the `exit` command and then create a service file for your app by typing the following command:
+Quittez le shell avec `Ctrl-D` ou en entrant la commande `exit` puis créez un fichier de service pour votre application en tapant la commande suivante :
 
 ```bash
 nano /etc/systemd/system/<yourapp>.service
 ```
 
-This should open a text editor in your terminal. Copy the following content into it:
+Cela devrait ouvrir un éditeur de texte dans votre terminal. Copiez le contenu suivant dedans :
 
 ```
 [Unit]
@@ -165,58 +165,58 @@ EnvironmentFiles=/srv/<yourapp>/settings.env
 WantedBy=multi-user.target
 ```
 
-Don't forget to replace the `<yourapp>` placeholders with the right values and, when ready, save the file using `Ctrl-X` and `y`.
+N'oubliez pas de remplacer les espaces réservés `<yourapp>` par les bonnes valeurs et, lorsque vous êtes prêt, sauvegardez le fichier en utilisant `Ctrl-X` et `y`.
 
-As you can see in the above snippet, we are assuming that the current [Marten environment](../../development/settings.md#environments) is the production one by setting the `MARTEN_ENV` environment variable to `production`. You should adapt this to your deployment use case obviously.
+Comme vous pouvez le voir dans l'extrait ci-dessus, nous supposons que l'[environnement Marten](../../development/settings.md#environnements) actuel est celui de production en définissant la variable d'environnement `MARTEN_ENV` sur `production`. Vous devriez adapter cela à votre cas d'utilisation de déploiement évidemment.
 
 :::caution
-While the service file is a good place to define environment variables for your project's settings, it should not be used for secrets and sensitive information, such as the [`secret_key`](../../development/reference/settings.md#secret_key) setting.
+Bien que le fichier de service soit un bon endroit pour définir des variables d'environnement pour les paramètres de votre projet, il ne devrait pas être utilisé pour les secrets et informations sensibles, comme le paramètre [`secret_key`](../../development/reference/settings.md#secret_key).
 
-Edit the `settings.env` file as the `deploy` user:
+Éditez le fichier `settings.env` en tant qu'utilisateur `deploy` :
 
 ```bash
 sudo -u deploy nano /srv/<yourapp>/settings.env
 ```
 
-Save the [`secret_key`](../../development/reference/settings.md#secret_key) and other sensitive settings in it:
+Sauvegardez le [`secret_key`](../../development/reference/settings.md#secret_key) et d'autres paramètres sensibles dedans :
 
 ```
 MARTEN_SECRET_KEY=<secretkey>
 ```
 
-And then load it from your application's codebase, as described in [Secure critical setting values](../introduction.md#secret-key).
+Et ensuite chargez-le depuis le codebase de votre application, comme décrit dans [Sécuriser les valeurs de paramètres critiques](../introduction.md#clé-secrète).
 
 :::
 
-In order to ensure that SystemD takes into account the new service you just created, you can then run the following command:
+Pour s'assurer que SystemD prend en compte le nouveau service que vous venez de créer, vous pouvez ensuite exécuter la commande suivante :
 
 ```bash
 systemctl daemon-reload
 ```
 
-And finally, you can start your server with:
+Et enfin, vous pouvez démarrer votre serveur avec :
 
 ```bash
 service <yourapp> start
 ```
 
-Note that in subsequent deployments you will simply want to restart the SystemD service you previously defined. To do so, you can simply use the following command:
+Notez que dans les déploiements suivants, vous voudrez simplement redémarrer le service SystemD que vous avez défini précédemment. Pour ce faire, vous pouvez simplement utiliser la commande suivante :
 
 ```bash
 service <yourapp> restart
 ```
 
-## Setup a Nginx reverse proxy
+## Configurer un reverse proxy Nginx
 
-Marten project servers are intended to be used behind a reverse proxy such as [Nginx](https://www.nginx.com/) or [Apache](https://httpd.apache.org/). Using a reverse proxy allows you to easily set up an SSL certificate for your server (for example using [Let's Encrypt](https://letsencrypt.org/)), to serve collected assets and media files if applicable, and enhance security and reliability.
+Les serveurs de projets Marten sont destinés à être utilisés derrière un reverse proxy tel que [Nginx](https://www.nginx.com/) ou [Apache](https://httpd.apache.org/). L'utilisation d'un reverse proxy vous permet de configurer facilement un certificat SSL pour votre serveur (par exemple en utilisant [Let's Encrypt](https://letsencrypt.org/)), de servir les assets collectés et les fichiers médias si applicable, et d'améliorer la sécurité et la fiabilité.
 
-In our case, we will be using [Nginx](https://www.nginx.com/) and create a site configuration for our application. Let's use the following command to do so:
+Dans notre cas, nous utiliserons [Nginx](https://www.nginx.com/) et créerons une configuration de site pour notre application. Utilisons la commande suivante pour ce faire :
 
 ```bash
 nano /etc/nginx/sites-available/<yourapp>.conf
 ```
 
-This should open a text editor in your terminal. Copy the following content into it:
+Cela devrait ouvrir un éditeur de texte dans votre terminal. Copiez le contenu suivant dedans :
 
 ```
 server {
@@ -255,25 +255,25 @@ server {
     proxy_buffering off;
 
     proxy_pass http://localhost:<yourport>;
-    # Alternatively, if you configured a Unix socket in your Marten settings:
+    # Alternativement, si vous avez configuré un socket Unix dans vos paramètres Marten :
     # proxy_pass http://unix:/run/<yourapp>/server.sock;
   }
 }
 ```
 
-Don't forget to replace the `<yourapp>`, `<yourdomain>`, `<yourassetspath>`, `<yourmediapath>`, and `<yourport>` placeholders with the right values and, when ready, save the file using `Ctrl-X` and `y`.
+N'oubliez pas de remplacer les espaces réservés `<yourapp>`, `<yourdomain>`, `<yourassetspath>`, `<yourmediapath>` et `<yourport>` par les bonnes valeurs et, lorsque vous êtes prêt, sauvegardez le fichier en utilisant `Ctrl-X` et `y`.
 
-As you can see, the reverse proxy will serve our application on the HTTP port 80 and is configured to target our Marten server host (`localhost`) and port. Because of this, you should ensure that your Marten server is not using the HTTP port 80 (instead it could use something like 8080 or 8000 for example). Alternatively, you can configure your Marten server to listen on a Unix socket by setting the [`socket`](../../development/reference/settings.md#socket) setting and update the `proxy_pass` directive accordingly.
+Comme vous pouvez le voir, le reverse proxy servira notre application sur le port HTTP 80 et est configuré pour cibler l'hôte (`localhost`) et le port de notre serveur Marten. Pour cette raison, vous devriez vous assurer que votre serveur Marten n'utilise pas le port HTTP 80 (il pourrait plutôt utiliser quelque chose comme 8080 ou 8000 par exemple). Alternativement, vous pouvez configurer votre serveur Marten pour écouter sur un socket Unix en définissant le paramètre [`socket`](../../development/reference/settings.md#socket) et mettre à jour la directive `proxy_pass` en conséquence.
 
-You should also note that the above configuration defines two additional locations in order to serve assets (`/assets/`) and media files (`/media/`). This makes the assumption that those files are _locally_ available on the considered server. As such you should remove these lines if this is not applicable to your use case or if these files are uploaded somewhere else (eg. in a cloud bucket).
+Vous devriez également noter que la configuration ci-dessus définit deux emplacements supplémentaires pour servir les assets (`/assets/`) et les fichiers médias (`/media/`). Cela suppose que ces fichiers sont disponibles _localement_ sur le serveur considéré. Ainsi, vous devriez supprimer ces lignes si cela ne s'applique pas à votre cas d'utilisation ou si ces fichiers sont téléchargés ailleurs (ex. dans un bucket cloud).
 
-You can then enable this site configuration by creating a symbolic link as follows:
+Vous pouvez ensuite activer cette configuration de site en créant un lien symbolique comme suit :
 
 ```bash
 ln -s /etc/nginx/sites-available/<yourapp>.conf /etc/nginx/sites-enabled/<yourapp>.conf
 ```
 
-And finally, you can restart the Nginx service with:
+Et enfin, vous pouvez redémarrer le service Nginx avec :
 
 ```bash
 sudo service nginx restart

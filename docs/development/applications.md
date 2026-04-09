@@ -1,26 +1,26 @@
 ---
 title: Applications
-description: Learn how to leverage applications to structure your projects.
+description: Apprenez à utiliser les applications pour structurer vos projets.
 sidebar_label: Applications
 ---
 
-Marten projects can be organized into logical and reusable components called "applications". These applications can contribute specific behaviors and abstractions to a project, including [models](../models-and-databases.mdx), [handlers](../handlers-and-http.mdx), [schemas](../schemas/introduction.md), [emails](../emailing/introduction.md), and [templates](../templates.mdx). They can be packaged and reused across various projects as well.
+Les projets Marten peuvent être organisés en composants logiques et réutilisables appelés "applications". Ces applications peuvent apporter des comportements et des abstractions spécifiques à un projet, notamment des [modèles](../models-and-databases.mdx), des [handlers](../handlers-and-http.mdx), des [schemas](../schemas/introduction.md), des [emails](../emailing/introduction.md) et des [templates](../templates.mdx). Elles peuvent également être empaquetées et réutilisées dans différents projets.
 
-## Overview
+## Vue d'ensemble
 
-A Marten **application** is a set of abstractions (defined under a dedicated and unique folder) that provides some set of features. These abstractions can correspond to [models](../models-and-databases.mdx), [handlers](../handlers-and-http.mdx), [templates](../templates.mdx), [schemas](../schemas.mdx), [emails](../emailing/introduction.md), etc.
+Une **application** Marten est un ensemble d'abstractions (définies sous un dossier dédié et unique) qui fournit un ensemble de fonctionnalités. Ces abstractions peuvent correspondre à des [modèles](../models-and-databases.mdx), des [handlers](../handlers-and-http.mdx), des [templates](../templates.mdx), des [schemas](../schemas.mdx), des [emails](../emailing/introduction.md), etc.
 
-Marten projects always use one or many applications. Indeed, each Marten project comes with a default [main application](#the-main-application) that corresponds to the standard `src` folder: models, migrations, or other classes defined in this folder are associated with the main application by default (unless they are part of another _explicitly defined_ application). As projects grow in size and scope, it is generally encouraged to start thinking in terms of applications and how to split models, handlers, or features across multiple apps depending on their intended responsibilities.
+Les projets Marten utilisent toujours une ou plusieurs applications. En effet, chaque projet Marten est livré avec une [application principale](#lapplication-principale) par défaut qui correspond au dossier standard `src` : les modèles, migrations ou autres classes définis dans ce dossier sont associés à l'application principale par défaut (à moins qu'ils ne fassent partie d'une autre application _explicitement définie_). Au fur et à mesure que les projets grandissent en taille et en portée, il est généralement encouragé de commencer à penser en termes d'applications et de répartir les modèles, handlers ou fonctionnalités entre plusieurs apps en fonction de leurs responsabilités prévues.
 
-Another benefit of applications is that they can be packaged and reused across multiple projects. This allows third-party libraries and shards to easily contribute models, migrations, handlers, or templates to other projects.
+Un autre avantage des applications est qu'elles peuvent être empaquetées et réutilisées dans plusieurs projets. Cela permet aux bibliothèques tierces et aux shards de contribuer facilement des modèles, migrations, handlers ou templates à d'autres projets.
 
-## Using applications
+## Utiliser les applications
 
-The use of applications must be manually enabled within projects: this is done through the use of the [`installed_apps`](./reference/settings.md#installed_apps) setting.
+L'utilisation des applications doit être activée manuellement dans les projets : cela se fait via le paramètre [`installed_apps`](./reference/settings.md#installed_apps).
 
-This setting corresponds to an array of installed app classes. Indeed, each Marten application must define a subclass of [`Marten::App`](pathname:///api/dev/Marten/App.html) to specify a few things such as the application label (see [Creating applications](#creating-applications) for more information about this). When those subclasses are specified in the `installed_apps` setting, the applications' models, migrations, assets, and templates will be made available to the considered project.
+Ce paramètre correspond à un tableau de classes d'applications installées. En effet, chaque application Marten doit définir une sous-classe de [`Marten::App`](pathname:///api/dev/Marten/App.html) pour spécifier certaines choses comme le label de l'application (voir [Créer des applications](#créer-des-applications) pour plus d'informations à ce sujet). Lorsque ces sous-classes sont spécifiées dans le paramètre `installed_apps`, les modèles, migrations, assets et templates des applications seront rendus disponibles pour le projet considéré.
 
-For example:
+Par exemple :
 
 ```crystal
 Marten.configure do |config|
@@ -31,42 +31,42 @@ Marten.configure do |config|
 end
 ```
 
-Adding an application class inside this array will have the following impact on the considered project:
+Ajouter une classe d'application dans ce tableau aura l'impact suivant sur le projet considéré :
 
-* the models of this application and the associated migrations will be used
-* the templates of the application will be made available to the templates engine
-* the assets of the application will be made available to the assets engine
-* the management commands defined by the application will be made available to the Marten CLI
+* les modèles de cette application et les migrations associées seront utilisés
+* les templates de l'application seront rendus disponibles pour le moteur de templates
+* les assets de l'application seront rendus disponibles pour le moteur d'assets
+* les commandes de gestion définies par l'application seront rendues disponibles dans le CLI Marten
 
-### The main application
+### L'application principale
 
-The "main" application is a default application that is always implicitly used by Marten projects (which means that it does not appear in the [`installed_apps`](./reference/settings.md#installed_apps) setting). This application is associated with the standard `src` folder: this means that models, migrations, assets, or templates defined in this folder will be associated with the main application by default. For example, models defined under a `src/models` folder would be associated with the main application.
+L'application "principale" est une application par défaut qui est toujours implicitement utilisée par les projets Marten (ce qui signifie qu'elle n'apparaît pas dans le paramètre [`installed_apps`](./reference/settings.md#installed_apps)). Cette application est associée au dossier standard `src` : cela signifie que les modèles, migrations, assets ou templates définis dans ce dossier seront associés à l'application principale par défaut. Par exemple, les modèles définis sous un dossier `src/models` seraient associés à l'application principale.
 
 :::info
-The main application is associated with the `main` label. This means that models of the main application that do not define an explicit table name will have table names starting with `main_`.
+L'application principale est associée au label `main`. Cela signifie que les modèles de l'application principale qui ne définissent pas un nom de table explicite auront des noms de table commençant par `main_`.
 :::
 
-It should be noted that it is possible to create _explicitly defined_ applications whose structures live under the `src` folder as well: the abstractions (eg. models, migrations, etc) of these applications will be associated with them and _not_ with the main application. This is because abstractions are always associated with the closest application in the files/folders structure.
+Il convient de noter qu'il est possible de créer des applications _explicitement définies_ dont les structures résident également sous le dossier `src` : les abstractions (ex. modèles, migrations, etc.) de ces applications seront associées à elles et _non_ à l'application principale. C'est parce que les abstractions sont toujours associées à l'application la plus proche dans la structure de fichiers/dossiers.
 
-In the end, the main application provides a convenient way for starting projects and prototyping without requiring to spec out how projects will be organized in terms of applications upfront. That being said, as projects grow in size and scope, it is really encouraged to start thinking in terms of applications and how to split abstractions and features across multiple apps depending on their intended responsibilities.
+En fin de compte, l'application principale offre un moyen pratique de démarrer des projets et de prototyper sans avoir besoin de planifier comment les projets seront organisés en termes d'applications au préalable. Cela dit, au fur et à mesure que les projets grandissent en taille et en portée, il est vraiment encouragé de commencer à penser en termes d'applications et de répartir les abstractions et fonctionnalités entre plusieurs apps en fonction de leurs responsabilités prévues.
 
-### Order of installed applications
+### Ordre des applications installées
 
-You should note that the order in which installed applications are defined in the [`installed_apps`](./reference/settings.md#installed_apps) setting can actually matter.
+Vous devez noter que l'ordre dans lequel les applications installées sont définies dans le paramètre [`installed_apps`](./reference/settings.md#installed_apps) peut effectivement avoir de l'importance.
 
-For example, a "foo" app might define a `test.html` template, and a similar template with the exact same name might be defined by a "bar" app. If the "foo" app appears before the "bar" app in the array of installed apps, then requesting and rendering the `test.html` template will actually involve the "foo" app's template only. This is because template loaders associated with app directories iterate over applications in the order in which they are defined in the installed apps array.
+Par exemple, une application "foo" pourrait définir un template `test.html`, et un template similaire avec exactement le même nom pourrait être défini par une application "bar". Si l'application "foo" apparaît avant l'application "bar" dans le tableau des applications installées, alors la demande et le rendu du template `test.html` impliqueront en réalité uniquement le template de l'application "foo". C'est parce que les chargeurs de templates associés aux répertoires d'applications parcourent les applications dans l'ordre dans lequel elles sont définies dans le tableau des applications installées.
 
-This is why it is always important to _namespace_ abstractions, assets, templates, and locales when creating applications. Failing to do so exposes apps to conflicts with other applications' code. As such, in the previous example, the "foo" app should've defined a `foo/test.html` template while the "bar" app should've defined a `bar/test.html` template to avoid possible conflicts.
+C'est pourquoi il est toujours important de _namespacer_ les abstractions, assets, templates et locales lors de la création d'applications. Ne pas le faire expose les apps à des conflits avec le code d'autres applications. Ainsi, dans l'exemple précédent, l'application "foo" aurait dû définir un template `foo/test.html` tandis que l'application "bar" aurait dû définir un template `bar/test.html` pour éviter les conflits possibles.
 
-## Creating applications
+## Créer des applications
 
-Creating applications can be done very easily through the use of the [`app`](./reference/generators.md#app) generator. For example:
+La création d'applications peut se faire très facilement grâce au générateur [`app`](./reference/generators.md#app). Par exemple :
 
 ```bash
 marten gen app blog
 ```
 
-Running such a command will add a new `blog` application to the current project with the following structure:
+L'exécution d'une telle commande ajoutera une nouvelle application `blog` au projet actuel avec la structure suivante :
 
 ```
 src/blog
@@ -80,31 +80,31 @@ src/blog
 └── cli.cr
 ```
 
-These files and folders are described below:
+Ces fichiers et dossiers sont décrits ci-dessous :
 
-| Path | Description |
+| Chemin | Description |
 | ----------- | ----------- |
-| `emails/` | Empty directory where the [emails](../emailing/introduction.md) of the application will be defined. |
-| `handlers/` | Empty directory where the [request handlers](../handlers-and-http/introduction.md) of the application will be defined. |
-| `migrations/` | Empty directory that will store the [migrations](../models-and-databases/migrations.md) that will be generated for the models of the application. |
-| `models/` | Empty directory where the [models](../models-and-databases/introduction.md) of the application will be defined. |
-| `schemas/` | Empty directory where the [schemas](../schemas/introduction.md) of the application will be defined. |
-| `templates/` | Empty directory where the [templates](../templates/introduction.md) of the application will be defined. |
-| `app.cr` | Definition of the application configuration abstraction; this is also where application-specific file requirements should be made. |
-| `cli.cr` | Requirements of CLI-related files, such as migrations for example. |
-| `routes.cr` | Module containing the [routes](../handlers-and-http/routing.md) of the application. |
+| `emails/` | Répertoire vide où les [emails](../emailing/introduction.md) de l'application seront définis. |
+| `handlers/` | Répertoire vide où les [handlers de requêtes](../handlers-and-http/introduction.md) de l'application seront définis. |
+| `migrations/` | Répertoire vide qui stockera les [migrations](../models-and-databases/migrations.md) qui seront générées pour les modèles de l'application. |
+| `models/` | Répertoire vide où les [modèles](../models-and-databases/introduction.md) de l'application seront définis. |
+| `schemas/` | Répertoire vide où les [schemas](../schemas/introduction.md) de l'application seront définis. |
+| `templates/` | Répertoire vide où les [templates](../templates/introduction.md) de l'application seront définis. |
+| `app.cr` | Définition de l'abstraction de configuration de l'application ; c'est également ici que les requirements de fichiers spécifiques à l'application doivent être faits. |
+| `cli.cr` | Requirements des fichiers liés au CLI, comme les migrations par exemple. |
+| `routes.cr` | Module contenant les [routes](../handlers-and-http/routing.md) de l'application. |
 
 :::tip
-The [`app`](./reference/generators.md#app) generator automatically ensures that:
+Le générateur [`app`](./reference/generators.md#app) s'assure automatiquement que :
 
-* The newly created application is added to the [`installed_apps`](./reference/settings.md#installed_apps) setting. 
-* Requirements for the application itself are added to the `src/project.cr` and `src/cli.cr` files.
-* The application's routes are included in the main routes map (which lives in the `config/routes.cr` file).
+* L'application nouvellement créée est ajoutée au paramètre [`installed_apps`](./reference/settings.md#installed_apps). 
+* Les requirements pour l'application elle-même sont ajoutés aux fichiers `src/project.cr` et `src/cli.cr`.
+* Les routes de l'application sont incluses dans la carte de routes principale (qui se trouve dans le fichier `config/routes.cr`).
 :::
 
-The most important file of an application is the `app.cr` one. This file usually includes all the app requirements and defines the application configuration class itself, which must be a subclass of the [`Marten::App`](pathname:///api/dev/Marten/App.html) abstract class. This class allows mainly to define the "label" identifier of the application (through the use of the [`#label`](pathname:///api/dev/Marten/Apps/Config.html#label(label%3AString|Symbol)-class-method) class method): this identifier must be unique across all the installed applications of a project and is used to generate things like model table names or migration classes.
+Le fichier le plus important d'une application est le fichier `app.cr`. Ce fichier inclut généralement tous les requirements de l'app et définit la classe de configuration de l'application elle-même, qui doit être une sous-classe de la classe abstraite [`Marten::App`](pathname:///api/dev/Marten/App.html). Cette classe permet principalement de définir l'identifiant "label" de l'application (via la méthode de classe [`#label`](pathname:///api/dev/Marten/Apps/Config.html#label(label%3AString|Symbol)-class-method)) : cet identifiant doit être unique parmi toutes les applications installées d'un projet et est utilisé pour générer des choses comme les noms de tables de modèles ou les classes de migration.
 
-Here is an example `app.cr` file content for a hypothetic "blog" app:
+Voici un exemple de contenu du fichier `app.cr` pour une application hypothétique "blog" :
 
 ```crystal
 require "./emails/**"
@@ -121,23 +121,23 @@ end
 ```
 
 :::info
-_Where_ the `app.cr` file is located is important: the directory where this file is defined is also the directory where key folders like `models`, `migrations`, `templates`, etc, must be present. This is necessary to ensure that these files and abstractions are associated with the considered app.
+L'emplacement du fichier `app.cr` est important : le répertoire où ce fichier est défini est également le répertoire où les dossiers clés comme `models`, `migrations`, `templates`, etc., doivent être présents. Cela est nécessaire pour s'assurer que ces fichiers et abstractions sont associés à l'app considérée.
 :::
 
-Another very important file is the `cli.cr` one: this file is there to define all the CLI-related requirements and will usually be required directly by your project's `manage.cr` file. _A minima_ the `cli.cr` file should require model migrations, but it could also require the management commands provided by the application. For example:
+Un autre fichier très important est le fichier `cli.cr` : ce fichier est là pour définir tous les requirements liés au CLI et sera généralement requis directement par le fichier `manage.cr` de votre projet. _A minima_ le fichier `cli.cr` devrait requérir les migrations de modèles, mais il pourrait aussi requérir les commandes de gestion fournies par l'application. Par exemple :
 
 ```crystal
 require "./cli/**"
 require "./migrations/**"
 ```
 
-### Defining settings for applications
+### Définir des paramètres pour les applications
 
-Applications that you create as part of your projects or third-party libraries can have their own associated settings, configurable through the use of regular [settings files](./settings.md).
+Les applications que vous créez dans le cadre de vos projets ou de bibliothèques tierces peuvent avoir leurs propres paramètres associés, configurables via l'utilisation de [fichiers de paramètres](./settings.md) classiques.
 
-In order to define settings for your applications, the simplest way is to create a `settings.cr` file containing a subclass of [`Marten::Conf::Settings`](pathname:///api/dev/Marten/Conf/Settings.html) in your application's folder. This subclass must make use of the [`#namespace`](pathname:///api/dev/Marten/Conf/Settings.html#namespace(ns)-macro) macro in order to define the setting "namespace" under which your application's settings will be accessible.
+Pour définir des paramètres pour vos applications, la manière la plus simple est de créer un fichier `settings.cr` contenant une sous-classe de [`Marten::Conf::Settings`](pathname:///api/dev/Marten/Conf/Settings.html) dans le dossier de votre application. Cette sous-classe doit utiliser la macro [`#namespace`](pathname:///api/dev/Marten/Conf/Settings.html#namespace(ns)-macro) afin de définir le "namespace" du paramètre sous lequel les paramètres de votre application seront accessibles.
 
-For example:
+Par exemple :
 
 ```crystal
 module Blog
@@ -152,7 +152,7 @@ module Blog
 end
 ```
 
-With the above example, it will be possible to configure the `blog.my_setting` setting as follows in a project's settings file:
+Avec l'exemple ci-dessus, il sera possible de configurer le paramètre `blog.my_setting` comme suit dans un fichier de paramètres du projet :
 
 ```crystal
 Marten.configure do |config|
@@ -160,6 +160,6 @@ Marten.configure do |config|
 end
 ```
 
-As you can see, the application's settings are configurable like any other built-in settings, but they are namespaced to the namespace value that was defined in the `Blog::Settings` class through the use of the [`#namespace`](pathname:///api/dev/Marten/Conf/Settings.html#namespace(ns)-macro) macro.
+Comme vous pouvez le voir, les paramètres de l'application sont configurables comme n'importe quel autre paramètre intégré, mais ils sont namespacés à la valeur de namespace qui a été définie dans la classe `Blog::Settings` via la macro [`#namespace`](pathname:///api/dev/Marten/Conf/Settings.html#namespace(ns)-macro).
 
-It's important to note that [`Marten::Conf::Settings`](pathname:///api/dev/Marten/Conf/Settings.html) subclasses have the flexibility to define any necessary methods to facilitate user configuration for the considered application. While basic settings typically necessitate only getters and setters for configuration, more intricate scenarios may demand additional methods, the utilization of blocks, or other complexities.
+Il est important de noter que les sous-classes de [`Marten::Conf::Settings`](pathname:///api/dev/Marten/Conf/Settings.html) ont la flexibilité de définir toutes les méthodes nécessaires pour faciliter la configuration utilisateur pour l'application considérée. Alors que les paramètres basiques ne nécessitent généralement que des getters et setters pour la configuration, des scénarios plus complexes peuvent demander des méthodes supplémentaires, l'utilisation de blocs, ou d'autres complexités.

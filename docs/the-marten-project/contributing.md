@@ -1,70 +1,70 @@
 ---
-title: Contributing to the Marten project
-description: Learn how you can start contributing to the Marten project.
-sidebar_label: Contributing
+title: Contribuer au projet Marten
+description: Découvrez comment commencer à contribuer au projet Marten.
+sidebar_label: Contribuer
 ---
 
-Marten is a big project that will keep evolving over time. If you want to, there are many ways to get involved!
+Marten est un grand projet qui continuera d'évoluer au fil du temps. Si vous le souhaitez, il existe de nombreuses façons de vous impliquer !
 
-## First things first...
+## Avant toute chose...
 
-The Marten project adheres to the [Contributor Covenant Code of Conduct](https://github.com/martenframework/marten/blob/main/CODE_OF_CONDUCT.md). Everyone contributing to the Marten project is expected to follow this code.
+Le projet Marten adhère au [Code de conduite Contributor Covenant](https://github.com/martenframework/marten/blob/main/CODE_OF_CONDUCT.md). Toute personne contribuant au projet Marten est tenue de respecter ce code.
 
-## Reporting issues
+## Signaler des problèmes
 
-You should use the [project's issue tracker](https://github.com/martenframework/marten/issues) that is hosted on GitHub if you've found a bug or if you want to propose a new feature.
+Vous devez utiliser le [système de suivi des problèmes du projet](https://github.com/martenframework/marten/issues) hébergé sur GitHub si vous avez trouvé un bug ou si vous souhaitez proposer une nouvelle fonctionnalité.
 
-### About bug reports
+### À propos des rapports de bugs
 
-If you've found a bug related to the Marten web framework **that is not a security issue**, then you should (i) search the [existing issues](https://github.com/martenframework/marten/issues) to verify that it hasn't been reported yet and (ii) [create a new issue](https://github.com/martenframework/marten/issues/new) if that's not the case. Don't forget to include as many details as possible in your tickets: an explanatory description of the issue at hand and how to reproduce it, snippets and/or tracebacks if this is appropriate, etc.
+Si vous avez trouvé un bug lié au framework web Marten **qui n'est pas un problème de sécurité**, alors vous devez (i) rechercher dans les [problèmes existants](https://github.com/martenframework/marten/issues) pour vérifier qu'il n'a pas déjà été signalé et (ii) [créer un nouveau problème](https://github.com/martenframework/marten/issues/new) si ce n'est pas le cas. N'oubliez pas d'inclure autant de détails que possible dans vos tickets : une description explicative du problème en question et comment le reproduire, des extraits de code et/ou des traces d'erreurs si cela est approprié, etc.
 
-### About security issues
+### À propos des problèmes de sécurité
 
-If you've found a security issue please **do not open a GitHub issue**. Instead, send an email to `security@martenframework.com`. We'll then investigate together to resolve the problem so we can make an announcement about a solution along with the vulnerability.
+Si vous avez trouvé un problème de sécurité, veuillez **ne pas ouvrir un problème GitHub**. Envoyez plutôt un email à `security@martenframework.com`. Nous examinerons alors ensemble le problème pour le résoudre afin de pouvoir faire une annonce concernant la solution en même temps que la vulnérabilité.
 
-## Contributing code
+## Contribuer du code
 
-The preferred way to contribute to the Marten framework is to submit pull requests to the project's [GitHub repository](https://github.com/martenframework/marten). If you don't know where to start and would like to start contributing code to the Marten framework, you can have a look at the [Good first issues](https://github.com/martenframework/marten/issues?q=is%3Aissue+is%3Aopen+label%3A%22Good+first+issue%22).
+La façon privilégiée de contribuer au framework Marten est de soumettre des pull requests vers le [dépôt GitHub](https://github.com/martenframework/marten) du projet. Si vous ne savez pas par où commencer et souhaitez commencer à contribuer du code au framework Marten, vous pouvez consulter les [Good first issues](https://github.com/martenframework/marten/issues?q=is%3Aissue+is%3Aopen+label%3A%22Good+first+issue%22).
 
-Below are provided some general tips regarding contributing code: development environments, running tests, etc.
+Vous trouverez ci-dessous quelques conseils généraux concernant la contribution de code : environnements de développement, exécution des tests, etc.
 
-### Development environment
+### Environnement de développement
 
 :::info
-The following steps assume that you have at least [git](https://git-scm.com/), [Crystal](https://crystal-lang.org/), and [Node.js](https://nodejs.org) installed on your system.
+Les étapes suivantes supposent que vous avez au moins [git](https://git-scm.com/), [Crystal](https://crystal-lang.org/) et [Node.js](https://nodejs.org) installés sur votre système.
 :::
 
-First, you should [fork](https://github.com/martenframework/marten/fork) the Marten git repository. Then you can get a local copy of the project using the following command:
+Tout d'abord, vous devez [forker](https://github.com/martenframework/marten/fork) le dépôt git de Marten. Ensuite, vous pouvez obtenir une copie locale du projet en utilisant la commande suivante :
 
 ```bash
 git clone git@github.com:<username>/marten.git
 ```
 
-Once this is done you should change into the `marten` repository and install the framework dependencies by running the following command:
+Une fois cela fait, vous devez vous placer dans le répertoire `marten` et installer les dépendances du framework en exécutant la commande suivante :
 
 ```bash
 make
 ```
 
-This will install a bunch of Crystal shards and some Node.js dependencies (which are required to work on the [Docusaurus](https://docusaurus.io/)-powered documentation).
+Cela installera un ensemble de shards Crystal et quelques dépendances Node.js (qui sont nécessaires pour travailler sur la documentation basée sur [Docusaurus](https://docusaurus.io/)).
 
-### Setting up a test project with Marten
+### Configurer un projet de test avec Marten
 
-This section dives into creating and configuring a test project using the Marten development environment. This allows you to experiment and develop features in isolation, ensuring everything works smoothly before committing changes to the main codebase.
+Cette section explique comment créer et configurer un projet de test en utilisant l'environnement de développement Marten. Cela vous permet d'expérimenter et de développer des fonctionnalités de manière isolée, en vous assurant que tout fonctionne correctement avant de valider des modifications dans la base de code principale.
 
-#### Creating a new test project
+#### Créer un nouveau projet de test
 
-Start by creating a new test project using the Marten CLI tool:
+Commencez par créer un nouveau projet de test en utilisant l'outil CLI de Marten :
 
 ```bash
 ./path/to/development/marten new project test-project [options]
 ```
 
-Replace `test-project` with your desired project name. After installation change to the project directory.
+Remplacez `test-project` par le nom de projet souhaité. Après l'installation, placez-vous dans le répertoire du projet.
 
-#### Configuring the Test Environment
+#### Configurer l'environnement de test
 
-To use the development marten project instead of the one provided by `shard.yml`, you need to create a `shard.override.yml`.
+Pour utiliser le projet Marten de développement au lieu de celui fourni par `shard.yml`, vous devez créer un fichier `shard.override.yml`.
 
 ```yaml
 name: test-project
@@ -75,13 +75,13 @@ dependencies:
     path: /path/to/development/marten
 ```
 
-Run `shards install`. Now, your test project is configured to use your local Marten development environment.
+Exécutez `shards install`. Votre projet de test est maintenant configuré pour utiliser votre environnement de développement Marten local.
 
-### Coding style
+### Style de code
 
-Overall, Marten tries to comply with Crystal's [style guide](https://crystal-lang.org/reference/conventions/coding_style.html) and you should ensure that your changes comply with it as well if you are contributing code to the project.
+De manière générale, Marten essaie de se conformer au [guide de style](https://crystal-lang.org/reference/conventions/coding_style.html) de Crystal et vous devez vous assurer que vos modifications s'y conforment également si vous contribuez du code au projet.
 
-In addition to that, Marten's codebase is checked using [ameba](https://github.com/crystal-ameba/ameba) and via the standard [`crystal tool format`](https://crystal-lang.org/reference/man/crystal/index.html#crystal-tool-format) command. Every pull request opened on [Marten's GitHub repository](https://github.com/martenframework/marten) will be checked using these tools automatically. If needed, you can verify that these checks are passing locally by running the following commands:
+En plus de cela, la base de code de Marten est vérifiée à l'aide d'[ameba](https://github.com/crystal-ameba/ameba) et via la commande standard [`crystal tool format`](https://crystal-lang.org/reference/man/crystal/index.html#crystal-tool-format). Chaque pull request ouverte sur le [dépôt GitHub de Marten](https://github.com/martenframework/marten) sera automatiquement vérifiée à l'aide de ces outils. Si nécessaire, vous pouvez vérifier que ces contrôles passent localement en exécutant les commandes suivantes :
 
 ```bash
 make qa            # Run both ameba and the Crystal formatting checks
@@ -89,7 +89,7 @@ make lint          # Run ameba checks only
 make format_checks # Run Crystal formatting checks only
 ```
 
-Additionally, you can also apply Crystal's default formatting to the codebase by running:
+De plus, vous pouvez également appliquer le formatage par défaut de Crystal à la base de code en exécutant :
 
 ```bash
 make format
@@ -97,15 +97,15 @@ make format
 
 ### Tests
 
-You should not submit pull requests without providing tests. Marten uses the standard [spec module](https://crystal-lang.org/reference/guides/testing.html) and comes with an extensive spec suite.
+Vous ne devez pas soumettre de pull requests sans fournir de tests. Marten utilise le module standard [spec](https://crystal-lang.org/reference/guides/testing.html) et dispose d'une suite de tests étendue.
 
-Specs must be defined in the `spec` folder, at the root of the project's repository. You can run the whole spec suite by using the following command (which is equivalent to running `crystal spec`):
+Les specs doivent être définies dans le dossier `spec`, à la racine du dépôt du projet. Vous pouvez exécuter l'ensemble de la suite de tests en utilisant la commande suivante (qui est équivalente à exécuter `crystal spec`) :
 
 ```bash
 make tests
 ```
 
-By default, specs will be executed using an in-memory SQLite database. If you wish to, you can configure additional databases by updating the `.spec.env.json` file that should've been automatically generated by the `make` command earlier (cf. [Development environment](#development-environment)). This file defines a bunch of "environment" setting values that are automatically leveraged to configure the test project that is used when running specs. It looks something like this:
+Par défaut, les specs seront exécutées en utilisant une base de données SQLite en mémoire. Si vous le souhaitez, vous pouvez configurer des bases de données supplémentaires en mettant à jour le fichier `.spec.env.json` qui devrait avoir été automatiquement généré par la commande `make` précédente (cf. [Environnement de développement](#environnement-de-développement)). Ce fichier définit un ensemble de valeurs de paramètres "d'environnement" qui sont automatiquement utilisées pour configurer le projet de test utilisé lors de l'exécution des specs. Il ressemble à ceci :
 
 ```json title=.spec.env.json
 {
@@ -127,9 +127,9 @@ By default, specs will be executed using an in-memory SQLite database. If you wi
 }
 ```
 
-As you can see, you have to specify two databases for each database backend (MariaDB, MySQL, and PostgreSQL). This is mandatory because Marten's specs are also testing cases where multiple databases are configured and used simultaneously for the same project.
+Comme vous pouvez le voir, vous devez spécifier deux bases de données pour chaque backend de base de données (MariaDB, MySQL et PostgreSQL). Cela est obligatoire car les specs de Marten testent également les cas où plusieurs bases de données sont configurées et utilisées simultanément pour le même projet.
 
-Specs are always executed using a _single_ database backend. As mentioned previously this database backend is the SQLite one by default, but you can specify the one to use when running specs by setting the `MARTEN_SPEC_DB_CONNECTION` environment variable. For example:
+Les specs sont toujours exécutées en utilisant un _seul_ backend de base de données. Comme mentionné précédemment, ce backend est celui de SQLite par défaut, mais vous pouvez spécifier celui à utiliser lors de l'exécution des specs en définissant la variable d'environnement `MARTEN_SPEC_DB_CONNECTION`. Par exemple :
 
 ```bash
 MARTEN_SPEC_DB_CONNECTION=mariadb make tests    # Will run specs using the MariaDB DB backend
@@ -139,12 +139,12 @@ MARTEN_SPEC_DB_CONNECTION=postgresql make tests # Will run specs using the Postg
 
 ### Documentation
 
-Marten's documentation is written using Markdown. It is powered by [Docusaurus](https://docusaurus.io/) and lives under the `docs` folder.
+La documentation de Marten est rédigée en Markdown. Elle est alimentée par [Docusaurus](https://docusaurus.io/) et se trouve dans le dossier `docs`.
 
-To run the documentation live server locally, you can change into `docs` and make use of the following command:
+Pour lancer le serveur de documentation en local, vous pouvez vous placer dans `docs` et utiliser la commande suivante :
 
 ```bash
 npm run start
 ```
 
-This will start the Docusaurus server at [http://localhost:3000/docs/](http://localhost:3000/docs/) and you will be able to easily see and test the changes you are making to the documentation source files.
+Cela démarrera le serveur Docusaurus à l'adresse [http://localhost:3000/docs/](http://localhost:3000/docs/) et vous pourrez facilement voir et tester les modifications que vous apportez aux fichiers sources de la documentation.

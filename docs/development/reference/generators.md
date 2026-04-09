@@ -1,114 +1,114 @@
 ---
-title: Generators
-description: Generators reference.
+title: Générateurs
+description: Référence des générateurs.
 toc_max_heading_level: 2
 ---
 
-This page provides a reference for all the available generators and their options.
+Cette page fournit une référence pour tous les générateurs disponibles et leurs options.
 
 ## `app`
 
-**Usage:** `marten gen app [options] [label]`
+**Utilisation :** `marten gen app [options] [label]`
 
-Add and configure a new [application](../applications.md) to the current project.
+Ajoute et configure une nouvelle [application](../applications.md) au projet actuel.
 
 :::info
-This generator will attempt to add the generated application to the [`installed_apps`](./settings.md#installed_apps) setting and will also configure Crystal requirements for it (in the `src/project.cr` and `src/cli.cr` files).
+Ce générateur tentera d'ajouter l'application générée au paramètre [`installed_apps`](./settings.md#installed_apps) et configurera également les requires Crystal pour celle-ci (dans les fichiers `src/project.cr` et `src/cli.cr`).
 :::
 
 ### Arguments
 
-* `label` - Label of the application to generate
+* `label` - Label de l'application à générer
 
-### Examples
+### Exemples
 
 ```bash
-marten gen app blogging # Generate a new 'blogging' application
+marten gen app blogging # Générer une nouvelle application 'blogging'
 ```
 
 ## `auth`
 
-**Usage:** `marten gen auth [options] [label]`
+**Utilisation :** `marten gen auth [options] [label]`
 
-Generate and configure a fully functional authentication application for your project. Please refer to [Authentication](../../authentication.mdx) to learn more about authentication in Marten, and to [Generated files](../../authentication/reference/generated-files.md) to see a list of the files generated for the authentication app specifically.
+Génère et configure une application d'authentification entièrement fonctionnelle pour votre projet. Veuillez consulter [Authentification](../../authentication.mdx) pour en savoir plus sur l'authentification dans Marten, et [Fichiers générés](../../authentication/reference/generated-files.md) pour voir la liste des fichiers générés spécifiquement pour l'application d'authentification.
 
 :::info
-This generator will attempt to add the generated application to the [`installed_apps`](./settings.md#installed_apps) setting and will also configure Crystal requirements for it (in the `src/project.cr` and `src/cli.cr` files). It will also add authentication-related settings to your base settings file and will add the [`marten-auth`](https://github.com/martenframework/marten-auth) shard to your project's `shard.yml`.
+Ce générateur tentera d'ajouter l'application générée au paramètre [`installed_apps`](./settings.md#installed_apps) et configurera également les requires Crystal pour celle-ci (dans les fichiers `src/project.cr` et `src/cli.cr`). Il ajoutera également les paramètres liés à l'authentification à votre fichier de paramètres de base et ajoutera le shard [`marten-auth`](https://github.com/martenframework/marten-auth) au `shard.yml` de votre projet.
 :::
 
 ### Arguments
 
-* `label` - Label of the authentication application to generate (default to "auth")
+* `label` - Label de l'application d'authentification à générer (par défaut "auth")
 
-### Examples
+### Exemples
 
 ```bash
-marten gen auth         # Generate a new authentication app with the 'auth' label
-marten gen auth my_auth # Generate a new authentication app with the 'my_auth' label
+marten gen auth         # Générer une nouvelle application d'authentification avec le label 'auth'
+marten gen auth my_auth # Générer une nouvelle application d'authentification avec le label 'my_auth'
 ```
 
 ## `email`
 
-**Usage:** `marten gen email [options] [name]`
+**Utilisation :** `marten gen email [options] [name]`
 
-Generate an email. Please refer to [Emailing](../../emailing.mdx) to learn more about emailing in Marten.
+Génère un email. Veuillez consulter [Emailing](../../emailing.mdx) pour en savoir plus sur l'envoi d'emails dans Marten.
 
 ### Options
 
-* `--app=APP` - Target app where the email should be created (default to the [main app](../applications.md#the-main-application))
-* `--parent=PARENT` - Parent class name for the generated email
+* `--app=APP` - Application cible où l'email doit être créé (par défaut l'[application principale](../applications.md#lapplication-principale))
+* `--parent=PARENT` - Nom de la classe parente pour l'email généré
 
 ### Arguments
 
-* `name` - Name of the email to generate (must be CamelCase)
+* `name` - Nom de l'email à générer (doit être en CamelCase)
 
-### Examples
+### Exemples
 
 ```bash
-marten gen email TestEmail            # Generate a new TestEmail email in the main application
-marten gen email TestEmail --app blog # Generate a new TestEmail email in the blog application
+marten gen email TestEmail            # Générer un nouvel email TestEmail dans l'application principale
+marten gen email TestEmail --app blog # Générer un nouvel email TestEmail dans l'application blog
 ```
 
 ## `handler`
 
-Generate a handler. Please refer to [Handlers](../../handlers-and-http/introduction.md) to learn more about handlers.
+Génère un handler. Veuillez consulter [Handlers](../../handlers-and-http/introduction.md) pour en savoir plus sur les handlers.
 
 ### Options
 
-* `--app=APP` - Target app where the handler should be created (default to the [main app](../applications.md#the-main-application))
-* `--parent=PARENT` - Parent class name for the generated handler
+* `--app=APP` - Application cible où le handler doit être créé (par défaut l'[application principale](../applications.md#lapplication-principale))
+* `--parent=PARENT` - Nom de la classe parente pour le handler généré
 
 ### Arguments
 
-* `name` - Name of the handler to generate (must be CamelCase)
+* `name` - Nom du handler à générer (doit être en CamelCase)
 
-### Examples
+### Exemples
 
 ```bash
-marten gen handler TestHandler            # Generate a new TestHandler handler in the main application
-marten gen handler TestHandler --app blog # Generate a new TestHandler handler in the blog application
+marten gen handler TestHandler            # Générer un nouveau handler TestHandler dans l'application principale
+marten gen handler TestHandler --app blog # Générer un nouveau handler TestHandler dans l'application blog
 ```
 
 ## `model`
 
-Generate a model. Please refer to [Models](../../models-and-databases/introduction.md) to learn more about models.
+Génère un modèle. Veuillez consulter [Modèles](../../models-and-databases/introduction.md) pour en savoir plus sur les modèles.
 
 ### Options
 
-* `--app=APP` - Target app where model handler should be created (default to the [main app](../applications.md#the-main-application))
-* `--parent=PARENT` - Parent class name for the generated model
-* `--no-timestamps` - Do not include timestamp fields in the generated model
+* `--app=APP` - Application cible où le modèle doit être créé (par défaut l'[application principale](../applications.md#lapplication-principale))
+* `--parent=PARENT` - Nom de la classe parente pour le modèle généré
+* `--no-timestamps` - Ne pas inclure les champs timestamp dans le modèle généré
 
 ### Arguments
 
-* `name` - Name of the model to generate (must be CamelCase)
-* `field_definitions` - Field definitions of the model to generate
+* `name` - Nom du modèle à générer (doit être en CamelCase)
+* `field_definitions` - Définitions des champs du modèle à générer
 
-### Details
+### Détails
 
-This generator can generate a model with the specified name and field definitions. The model is generated in the app specified by the `--app` option or in the [main app](../applications.md#the-main-application) if no app is specified.
+Ce générateur peut générer un modèle avec le nom et les définitions de champs spécifiés. Le modèle est généré dans l'application spécifiée par l'option `--app` ou dans l'[application principale](../applications.md#lapplication-principale) si aucune application n'est spécifiée.
 
-Field definitions can be specified using the following formats:
+Les définitions de champs peuvent être spécifiées en utilisant les formats suivants :
 
 ```
 name:type
@@ -116,78 +116,78 @@ name:type{qualifier}
 name:type:modifier:modifier
 ```
 
-Where `name` is the name of the field and `type` is the type of the field.
+Où `name` est le nom du champ et `type` est le type du champ.
 
-`qualifier` can be required depending on the considered field type; when this is the case, it corresponds to a mandatory field option. For example, `label:string{128}` will produce a [string field](../../models-and-databases/reference/fields.md#string) whose `max_size` option is set to `128`. Another example: `author:many_to_one{User}` will produce a [many-to-one field](../../models-and-databases/reference/fields.md#many_to_one) whose `to` option is set to target the `User` model.
+`qualifier` peut être requis selon le type de champ considéré ; lorsque c'est le cas, il correspond à une option de champ obligatoire. Par exemple, `label:string{128}` produira un [champ string](../../models-and-databases/reference/fields.md#string) dont l'option `max_size` est définie sur `128`. Autre exemple : `author:many_to_one{User}` produira un [champ many-to-one](../../models-and-databases/reference/fields.md#many_to_one) dont l'option `to` est définie pour cibler le modèle `User`.
 
-`modifier` is an optional field modifier. Field modifiers are used to specify additional (but non-mandatory) field options. For example: `name:string:uniq` will produce a [string field](../../models-and-databases/reference/fields.md#string) whose `unique` option is set to `true`. Another example: `name:string:uniq:index` will produce a [string field](../../models-and-databases/reference/fields.md#string) whose `unique` and `index` options are set to `true`.
+`modifier` est un modificateur de champ optionnel. Les modificateurs de champ sont utilisés pour spécifier des options de champ supplémentaires (mais non obligatoires). Par exemple : `name:string:uniq` produira un [champ string](../../models-and-databases/reference/fields.md#string) dont l'option `unique` est définie sur `true`. Autre exemple : `name:string:uniq:index` produira un [champ string](../../models-and-databases/reference/fields.md#string) dont les options `unique` et `index` sont définies sur `true`.
 
-### Examples
+### Exemples
 
 ```bash
-# Generate a model in the main app:
+# Générer un modèle dans l'application principale :
 marten gen model User name:string email:string
 
-# Generate a model in the admin app:
+# Générer un modèle dans l'application admin :
 marten gen model User name:string email:string --app admin
 
-# Generate a model with a many-to-one reference:
+# Générer un modèle avec une référence many-to-one :
 marten gen model Article label:string body:text author:many_to_one{User}
 
-# Generate a model with a parent class:
+# Générer un modèle avec une classe parente :
 marten gen model Admin::User name:string email:string --parent User
 
-# Generate a model without timestamps:
+# Générer un modèle sans timestamps :
 marten gen model User name:string email:string --no-timestamps
 ```
 
 ## `schema`
 
-Generate a schema. Please refer to [Schemas](../../schemas/introduction.md) to learn more about schemas.
+Génère un schema. Veuillez consulter [Schemas](../../schemas/introduction.md) pour en savoir plus sur les schemas.
 
 ### Options
 
-* `--app=APP` - Target app where schema should be created (default to the [main app](../applications.md#the-main-application))
-* `--parent=PARENT` - Parent class name for the generated schema
+* `--app=APP` - Application cible où le schema doit être créé (par défaut l'[application principale](../applications.md#lapplication-principale))
+* `--parent=PARENT` - Nom de la classe parente pour le schema généré
 
 ### Arguments
 
-* `name` - Name of the schema to generate (must be CamelCase)
-* `field_definitions` - Field definitions of the schema to generate
+* `name` - Nom du schema à générer (doit être en CamelCase)
+* `field_definitions` - Définitions des champs du schema à générer
 
-### Details
+### Détails
 
-This generator can generate a schema with the specified name and field definitions. The schema is generated in the app specified by the `--app` option or in the [main app](../applications.md#the-main-application) if no app is specified.
+Ce générateur peut générer un schema avec le nom et les définitions de champs spécifiés. Le schema est généré dans l'application spécifiée par l'option `--app` ou dans l'[application principale](../applications.md#lapplication-principale) si aucune application n'est spécifiée.
 
-Field definitions can be specified using the following formats:
+Les définitions de champs peuvent être spécifiées en utilisant les formats suivants :
 
 ```
 name:type
 name:type:modifier:modifier
 ```
 
-Where `name` is the name of the field and `type` is the type of the field.
+Où `name` est le nom du champ et `type` est le type du champ.
 
-`modifier` is an optional field modifier. Field modifiers are used to specify additional (but non-mandatory) field options. For example: `name:string:optional` will produce a [string field](../../schemas/reference/fields.md#string) whose `required` option is set to `false`.
+`modifier` est un modificateur de champ optionnel. Les modificateurs de champ sont utilisés pour spécifier des options de champ supplémentaires (mais non obligatoires). Par exemple : `name:string:optional` produira un [champ string](../../schemas/reference/fields.md#string) dont l'option `required` est définie sur `false`.
 
-### Examples
+### Exemples
 
 ```bash
-# Generate a schema in the main app:
+# Générer un schema dans l'application principale :
 marten gen schema ArticleSchema title:string body:string
 
-# Generate a schema in the blog app:
+# Générer un schema dans l'application blog :
 marten gen schema ArticleSchema title:string body:string --app admin
 
-# Generate a schema with a parent class:
+# Générer un schema avec une classe parente :
 marten gen schema ArticleSchema title:string body:string --parent BaseSchema
 ```
 
 ## `secretkey`
 
-Generate a new secret key value that can be used in the [`secret_key`](./settings.md#secret_key) setting.
+Génère une nouvelle valeur de clé secrète qui peut être utilisée dans le paramètre [`secret_key`](./settings.md#secret_key).
 
-### Examples
+### Exemples
 
 ```bash
 marten gen secretkey

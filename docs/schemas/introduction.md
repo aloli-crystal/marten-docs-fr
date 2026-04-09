@@ -1,18 +1,18 @@
 ---
-title: Introduction to schemas
-description: Learn how to define schemas and use them in handlers.
+title: Introduction aux schemas
+description: Apprenez à définir des schemas et à les utiliser dans les handlers.
 sidebar_label: Introduction
 ---
 
-Schemas are classes that define how input data should be serialized/deserialized, and validated. Schemas are usually used when processing web requests containing form data or pre-defined payloads.
+Les schemas sont des classes qui définissent comment les données d'entrée doivent être sérialisées/désérialisées et validées. Les schemas sont généralement utilisés lors du traitement de requêtes web contenant des données de formulaire ou des charges utiles prédéfinies.
 
-## Basic schema definition and usage
+## Définition et utilisation de base des schemas
 
-### The schema class
+### La classe schema
 
-A schema class describes an _expected_ set of data. It describes the logical structure of this data, what are its expected characteristics, and what are the rules to use in order to identify whether it is valid or not. Schemas classes must inherit from the [`Marten::Schema`](pathname:///api/dev/Marten/Schema.html) base class and they must define "fields" through the use of a `field` macro. These fields allow to define what data is expected by the schema, and how it is validated.
+Une classe schema décrit un ensemble _attendu_ de données. Elle décrit la structure logique de ces données, quelles sont les caractéristiques attendues, et quelles sont les règles à utiliser pour déterminer si elles sont valides ou non. Les classes schema doivent hériter de la classe de base [`Marten::Schema`](pathname:///api/dev/Marten/Schema.html) et doivent définir des « champs » via l'utilisation d'une macro `field`. Ces champs permettent de définir quelles données sont attendues par le schema, et comment elles sont validées.
 
-For example, the following snippet defines a simple `ArticleSchema` schema:
+Par exemple, le fragment suivant définit un simple schema `ArticleSchema` :
 
 ```crystal
 class ArticleSchema < Marten::Schema
@@ -22,19 +22,19 @@ class ArticleSchema < Marten::Schema
 end
 ```
 
-In the above example, `title`, `content`, and `published_at` are fields of the `ArticleSchema` schema. This schema is very simple, but it already defines a set of validation rules that could be used to validate any data set the schema is applied to:
+Dans l'exemple ci-dessus, `title`, `content` et `published_at` sont des champs du schema `ArticleSchema`. Ce schema est très simple, mais il définit déjà un ensemble de règles de validation qui pourraient être utilisées pour valider tout jeu de données auquel le schema est appliqué :
 
-* the `title` field is required, it must be a string that do not exceed 128 characters
-* the `content` field is required and must be a string as well
-* the `published_at` field is a date time that is _not_ required
+* le champ `title` est obligatoire, il doit être une chaîne de caractères ne dépassant pas 128 caractères
+* le champ `content` est obligatoire et doit également être une chaîne de caractères
+* le champ `published_at` est une date/heure qui n'est _pas_ obligatoire
 
-### Using schemas
+### Utiliser les schemas
 
-Schemas can theoretically be used to process any kind of data, including a request's data. This makes them ideal when it comes to processing form inputs data or JSON payloads for example.
+Les schemas peuvent théoriquement être utilisés pour traiter tout type de données, y compris les données d'une requête. Cela les rend idéaux pour le traitement des données de formulaires ou des charges utiles JSON par exemple.
 
-When used as part of [handlers](../handlers-and-http/introduction.md), and especially when processing HTML forms, schemas will usually be initialized and used to render a form when `GET` requests are submitted to the considered handler. Processing the actual form data will usually be done in the same handler when `POST` requests are submitted.
+Lorsqu'ils sont utilisés dans le cadre de [handlers](../handlers-and-http/introduction.md), et en particulier lors du traitement de formulaires HTML, les schemas seront généralement initialisés et utilisés pour rendre un formulaire lorsque des requêtes `GET` sont soumises au handler considéré. Le traitement des données réelles du formulaire sera généralement effectué dans le même handler lorsque des requêtes `POST` sont soumises.
 
-For example, the handler in the following snippets displays a schema when a `GET` request is processed, and it validates the incoming data using the schema when the request is a `POST`:
+Par exemple, le handler dans les fragments suivants affiche un schema lorsqu'une requête `GET` est traitée, et valide les données entrantes en utilisant le schema lorsque la requête est un `POST` :
 
 ```crystal
 class ArticleCreateHandler < Marten::Handler
@@ -61,17 +61,17 @@ class ArticleCreateHandler < Marten::Handler
 end
 ```
 
-Let's break it down a bit more:
+Détaillons un peu plus :
 
-* when the incoming request is a `GET`, the handler will simply render the `article_create.html` template, and initialize the schema (instance of `ArticleSchema`) with any data currently present in the request object (which is returned by the `#request` method). This schema object is made available to the template context
-* when the incoming request is a `POST`, it will initialize the schema and try to see if it is valid considering the incoming data (using the [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) method). If it's valid, then a new `Article` record will be created using the schema's validated data ([`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method)), and the user will be redirect to a home page. Otherwise, the `article_create.html` template will be rendered again with the invalid schema in the associated context
+* lorsque la requête entrante est un `GET`, le handler rendra simplement le template `article_create.html`, et initialisera le schema (instance de `ArticleSchema`) avec les données actuellement présentes dans l'objet requête (retourné par la méthode `#request`). Cet objet schema est rendu disponible dans le contexte du template
+* lorsque la requête entrante est un `POST`, il initialisera le schema et essaiera de voir s'il est valide compte tenu des données entrantes (en utilisant la méthode [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method)). S'il est valide, alors un nouvel enregistrement `Article` sera créé en utilisant les données validées du schema ([`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method)), et l'utilisateur sera redirigé vers une page d'accueil. Sinon, le template `article_create.html` sera rendu à nouveau avec le schema invalide dans le contexte associé
 
 
 :::tip
-Some [generic handlers](../handlers-and-http/generic-handlers.md) allow to conveniently process schemas in handlers. This is the case for the [`Marten::Handlers::Schema`](../handlers-and-http/reference/generic-handlers.md#processing-a-schema), the [`Marten::Handlers::RecordCreate`](../handlers-and-http/reference/generic-handlers.md#creating-a-record), and the [`Marten::Handlers::RecordUpdate`](../handlers-and-http/reference/generic-handlers.md#updating-a-record) generic handlers for example.
+Certains [handlers génériques](../handlers-and-http/generic-handlers.md) permettent de traiter commodément les schemas dans les handlers. C'est le cas des handlers génériques [`Marten::Handlers::Schema`](../handlers-and-http/reference/generic-handlers.md#processing-a-schema), [`Marten::Handlers::RecordCreate`](../handlers-and-http/reference/generic-handlers.md#creating-a-record) et [`Marten::Handlers::RecordUpdate`](../handlers-and-http/reference/generic-handlers.md#updating-a-record) par exemple.
 :::
 
-Note that schemas can be used for other things than processing form data. For example, they can also be used to process JSON payloads as part of API endpoints:
+Notez que les schemas peuvent être utilisés pour d'autres choses que le traitement de données de formulaire. Par exemple, ils peuvent aussi être utilisés pour traiter des charges utiles JSON dans le cadre de points d'accès API :
 
 ```crystal
 class API::ArticleCreateHandler < Marten::Handler
@@ -93,14 +93,14 @@ end
 ```
 
 :::info
-The `#data` method of an HTTP request object returns a hash-like object containing the request data: this object is automatically initialized from any form data or JSON data contained in the request body.
+La méthode `#data` d'un objet de requête HTTP retourne un objet de type hash contenant les données de la requête : cet objet est automatiquement initialisé à partir de toute donnée de formulaire ou donnée JSON contenue dans le corps de la requête.
 :::
 
-### Rendering schemas as forms
+### Rendu des schemas sous forme de formulaires
 
-It should be noted that templates can easily interact with schema objects in order to introspect them and render a corresponding HTML form.
+Il est à noter que les templates peuvent facilement interagir avec les objets schema afin de les introspecter et de rendre un formulaire HTML correspondant.
 
-In the previous example, the schema could be used as follows to render an equivalent form in the `article_create.html` template:
+Dans l'exemple précédent, le schema pourrait être utilisé comme suit pour rendre un formulaire équivalent dans le template `article_create.html` :
 
 ```html
 <form method="post" action="" novalidate>
@@ -138,19 +138,19 @@ In the previous example, the schema could be used as follows to render an equiva
 </form>
 ```
 
-The provided code also demonstrates how to efficiently handle errors within your templates. Here's a breakdown of the main guidelines to follow when dealing with schema errors in templates:
+Le code fourni démontre également comment gérer efficacement les erreurs dans vos templates. Voici un résumé des principales directives à suivre lors de la gestion des erreurs de schema dans les templates :
 
-* Begin by checking for any `schema.errors.global` errors.
-  These are form-wide issues, and displaying them prominently alerts the user to broader problems with their input.
-* If `schema.field_name.errored?` returns true, it signals errors within that particular input field.
-* Display each individual `schema.field_name.errors` message directly below the associated input field.
-  This provides the user with clear guidance on how to correct specific validation issues.
+* Commencez par vérifier les erreurs `schema.errors.global`.
+  Ce sont des problèmes à l'échelle du formulaire, et les afficher de manière visible alerte l'utilisateur sur des problèmes plus larges avec sa saisie.
+* Si `schema.field_name.errored?` retourne true, cela signale des erreurs dans ce champ de saisie particulier.
+* Affichez chaque message `schema.field_name.errors` individuel directement sous le champ de saisie associé.
+  Cela fournit à l'utilisateur des indications claires sur la manière de corriger des problèmes de validation spécifiques.
 
-## Schema fields
+## Champs de schema
 
-Schema classes must define _fields_. Fields allow to specify the expected attributes of a schema and they indicate how to validate incoming data sets. They are defined through the use of the `field` macro.
+Les classes schema doivent définir des _champs_. Les champs permettent de spécifier les attributs attendus d'un schema et indiquent comment valider les données entrantes. Ils sont définis via l'utilisation de la macro `field`.
 
-For example:
+Par exemple :
 
 ```crystal
 class ArticleSchema < Marten::Schema
@@ -160,39 +160,39 @@ class ArticleSchema < Marten::Schema
 end
 ```
 
-### Field ID and field type
+### Identifiant et type de champ
 
-Pretty much like model fields, every field in a schema class must contain two mandatory positional arguments: a field identifier and a field type.
+Tout comme les champs de modèle, chaque champ dans une classe schema doit contenir deux arguments positionnels obligatoires : un identifiant de champ et un type de champ.
 
-The field identifier is used by Marten to determine the name of the corresponding key in any data set objects that should be validated by the schema.
+L'identifiant de champ est utilisé par Marten pour déterminer le nom de la clé correspondante dans tout objet de jeu de données qui doit être validé par le schema.
 
-The field type determines a few other things:
+Le type de champ détermine plusieurs choses :
 
-* the type of the expected value in the validated data set
-* how the field is serialized and deserialized
-* how field values are actually validated
+* le type de la valeur attendue dans le jeu de données validé
+* comment le champ est sérialisé et désérialisé
+* comment les valeurs de champ sont réellement validées
 
-Marten provides numerous built-in schema field types that cover common web development needs. The complete list of supported fields is covered in the [schema fields reference](./reference/fields.md).
+Marten fournit de nombreux types de champs de schema intégrés qui couvrent les besoins courants du développement web. La liste complète des champs supportés est couverte dans la [référence des champs de schema](./reference/fields.md).
 
 :::note
-It is possible to write custom schema fields and to use them in your schema definitions. See [How to create custom schema fields](./how-to/create-custom-schema-fields.md) for more details regarding this capability.
+Il est possible d'écrire des champs de schema personnalisés et de les utiliser dans vos définitions de schema. Voir [Comment créer des champs de schema personnalisés](./how-to/create-custom-schema-fields.md) pour plus de détails sur cette fonctionnalité.
 :::
 
-### Common field options
+### Options communes des champs
 
-In addition to their identifiers and types, fields can take keyword arguments that allow to further configure their behaviours and how they are validated. These keyword arguments are optional and they are shared across all the available fields.
+En plus de leurs identifiants et types, les champs peuvent prendre des arguments nommés qui permettent de configurer davantage leurs comportements et la manière dont ils sont validés. Ces arguments nommés sont optionnels et ils sont partagés par tous les champs disponibles.
 
 #### `required`
 
-The `required` argument allows to define whether a field is mandatory or not. The default value for this argument is `true`.
+L'argument `required` permet de définir si un champ est obligatoire ou non. La valeur par défaut de cet argument est `true`.
 
-The presence of mandatory fields is automatically enforced by schemas: if a mandatory field is missing in a data set, then a corresponding error will be generated by the schema.
+La présence des champs obligatoires est automatiquement vérifiée par les schemas : si un champ obligatoire est manquant dans un jeu de données, alors une erreur correspondante sera générée par le schema.
 
 ## Validations
 
-One of the key characteristics of schemas is that they allow you to validate any incoming data and request parameters. As mentioned previously, the rules that are used to perform this validation can be inherited from the fields in your schema, depending on the options you used (for example fields using `required: true` will make the associated data validation fail if the field value is not present). They can also be explicitly specified in your schema class, which is useful if you need to implement custom validation logics.
+L'une des caractéristiques clés des schemas est qu'ils vous permettent de valider toute donnée entrante et tout paramètre de requête. Comme mentionné précédemment, les règles utilisées pour effectuer cette validation peuvent être héritées des champs de votre schema, selon les options que vous avez utilisées (par exemple les champs utilisant `required: true` feront échouer la validation des données associées si la valeur du champ n'est pas présente). Elles peuvent également être explicitement spécifiées dans votre classe schema, ce qui est utile si vous devez implémenter des logiques de validation personnalisées.
 
-For example:
+Par exemple :
 
 ```crystal
 class SignUpSchema < Marten::Schema
@@ -212,15 +212,15 @@ class SignUpSchema < Marten::Schema
 end
 ```
 
-Schema validations are always triggered by the use of the [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) or [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) methods: these methods return `true` or `false` depending on whether the data is valid or invalid.
+Les validations de schema sont toujours déclenchées par l'utilisation des méthodes [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) : ces méthodes retournent `true` ou `false` selon que les données sont valides ou invalides.
 
-Please head over to the [Schema validations](./validations.md) guide in order to learn more about schema validations and how to customize it.
+Consultez le guide [Validations de schema](./validations.md) pour en savoir plus sur les validations de schema et comment les personnaliser.
 
-## Accessing validated data
+## Accéder aux données validées
 
-After performing [schema validations](#validations) (ie. after calling [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) or [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) on a schema object), accessing the validated data is often necessary. For instance, you may need to persist the validated data as part of a model record. To achieve this, you can make use of the [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) method, which is accessible in all schema instances.
+Après avoir effectué les [validations de schema](#validations) (c'est-à-dire après avoir appelé [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) sur un objet schema), l'accès aux données validées est souvent nécessaire. Par exemple, vous pourriez avoir besoin de persister les données validées dans un enregistrement de modèle. Pour y parvenir, vous pouvez utiliser la méthode [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method), qui est accessible dans toutes les instances de schema.
 
-This method provides access to a hash that contains the deserialized and validated field values of the schema. For instance, let's consider the example of the `ArticleSchema` schema [mentioned earlier](#the-schema-class):
+Cette méthode donne accès à un hash qui contient les valeurs de champs désérialisées et validées du schema. Par exemple, considérons l'exemple du schema `ArticleSchema` [mentionné précédemment](#la-classe-schema) :
 
 ```crystal
 schema = ArticleSchema.new(Marten::Schema::DataHash{"title" => "Test article", "content" => "Test content"})
@@ -230,15 +230,15 @@ schema.validated_data["title"]   # => "Test article"
 schema.validated_data["content"] # => "Test content"
 ```
 
-It is important to note that accessing values using [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) as shown in the above example is not type-safe. The [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) hash can return any supported schema field values, and as a result, you may need to utilize the [`#as`](https://crystal-lang.org/reference/syntax_and_semantics/as.html) pseudo-method to handle the fetched validated data appropriately, depending on how and where you intend to use it.
+Il est important de noter que l'accès aux valeurs en utilisant [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) comme montré dans l'exemple ci-dessus n'est pas type-safe. Le hash [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) peut retourner n'importe quelle valeur de champ de schema supportée, et par conséquent, vous pourriez avoir besoin d'utiliser la pseudo-méthode [`#as`](https://crystal-lang.org/reference/syntax_and_semantics/as.html) pour gérer les données validées récupérées de manière appropriée, selon comment et où vous avez l'intention de les utiliser.
 
-To palliate this, Marten automatically defines type-safe methods that you can utilize to access your validated schema field values:
+Pour pallier cela, Marten définit automatiquement des méthodes type-safe que vous pouvez utiliser pour accéder aux valeurs validées de vos champs de schema :
 
-* `#<field>` returns a nillable version of the `<field>` field value
-* `#<field>!` returns a non-nillable version of the `<field>` field value
-* `#<field>?` returns a boolean indicating if the `<field>` field has a value
+* `#<field>` retourne une version nullable de la valeur du champ `<field>`
+* `#<field>!` retourne une version non-nullable de la valeur du champ `<field>`
+* `#<field>?` retourne un booléen indiquant si le champ `<field>` a une valeur
 
-For example:
+Par exemple :
 
 ```crystal
 schema = ArticleSchema.new(Marten::Schema::DataHash{"title" => "Test article"})
@@ -255,9 +255,9 @@ schema.content? # => false
 
 ## Callbacks
 
-It is possible to define callbacks in your schema in order to bind methods and logics to specific events in the life cycle of your schema objects. Presently, schemas support callbacks related to validation only: `before_validation` and `after_validation`
+Il est possible de définir des callbacks dans votre schema afin de lier des méthodes et des logiques à des événements spécifiques du cycle de vie de vos objets schema. Actuellement, les schemas supportent uniquement les callbacks liés à la validation : `before_validation` et `after_validation`.
 
-`before_validation` callbacks are called before running validation rules for a given schema while `after_validation` callbacks are executed after. They can be used to alter the validated data once the validation is done for example.
+Les callbacks `before_validation` sont appelés avant l'exécution des règles de validation pour un schema donné, tandis que les callbacks `after_validation` sont exécutés après. Ils peuvent être utilisés par exemple pour modifier les données validées une fois la validation terminée.
 
 ```crystal
 class ArticleSchema < Marten::Schema
@@ -278,4 +278,4 @@ class ArticleSchema < Marten::Schema
 end
 ```
 
-The use of methods like [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) or [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) will trigger validation callbacks. See [Schema validations](./validations.md) for more details.
+L'utilisation de méthodes comme [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) déclenchera les callbacks de validation. Voir [Validations de schema](./validations.md) pour plus de détails.

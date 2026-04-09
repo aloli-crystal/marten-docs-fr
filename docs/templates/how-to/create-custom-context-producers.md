@@ -1,19 +1,19 @@
 ---
-title: Create custom context producers
-sidebar_label: Create context producers
-description: How to create custom context producers.
+title: Créer des context producers personnalisés
+sidebar_label: Créer des context producers
+description: Comment créer des context producers personnalisés.
 ---
 
-Marten has built-in support for common [context producers](../reference/context-producers.md), but the framework also allows you to write your own context producers that you can leverage as part of your project's templates. This allows you to easily reuse common context values over multiple templates.
+Marten dispose d'un support intégré pour les [context producers](../reference/context-producers.md) courants, mais le framework vous permet également d'écrire vos propres context producers que vous pouvez utiliser dans les templates de votre projet. Cela vous permet de réutiliser facilement des valeurs de contexte communes dans plusieurs templates.
 
-## Defining a context producer
+## Définir un context producer
 
-Defining a context producer involves creating a subclass of the [`Marten::Template::ContextProducer`](pathname:///api/dev/Marten/Template/ContextProducer.html) abstract class. This abstract class requires that subclasses implement a single [`#produce`](pathname:///api/dev/Marten/Template/ContextProducer.html#produce(request%3AHTTP%3A%3ARequest%3F%3Dnil)-instance-method) method: this method takes an optional request object as argument and must return either:
+Définir un context producer implique de créer une sous-classe de la classe abstraite [`Marten::Template::ContextProducer`](pathname:///api/dev/Marten/Template/ContextProducer.html). Cette classe abstraite exige que les sous-classes implémentent une seule méthode [`#produce`](pathname:///api/dev/Marten/Template/ContextProducer.html#produce(request%3AHTTP%3A%3ARequest%3F%3Dnil)-instance-method) : cette méthode prend un objet requête optionnel comme argument et doit retourner soit :
 
-* a hash or a named tuple containing the values to contribute to the template context
-* or `nil` if no values can be generated for the passed request
+* un hash ou un named tuple contenant les valeurs à contribuer au contexte du template
+* ou `nil` si aucune valeur ne peut être générée pour la requête passée
 
-For example, the following context producer would expose the value of the [`debug`](../../development/reference/settings.md#debug) setting to all the template contexts being created:
+Par exemple, le context producer suivant exposerait la valeur du paramètre [`debug`](../../development/reference/settings.md#debug) à tous les contextes de template créés :
 
 ```crystal
 class Debug < Marten::Template::ContextProducer
@@ -23,6 +23,6 @@ class Debug < Marten::Template::ContextProducer
 end
 ```
 
-## Activating context producers
+## Activer des context producers
 
-As mentioned in [Using context producers](../introduction.md#using-context-producers), context producers classes must be added to the [`templates.context_producers`](../../development/reference/settings.md#context_producers) setting in order to be used by the Marten templates engine when initializing new context objects.
+Comme mentionné dans [Utilisation des context producers](../introduction.md#utilisation-des-context-producers), les classes de context producers doivent être ajoutées au paramètre [`templates.context_producers`](../../development/reference/settings.md#context_producers) pour être utilisées par le moteur de templates de Marten lors de l'initialisation de nouveaux objets de contexte.

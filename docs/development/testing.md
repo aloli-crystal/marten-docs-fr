@@ -1,18 +1,18 @@
 ---
-title: Testing
-description: Learn how to test your Marten project.
-sidebar_label: Testing
+title: Tests
+description: Apprenez à tester votre projet Marten.
+sidebar_label: Tests
 ---
 
-This section covers the basics regarding how to test a Marten project and the various tools that you can leverage in this regard.
+Cette section couvre les bases concernant la façon de tester un projet Marten et les divers outils que vous pouvez utiliser à cet égard.
 
-## The basics
+## Les bases
 
-You should test your Marten project to ensure that it adheres to the specifications it was built for. Like any Crystal project, Marten lets you write "specs" (see the [official documentation related to testing in Crystal](https://crystal-lang.org/reference/guides/testing.html) to learn more about those).
+Vous devriez tester votre projet Marten pour vous assurer qu'il respecte les spécifications pour lesquelles il a été construit. Comme tout projet Crystal, Marten vous permet d'écrire des "specs" (voir la [documentation officielle relative aux tests dans Crystal](https://crystal-lang.org/reference/guides/testing.html) pour en savoir plus).
 
-By default, when creating a project through the use of the [`new`](./reference/management-commands.md#new) management command, Marten will automatically create a `spec/` folder at the root of your project structure. This folder contains a unique `spec_helper.cr` file allowing you to initialize the test environment for your Marten project.
+Par défaut, lors de la création d'un projet via la commande de gestion [`new`](./reference/management-commands.md#new), Marten créera automatiquement un dossier `spec/` à la racine de la structure de votre projet. Ce dossier contient un fichier unique `spec_helper.cr` vous permettant d'initialiser l'environnement de test pour votre projet Marten.
 
-This file should look something like this:
+Ce fichier devrait ressembler à quelque chose comme ceci :
 
 ```crystal title=spec/spec_helper.cr
 ENV["MARTEN_ENV"] = "test"
@@ -24,19 +24,19 @@ require "marten/spec"
 require "../src/project"
 ```
 
-As you can see, the `spec_helper.cr` file forces the Marten environment variable to be set to `test` and requires the spec library as well as Marten and your actual project. This file should be required by all your spec files.
+Comme vous pouvez le voir, le fichier `spec_helper.cr` force la variable d'environnement Marten à être définie sur `test` et requiert la bibliothèque spec ainsi que Marten et votre projet réel. Ce fichier devrait être requis par tous vos fichiers de spec.
 
 :::info
-It's very important to require `marten/spec` in your top-level spec helper as this will ensure that the mandatory spec callbacks are configured for your spec suite (eg. in order to ensure that your database is properly set up before each spec is executed).
+Il est très important de requérir `marten/spec` dans votre spec helper de niveau supérieur car cela garantira que les callbacks de spec obligatoires sont configurés pour votre suite de specs (par exemple, pour s'assurer que votre base de données est correctement initialisée avant l'exécution de chaque spec).
 :::
 
-When it comes to running your tests, you can simply make use of the standard [`crystal spec`](https://crystal-lang.org/reference/man/crystal/index.html#crystal-spec) command.
+Pour exécuter vos tests, vous pouvez simplement utiliser la commande standard [`crystal spec`](https://crystal-lang.org/reference/man/crystal/index.html#crystal-spec).
 
-## Writing tests
+## Écrire des tests
 
-To write tests, you should write regular [specs](https://crystal-lang.org/reference/guides/testing.html) and ensure that your spec files always require the `spec/spec_helper.cr` file.
+Pour écrire des tests, vous devez écrire des [specs](https://crystal-lang.org/reference/guides/testing.html) classiques et vous assurer que vos fichiers de spec requièrent toujours le fichier `spec/spec_helper.cr`.
 
-For example:
+Par exemple :
 
 ```crystal
 require "./spec_helper"
@@ -51,12 +51,12 @@ describe MySuperAbstraction do
 end
 ```
 
-You are encouraged to organize your spec files by following the structure of your projects. For example, you could create a `models` folder and define specs related to your models in it.
+Il est encouragé d'organiser vos fichiers de spec en suivant la structure de vos projets. Par exemple, vous pourriez créer un dossier `models` et y définir les specs liées à vos modèles.
 
 :::tip
-When organizing spec files across multiple folders, one good practice is to define a `spec_helper.cr` file at each level of your folders structure. These additional `spec_helper.cr` files should require the same file from the parent folder.
+Lorsque vous organisez les fichiers de spec dans plusieurs dossiers, une bonne pratique est de définir un fichier `spec_helper.cr` à chaque niveau de votre structure de dossiers. Ces fichiers `spec_helper.cr` supplémentaires devraient requérir le même fichier du dossier parent.
 
-For example:
+Par exemple :
 
 ```crystal title=spec/models/spec_helper.cr
 require "../spec_helper"
@@ -71,19 +71,19 @@ end
 ```
 :::
 
-## Running tests
+## Exécuter les tests
 
-As mentioned before, running specs involves making use of the standard [`crystal spec`](https://crystal-lang.org/reference/man/crystal/index.html#crystal-spec) command.
+Comme mentionné précédemment, l'exécution des specs implique l'utilisation de la commande standard [`crystal spec`](https://crystal-lang.org/reference/man/crystal/index.html#crystal-spec).
 
-### The test environment
+### L'environnement de test
 
-By default, the [`new`](./reference/management-commands.md#new) management command always creates a `test` environment when generating new projects. As such, you should ensure that the `MARTEN_ENV` environment variable is set to `test` when running your Crystal specs. It should also be reminded that this `test` environment is associated with a dedicated settings file where test-related settings can be specified and/or overridden if necessary (see [Settings](./settings.md#environments) for more details about this).
+Par défaut, la commande de gestion [`new`](./reference/management-commands.md#new) crée toujours un environnement `test` lors de la génération de nouveaux projets. Ainsi, vous devez vous assurer que la variable d'environnement `MARTEN_ENV` est définie sur `test` lors de l'exécution de vos specs Crystal. Il convient également de rappeler que cet environnement `test` est associé à un fichier de paramètres dédié où les paramètres liés aux tests peuvent être spécifiés et/ou surchargés si nécessaire (voir [Paramètres](./settings.md#environnements) pour plus de détails à ce sujet).
 
-### The test database
+### La base de données de test
 
-Marten **must** use a different database when running tests in order to not tamper with your regular database. Indeed, the database used in the context of specs will be flushed and generated automatically every time the specs suite is executed. You should not set these database names to the same names as the ones used for your development or production environments. If test database names are not explicitly set, your specs suite won't be allowed to run at all.
+Marten **doit** utiliser une base de données différente lors de l'exécution des tests afin de ne pas altérer votre base de données habituelle. En effet, la base de données utilisée dans le contexte des specs sera vidée et générée automatiquement à chaque exécution de la suite de specs. Vous ne devez pas définir ces noms de base de données aux mêmes noms que ceux utilisés pour vos environnements de développement ou de production. Si les noms de base de données de test ne sont pas explicitement définis, votre suite de specs ne sera pas autorisée à s'exécuter du tout.
 
-One way to ensure you use a dedicated database specifically for tests is to override the [`database`](./reference/settings.md#database-settings) settings as follows:
+Une façon de s'assurer que vous utilisez une base de données dédiée spécifiquement aux tests est de surcharger les paramètres de [`database`](./reference/settings.md#database-settings) comme suit :
 
 ```crystal title=config/settings/test.cr
 Marten.configure :test do |config|
@@ -93,25 +93,25 @@ Marten.configure :test do |config|
 end
 ```
 
-## Testing tools
+## Outils de test
 
-Marten provides some tools that can become useful when writing specs.
+Marten fournit certains outils qui peuvent s'avérer utiles lors de l'écriture de specs.
 
-### Using the test client
+### Utiliser le client de test
 
-The test client is an abstraction that is provided when requiring `marten/spec` and that acts as a very basic web client. This tool allows you to easily test your handlers and the various routes of your application by issuing requests and by introspecting the returned responses.
+Le client de test est une abstraction fournie lors du require de `marten/spec` et qui agit comme un client web très basique. Cet outil vous permet de tester facilement vos handlers et les différentes routes de votre application en émettant des requêtes et en inspectant les réponses retournées.
 
-By leveraging the test client, you can easily simulate various requests (eg. GET or POST requests) for specific URLs and observe the returned responses. While doing so, you can introspect the response properties (such as its status code, content, and headers) in order to verify that your handlers behave as expected.
+En utilisant le client de test, vous pouvez facilement simuler diverses requêtes (par exemple des requêtes GET ou POST) vers des URLs spécifiques et observer les réponses retournées. Ce faisant, vous pouvez inspecter les propriétés de la réponse (comme son code de statut, son contenu et ses en-têtes) afin de vérifier que vos handlers se comportent comme prévu.
 
-#### A simple example
+#### Un exemple simple
 
-To use the test client, you can either initialize a [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec/Client.html) object or make use of the per-spec test client that is provided by the [`Marten::Spec#client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method) method. Initializing new [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method) objects allow you to set client-wide properties, like a default content type.
+Pour utiliser le client de test, vous pouvez soit initialiser un objet [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec/Client.html) soit utiliser le client de test par spec fourni par la méthode [`Marten::Spec#client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method). L'initialisation de nouveaux objets [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method) vous permet de définir des propriétés à l'échelle du client, comme un type de contenu par défaut.
 
 :::info
-Note that the client returned by the [`Marten::Spec#client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method) method is memoized and is reset after _each_ spec execution.
+Notez que le client retourné par la méthode [`Marten::Spec#client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method) est mémorisé et est réinitialisé après _chaque_ exécution de spec.
 :::
 
-Let's have a look at a simple way to use the test client and verify the corresponding responses:
+Voyons une manière simple d'utiliser le client de test et de vérifier les réponses correspondantes :
 
 ```crystal
 describe MyRedirectHandler do
@@ -127,7 +127,7 @@ end
 ```
 
 :::tip
-In the above example we are simply specifying a "raw" path by hardcoding its value. In a real scenario, you will likely want to [resolve your handler URLs](../handlers-and-http/routing.md#reverse-url-resolutions) using the [`Marten::Routing::Map#reverse`](pathname:///api/dev/Marten/Routing/Map.html#reverse(name%3AString|Symbol%2Cparams%3AHash(String|Symbol%2CParameter%3A%3ATypes))-instance-method) method of the main routes map (that way, you don't hardcode route paths in your specs). For example
+Dans l'exemple ci-dessus, nous spécifions simplement un chemin "brut" en codant sa valeur en dur. Dans un scénario réel, vous voudrez probablement [résoudre les URLs de vos handlers](../handlers-and-http/routing.md#reverse-url-resolutions) en utilisant la méthode [`Marten::Routing::Map#reverse`](pathname:///api/dev/Marten/Routing/Map.html#reverse(name%3AString|Symbol%2Cparams%3AHash(String|Symbol%2CParameter%3A%3ATypes))-instance-method) de la carte de routes principale (de cette façon, vous ne codez pas en dur les chemins de routes dans vos specs). Par exemple
 
 ```crystal
 url = Marten.routes.reverse("article_detail", pk: 42)
@@ -135,12 +135,12 @@ response = Marten::Spec.client.get(url, query_params: {"foo" => "bar"})
 ```
 :::
 
-Here we are simply issuing a GET request (by leveraging the [`#get`](pathname:///api/dev/Marten/Spec/Client.html#get(path%3AString%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method) test client method) and testing the obtained response. A few things can be noted:
+Ici, nous émettons simplement une requête GET (en utilisant la méthode [`#get`](pathname:///api/dev/Marten/Spec/Client.html#get(path%3AString%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method) du client de test) et testons la réponse obtenue. Quelques points peuvent être notés :
 
-* The test client does not require your project's server to be running: internally it uses a lightweight server handlers chain that ensures that your project's middlewares are applied and that the URL you requested is resolved and mapped to the right handler
-* Only the path to the handler needs to be specified when issuing requests (eg. `/foo/bar`)
+* Le client de test ne nécessite pas que le serveur de votre projet soit en cours d'exécution : en interne, il utilise une chaîne légère de handlers de serveur qui garantit que les middlewares de votre projet sont appliqués et que l'URL que vous avez demandée est résolue et mappée au bon handler
+* Seul le chemin vers le handler doit être spécifié lors de l'émission de requêtes (ex. `/foo/bar`)
 
-Note that you can also issue other types of requests by leveraging methods like [`#post`](pathname:///api/dev/Marten/Spec/Client.html#post(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method), [`#put`](pathname:///api/dev/Marten/Spec/Client.html#put(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method), or [`#delete`](pathname:///api/dev/Marten/Spec/Client.html#delete(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method). For example:
+Notez que vous pouvez également émettre d'autres types de requêtes en utilisant des méthodes comme [`#post`](pathname:///api/dev/Marten/Spec/Client.html#post(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method), [`#put`](pathname:///api/dev/Marten/Spec/Client.html#put(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method) ou [`#delete`](pathname:///api/dev/Marten/Spec/Client.html#delete(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method). Par exemple :
 
 ```crystal
 describe MySchemaHandler do
@@ -156,24 +156,24 @@ end
 ```
 
 :::info
-By default, CSRF checks are disabled for requests issued by the test client. If for some reasons you need to ensure that those are enabled, you can initialize a [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec/Client.html) object with `disable_request_forgery_protection: false`.
+Par défaut, les vérifications CSRF sont désactivées pour les requêtes émises par le client de test. Si pour une raison quelconque vous devez vous assurer qu'elles sont activées, vous pouvez initialiser un objet [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec/Client.html) avec `disable_request_forgery_protection: false`.
 :::
 
-#### Introspecting responses
+#### Inspecter les réponses
 
-Responses returned by the test client are instances of the standard [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) class. As such you can easily access response attributes such as the status code, the content and content type, cookies, and headers in your specs in order to verify that the expected response was returned by your handler.
+Les réponses retournées par le client de test sont des instances de la classe standard [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). En tant que tel, vous pouvez facilement accéder aux attributs de la réponse tels que le code de statut, le contenu et le type de contenu, les cookies et les en-têtes dans vos specs afin de vérifier que la réponse attendue a été retournée par votre handler.
 
 #### Exceptions
 
-It is important to note that exceptions raised in your handlers will be visible from your spec. This means that you should use the standard [`#expect_raises`](https://crystal-lang.org/api/Spec/Expectations.html#expect_raises%28klass%3AT.class%2Cmessage%3AString%7CRegex%7CNil%3Dnil%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%26%29forallT-instance-method) expectation helper to verify that these exceptions are indeed raised.
+Il est important de noter que les exceptions levées dans vos handlers seront visibles depuis votre spec. Cela signifie que vous devriez utiliser le helper d'expectation standard [`#expect_raises`](https://crystal-lang.org/api/Spec/Expectations.html#expect_raises%28klass%3AT.class%2Cmessage%3AString%7CRegex%7CNil%3Dnil%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%26%29forallT-instance-method) pour vérifier que ces exceptions sont effectivement levées.
 
-#### Session and cookies
+#### Session et cookies
 
-Test clients are always stateful: if a handler sets a cookie in the returned response, then this cookie will be stored in the client's cookie store (available via the [`#cookies`](pathname:///api/dev/Marten/Spec/Client.html#cookies-instance-method) method) and will be automatically sent for subsequent requests issued by the client.
+Les clients de test sont toujours avec état : si un handler définit un cookie dans la réponse retournée, alors ce cookie sera stocké dans le magasin de cookies du client (disponible via la méthode [`#cookies`](pathname:///api/dev/Marten/Spec/Client.html#cookies-instance-method)) et sera automatiquement envoyé pour les requêtes suivantes émises par le client.
 
-The same goes for session values: such values can be set using the session store returned by the [`#sessions`](pathname:///api/dev/Marten/Spec/Client.html#session-instance-method) client method. If you set session values in this store prior to any request, the matched handler will have access to them and the new values that are set by the handler will be available for further inspection once the response is returned. These session values are also maintained between requests issued by a single client.
+Il en va de même pour les valeurs de session : de telles valeurs peuvent être définies en utilisant le magasin de session retourné par la méthode client [`#sessions`](pathname:///api/dev/Marten/Spec/Client.html#session-instance-method). Si vous définissez des valeurs de session dans ce magasin avant toute requête, le handler correspondant y aura accès et les nouvelles valeurs définies par le handler seront disponibles pour une inspection ultérieure une fois la réponse retournée. Ces valeurs de session sont également maintenues entre les requêtes émises par un même client.
 
-For example:
+Par exemple :
 
 ```crystal
 describe MyHandler do
@@ -191,11 +191,11 @@ describe MyHandler do
 end
 ```
 
-#### Flash messages
+#### Messages flash {#flash-messages}
 
-Similarly to accessing session values, you can also access flash messages by leveraging the [`#flash`](pathname:///api/dev/Marten/Spec/Client.html#flash-instance-method) method of the test client. This method returns a [`Marten::HTTP::FlashStore`](pathname:///api/dev/Marten/HTTP/FlashStore.html) object, initialized from the currently configured session store. This can be helpful to access flash messages that might have been set by handlers and verify that they have the expected values.
+De manière similaire à l'accès aux valeurs de session, vous pouvez également accéder aux messages flash en utilisant la méthode [`#flash`](pathname:///api/dev/Marten/Spec/Client.html#flash-instance-method) du client de test. Cette méthode retourne un objet [`Marten::HTTP::FlashStore`](pathname:///api/dev/Marten/HTTP/FlashStore.html), initialisé à partir du magasin de session actuellement configuré. Cela peut être utile pour accéder aux messages flash qui auraient pu être définis par les handlers et vérifier qu'ils ont les valeurs attendues.
 
-For example:
+Par exemple :
 
 ```crystal
 describe MyHandler do
@@ -213,14 +213,14 @@ describe MyHandler do
 end
 ```
 
-#### Testing client and authentication
+#### Client de test et authentification
 
-When using the [marten-auth](https://github.com/martenframework/marten-auth) shard and the built-in [authentication](../authentication.mdx), a few additional helpers can be leveraged in order to easily sign in/sign out users while using the test client:
+Lorsque vous utilisez le shard [marten-auth](https://github.com/martenframework/marten-auth) et l'[authentification](../authentication.mdx) intégrée, quelques helpers supplémentaires peuvent être utilisés afin de connecter/déconnecter facilement des utilisateurs avec le client de test :
 
-* The `#sign_in` method can be used to simulate the effect of a signed-in user. This means that the user ID will be persisted into the test client session and that requests issued with it will be associated with the considered user
-* The `#sign_out` method can be used to ensure that any signed-in user is logged out and that the session is flushed
+* La méthode `#sign_in` peut être utilisée pour simuler l'effet d'un utilisateur connecté. Cela signifie que l'ID de l'utilisateur sera persisté dans la session du client de test et que les requêtes émises avec celui-ci seront associées à l'utilisateur considéré
+* La méthode `#sign_out` peut être utilisée pour s'assurer que tout utilisateur connecté est déconnecté et que la session est vidée
 
-For example:
+Par exemple :
 
 ```crystal
 describe MyHandler do
@@ -242,11 +242,11 @@ describe MyHandler do
 end
 ```
 
-### Collecting emails
+### Collecter les emails
 
-If your code is sending [emails](../emailing/introduction.md), you might want to test that these emails are sent as expected. To do that, you can leverage the [development emailing backend](../emailing/reference/backends.md#development-backend) to ensure that sent emails are collected as part of each spec execution.
+Si votre code envoie des [emails](../emailing/introduction.md), vous pourriez vouloir tester que ces emails sont envoyés comme prévu. Pour ce faire, vous pouvez utiliser le [backend d'emailing de développement](../emailing/reference/backends.md#development-backend) pour vous assurer que les emails envoyés sont collectés dans le cadre de chaque exécution de spec.
 
-To do that, the emailing backend needs to be initialized with `collect_emails: true` when configuring the [`emailing.backend`](./reference/settings.md#backend-1) setting. For example:
+Pour cela, le backend d'emailing doit être initialisé avec `collect_emails: true` lors de la configuration du paramètre [`emailing.backend`](./reference/settings.md#backend-1). Par exemple :
 
 ```crystal title=config/settings/test.cr
 Marten.configure :test do |config|
@@ -254,7 +254,7 @@ Marten.configure :test do |config|
 end
 ```
 
-Doing so will ensure that all sent emails are "collected" for further inspection. You can easily retrieve collected emails by calling the [`Marten::Spec#delivered_emails`](pathname:///api/dev/Marten/Spec.html#delivered_emails%3AArray(Emailing%3A%3AEmail)-class-method) method, which returns an array of [`Marten::Email`](pathname:///api/dev/Marten/Emailing/Email.html) instances. For example:
+Cela garantira que tous les emails envoyés sont "collectés" pour une inspection ultérieure. Vous pouvez facilement récupérer les emails collectés en appelant la méthode [`Marten::Spec#delivered_emails`](pathname:///api/dev/Marten/Spec.html#delivered_emails%3AArray(Emailing%3A%3AEmail)-class-method), qui retourne un tableau d'instances de [`Marten::Email`](pathname:///api/dev/Marten/Emailing/Email.html). Par exemple :
 
 ```crystal
 describe MyObject do
@@ -271,5 +271,5 @@ end
 ```
 
 :::info
-Note that Marten also automatically ensures that the collected emails are automatically reset after each spec execution so that you don't have to take care of that directly.
+Notez que Marten s'assure également automatiquement que les emails collectés sont automatiquement réinitialisés après chaque exécution de spec afin que vous n'ayez pas à vous en occuper directement.
 :::

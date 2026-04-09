@@ -1,16 +1,16 @@
 ---
-title: Introduction to templates
-description: Learn how to write templates and generate HTML dynamically.
+title: Introduction aux templates
+description: Apprenez à écrire des templates et à générer du HTML dynamiquement.
 sidebar_label: Introduction
 ---
 
-Templates provide a convenient way for defining the presentation logic of a web application. They allow to write textual content that is rendered dynamically by using a dedicated syntax. This syntax enables the use of dynamic variables as well as some programming constructs.
+Les templates offrent un moyen pratique de définir la logique de présentation d'une application web. Ils permettent d'écrire du contenu textuel rendu dynamiquement grâce à une syntaxe dédiée. Cette syntaxe permet l'utilisation de variables dynamiques ainsi que de certaines structures de programmation.
 
-## Syntax
+## Syntaxe
 
-A template is a textual document or a string that makes use of the Marten template language, and that can be used to generate _any_ text-based format (HTML, XML, etc). In order to insert dynamic content, templates usually make use of a few constructs such as **variables**, which are replaced by the corresponding values when the template is evaluated, and **tags**, which can be used to implement the logic of the template.
+Un template est un document textuel ou une chaîne de caractères qui utilise le langage de templates de Marten, et qui peut être utilisé pour générer _n'importe quel_ format basé sur du texte (HTML, XML, etc). Pour insérer du contenu dynamique, les templates utilisent généralement quelques constructions telles que les **variables**, qui sont remplacées par les valeurs correspondantes lors de l'évaluation du template, et les **tags**, qui peuvent être utilisés pour implémenter la logique du template.
 
-For example, the following template displays the properties of an `article` variable and loops over the associated comments in order to display them as a list:
+Par exemple, le template suivant affiche les propriétés d'une variable `article` et parcourt les commentaires associés afin de les afficher sous forme de liste :
 
 ```html
 <h1>{{ article.title }}</h1>
@@ -24,29 +24,29 @@ For example, the following template displays the properties of an `article` vari
 </ul>
 ```
 
-Templates need to be evaluated with a **context**. This context is usually a hash-like object containing all the variables or values that can be used by the template when it is rendered.
+Les templates doivent être évalués avec un **contexte**. Ce contexte est généralement un objet de type hash contenant toutes les variables ou valeurs que le template peut utiliser lors de son rendu.
 
-In the previous example, the template context would at least contain one `article` key giving access to the considered article properties.
+Dans l'exemple précédent, le contexte du template contiendrait au minimum une clé `article` donnant accès aux propriétés de l'article considéré.
 
 ### Variables
 
-Variables can be used to inject a value from the context into the rendered template. They must be surrounded by **`{{`** and **`}}`**.
+Les variables peuvent être utilisées pour injecter une valeur du contexte dans le template rendu. Elles doivent être entourées par **`{{`** et **`}}`**.
 
-For example:
+Par exemple :
 
 ```html
 Hello, {{ name }}!
 ```
 
-If the context used to render the above template is `{"name" => "John Doe"}`, then the output would be "Hello, John Doe!".
+Si le contexte utilisé pour rendre le template ci-dessus est `{"name" => "John Doe"}`, alors la sortie serait "Hello, John Doe!".
 
-Each variable can involve additional lookups in order to access specific object attributes (if such objects have ones). These lookups are expressed by relying on a dot notation (`foo.bar`). For example, the following snippet would output the `title` attribute of the `article` variable:
+Chaque variable peut impliquer des recherches supplémentaires afin d'accéder à des attributs spécifiques d'un objet (si ces objets en possèdent). Ces recherches sont exprimées en utilisant une notation par points (`foo.bar`). Par exemple, le fragment suivant afficherait l'attribut `title` de la variable `article` :
 
 ```html
 <h1>{{ article.title }}</h1>
 ```
 
-This notation can be used to call object methods but also to perform key lookups for hashes or named tuples. It can also be used to perform index lookups for indexable objects (such as arrays or tuples):
+Cette notation peut être utilisée pour appeler des méthodes d'objets mais aussi pour effectuer des recherches par clé dans les hashes ou les named tuples. Elle peut également être utilisée pour effectuer des recherches par index dans les objets indexables (comme les tableaux ou les tuples) :
 
 ```
 {{ my_array.0 }}
@@ -54,37 +54,37 @@ This notation can be used to call object methods but also to perform key lookups
 
 ### Filters
 
-Filters can be applied to [variables](#variables) or [tag](#tags) arguments in order to transform their values. They are applied to these variables or arguments through the use of a pipe (**`|`**) followed by the name of the filter.
+Les filters peuvent être appliqués aux [variables](#variables) ou aux arguments de [tags](#tags) afin de transformer leurs valeurs. Ils sont appliqués à ces variables ou arguments via l'utilisation d'un pipe (**`|`**) suivi du nom du filter.
 
-For example, the following snippet will apply the [`capitalize`](./reference/filters.md#capitalize) filter to the output of the `name` variable, which will capitalize the value of this variable:
+Par exemple, le fragment suivant appliquera le filter [`capitalize`](./reference/filters.md#capitalize) à la sortie de la variable `name`, ce qui mettra en majuscule la valeur de cette variable :
 
 ```html
 Hello, {{ name|capitalize }}!
 ```
 
-It should be noted that some filters can take an argument. When this is the case, the argument is specified following a colon character (**`:`**).
+Il est à noter que certains filters peuvent prendre un argument. Lorsque c'est le cas, l'argument est spécifié après un caractère deux-points (**`:`**).
 
-For example, the following snippet will apply the [`default`](./reference/filters.md#default) filter to the output of the `name` variable in order to fallback to a default name if the variable has a null value:
+Par exemple, le fragment suivant appliquera le filter [`default`](./reference/filters.md#default) à la sortie de la variable `name` afin de revenir à un nom par défaut si la variable a une valeur nulle :
 
 ```html
 Hello, {{ name|default:"Stranger" }}!
 ```
 
-It should be noted that the fact that an argument is supported or not, and mandatory or not, varies based on the considered filter. In all cases, filters can support up to **one** argument only. Moreover, a filter argument can either correspond to a regular [variable](#variables) or a [literal](#literal-values).
+Il est à noter que le fait qu'un argument soit supporté ou non, et obligatoire ou non, varie selon le filter considéré. Dans tous les cas, les filters ne peuvent accepter qu'**un seul** argument au maximum. De plus, un argument de filter peut correspondre soit à une [variable](#variables) classique, soit à une [valeur littérale](#valeurs-littérales).
 
-Please head over to the [filters reference](./reference/filters.md) to see a list of all the available filters. Implementing custom filters is also a possibility that is documented in [Create custom filters](./how-to/create-custom-filters.md).
+Consultez la [référence des filters](./reference/filters.md) pour voir la liste de tous les filters disponibles. L'implémentation de filters personnalisés est également possible et documentée dans [Créer des filters personnalisés](./how-to/create-custom-filters.md).
 
 ### Tags
 
-Tags allow to do method-calling and to run any kind of logic within a template. Some tags allow to perform control flows (like if conditions, or for loops) while others simply output values. They are delimited by **`{%`** and **`%}`**.
+Les tags permettent d'effectuer des appels de méthodes et d'exécuter tout type de logique au sein d'un template. Certains tags permettent d'effectuer des contrôles de flux (comme les conditions if ou les boucles for) tandis que d'autres produisent simplement des valeurs. Ils sont délimités par **`{%`** et **`%}`**.
 
-For example, the following snippet makes use of the [`assign`](./reference/tags.md#assign) tag to create a new variable within a template:
+Par exemple, le fragment suivant utilise le tag [`assign`](./reference/tags.md#assign) pour créer une nouvelle variable au sein d'un template :
 
 ```html
 {% assign my_var = "Hello World!" %}
 ```
 
-As mentioned above, some tags allow to perform control flows and require a "closing" tag, like the [`for`](./reference/tags.md#for) or [`if`](./reference/tags.md#if) tags:
+Comme mentionné ci-dessus, certains tags permettent d'effectuer des contrôles de flux et nécessitent un tag de « fermeture », comme les tags [`for`](./reference/tags.md#for) ou [`if`](./reference/tags.md#if) :
 
 ```html
 {% for article in articles %}
@@ -92,46 +92,46 @@ As mentioned above, some tags allow to perform control flows and require a "clos
 {% endfor %}
 ```
 
-Some tags also require arguments. Similarly to filters, these arguments can either correspond to regular [variables](#variables) or [literals](#literal-values). For example, the [`url`](./reference/tags.md#url) template tag requires at least the name of the route for which the URL resolution should be performed:
+Certains tags nécessitent également des arguments. De manière similaire aux filters, ces arguments peuvent correspondre soit à des [variables](#variables) classiques, soit à des [littéraux](#valeurs-littérales). Par exemple, le tag de template [`url`](./reference/tags.md#url) nécessite au minimum le nom de la route pour laquelle la résolution d'URL doit être effectuée :
 
 ```html
 {% url "my_route" %}
 ```
 
-Please head over to the [tags reference](./reference/tags.md) to see a list of all the available template tags. Implementing custom tags is also a possibility that is documented in [Create custom tags](./how-to/create-custom-tags.md).
+Consultez la [référence des tags](./reference/tags.md) pour voir la liste de tous les tags de template disponibles. L'implémentation de tags personnalisés est également possible et documentée dans [Créer des tags personnalisés](./how-to/create-custom-tags.md).
 
-### Comments
+### Commentaires
 
-Comments can be inserted in any templates and must be surrounded by **`{#`** and **`#}`**:
+Des commentaires peuvent être insérés dans n'importe quel template et doivent être entourés par **`{#`** et **`#}`** :
 
 ```html
 {# This will not be evaluated #}
 ```
 
-### Literal values
+### Valeurs littérales
 
-The Marten templating language supports making use of literal values as part of [variables](#variables), [filter](#filters) arguments, or [tag](#tags) arguments. These literals are essentially a representation of the corresponding objects in Crystal. Each supported type of literal is listed below:
+Le langage de templates Marten supporte l'utilisation de valeurs littérales dans les [variables](#variables), les arguments de [filters](#filters) ou les arguments de [tags](#tags). Ces littéraux sont essentiellement une représentation des objets correspondants en Crystal. Chaque type de littéral supporté est listé ci-dessous :
 
-| Type | Example |
+| Type | Exemple |
 | ----------- | ----------- |
 | Nil | `{{ nil }}` |
 | True | `{{ true }}` |
 | False | `{{ false }}` |
-| Integer | `{{ 42 }}` |
-| Float | `{{ 42.45 }}` |
-| Single-quoted string | `{{ 'Hello World' }}` |
-| Double-quoted string | `{{ "Hello World" }}` |
+| Entier | `{{ 42 }}` |
+| Flottant | `{{ 42.45 }}` |
+| Chaîne entre guillemets simples | `{{ 'Hello World' }}` |
+| Chaîne entre guillemets doubles | `{{ "Hello World" }}` |
 
-## Template inheritance
+## Héritage de templates
 
-Templates can inherit from each other: this allows you to easily define a "base" template containing the layout of your application so that you can reuse it in order to build other templates, which helps in keeping your codebase DRY.
+Les templates peuvent hériter les uns des autres : cela vous permet de définir facilement un template « de base » contenant la mise en page de votre application afin de le réutiliser pour construire d'autres templates, ce qui aide à garder votre code DRY.
 
-This works as follows:
+Cela fonctionne comme suit :
 
-* a "base" template defines the shared layout as well as "blocks" where child templates will actually inject their own contents
-* "child" templates "extend" from the base template and explicitly define the contents of the "blocks" that are expected by the base template
+* un template « de base » définit la mise en page partagée ainsi que des « blocs » où les templates enfants injecteront leur propre contenu
+* les templates « enfants » « étendent » le template de base et définissent explicitement le contenu des « blocs » attendus par le template de base
 
-For example, a "base" template could look like this:
+Par exemple, un template « de base » pourrait ressembler à ceci :
 
 ```html
 <html>
@@ -144,10 +144,10 @@ For example, a "base" template could look like this:
 </html>
 ```
 
-Here the base template defines two blocks by using the [`block`](./reference/tags.md#block) template tag. Using this tag essentially makes it possible for any child templates to "override" the content of these blocks.
+Ici, le template de base définit deux blocs en utilisant le tag de template [`block`](./reference/tags.md#block). L'utilisation de ce tag permet essentiellement à tout template enfant de « surcharger » le contenu de ces blocs.
 
 :::tip
-Note that it is possible to specify the name of the block being closed in the `endblock` tag to improve readability. For example:
+Notez qu'il est possible de spécifier le nom du bloc fermé dans le tag `endblock` pour améliorer la lisibilité. Par exemple :
 
 ```html
 {% block title %}
@@ -156,7 +156,7 @@ My super website
 ````
 :::
 
-Given the above base template (that we assume is named `base.html`), a "child" template making use of it could look like this:
+Étant donné le template de base ci-dessus (que nous supposons nommé `base.html`), un template « enfant » l'utilisant pourrait ressembler à ceci :
 
 ```html
 {% extend "base.html" %}
@@ -166,21 +166,21 @@ Given the above base template (that we assume is named `base.html`), a "child" t
 {% block content %}Custom page content{% endblock %}
 ```
 
-Here we make use of the [`extend`](./reference/tags.md#extend) template tag in order to indicate that we want to inherit from the `base.html` template that we created previously. When Marten encounters this tag, it'll make sure that the targeted template is properly loaded before resuming the evaluation of the current template.
+Ici, nous utilisons le tag de template [`extend`](./reference/tags.md#extend) pour indiquer que nous souhaitons hériter du template `base.html` créé précédemment. Lorsque Marten rencontre ce tag, il s'assure que le template ciblé est correctement chargé avant de reprendre l'évaluation du template courant.
 
 :::warning
-The `{% extend %}` tag should always be called at the top of the file, before the actual content of the template. Inheritance won't work properly if that's not the case.
+Le tag `{% extend %}` doit toujours être appelé en haut du fichier, avant le contenu réel du template. L'héritage ne fonctionnera pas correctement si ce n'est pas le cas.
 :::
 
-We also use [`block`](./reference/tags.md#block) tags to redefine the content of the blocks that were defined in the `base.html` template. It should be noted that if a child template does not define the content of one of its parent's blocks, the default content of this block will be used instead (if there is one!).
+Nous utilisons également des tags [`block`](./reference/tags.md#block) pour redéfinir le contenu des blocs définis dans le template `base.html`. Il est à noter que si un template enfant ne définit pas le contenu d'un des blocs de son parent, le contenu par défaut de ce bloc sera utilisé à la place (s'il y en a un !).
 
 :::info
-You can use many levels of template inheritance if needed. Indeed, a `child.html` template can very well extend a `base_dashboard.html` template, which itself extends a `base.html` template for example.
+Vous pouvez utiliser plusieurs niveaux d'héritage de templates si nécessaire. En effet, un template `child.html` peut très bien étendre un template `base_dashboard.html`, qui lui-même étend un template `base.html` par exemple.
 :::
 
-It should be noted that it is also possible to get the content of a block from a parent template by using the `super` template tag. This can be useful in situations where blocks in a child template need to extend (add content) to a parent's block content instead of overwriting it.
+Il est à noter qu'il est également possible d'obtenir le contenu d'un bloc d'un template parent en utilisant le tag de template `super`. Cela peut être utile dans les situations où les blocs d'un template enfant doivent étendre (ajouter du contenu) le contenu d'un bloc parent au lieu de le remplacer.
 
-For example, with the following snippet the output of the `title` block would be "My super website - Example page":
+Par exemple, avec le fragment suivant, la sortie du bloc `title` serait "My super website - Example page" :
 
 ```html
 {% extend "base.html" %}
@@ -190,15 +190,15 @@ For example, with the following snippet the output of the `title` block would be
 {% block content %}Custom page content{% endblock %}
 ```
 
-It's important to remember that the `super` template tag can only be used within `block` tags.
+Il est important de se rappeler que le tag de template `super` ne peut être utilisé qu'à l'intérieur de tags `block`.
 
-## Template inclusion
+## Inclusion de templates
 
-Templates can "include" other templates easily through the use of the [`include`](./reference/tags.md#include) template tag. Such templates are usually referred to as "partials": these are template snippets that can be easily "included" into other templates to avoid duplications of code.
+Les templates peuvent « inclure » d'autres templates facilement grâce à l'utilisation du tag de template [`include`](./reference/tags.md#include). De tels templates sont généralement appelés « partiels » : ce sont des fragments de template qui peuvent être facilement « inclus » dans d'autres templates pour éviter la duplication de code.
 
-Included templates are rendered using the context of the including template. This means that all the variables that are provided to the including template can also be used as part of the included template. In addition to that, other specific variables can also be defined when including a specific template.
+Les templates inclus sont rendus en utilisant le contexte du template incluant. Cela signifie que toutes les variables fournies au template incluant peuvent également être utilisées dans le template inclus. De plus, d'autres variables spécifiques peuvent également être définies lors de l'inclusion d'un template spécifique.
 
-For example, let's assume that a project defines the following partial template:
+Par exemple, supposons qu'un projet définisse le template partiel suivant :
 
 ```html name="src/templates/partials/button.html
 <button class="{{ type }}">
@@ -206,54 +206,53 @@ For example, let's assume that a project defines the following partial template:
 </button>
 ```
 
-This partial could be included as follows in the following template:
+Ce partiel pourrait être inclus comme suit dans le template suivant :
 
 ```html
 {% include "partials/button.html" with type="primary" %}
 {% include "partials/button.html" with type="primary", text="Custom text" %}
 ```
 
-Note the use of the `with` keyword to specify comma-separated variables that should be used to populate the included template's context.
+Notez l'utilisation du mot-clé `with` pour spécifier les variables séparées par des virgules qui doivent être utilisées pour remplir le contexte du template inclus.
 
-Obviously, it is also possible to include partials that don't require any variables. In that case, the use of the `with` keyword is not necessary:
+Évidemment, il est aussi possible d'inclure des partiels qui ne nécessitent aucune variable. Dans ce cas, l'utilisation du mot-clé `with` n'est pas nécessaire :
 
 ```html
 {% include "partials/other_snippet.html" %}
 ```
 
-## Template loading
+## Chargement de templates
 
-Templates can be loaded from specific locations within your codebase and from application folders. This is controlled by two main settings:
+Les templates peuvent être chargés depuis des emplacements spécifiques dans votre code source et depuis les dossiers des applications. Cela est contrôlé par deux paramètres principaux :
 
-* [`templates.app_dirs`](../development/reference/settings.md#app_dirs-1) is a boolean that indicates whether or not it should be possible to load templates that are provided by [installed applications](../development/reference/settings.md#installed_apps). Indeed, applications can define a `templates` folder at their root, and these templates will be discoverable by Marten if this setting is set to `true`
-* [`templates.dirs`](../development/reference/settings.md#dirs-1) is an array of additional directories where templates should be looked for
+* [`templates.app_dirs`](../development/reference/settings.md#app_dirs-1) est un booléen qui indique s'il doit être possible de charger des templates fournis par les [applications installées](../development/reference/settings.md#installed_apps). En effet, les applications peuvent définir un dossier `templates` à leur racine, et ces templates seront découverts par Marten si ce paramètre est défini à `true`
+* [`templates.dirs`](../development/reference/settings.md#dirs-1) est un tableau de répertoires supplémentaires où les templates doivent être recherchés
 
-Application templates are always enabled by default (`templates.app_dirs = true`) for new Marten projects.
+Les templates d'application sont toujours activés par défaut (`templates.app_dirs = true`) pour les nouveaux projets Marten.
 
-It is possible to programmatically load a template by name. To do so, you can use the [`#get_template`](pathname:///api/dev/Marten/Template/Engine.html#get_template(template_name%3AString)%3ATemplate-instance-method) method that is provided by the Marten templates engine:
+Il est possible de charger un template par nom de manière programmatique. Pour ce faire, vous pouvez utiliser la méthode [`#get_template`](pathname:///api/dev/Marten/Template/Engine.html#get_template(template_name%3AString)%3ATemplate-instance-method) fournie par le moteur de templates de Marten :
 
 ```crystal
 Marten.templates.get_template("foo/bar.html")
 ```
 
-This will return a compiled [`Template`](pathname:///api/dev/Marten/Template/Template.html) object that you can then render by using a specific context.
+Cela retournera un objet [`Template`](pathname:///api/dev/Marten/Template/Template.html) compilé que vous pourrez ensuite rendre en utilisant un contexte spécifique.
 
-:::tip Customizing template loaders
-The [`templates.loaders`](../development/reference/settings.md#loaders) setting provides fine-grained control over how Marten discovers and loads templates. This setting expects an array of template loader classes, which must inherit from `Marten::Template::Loader::Base`. This setting will overwrite the default template loaders
-configured by Marten. This gives you the option to configure [custom loaders](./how-to/create-custom-loaders.md) to load templates from different sources, such as databases or in-memory data structures.
+:::tip Personnaliser les loaders de templates
+Le paramètre [`templates.loaders`](../development/reference/settings.md#loaders) offre un contrôle précis sur la façon dont Marten découvre et charge les templates. Ce paramètre attend un tableau de classes de loaders de templates, qui doivent hériter de `Marten::Template::Loader::Base`. Ce paramètre remplacera les loaders de templates par défaut configurés par Marten. Cela vous donne la possibilité de configurer des [loaders personnalisés](./how-to/create-custom-loaders.md) pour charger des templates depuis différentes sources, telles que des bases de données ou des structures de données en mémoire.
 
-Example: Configuring a File System Loader
+Exemple : Configuration d'un loader de système de fichiers
 
 ```crystal
 config.templates.loaders = [Marten::Template::Loader::FileSystem.new("/path/to/templates")] of Marten::Template::Loader::Base
 ```
 :::
 
-## Rendering a template
+## Rendu d'un template
 
-You won't usually need to interact with the "low-level" API of the Marten template engine in order to render templates: most of the time you will render templates as part of [handlers](../handlers-and-http.mdx), which means that you will likely end up using the [`#render`](../handlers-and-http/introduction.md#render) shortcut or [generic handlers](../handlers-and-http/generic-handlers.md) that automatically render templates for you.
+Vous n'aurez généralement pas besoin d'interagir avec l'API « bas niveau » du moteur de templates de Marten pour rendre des templates : la plupart du temps, vous rendrez des templates dans le cadre de [handlers](../handlers-and-http.mdx), ce qui signifie que vous utiliserez probablement le raccourci [`#render`](../handlers-and-http/introduction.md#render) ou des [handlers génériques](../handlers-and-http/generic-handlers.md) qui rendent automatiquement les templates pour vous.
 
-That being said, it is also possible to render any [`Template`](pathname:///api/dev/Marten/Template/Template.html) object that you loaded by leveraging the [`#render`](pathname:///api/dev/Marten/Template/Template.html#render(context%3AHash|NamedTuple)%3AString-instance-method) method. This method can be used either with a Marten context object, a hash, or a named tuple:
+Cela dit, il est également possible de rendre n'importe quel objet [`Template`](pathname:///api/dev/Marten/Template/Template.html) que vous avez chargé en utilisant la méthode [`#render`](pathname:///api/dev/Marten/Template/Template.html#render(context%3AHash|NamedTuple)%3AString-instance-method). Cette méthode peut être utilisée soit avec un objet contexte Marten, un hash, ou un named tuple :
 
 ```crystal
 template = Marten.templates.get_template("foo/bar.html")
@@ -262,11 +261,11 @@ template.render({"foo" => "bar"})
 template.render({ foo: "bar" })
 ```
 
-## Using enums in contexts
+## Utilisation des enums dans les contextes
 
-[Enum](https://crystal-lang.org/api/Enum.html) classes cannot be part of union types in Crystal. Because of this limitation, enum values are replaced by special objects in Marten templates. These objects always resolve to the integer value of the corresponding enum value.
+Les classes [Enum](https://crystal-lang.org/api/Enum.html) ne peuvent pas faire partie de types union en Crystal. En raison de cette limitation, les valeurs d'enum sont remplacées par des objets spéciaux dans les templates Marten. Ces objets se résolvent toujours vers la valeur entière de la valeur d'enum correspondante.
 
-For example, let's consider the following enum:
+Par exemple, considérons l'enum suivant :
 
 ```crystal
 enum Color
@@ -276,15 +275,15 @@ enum Color
 end
 ```
 
-If a `color` variable is set to `Color::Red`, then the following template will output `0`:
+Si une variable `color` est définie à `Color::Red`, alors le template suivant affichera `0` :
 
 ```html
 {{ color }}
 ```
 
-It's important to note that enum values within Marten templates can be compared with each other, yielding the same results as comparing enum values in Crystal.
+Il est important de noter que les valeurs d'enum dans les templates Marten peuvent être comparées entre elles, produisant les mêmes résultats que la comparaison de valeurs d'enum en Crystal.
 
-Additionally, `<name>?` helper properties can be invoked on enum values within templates, simplifying the process of determining the type of the enum value being considered. For instance:
+De plus, les propriétés d'aide `<name>?` peuvent être invoquées sur les valeurs d'enum dans les templates, simplifiant le processus de détermination du type de la valeur d'enum considérée. Par exemple :
 
 ```html
 {% if color.red? %}
@@ -292,15 +291,15 @@ Additionally, `<name>?` helper properties can be invoked on enum values within t
 {% endif %}
 ```
 
-## Using custom objects in contexts
+## Utilisation d'objets personnalisés dans les contextes
 
-Most objects that are provided by Marten (such as Model records, query sets, schemas, etc) can automatically be used as part of templates. If your project involves other custom classes, and if you would like to interact with such objects in your templates, then you will need to explicitly ensure that they include the [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) module.
+La plupart des objets fournis par Marten (tels que les enregistrements Model, les query sets, les schemas, etc.) peuvent automatiquement être utilisés dans les templates. Si votre projet implique d'autres classes personnalisées, et si vous souhaitez interagir avec de tels objets dans vos templates, vous devrez explicitement vous assurer qu'ils incluent le module [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html).
 
-:::note Why?
-Crystal being a statically typed language, the Marten engine needs to know which types of objects it is dealing with in advance in order to know (i) what can go into template contexts and (ii) how to "resolve" object attributes when templates are rendered. It is not possible to simply expect any `Object` object, hence why we need to make use of a shared [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) module to account for all the classes whose objects should be usable as part of template contexts.
+:::note Pourquoi ?
+Crystal étant un langage typé statiquement, le moteur Marten a besoin de savoir quels types d'objets il manipule à l'avance afin de savoir (i) ce qui peut être placé dans les contextes de template et (ii) comment « résoudre » les attributs des objets lorsque les templates sont rendus. Il n'est pas possible d'attendre simplement n'importe quel objet `Object`, c'est pourquoi nous devons utiliser un module partagé [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) pour prendre en compte toutes les classes dont les objets doivent être utilisables dans les contextes de template.
 :::
 
-Let's take the example of a `Point` class that provides access to an x-coordinate and a y-coordinate:
+Prenons l'exemple d'une classe `Point` qui fournit un accès à une coordonnée x et une coordonnée y :
 
 ```crystal
 class Point
@@ -312,19 +311,19 @@ class Point
 end
 ```
 
-By default, `Point` objects cannot be used as part of templates. Let's say we want to render the following template involving a `point` variable:
+Par défaut, les objets `Point` ne peuvent pas être utilisés dans les templates. Supposons que nous voulions rendre le template suivant impliquant une variable `point` :
 
 ```html
-My point is: {{ point.x }}, {{ point.y }}
+My point is: {{ point.x }}, {{ point.y }}
 ```
 
-If you try to render such a template while passing a `Point` object into the template context, you will encounter a `Marten::Template::Errors::UnsupportedValue` exception stating:
+Si vous essayez de rendre un tel template en passant un objet `Point` dans le contexte du template, vous rencontrerez une exception `Marten::Template::Errors::UnsupportedValue` indiquant :
 
 ```
 Unable to initialize template values from Point objects
 ```
 
-To remediate this, you will have to include the [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) module in the `Point` class and define a `#resolve_template_attribute` method as follows:
+Pour remédier à cela, vous devrez inclure le module [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) dans la classe `Point` et définir une méthode `#resolve_template_attribute` comme suit :
 
 ```crystal
 class Point
@@ -347,9 +346,9 @@ class Point
 end
 ```
 
-Each class including the [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) module must also implement a `#resolve_template_attribute` method in order to allow resolutions of object attributes when templates are rendered (for example `{{ point.x }}`). That being said, there are a few shortcuts that can be used in order to avoid writing such methods.
+Chaque classe incluant le module [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) doit également implémenter une méthode `#resolve_template_attribute` afin de permettre la résolution des attributs des objets lorsque les templates sont rendus (par exemple `{{ point.x }}`). Cela dit, il existe quelques raccourcis pour éviter d'écrire de telles méthodes.
 
-The first one is to use the [`#template_attributes`](pathname:///api/dev/Marten/Template/Object.html#template_attributes(*names)-macro) macro in order to easily define the names of the methods that should be made available to the template runtime. For example, such macro could be used like this with our `Point` class:
+Le premier est d'utiliser la macro [`#template_attributes`](pathname:///api/dev/Marten/Template/Object.html#template_attributes(*names)-macro) afin de définir facilement les noms des méthodes qui doivent être rendues disponibles au runtime du template. Par exemple, cette macro pourrait être utilisée ainsi avec notre classe `Point` :
 
 ```crystal
 class Point
@@ -365,7 +364,7 @@ class Point
 end
 ```
 
-Another possibility is to include the [`Marten::Template::Object::Auto`](pathname:///api/dev/Marten/Template/Object/Auto.html) module instead of the [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) one in your class. This module will automatically ensure that every "attribute-like" public method that is defined in the including class can also be accessed in templates when performing variable lookups.
+Une autre possibilité est d'inclure le module [`Marten::Template::Object::Auto`](pathname:///api/dev/Marten/Template/Object/Auto.html) au lieu du module [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) dans votre classe. Ce module s'assurera automatiquement que chaque méthode publique de type « attribut » définie dans la classe incluante peut également être accédée dans les templates lors des recherches de variables.
 
 ```crystal
 class Point
@@ -379,15 +378,15 @@ class Point
 end
 ```
 
-Note that **all** "attribute-like" public methods will be made available to the template runtime when using the [`Marten::Template::Object::Auto`](pathname:///api/dev/Marten/Template/Object/Auto.html) module. This may be a good enough behavior, but if you want to have more control over what can be accessed in templates or not, you will likely end up using [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) and the [`#template_attributes`](pathname:///api/dev/Marten/Template/Object.html#template_attributes(*names)-macro) macro instead.
+Notez que **toutes** les méthodes publiques de type « attribut » seront rendues disponibles au runtime du template lors de l'utilisation du module [`Marten::Template::Object::Auto`](pathname:///api/dev/Marten/Template/Object/Auto.html). Cela peut être un comportement suffisant, mais si vous souhaitez avoir plus de contrôle sur ce qui peut être accédé dans les templates ou non, vous finirez probablement par utiliser [`Marten::Template::Object`](pathname:///api/dev/Marten/Template/Object.html) et la macro [`#template_attributes`](pathname:///api/dev/Marten/Template/Object.html#template_attributes(*names)-macro) à la place.
 
-## Using context producers
+## Utilisation des context producers
 
-Context producers are helpers that ensure that common variables are automatically inserted in the template context whenever a template is rendered. They are applied every time a new template context is generated.
+Les context producers sont des aides qui garantissent que des variables communes sont automatiquement insérées dans le contexte du template chaque fois qu'un template est rendu. Ils sont appliqués à chaque fois qu'un nouveau contexte de template est généré.
 
-For example, they can be used to insert the current HTTP request object in every template context being rendered in the context of a handler and HTTP request. This makes sense considering that the HTTP request object is a common object that is likely to be used by multiple templates in your project: that way there is no need to explicitly "insert" it in the context every time you render a template. This specific capability is provided by the [`Marten::Template::ContextProducer::Request`](pathname:///api/dev/Marten/Template/ContextProducer/Request.html) context producer, which inserts a `request` object into every template context.
+Par exemple, ils peuvent être utilisés pour insérer l'objet de requête HTTP courante dans chaque contexte de template rendu dans le cadre d'un handler et d'une requête HTTP. Cela a du sens étant donné que l'objet de requête HTTP est un objet couramment utilisé par plusieurs templates dans votre projet : de cette façon, il n'est pas nécessaire de l'insérer explicitement dans le contexte à chaque fois que vous rendez un template. Cette capacité spécifique est fournie par le context producer [`Marten::Template::ContextProducer::Request`](pathname:///api/dev/Marten/Template/ContextProducer/Request.html), qui insère un objet `request` dans chaque contexte de template.
 
-Template context producers can be configured through the use of the [`templates.context_producers`](../development/reference/settings.md#context_producers) setting. When generating a new project by using the `marten new` command, the following context producers will be automatically configured:
+Les context producers de templates peuvent être configurés via le paramètre [`templates.context_producers`](../development/reference/settings.md#context_producers). Lors de la génération d'un nouveau projet en utilisant la commande `marten new`, les context producers suivants seront automatiquement configurés :
 
 ```crystal
 config.templates.context_producers = [
@@ -398,46 +397,46 @@ config.templates.context_producers = [
 ]
 ```
 
-Each context producer in this array will be applied in order when a new template context is created and will contribute "common" context values to it. This means that the order of these is important since context producers can technically overwrite the values that were added by previous context producers.
+Chaque context producer dans ce tableau sera appliqué dans l'ordre lorsqu'un nouveau contexte de template est créé et contribuera des valeurs de contexte « communes ». Cela signifie que l'ordre de ces éléments est important puisque les context producers peuvent techniquement écraser les valeurs ajoutées par les context producers précédents.
 
-Please head over to the [context producers reference](./reference/context-producers.md) to see a list of all the available context producers. Implementing custom context producers is also a possibility that is documented in [Create custom context producers](./how-to/create-custom-context-producers.md).
+Consultez la [référence des context producers](./reference/context-producers.md) pour voir la liste de tous les context producers disponibles. L'implémentation de context producers personnalisés est également possible et documentée dans [Créer des context producers personnalisés](./how-to/create-custom-context-producers.md).
 
-## Auto-escaping
+## Auto-échappement {#auto-escaping}
 
-The output of template variables is automatically escaped by Marten in order to prevent Cross-Site Scripting (XSS) vulnerabilities.
+La sortie des variables de template est automatiquement échappée par Marten afin de prévenir les vulnérabilités de type Cross-Site Scripting (XSS).
 
-For example, let's consider the following snippet:
+Par exemple, considérons le fragment suivant :
 
 ```html
 Hello, {{ name }}!
 ```
 
-If this template is rendered with `<script>alert('popup')</script>` as the content of the `name` variable, then the output will be:
+Si ce template est rendu avec `<script>alert('popup')</script>` comme contenu de la variable `name`, alors la sortie sera :
 
 ```html
 Hello, &lt;script&gt;alert(&#39;popup&#39;)&lt;/script&gt;!
 ```
 
-It should be noted that this behavior can be disabled _explicitly_. Indeed, sometimes it is expected that some template variables will contain trusted HTML content that you intend to embed into the template's HTML.
+Il est à noter que ce comportement peut être désactivé _explicitement_. En effet, parfois il est attendu que certaines variables de template contiennent du contenu HTML de confiance que vous souhaitez intégrer dans le HTML du template.
 
-To do this, it is possible to make use of the [`safe`](./reference/filters.md#safe) template filter. This filter "marks" the output of a variable as safe, which ensures that its content is not escaped before being inserted in the final output of a rendered template.
+Pour ce faire, il est possible d'utiliser le filter de template [`safe`](./reference/filters.md#safe). Ce filter « marque » la sortie d'une variable comme sûre, ce qui garantit que son contenu n'est pas échappé avant d'être inséré dans la sortie finale d'un template rendu.
 
-For example:
+Par exemple :
 
 ```html
 Hello, {{ name }}!
 Hello, {{ name|safe }}!
 ```
 
-When rendered with `<b>John</b>` as the content of the `name` variable, the above template will output:
+Lorsqu'il est rendu avec `<b>John</b>` comme contenu de la variable `name`, le template ci-dessus produira :
 
 ```html
 Hello, &lt;b&gt;John&lt;/b&gt;!
 Hello, <b>John</b>!
 ```
 
-## Strict variables
+## Variables strictes
 
-By default, when a template variable is unknown or undefined, Marten treats it as a `nil` value. Consequently, nothing will be displayed for such variables, and they will be evaluated as falsey in if conditions.
+Par défaut, lorsqu'une variable de template est inconnue ou non définie, Marten la traite comme une valeur `nil`. Par conséquent, rien ne sera affiché pour de telles variables, et elles seront évaluées comme fausses dans les conditions if.
 
-However, it is possible to modify this behavior by enabling the [`templates.strict_variables`](../development/reference/settings.md#strict_variables) setting. When this setting is set to `true`, unknown variables encountered in templates will raise [`Marten::Template::Errors::UnknownVariable`](pathname:///api/dev/Marten/Template/Errors/UnknownVariable.html) exceptions.
+Cependant, il est possible de modifier ce comportement en activant le paramètre [`templates.strict_variables`](../development/reference/settings.md#strict_variables). Lorsque ce paramètre est défini à `true`, les variables inconnues rencontrées dans les templates lèveront des exceptions [`Marten::Template::Errors::UnknownVariable`](pathname:///api/dev/Marten/Template/Errors/UnknownVariable.html).

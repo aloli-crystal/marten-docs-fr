@@ -1,43 +1,43 @@
 ---
-title: Management commands
-description: Learn the basics of the Marten management CLI tool.
-sidebar_label: Management commands
+title: Commandes de gestion
+description: Apprenez les bases de l'outil CLI de gestion de Marten.
+sidebar_label: Commandes de gestion
 ---
 
-Marten comes with a built-in command line interface (CLI) that developers can leverage to perform common actions and interact with the framework. This tool provides a set of built-in sub-commands that can be easily extended with new commands.
+Marten est livré avec un outil en ligne de commande (CLI) intégré que les développeurs peuvent utiliser pour effectuer des actions courantes et interagir avec le framework. Cet outil fournit un ensemble de sous-commandes intégrées qui peuvent être facilement étendues avec de nouvelles commandes.
 
-## Usage
+## Utilisation
 
-The `marten` command is available with each Marten installation, and it is also automatically compiled when the Marten shard is installed. This means that you can either use the `marten` command from anywhere in your system (if the Marten CLI was installed globally like described in [Installation](../getting-started/installation.md)) or you can run the relative `bin/marten` command from inside your project structure.
+La commande `marten` est disponible avec chaque installation de Marten, et elle est également compilée automatiquement lorsque le shard Marten est installé. Cela signifie que vous pouvez soit utiliser la commande `marten` depuis n'importe où sur votre système (si le CLI Marten a été installé globalement comme décrit dans [Installation](../getting-started/installation.md)), soit exécuter la commande relative `bin/marten` depuis l'intérieur de la structure de votre projet.
 
-When the `marten` command is executed, it will look for a relative `manage.cr` file to identify your current project, its [settings](./settings.md), and its installed [applications](./applications.md), which in turn will define the available sub-commands that you can run.
+Lorsque la commande `marten` est exécutée, elle recherchera un fichier relatif `manage.cr` pour identifier votre projet actuel, ses [paramètres](./settings.md), et ses [applications](./applications.md) installées, qui à leur tour définiront les sous-commandes disponibles que vous pouvez exécuter.
 
-The `marten` command is intended to be used as follows:
+La commande `marten` est destinée à être utilisée comme suit :
 
 ```bash
 marten [command] [options] [arguments]
 ```
 
-As you can see, the `marten` CLI must be used with a specific **command**, possibly followed by **options** and **arguments** (which may be required or not depending on the considered command). All the built-in commands are listed in the [management commands reference](./reference/management-commands.md).
+Comme vous pouvez le voir, le CLI `marten` doit être utilisé avec une **commande** spécifique, éventuellement suivie d'**options** et d'**arguments** (qui peuvent être requis ou non selon la commande considérée). Toutes les commandes intégrées sont listées dans la [référence des commandes de gestion](./reference/management-commands.md).
 
-### Displaying help information
+### Afficher les informations d'aide
 
-You can display help information about a specific management command by using the `marten` CLI as follows:
+Vous pouvez afficher les informations d'aide d'une commande de gestion spécifique en utilisant le CLI `marten` comme suit :
 
 ```bash
 marten help [command]
 marten [command] --help
 ```
 
-### Listing commands
+### Lister les commandes
 
-It is possible to list all the available commands within a project by running the `marten` CLI as follows:
+Il est possible de lister toutes les commandes disponibles dans un projet en exécutant le CLI `marten` comme suit :
 
 ```bash
 marten help
 ```
 
-This should output something like this:
+Cela devrait produire quelque chose comme ceci :
 
 ```bash
 Usage: marten [command] [options] [arguments]
@@ -64,17 +64,17 @@ Run a command followed by --help to see command specific information, ex:
 marten [command] --help
 ```
 
-All the available commands are listed per application: by default, only `marten` commands are listed obviously (if no other applications are installed), but it should be noted that [applications](./applications.md) can contribute management commands as well. If that's the case, these additional commands will be automatically listed as well.
+Toutes les commandes disponibles sont listées par application : par défaut, seules les commandes `marten` sont listées évidemment (si aucune autre application n'est installée), mais il convient de noter que les [applications](./applications.md) peuvent également contribuer des commandes de gestion. Si c'est le cas, ces commandes supplémentaires seront automatiquement listées aussi.
 
-### Shared options
+### Options partagées {#shared-options}
 
-Each command can accept its own set of arguments and options, but it should be noted that all the available commands always accept the following options:
+Chaque commande peut accepter son propre ensemble d'arguments et d'options, mais il convient de noter que toutes les commandes disponibles acceptent toujours les options suivantes :
 
-* `--error-trace` - Allows showing the full error trace (if a compilation is involved)
-* `--log-level=level` - Set the log level (default to "info")
-* `--no-color` - Disables colored outputs
-* `-h, --help` - Displays help information about the considered command
+* `--error-trace` - Permet d'afficher la trace d'erreur complète (si une compilation est impliquée)
+* `--log-level=level` - Définit le niveau de log (par défaut "info")
+* `--no-color` - Désactive les sorties colorées
+* `-h, --help` - Affiche les informations d'aide sur la commande considérée
 
-## Available commands
+## Commandes disponibles
 
-Please head over to the [management commands reference](./reference/management-commands.md) to see a list of all the available management commands. Implementing custom management commands is also a possibility that is documented in [Create custom commands](./how-to/create-custom-commands.md).
+Veuillez vous rendre sur la [référence des commandes de gestion](./reference/management-commands.md) pour voir la liste de toutes les commandes de gestion disponibles. L'implémentation de commandes de gestion personnalisées est également une possibilité documentée dans [Créer des commandes personnalisées](./how-to/create-custom-commands.md).

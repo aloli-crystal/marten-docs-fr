@@ -1,34 +1,34 @@
 ---
-title: Design philosophies
-description: Learn about the design philosophies behind the Marten web framework.
+title: Philosophies de conception
+description: Découvrez les philosophies de conception derrière le framework web Marten.
 ---
 
-This document goes over the fundamental design philosophies that influenced the creation of the Marten web framework. It seeks to provide insight into the past and serve as a reference for the future.
+Ce document présente les philosophies de conception fondamentales qui ont influencé la création du framework web Marten. Il cherche à donner un aperçu du passé et à servir de référence pour l'avenir.
 
-## Simple and easy to use
+## Simple et facile à utiliser
 
-Marten tries to ensure that everything it enables is as simple as possible and that the syntax provided for dealing with the framework's components remains obvious and easy to remember (and certainly not complex or obscure). The framework makes it as easy as possible to leverage its capabilities and perform CRUD operations.
+Marten s'efforce de garantir que tout ce qu'il permet est aussi simple que possible et que la syntaxe fournie pour interagir avec les composants du framework reste évidente et facile à retenir (et certainement pas complexe ou obscure). Le framework rend aussi facile que possible l'exploitation de ses capacités et la réalisation d'opérations CRUD.
 
-## Full-featured
+## Complet
 
-Marten adheres to the "batteries included" philosophy. Out of the box, it provides the tools and features that are commonly required by web applications: [ORM](../models-and-databases/introduction.md), [migrations](../models-and-databases/migrations.md), [translations](../i18n/introduction.md), [templating engine](../templates/introduction.md), [sessions](../handlers-and-http/sessions.md), [emailing](../emailing/introduction.md), and [authentication](../authentication/introduction.md).
+Marten adhère à la philosophie "batteries incluses". Dès son installation, il fournit les outils et fonctionnalités couramment requis par les applications web : [ORM](../models-and-databases/introduction.md), [migrations](../models-and-databases/migrations.md), [traductions](../i18n/introduction.md), [moteur de templates](../templates/introduction.md), [sessions](../handlers-and-http/sessions.md), [envoi d'emails](../emailing/introduction.md) et [authentification](../authentication/introduction.md).
 
 ## Extensible
 
-Marten gives developers the ability to contribute extra functionalities to the framework easily. Things like [custom model field implementations](../models-and-databases/how-to/create-custom-model-fields.md), [new route parameter types](../handlers-and-http/how-to/create-custom-route-parameters.md), [session stores](../handlers-and-http/sessions.md#session-stores), etc... can all be registered to the framework easily.
+Marten donne aux développeurs la possibilité de contribuer facilement des fonctionnalités supplémentaires au framework. Des éléments comme les [implémentations de champs de modèle personnalisés](../models-and-databases/how-to/create-custom-model-fields.md), les [nouveaux types de paramètres de route](../handlers-and-http/how-to/create-custom-route-parameters.md), les [stores de session](../handlers-and-http/sessions.md#session-stores), etc. peuvent tous être enregistrés facilement dans le framework.
 
-## DB-Neutral
+## Neutre vis-à-vis de la base de données
 
-The framework's ORM is and should remain usable with multiple database backends (including MariaDB, MySQL, PostgreSQL, and SQLite).
+L'ORM du framework est et devrait rester utilisable avec plusieurs backends de base de données (notamment MariaDB, MySQL, PostgreSQL et SQLite).
 
-## App-oriented
+## Orienté applications
 
-Marten allows separating projects into a set of logical "[apps](../development/applications.md)", which helps improve code organization and makes it easy for multiple developers to work on different components. Each app can contribute specific abstractions and features to a project like models and migrations, templates, HTTP handlers and routes, etc. These apps can also be extracted in Crystal shards in order to contribute features and behaviors to other Marten projects. The goal behind this capability is to allow the creation of a powerful apps ecosystem over time and to encourage "reusability" and "pluggability".
+Marten permet de séparer les projets en un ensemble d'« [applications](../development/applications.md) » logiques, ce qui contribue à améliorer l'organisation du code et facilite le travail de plusieurs développeurs sur différents composants. Chaque application peut apporter des abstractions et fonctionnalités spécifiques à un projet comme des modèles et des migrations, des templates, des handlers HTTP et des routes, etc. Ces applications peuvent également être extraites dans des shards Crystal afin de contribuer des fonctionnalités et comportements à d'autres projets Marten. L'objectif derrière cette capacité est de permettre la création d'un puissant écosystème d'applications au fil du temps et d'encourager la "réutilisabilité" et la "modularité".
 
 :::tip
-In this light, the [Awesome Marten](https://github.com/martenframework/awesome-marten) repository lists applications that you can leverage in your projects.
+Dans cette optique, le dépôt [Awesome Marten](https://github.com/martenframework/awesome-marten) répertorie les applications que vous pouvez exploiter dans vos projets.
 :::
 
-## Backend-oriented
+## Orienté backend
 
-The framework is intentionally very "backend-oriented" because the idea is to not make too many assumptions regarding how the frontend code and assets should be structured, packaged or bundled together. The framework can't account for all the ways assets can be packaged and/or bundled together and does not advocate for specific solutions in this area. Some projects might require a webpack strategy to bundle assets, some might require a fingerprinting step on top of that, and others might need something entirely different. How these toolchains are configured or set up is left to the discretion of web application developers, and the framework simply makes it easy to [reference these assets](../assets/introduction.md) and [collect them](../assets/introduction.md#serving-assets-in-production) at deploy time to upload them to their final destination.
+Le framework est intentionnellement très "orienté backend" car l'idée est de ne pas faire trop d'hypothèses sur la manière dont le code frontend et les assets doivent être structurés, empaquetés ou regroupés. Le framework ne peut pas tenir compte de toutes les façons dont les assets peuvent être empaquetés et/ou regroupés et ne préconise pas de solutions spécifiques dans ce domaine. Certains projets peuvent nécessiter une stratégie webpack pour regrouper les assets, certains peuvent nécessiter une étape de fingerprinting en plus, et d'autres peuvent avoir besoin de quelque chose de complètement différent. La manière dont ces chaînes d'outils sont configurées ou mises en place est laissée à la discrétion des développeurs d'applications web, et le framework se contente de faciliter le [référencement de ces assets](../assets/introduction.md) et leur [collecte](../assets/introduction.md#serving-assets-in-production) au moment du déploiement pour les envoyer vers leur destination finale.

@@ -1,41 +1,41 @@
 ---
-title: Template loaders
-description: Template loaders reference.
+title: Loaders de template
+description: Référence des loaders de template.
 ---
 
-This page provides a reference for all the available template loaders that can be used to customize template retrieval in Marten.
+Cette page fournit une référence pour tous les loaders de template disponibles qui peuvent être utilisés pour personnaliser la récupération des templates dans Marten.
 
-## FileSystem Loader
+## Loader FileSystem
 
-**Class**: [`Marten::Template::Loader::FileSystem`](pathname:///api/dev/Marten/Template/Loader/FileSystem.html)
+**Classe** : [`Marten::Template::Loader::FileSystem`](pathname:///api/dev/Marten/Template/Loader/FileSystem.html)
 
-Loads templates directly from the file system.
+Charge les templates directement depuis le système de fichiers.
 
-Initialization example:
+Exemple d'initialisation :
 
 ```crystal
 loader = Marten::Template::Loader::FileSystem.new("/path/to/templates")
 ```
 
-## AppDirs Loader
+## Loader AppDirs
 
-**Class**: [`Marten::Template::Loader::AppDirs`](pathname:///api/dev/Marten/Template/Loader/AppDirs.html)
+**Classe** : [`Marten::Template::Loader::AppDirs`](pathname:///api/dev/Marten/Template/Loader/AppDirs.html)
 
-Coordinates template loading from application directories. Relies on instances of FileSystem.
+Coordonne le chargement des templates depuis les répertoires des applications. S'appuie sur des instances de FileSystem.
 
-Initialization example:
+Exemple d'initialisation :
 
 ```crystal
 loader = Marten::Template::Loader::AppDirs.new
 ```
 
-## Cached Loader
+## Loader Cached
 
-**Class**: [`Marten::Template::Loader::Cached`](pathname:///api/dev/Marten/Template/Loader/Cached.html)
+**Classe** : [`Marten::Template::Loader::Cached`](pathname:///api/dev/Marten/Template/Loader/Cached.html)
 
-Provides a caching layer for compiled templates. Can wrap other loaders to optimize retrieval.
+Fournit une couche de mise en cache pour les templates compilés. Peut encapsuler d'autres loaders pour optimiser la récupération.
 
-Initialization example:
+Exemple d'initialisation :
 
 ```crystal
 file_loader = Marten::Template::Loader::FileSystem.new("/path/to/templates")

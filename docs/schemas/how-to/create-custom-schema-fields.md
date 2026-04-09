@@ -1,33 +1,33 @@
 ---
-title: Create custom schema fields
-description: How to create custom schema fields.
+title: Créer des champs de schema personnalisés
+description: Comment créer des champs de schema personnalisés.
 ---
 
-Marten gives you the ability to create your own custom schema field implementations. Those can involve custom validations, behaviors, and errors. You can leverage these custom fields as part of your project's schema definitions, and you can even distribute them to let other projects use them.
+Marten vous donne la possibilité de créer vos propres implémentations de champs de schema personnalisés. Ceux-ci peuvent impliquer des validations, des comportements et des erreurs personnalisés. Vous pouvez utiliser ces champs personnalisés dans les définitions de schema de votre projet, et vous pouvez même les distribuer pour permettre à d'autres projets de les utiliser.
 
-## Schema fields: scope and responsibilities
+## Champs de schema : portée et responsabilités
 
-Schema fields have the following responsibilities:
+Les champs de schema ont les responsabilités suivantes :
 
-* they define how field values are deserialized and serialized
-* they define how these values are validated
+* ils définissent comment les valeurs de champ sont désérialisées et sérialisées
+* ils définissent comment ces valeurs sont validées
 
-When creating a custom schema field, there are usually two approaches that you can consider depending on the amount of customization that you want to implement. You can either:
+Lors de la création d'un champ de schema personnalisé, il y a généralement deux approches que vous pouvez envisager selon le niveau de personnalisation que vous souhaitez implémenter. Vous pouvez soit :
 
-* leverage an existing built-in schema field (eg. integer, string, etc) and add custom behaviors and validations to it
-* or create a new schema field from scratch
+* utiliser un champ de schema intégré existant (par exemple integer, string, etc.) et y ajouter des comportements et validations personnalisés
+* soit créer un nouveau champ de schema de zéro
 
-## Registering new schema fields
+## Enregistrer de nouveaux champs de schema
 
-Regardless of the approach you take in order to define new schema field classes ([subclassing built-in fields](#subclassing-existing-schema-fields), or [creating new ones from scratch](#creating-new-schema-fields-from-scratch)), these classes must be registered to the Marten's global fields registry in order to make them available for use when defining schemas.
+Quelle que soit l'approche que vous adoptez pour définir de nouvelles classes de champs de schema ([sous-classer des champs existants](#sous-classer-des-champs-de-schema-existants), ou [en créer de nouveaux de zéro](#créer-de-nouveaux-champs-de-schema-de-zéro)), ces classes doivent être enregistrées dans le registre global des champs de Marten afin de les rendre disponibles lors de la définition de schemas.
 
-To do so, you will have to call the [`Marten::Schema::Field#register`](pathname:///api/dev/Marten/Schema/Field.html#register(id%2Cfield_klass)-macro) method with the identifier of the field you wish to use, and the actual field class. For example:
+Pour ce faire, vous devrez appeler la méthode [`Marten::Schema::Field#register`](pathname:///api/dev/Marten/Schema/Field.html#register(id%2Cfield_klass)-macro) avec l'identifiant du champ que vous souhaitez utiliser, et la classe de champ réelle. Par exemple :
 
 ```crystal
 Marten::Schema::Field.register(:foo, FooField)
 ```
 
-The identifier you pass to `#register` can be a symbol or a string. This is the identifier that is then made available to schema classes in order to define their fields:
+L'identifiant que vous passez à `#register` peut être un symbole ou une chaîne. C'est l'identifiant qui est ensuite rendu disponible aux classes schema pour définir leurs champs :
 
 ```crystal
 class MySchema < Marten::Schema
@@ -37,16 +37,16 @@ class MySchema < Marten::Schema
 end
 ```
 
-The call to `#register` can be made from anywhere in your codebase, but obviously, you will want to ensure that it is done before requiring your schema classes: indeed, Marten will make the compilation of your project fail if it can't find the field type you are trying to use as part of a schema definition.
+L'appel à `#register` peut être effectué depuis n'importe où dans votre code, mais évidemment, vous voudrez vous assurer qu'il est fait avant de requérir vos classes schema : en effet, Marten fera échouer la compilation de votre projet s'il ne peut pas trouver le type de champ que vous essayez d'utiliser dans une définition de schema.
 
-## Subclassing existing schema fields
+## Sous-classer des champs de schema existants
 
-This is probably the easiest way to create a custom field: if the field you want to create can be derived from one of the [built-in schema fields](../reference/fields.md) (usually those correspond to primitive types), then you can easily subclass the corresponding class and customize it so that it suits your needs.
+C'est probablement la manière la plus simple de créer un champ personnalisé : si le champ que vous voulez créer peut être dérivé de l'un des [champs de schema intégrés](../reference/fields.md) (ceux-ci correspondent généralement à des types primitifs), alors vous pouvez facilement sous-classer la classe correspondante et la personnaliser pour qu'elle réponde à vos besoins.
 
-For example, implementing a custom "email" field could be done by subclassing the existing [`Marten::Schema::Field::String`](pathname:///api/dev/Marten/Schema/Field/String.html) class. Indeed, an "email" field is essentially a string with a pre-defined maximum size and some additional validation logic:
+Par exemple, implémenter un champ « email » personnalisé pourrait être fait en sous-classant la classe existante [`Marten::Schema::Field::String`](pathname:///api/dev/Marten/Schema/Field/String.html). En effet, un champ « email » est essentiellement une chaîne avec une taille maximale prédéfinie et une logique de validation supplémentaire :
 
 ```crystal
-class EmailField < Marten::Schema::Field::String
+class EmailField < Marten::Schema::Field::String
   def initialize(
     @id : ::String,
     @required : ::Bool = true,
@@ -69,19 +69,19 @@ class EmailField < Marten::Schema::Field::String
 end
 ```
 
-In the above snippet, the `EmailField` class simply overrides the `#validate` method so that it implements validation rules that are specific to the use case of email addresses (while also ensuring that regular string validations are executed as well).
+Dans le fragment ci-dessus, la classe `EmailField` surcharge simplement la méthode `#validate` afin d'implémenter des règles de validation spécifiques au cas d'utilisation des adresses email (tout en s'assurant que les validations classiques de chaîne sont également exécutées).
 
-Everything that is described in the following section about [creating schema fields from scratch](#creating-new-schema-fields-from-scratch) also applies to the case of subclassing existing schema fields: the same methods can be overridden if necessary, but leveraging an existing class can save you some work.
+Tout ce qui est décrit dans la section suivante sur la [création de champs de schema de zéro](#créer-de-nouveaux-champs-de-schema-de-zéro) s'applique également au cas du sous-classement de champs existants : les mêmes méthodes peuvent être surchargées si nécessaire, mais utiliser une classe existante peut vous faire gagner du temps.
 
-## Creating new schema fields from scratch
+## Créer de nouveaux champs de schema de zéro
 
-Creating new schema fields from scratch involves subclassing the [`Marten::Schema::Field::Base`](pathname:///api/dev/Marten/Schema/Field/Base.html) abstract class. Because of this, the new field class is required to implement a set of mandatory methods. These mandatory methods, and some other ones that are optional (but interesting in terms of capabilities), are described in the following sections.
+Créer de nouveaux champs de schema de zéro implique de sous-classer la classe abstraite [`Marten::Schema::Field::Base`](pathname:///api/dev/Marten/Schema/Field/Base.html). De ce fait, la nouvelle classe de champ doit implémenter un ensemble de méthodes obligatoires. Ces méthodes obligatoires, et d'autres qui sont optionnelles (mais intéressantes en termes de fonctionnalités), sont décrites dans les sections suivantes.
 
-### Mandatory methods
+### Méthodes obligatoires
 
 #### `deserialize`
 
-The `#deserialize` method is responsible for deserializing a schema field value. Indeed, the raw value of a schema field usually comes from a request's data and needs to be converted to another format. For example, a `uuid` field might need to convert a `String` value to a proper `UUID` object:
+La méthode `#deserialize` est responsable de la désérialisation d'une valeur de champ de schema. En effet, la valeur brute d'un champ de schema provient généralement des données d'une requête et doit être convertie dans un autre format. Par exemple, un champ `uuid` pourrait avoir besoin de convertir une valeur `String` en un objet `UUID` approprié :
 
 ```crystal
 def deserialize(value) : ::UUID?
@@ -102,15 +102,15 @@ rescue ArgumentError
 end
 ```
 
-Fields can be configured as required or not ([`required`](../reference/fields.md#required) option), this means that you will usually want to handle the case of `nil` values as part of this methods and return `nil` if the incoming value is `nil`. It should also be noted that incoming values can be any JSON data (`JSON::Any`), which means that you need to handle this case properly as well.
+Les champs peuvent être configurés comme obligatoires ou non (option [`required`](../reference/fields.md#required)), ce qui signifie que vous voudrez généralement gérer le cas des valeurs `nil` dans cette méthode et retourner `nil` si la valeur entrante est `nil`. Il est également à noter que les valeurs entrantes peuvent être n'importe quelle donnée JSON (`JSON::Any`), ce qui signifie que vous devez gérer ce cas correctement également.
 
-If the value can't be processed properly by your field class, then it may be necessary to raise an exception. To do that you can leverage the `#raise_unexpected_field_value` method, which will raise a `Marten::Schema::Errors::UnexpectedFieldValue` exception.
+Si la valeur ne peut pas être traitée correctement par votre classe de champ, il peut être nécessaire de lever une exception. Pour cela, vous pouvez utiliser la méthode `#raise_unexpected_field_value`, qui lèvera une exception `Marten::Schema::Errors::UnexpectedFieldValue`.
 
 #### `serialize`
 
-The `#serialize` method is responsible for serializing a field value, which is essentially the reverse of the [`#deserialize`](#deserialize) method. As such, this method must convert a field value from the "Crystal" representation to the "raw" schema representation.
+La méthode `#serialize` est responsable de la sérialisation d'une valeur de champ, ce qui est essentiellement l'inverse de la méthode [`#deserialize`](#deserialize). En tant que telle, cette méthode doit convertir une valeur de champ de la représentation « Crystal » vers la représentation brute du schema.
 
-For example, this method could return the string representation of a `UUID` object:
+Par exemple, cette méthode pourrait retourner la représentation en chaîne d'un objet `UUID` :
 
 ```crystal
 def serialize(value) : ::String?
@@ -118,13 +118,13 @@ def serialize(value) : ::String?
 end
 ```
 
-Again, if the value can't be processed properly by the field class, it may be necessary to raise an exception. To do that you can leverage the `#raise_unexpected_field_value` method, which will raise a `Marten::Schema::Errors::UnexpectedFieldValue` exception.
+Encore une fois, si la valeur ne peut pas être traitée correctement par la classe de champ, il peut être nécessaire de lever une exception. Pour cela, vous pouvez utiliser la méthode `#raise_unexpected_field_value`, qui lèvera une exception `Marten::Schema::Errors::UnexpectedFieldValue`.
 
-### Other useful methods
+### Autres méthodes utiles
 
 #### `initialize`
 
-The default `#initialize` method that is provided by the [`Marten::Schema::Field::Base`](pathname:///api/dev/Marten/Schema/Field/Base.html) is fairly simply and looks like this:
+La méthode `#initialize` par défaut fournie par [`Marten::Schema::Field::Base`](pathname:///api/dev/Marten/Schema/Field/Base.html) est assez simple et ressemble à ceci :
 
 ```crystal
 def initialize(
@@ -134,13 +134,13 @@ def initialize(
 end
 ```
 
-Depending on your field requirements, you might want to override this method completely in order to support additional parameters (such as default validation-related options for example).
+Selon les exigences de votre champ, vous pourriez vouloir surcharger cette méthode complètement afin de supporter des paramètres supplémentaires (tels que des options liées à la validation par défaut par exemple).
 
 #### `validate`
 
-The `#validate` method does nothing by default and can be overridden on a per-field class basis in order to implement custom validation logic. This method takes the schema object being validated and the field value as arguments, which allows you to easily run validation checks and to add [validation errors](../validations.md) to the schema object.
+La méthode `#validate` ne fait rien par défaut et peut être surchargée sur une base par classe de champ afin d'implémenter une logique de validation personnalisée. Cette méthode prend l'objet schema en cours de validation et la valeur du champ comme arguments, ce qui vous permet d'exécuter facilement des vérifications de validation et d'ajouter des [erreurs de validation](../validations.md) à l'objet schema.
 
-For example:
+Par exemple :
 
 ```crystal
 def validate(schema, value)
@@ -152,9 +152,9 @@ def validate(schema, value)
 end
 ```
 
-### An example
+### Un exemple
 
-Let's consider the use case of the "email" field highlighted in [Subclassing existing schema fields](#subclassing-existing-schema-fields). The exact same field could be implemented from scratch with the following snippet:
+Considérons le cas d'utilisation du champ « email » mis en évidence dans [Sous-classer des champs de schema existants](#sous-classer-des-champs-de-schema-existants). Le même champ exactement pourrait être implémenté de zéro avec le fragment suivant :
 
 ```crystal
 class EmailField < Marten::Schema::Field::Base

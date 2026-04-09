@@ -1,16 +1,16 @@
 ---
-title: Managing files
-description: Learn how to manage uploaded files.
-sidebar_label: Managing files
+title: Gérer les fichiers
+description: Apprenez à gérer les fichiers téléversés.
+sidebar_label: Gérer les fichiers
 ---
 
-Marten gives you the ability to associate uploaded files with model records and to fully customize how and where those files are persisted. This section covers the basics of using files with models, how to interact with file objects, and introduces the concept of file storage.
+Marten vous donne la possibilité d'associer des fichiers téléversés à des enregistrements de modèle et de personnaliser entièrement comment et où ces fichiers sont persistés. Cette section couvre les bases de l'utilisation des fichiers avec les modèles, comment interagir avec les objets fichier, et introduit le concept de stockage de fichiers.
 
-## Using files with models
+## Utiliser des fichiers avec les modèles
 
-You can make use of the [`file`](../models-and-databases/reference/fields.md#file) or [`image`](../models-and-databases/reference/fields.md#image) fields when defining models: this allows to associate an uploaded file with specific model records.
+Vous pouvez utiliser les champs [`file`](../models-and-databases/reference/fields.md#file) ou [`image`](../models-and-databases/reference/fields.md#image) lors de la définition de modèles : cela permet d'associer un fichier téléversé à des enregistrements de modèle spécifiques.
 
-For example, let's consider the following model:
+Par exemple, considérons le modèle suivant :
 
 ```crystal
 class Attachment < Marten::Model
@@ -19,7 +19,7 @@ class Attachment < Marten::Model
 end
 ```
 
-Any `Attachment` model record will have an `uploaded_file` attribute allowing interacting with the attached file:
+Tout enregistrement du modèle `Attachment` aura un attribut `uploaded_file` permettant d'interagir avec le fichier attaché :
 
 ```crystal
 attachment = Attachment.first!
@@ -30,12 +30,12 @@ attachment.uploaded_file.size      # => 5796929
 attachment.uploaded_file.url       # => "/media/test.txt"
 ```
 
-The object returned by the `Attachment#uploaded_file` method is a "file object": an instance of [`Marten::DB::Field::File::File`](pathname:///api/dev/Marten/DB/Field/File/File.html). These objects and their associated capabilities are described below in [File objects](#file-objects).
+L'objet retourné par la méthode `Attachment#uploaded_file` est un « objet fichier » : une instance de [`Marten::DB::Field::File::File`](pathname:///api/dev/Marten/DB/Field/File/File.html). Ces objets et leurs fonctionnalités associées sont décrits ci-dessous dans [Objets fichier](#objets-fichier).
 
-:::tip Under which path are files persisted?
-Files are stored at the root of the media [storage](#file-storages) by default. It should be noted that the path used to persist files in storages can be configured by setting the `upload_to` [`file`](../models-and-databases/reference/fields.md#file) field option.
+:::tip Sous quel chemin les fichiers sont-ils persistés ?
+Les fichiers sont stockés à la racine du [stockage](#stockages-de-fichiers) media par défaut. Il est à noter que le chemin utilisé pour persister les fichiers dans les stockages peut être configuré en définissant l'option `upload_to` du champ [`file`](../models-and-databases/reference/fields.md#file).
 
-For example, the previous `Attachment` model could be rewritten as follows to ensure that files are persisted in a `foo/bar` folder:
+Par exemple, le modèle `Attachment` précédent pourrait être réécrit comme suit pour s'assurer que les fichiers sont persistés dans un dossier `foo/bar` :
 
 ```crystal
 class Attachment < Marten::Model
@@ -44,7 +44,7 @@ class Attachment < Marten::Model
 end
 ```
 
-It should also be noted that `upload_to` can correspond to a proc that takes the name of the file to save, which can be used to implement more complex file path generation logic if necessary:
+Il est également à noter que `upload_to` peut correspondre à un proc qui prend le nom du fichier à sauvegarder, ce qui peut être utilisé pour implémenter une logique de génération de chemin de fichier plus complexe si nécessaire :
 
 ```crystal
 class Attachment < Marten::Model
@@ -54,7 +54,7 @@ end
 ```
 :::
 
-It should be noted that saving a model record will automatically result in any associated files being saved and persisted in the right [storage](#file-storages) automatically. For example, the following snippet reads a locally available file and attaches it to a new model record:
+Il est à noter que sauvegarder un enregistrement de modèle résultera automatiquement en la sauvegarde et la persistance de tous les fichiers associés dans le bon [stockage](#stockages-de-fichiers) automatiquement. Par exemple, le fragment suivant lit un fichier disponible localement et l'attache à un nouvel enregistrement de modèle :
 
 ```crystal
 attachment = Attachment.new
@@ -66,21 +66,21 @@ end
 ```
 
 :::info
-You don't need to take care of possible collisions between attached file names: Marten automatically ensures that uploaded files have a unique file name in the destination storage in order to avoid possible conflicts.
+Vous n'avez pas besoin de vous soucier des collisions possibles entre les noms de fichiers attachés : Marten s'assure automatiquement que les fichiers téléversés ont un nom de fichier unique dans le stockage de destination afin d'éviter les conflits possibles.
 :::
 
-## File objects
+## Objets fichier
 
-As mentioned previously, file objects are used internally by Marten to allow interacting with files that are associated with model records. These objects are instances of the [`Marten::DB::Field::File::File`](pathname:///api/dev/Marten/DB/Field/File/File.html) class. They give access to basic file properties and they allow to interact with the associated IO.
+Comme mentionné précédemment, les objets fichier sont utilisés en interne par Marten pour permettre l'interaction avec les fichiers associés aux enregistrements de modèle. Ces objets sont des instances de la classe [`Marten::DB::Field::File::File`](pathname:///api/dev/Marten/DB/Field/File/File.html). Ils donnent accès aux propriétés de base du fichier et permettent d'interagir avec l'IO associé.
 
-It should be noted that these "file objects" are **always** associated with a model record (persisted or not), and as such, they are only used in the context of the [`file`](../models-and-databases/reference/fields.md#file) model field.
+Il est à noter que ces « objets fichier » sont **toujours** associés à un enregistrement de modèle (persisté ou non), et en tant que tels, ils ne sont utilisés que dans le contexte du champ de modèle [`file`](../models-and-databases/reference/fields.md#file).
 
-Finally, it's worth mentioning that file objects can be **attached** and/or **committed**:
+Enfin, il convient de mentionner que les objets fichier peuvent être **attachés** et/ou **validés** :
 
-* an **attached** file object has an associated file set: in that case, its [`#attached?`](pathname:///api/dev/Marten/DB/Field/File/File.html#attached%3F-instance-method) method returns `true`
-* a **committed** file object has an associated file that is _persisted_ to the underlying [storage](#file-storages): in that case, its [`#committed?`](pathname:///api/dev/Marten/DB/Field/File/File.html#committed%3F%3ABool-instance-method) method returns `true`
+* un objet fichier **attaché** a un fichier associé défini : dans ce cas, sa méthode [`#attached?`](pathname:///api/dev/Marten/DB/Field/File/File.html#attached%3F-instance-method) retourne `true`
+* un objet fichier **validé** a un fichier associé qui est _persisté_ dans le [stockage](#stockages-de-fichiers) sous-jacent : dans ce cas, sa méthode [`#committed?`](pathname:///api/dev/Marten/DB/Field/File/File.html#committed%3F%3ABool-instance-method) retourne `true`
 
-For example:
+Par exemple :
 
 ```crystal
 attachment = Attachment.last!
@@ -88,22 +88,22 @@ attachment.uploaded_file.attached?  # => true
 attachment.uploaded_file.committed? # => true
 ```
 
-### Accessing file properties
+### Accéder aux propriétés du fichier
 
-File objects give access to basic file properties through the use of the following methods:
+Les objets fichier donnent accès aux propriétés de base du fichier via les méthodes suivantes :
 
-| Method | Description |
+| Méthode | Description |
 | ----------- | ----------- |
-| `#file` | Returns the associated / "wrapped" file object. This can be a real [`File`](https://crystal-lang.org/api/File.html) object, an uploaded file (instance of [`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html)), or `nil` if no file is associated yet. |
-| `#name` | Returns the name of the file. |
-| `#size` | Returns the size of the file, using the associated [storage](#file-storages). |
-| `#url` | Returns the URL of the file, using the associated [storage](#file-storages). |
+| `#file` | Retourne l'objet fichier associé / « encapsulé ». Il peut s'agir d'un véritable objet [`File`](https://crystal-lang.org/api/File.html), d'un fichier téléversé (instance de [`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html)), ou `nil` si aucun fichier n'est encore associé. |
+| `#name` | Retourne le nom du fichier. |
+| `#size` | Retourne la taille du fichier, en utilisant le [stockage](#stockages-de-fichiers) associé. |
+| `#url` | Retourne l'URL du fichier, en utilisant le [stockage](#stockages-de-fichiers) associé. |
 
-### Accessing the underlying file content
+### Accéder au contenu du fichier sous-jacent
 
-File objects allow you to access the underlying file content through the use of the [`#open`](pathname:///api/dev/Marten/DB/Field/File/File.html#open%3AIO-instance-method) method. This method returns an [`IO`](https://crystal-lang.org/api/IO.html) object.
+Les objets fichier vous permettent d'accéder au contenu du fichier sous-jacent via la méthode [`#open`](pathname:///api/dev/Marten/DB/Field/File/File.html#open%3AIO-instance-method). Cette méthode retourne un objet [`IO`](https://crystal-lang.org/api/IO.html).
 
-For example:
+Par exemple :
 
 ```crystal
 attachment = Attachment.last!
@@ -111,11 +111,11 @@ file_io = attachment.uploaded_file.open
 puts file_io.gets_to_end
 ```
 
-### Updating the attached file
+### Mettre à jour le fichier attaché
 
-It is possible to update the actual file of a "file object" by using the [`#save`](pathname:///api/dev/Marten/DB/Field/File/File.html#save(filepath%3A%3A%3AString%2Ccontent%3AIO%2Csave%3Dfalse)%3ANil-instance-method) method. This method allows saving the content of a specified [`IO`](https://crystal-lang.org/api/IO.html) object and associating it with a specific file path in the underlying [storage](#file-storages).
+Il est possible de mettre à jour le fichier réel d'un « objet fichier » en utilisant la méthode [`#save`](pathname:///api/dev/Marten/DB/Field/File/File.html#save(filepath%3A%3A%3AString%2Ccontent%3AIO%2Csave%3Dfalse)%3ANil-instance-method). Cette méthode permet de sauvegarder le contenu d'un objet [`IO`](https://crystal-lang.org/api/IO.html) spécifié et de l'associer à un chemin de fichier spécifique dans le [stockage](#stockages-de-fichiers) sous-jacent.
 
-For example:
+Par exemple :
 
 ```crystal
 attachment = Attachment.new
@@ -128,11 +128,11 @@ end
 attachment.uploaded_file.url # => "/media/path/to/test.txt"
 ```
 
-### Deleting the attached file
+### Supprimer le fichier attaché
 
-It is also possible to manually "delete" the file associated with the "file object". To do so, the [`#delete`](pathname:///api/dev/Marten/DB/Field/File/File.html#delete(save%3Dfalse)%3ANil-instance-method) method can be used. It should be noted that calling this method will remove the association between the model record and the file AND will also delete the file in the considered [storage](#file-storages).
+Il est également possible de « supprimer » manuellement le fichier associé à l'« objet fichier ». Pour ce faire, la méthode [`#delete`](pathname:///api/dev/Marten/DB/Field/File/File.html#delete(save%3Dfalse)%3ANil-instance-method) peut être utilisée. Il est à noter que l'appel de cette méthode supprimera l'association entre l'enregistrement de modèle et le fichier ET supprimera également le fichier dans le [stockage](#stockages-de-fichiers) considéré.
 
-For example:
+Par exemple :
 
 ```crystal
 attachment = Attachment.last!
@@ -141,26 +141,26 @@ attachment.uploaded_file.attached?  # => false
 attachment.uploaded_file.committed? # => false
 ```
 
-## File storages
+## Stockages de fichiers
 
-Marten uses a file storage mechanism to perform file operations like saving files, deleting files, generating URLs, ... This file storages mechanism allows to save files in different backends by leveraging a standardized API (eg. in the local file system, in a cloud bucket, etc).
+Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations sur les fichiers comme la sauvegarde, la suppression, la génération d'URL, etc. Ce mécanisme de stockage de fichiers permet de sauvegarder les fichiers dans différents backends en utilisant une API standardisée (par exemple dans le système de fichiers local, dans un bucket cloud, etc.).
 
-By default, [`file`](../models-and-databases/reference/fields.md#file) model fields make use of the configured "media" storage. This storage uses the [`settings.media_files`](../development/reference/settings.md#media-files-settings) settings to determine what storage backend to use, and where to persist files. By default, the media storage uses the [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) storage backend, which ensures that files are persisted in the local file system, where the Marten application is running.
+Par défaut, les champs de modèle [`file`](../models-and-databases/reference/fields.md#file) utilisent le stockage « media » configuré. Ce stockage utilise les paramètres [`settings.media_files`](../development/reference/settings.md#media-files-settings) pour déterminer quel backend de stockage utiliser, et où persister les fichiers. Par défaut, le stockage media utilise le backend de stockage [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers sont persistés dans le système de fichiers local, là où l'application Marten s'exécute.
 
-All the available file storages are listed in the [file storage reference](./reference/stores.md).
+Tous les stockages de fichiers disponibles sont listés dans la [référence des stockages de fichiers](./reference/stores.md).
 
-### Interacting with the media file storage
+### Interagir avec le stockage de fichiers media
 
-You won't usually need to interact directly with the file storage, but it's worth mentioning that storage objects share the same API. Indeed, the class of these storage objects must inherit from the [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html) abstract class and implement a set of mandatory methods which provide the following functionalities:
+Vous n'aurez généralement pas besoin d'interagir directement avec le stockage de fichiers, mais il convient de mentionner que les objets de stockage partagent la même API. En effet, la classe de ces objets de stockage doit hériter de la classe abstraite [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html) et implémenter un ensemble de méthodes obligatoires qui fournissent les fonctionnalités suivantes :
 
-* saving files ([`#save`](pathname:///api/dev/Marten/Core/Storage/Base.html#save(filepath%3AString%2Ccontent%3AIO)%3AString-instance-method))
-* deleting files ([`#delete`](pathname:///api/dev/Marten/Core/Storage/Base.html#delete(filepath%3AString)%3ANil-instance-method))
-* opening files ([`#open`](pathname:///api/dev/Marten/Core/Storage/Base.html#open(filepath%3AString)%3AIO-instance-method))
-* verifying that files exist ([`#exist?`](pathname:///api/dev/Marten/Core/Storage/Base.html#exists%3F(filepath%3AString)%3ABool-instance-method))
-* retrieving file sizes ([`#size`](pathname:///api/dev/Marten/Core/Storage/Base.html#size(filepath%3AString)%3AInt64-instance-method))
-* retrieving file URLs ([`#url`](pathname:///api/dev/Marten/Core/Storage/Base.html#url(filepath%3AString)%3AString-instance-method))
+* sauvegarder des fichiers ([`#save`](pathname:///api/dev/Marten/Core/Storage/Base.html#save(filepath%3AString%2Ccontent%3AIO)%3AString-instance-method))
+* supprimer des fichiers ([`#delete`](pathname:///api/dev/Marten/Core/Storage/Base.html#delete(filepath%3AString)%3ANil-instance-method))
+* ouvrir des fichiers ([`#open`](pathname:///api/dev/Marten/Core/Storage/Base.html#open(filepath%3AString)%3AIO-instance-method))
+* vérifier que des fichiers existent ([`#exist?`](pathname:///api/dev/Marten/Core/Storage/Base.html#exists%3F(filepath%3AString)%3ABool-instance-method))
+* récupérer les tailles de fichiers ([`#size`](pathname:///api/dev/Marten/Core/Storage/Base.html#size(filepath%3AString)%3AInt64-instance-method))
+* récupérer les URL de fichiers ([`#url`](pathname:///api/dev/Marten/Core/Storage/Base.html#url(filepath%3AString)%3AString-instance-method))
 
-These capabilities are highlighted with the following example, where the media storage is used to interact with files:
+Ces fonctionnalités sont illustrées dans l'exemple suivant, où le stockage media est utilisé pour interagir avec des fichiers :
 
 ```crystal
 file = File.open("test.txt")
@@ -175,7 +175,7 @@ storage.delete(filepath)   # => nil
 storage.exists?(filepath)  # => false
 ```
 
-It should be noted that everything in the previous example could be done with a custom storage initialized manually as well:
+Il est à noter que tout ce qui précède pourrait également être fait avec un stockage personnalisé initialisé manuellement :
 
 ```crystal
 file = File.open("test.txt")
@@ -190,11 +190,11 @@ storage.delete(filepath)   # => nil
 storage.exists?(filepath)  # => false
 ```
 
-### Using a different storage with models
+### Utiliser un stockage différent avec les modèles
 
-As mentioned previously, [`file`](../models-and-databases/reference/fields.md#file) model fields make use of the configured "media" storage by default. That being said, it is possible to leverage the `storage` option in order to make use of another storage if necessary.
+Comme mentionné précédemment, les champs de modèle [`file`](../models-and-databases/reference/fields.md#file) utilisent le stockage « media » configuré par défaut. Cela dit, il est possible d'utiliser l'option `storage` pour utiliser un autre stockage si nécessaire.
 
-For example:
+Par exemple :
 
 ```crystal
 custom_storage = Marten::Core::Storage::FileSystem.new(root: "/tmp", base_url: "/tmp")
@@ -205,11 +205,11 @@ class Attachment < Marten::Model
 end
 ```
 
-When doing this, all the file operations will be done using the configured storage instead of the default media storage.
+Ce faisant, toutes les opérations sur les fichiers seront effectuées en utilisant le stockage configuré au lieu du stockage media par défaut.
 
-## Serving uploaded files during development
+## Servir les fichiers téléversés pendant le développement
 
-Marten provides a handler that you can use to serve media files in development environments only. This handler ([`Marten::Handlers::Defaults::Development::ServeMediaFile`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeMediaFile.html)) is automatically mapped to a route when creating new projects through the use of the [`new`](../development/reference/management-commands.md#new) management command:
+Marten fournit un handler que vous pouvez utiliser pour servir les fichiers media uniquement dans les environnements de développement. Ce handler ([`Marten::Handlers::Defaults::Development::ServeMediaFile`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeMediaFile.html)) est automatiquement associé à une route lors de la création de nouveaux projets via l'utilisation de la commande de gestion [`new`](../development/reference/management-commands.md#new) :
 
 ```crystal
 Marten.routes.draw do
@@ -221,8 +221,8 @@ Marten.routes.draw do
 end
 ```
 
-As you can see, this route will automatically use the URL that is configured as part of the [`url`](../development/reference/settings.md#url-1) media files setting. For example, this means that a `foo/bar.txt` media file would be served by the `/media/foo/bar.txt` route in development if the [`url`](../development/reference/settings.md#url-1) setting is set to `/media/`.
+Comme vous pouvez le voir, cette route utilisera automatiquement l'URL configurée dans le paramètre de fichiers media [`url`](../development/reference/settings.md#url-1). Par exemple, cela signifie qu'un fichier media `foo/bar.txt` serait servi par la route `/media/foo/bar.txt` en développement si le paramètre [`url`](../development/reference/settings.md#url-1) est défini à `/media/`.
 
 :::warning
-It is very important to understand that this handler should **only** be used in development environments. Indeed, the [`Marten::Handlers::Defaults::Development::ServeMediaFile`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeMediaFile.html) handler is not suited for production environments as it is not really efficient or secure. A better way to serve uploaded files is to leverage a web server or a cloud bucket for example (depending on the configured media files storage).
+Il est très important de comprendre que ce handler ne devrait être utilisé **que** dans les environnements de développement. En effet, le handler [`Marten::Handlers::Defaults::Development::ServeMediaFile`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeMediaFile.html) n'est pas adapté aux environnements de production car il n'est pas vraiment efficace ni sécurisé. Une meilleure façon de servir les fichiers téléversés est d'utiliser un serveur web ou un bucket cloud par exemple (en fonction du stockage de fichiers media configuré).
 :::

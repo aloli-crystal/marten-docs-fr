@@ -1,17 +1,17 @@
 ---
-title: File storages
-description: File storages reference.
+title: Stockages de fichiers
+description: Référence des stockages de fichiers.
 ---
 
-## Built-in storages
+## Stockages intégrés
 
-### File system storage
+### Stockage système de fichiers
 
-A basic file system storage that stores files locally.
+Un stockage basique de système de fichiers qui stocke les fichiers localement.
 
-This file storage is implemented as part of the [`Marten::Core::Storage::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) class. It ensures that files are persisted in the local file system, where the Marten application is running.
+Ce stockage de fichiers est implémenté dans la classe [`Marten::Core::Storage::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html). Il garantit que les fichiers sont persistés dans le système de fichiers local, là où l'application Marten s'exécute.
 
-For example:
+Par exemple :
 
 ```crystal
 Marten.configure do |config|
@@ -19,12 +19,12 @@ Marten.configure do |config|
 end
 ```
 
-## Other stores
+## Autres stockages
 
-Additional file storages shards are also maintained under the umbrella of the Marten project or by the community itself and can be used as part of your application depending on your specific caching requirements:
+Des shards de stockages de fichiers supplémentaires sont également maintenus sous l'égide du projet Marten ou par la communauté elle-même et peuvent être utilisés dans votre application en fonction de vos besoins spécifiques :
 
-* [`marten-s3`](https://github.com/martenframework/marten-s3) provides an [S3](https://aws.amazon.com/s3/) file storage
+* [`marten-s3`](https://github.com/martenframework/marten-s3) fournit un stockage de fichiers [S3](https://aws.amazon.com/s3/)
 
 :::info
-Feel free to contribute to this page and add links to your shards if you've created file storages that are not listed here!
+N'hésitez pas à contribuer à cette page et à ajouter des liens vers vos shards si vous avez créé des stockages de fichiers qui ne sont pas listés ici !
 :::

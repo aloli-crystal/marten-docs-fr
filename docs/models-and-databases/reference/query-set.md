@@ -1,27 +1,27 @@
 ---
 title: Query set
-description: Query set reference.
+description: Référence des query sets.
 ---
 
-This page provides a reference for all the query set methods and available predicates that can be leveraged when filtering model records.
+Cette page fournit une référence pour toutes les méthodes de query set et les prédicats disponibles qui peuvent être utilisés lors du filtrage des enregistrements de modèles.
 
-## Query set laziness
+## Évaluation paresseuse des query sets
 
-Query sets are **lazily evaluated**: defining a query set will usually not involve any database operations. Additionally, most methods provided by query sets also return new query set objects. Query sets are only translated to SQL queries hitting the underlying database when records need to be extracted or manipulated by the considered codebase.
+Les query sets sont **évalués paresseusement** : définir un query set n'impliquera généralement aucune opération de base de données. De plus, la plupart des méthodes fournies par les query sets retournent également de nouveaux objets query set. Les query sets ne sont traduits en requêtes SQL touchant la base de données sous-jacente que lorsque les enregistrements doivent être extraits ou manipulés par le code considéré.
 
-For example:
+Par exemple :
 
 ```crystal
-qset = Article.filter(title__startswith: "Top") # the query set is not evaluated
-qset = qset.filter(author__first_name: "John")  # the query set is not evaluated
-puts qset                                       # the query set is evaluated
+qset = Article.filter(title__startswith: "Top") # le query set n'est pas évalué
+qset = qset.filter(author__first_name: "John")  # le query set n'est pas évalué
+puts qset                                       # le query set est évalué
 ```
 
-In the above example the two filters are simply chained without these resulting in database hits. The query set is only evaluated when the actual records need to be printed.
+Dans l'exemple ci-dessus, les deux filtres sont simplement chaînés sans que cela ne résulte en des accès à la base de données. Le query set n'est évalué que lorsque les enregistrements réels doivent être affichés.
 
-Overall, query sets are evaluated in the following situations:
+De manière générale, les query sets sont évalués dans les situations suivantes :
 
-* when iterating over the underlying records (eg. when using `#each`)
+* lors de l'itération sur les enregistrements sous-jacents (par ex. lors de l'utilisation de `#each`)
 
   ```crystal
   Article.filter(title__startswith: "Top").each do |article|
@@ -29,55 +29,55 @@ Overall, query sets are evaluated in the following situations:
   end
   ```
 
-* when retrieving the records for a specific range
+* lors de la récupération des enregistrements pour une plage spécifique
 
   ```crystal
   Article.filter(title__startswith: "Top")[4..10]
   ```
 
-* when printing the query set object (eg. using `puts`)
+* lors de l'affichage de l'objet query set (par ex. en utilisant `puts`)
 
-## Methods that return new query sets
+## Méthodes qui retournent de nouveaux query sets
 
-Query sets provide a set of methods that allow to generate other (possibly filtered) query sets. Calling these methods won't result in the query set to be evaluated.
+Les query sets fournissent un ensemble de méthodes qui permettent de générer d'autres query sets (potentiellement filtrés). L'appel de ces méthodes n'entraînera pas l'évaluation du query set.
 
 ### `[](range)`
 
-Returns the records corresponding to the passed range.
+Retourne les enregistrements correspondant à la plage passée.
 
-If no records match the passed range, an `IndexError` exception is raised. If the current query set was already evaluated (records were retrieved from the database), an array of records will be returned. Otherwise, another sliced query set will be returned:
+Si aucun enregistrement ne correspond à la plage passée, une exception `IndexError` est levée. Si le query set actuel a déjà été évalué (les enregistrements ont été récupérés de la base de données), un tableau d'enregistrements sera retourné. Sinon, un autre query set tronqué sera retourné :
 
 ```crystal
 qset_1 = Article.all
 qset_1.each { }
-qset_1[2..6] # returns an array of Article records
+qset_1[2..6] # retourne un tableau d'enregistrements Article
 
 qset_2 = Article.all
-qset_2[2..6] # returns a "sliced" query set
+qset_2[2..6] # retourne un query set "tronqué"
 ```
 
 ### `[]?(range)`
 
-Returns the records corresponding to the passed range.
+Retourne les enregistrements correspondant à la plage passée.
 
-`nil` is returned if no records match the passed range. If the current query set was already evaluated (records were retrieved from the database), an array of records will be returned. Otherwise, another sliced query set will be returned:
+`nil` est retourné si aucun enregistrement ne correspond à la plage passée. Si le query set actuel a déjà été évalué (les enregistrements ont été récupérés de la base de données), un tableau d'enregistrements sera retourné. Sinon, un autre query set tronqué sera retourné :
 
 ```crystal
 qset_1 = Article.all
 qset_1.each { }
-qset_1[2..6]? # returns an array of Article records
+qset_1[2..6]? # retourne un tableau d'enregistrements Article
 
 qset_2 = Article.all
-qset_2[2..6]? # returns a "sliced" query set
+qset_2[2..6]? # retourne un query set "tronqué"
 ```
 
 ### `&` (AND)
 
-Combines the current query set with another one using the **AND** operator.
+Combine le query set actuel avec un autre en utilisant l'opérateur **AND**.
 
-This method returns a new query set that is the result of combining the current query set with another one using the AND SQL operator.
+Cette méthode retourne un nouveau query set qui est le résultat de la combinaison du query set actuel avec un autre en utilisant l'opérateur SQL AND.
 
-For example:
+Par exemple :
 
 ```crystal
 query_set_1 = Post.all.filter(title: "Test")
@@ -88,11 +88,11 @@ combined_query_set = query_set_1 & query_set_2
 
 ### `|` (OR)
 
-Combines the current query set with another one using the **OR** operator.
+Combine le query set actuel avec un autre en utilisant l'opérateur **OR**.
 
-This method returns a new query set that is the result of combining the current query set with another one using the OR SQL operator.
+Cette méthode retourne un nouveau query set qui est le résultat de la combinaison du query set actuel avec un autre en utilisant l'opérateur SQL OR.
 
-For example:
+Par exemple :
 
 ```crystal
 query_set_1 = Post.all.filter(title: "Test")
@@ -103,11 +103,11 @@ combined_query_set = query_set_1 | query_set_2
 
 ### `^` (XOR)
 
-Combines the current query set with another one using the **XOR** operator.
+Combine le query set actuel avec un autre en utilisant l'opérateur **XOR**.
 
-This method returns a new query set that is the result of combining the current query set with another one using the XOR SQL operator.
+Cette méthode retourne un nouveau query set qui est le résultat de la combinaison du query set actuel avec un autre en utilisant l'opérateur SQL XOR.
 
-For example:
+Par exemple :
 
 ```crystal
 query_set_1 = Post.all.filter(title: "Test")
@@ -117,25 +117,25 @@ combined_query_set = query_set_1 ^ query_set_2
 ```
 
 :::info
-XOR is natively support on MariaDB and MySQL only. Other database backends (PostgreSQL and SQLite) will use `case ... when` statements in order to perform XOR operations at the SQL level.
+Le XOR est supporté nativement sur MariaDB et MySQL uniquement. Les autres backends de base de données (PostgreSQL et SQLite) utiliseront des instructions `case ... when` afin d'effectuer les opérations XOR au niveau SQL.
 :::
 
 ### `all`
 
-Allows retrieving all the records of a specific model. `#all` can be used as a class method from any model class, or it can be used as an instance method from any query set object. In this last case, calling `#all` returns a copy of the current query set.
+Permet de récupérer tous les enregistrements d'un modèle spécifique. `#all` peut être utilisé comme méthode de classe depuis n'importe quelle classe de modèle, ou comme méthode d'instance depuis n'importe quel objet query set. Dans ce dernier cas, appeler `#all` retourne une copie du query set actuel.
 
-For example:
+Par exemple :
 
 ```crystal
-qset = Article.all # returns a query set matching "all" the records of the Article model
-qset2 = qset.all   # returns a copy of the initial query set
+qset = Article.all # retourne un query set correspondant à "tous" les enregistrements du modèle Article
+qset2 = qset.all   # retourne une copie du query set initial
 ```
 
 ### `annotate`
 
-Returns a new query set that will include the specified annotations.
+Retourne un nouveau query set qui inclura les annotations spécifiées.
 
-This method returns a new query set with the specified annotations. The annotations are specified using a block where each annotation has to be wrapped using the `#annotate` method. For example:
+Cette méthode retourne un nouveau query set avec les annotations spécifiées. Les annotations sont spécifiées en utilisant un bloc où chaque annotation doit être encapsulée avec la méthode `#annotate`. Par exemple :
 
 ```crystal
 query_set = Book.all.annotate { count(:authors) }
@@ -145,44 +145,44 @@ other_query_set = Book.all.annotate do
 end
 ```
 
-Each of the specified annotations is then available for further use in the query set (in order to filter or order the records). The annotations are also available in retrieved model records via the [`#annotations`](pathname:///api/dev/Marten/DB/Model.html#annotations%3AHash(String%2CBool|File|Float32|Float64|Int32|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3ADB%3A%3AField%3A%3AFile%3A%3AFile|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Symbol|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) method, which returns a hash containing the annotations as keys and their values as values.
+Chacune des annotations spécifiées est ensuite disponible pour une utilisation ultérieure dans le query set (afin de filtrer ou ordonner les enregistrements). Les annotations sont également disponibles dans les enregistrements de modèle récupérés via la méthode [`#annotations`](pathname:///api/dev/Marten/DB/Model.html#annotations%3AHash(String%2CBool|File|Float32|Float64|Int32|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3ADB%3A%3AField%3A%3AFile%3A%3AFile|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Symbol|Time|Time%3A%3ASpan|UUID|Nil)-instance-method), qui retourne un hash contenant les annotations comme clés et leurs valeurs comme valeurs.
 
-Those are the supported annotation types:
+Voici les types d'annotation supportés :
 
-| Aggregation method | Description |
+| Méthode d'agrégation | Description |
 |---------------------|-------------|
-| `count` | Counts the number of records |
-| `sum` | Returns the sum of the values of a given field |
-| `average` | Returns the average of the values of a given field |
-| `minimum` | Returns the minimum value of a given field |
-| `maximum` | Returns the maximum value of a given field |
+| `count` | Compte le nombre d'enregistrements |
+| `sum` | Retourne la somme des valeurs d'un field donné |
+| `average` | Retourne la moyenne des valeurs d'un field donné |
+| `minimum` | Retourne la valeur minimale d'un field donné |
+| `maximum` | Retourne la valeur maximale d'un field donné |
 
-Please refer to the [Annotating query sets with aggregated data](../queries.md#annotating-query-sets-with-aggregated-data) section to learn more about using annotations.
+Veuillez vous référer à la section [Annoter les query sets avec des données agrégées](../queries.md#annoter-les-query-sets-avec-des-données-agrégées) pour en savoir plus sur l'utilisation des annotations.
 
 ### `distinct`
 
-Returns a new query set that will use `SELECT DISTINCT` or `SELECT DISTINCT ON` in its SQL query.
+Retourne un nouveau query set qui utilisera `SELECT DISTINCT` ou `SELECT DISTINCT ON` dans sa requête SQL.
 
-If you use this method without arguments, a `SELECT DISTINCT` statement will be used at the database level. If you pass field names as arguments, a `SELECT DISTINCT ON` statement will be used to eliminate any duplicated rows based on the specified fields:
+Si vous utilisez cette méthode sans arguments, une instruction `SELECT DISTINCT` sera utilisée au niveau de la base de données. Si vous passez des noms de fields comme arguments, une instruction `SELECT DISTINCT ON` sera utilisée pour éliminer les lignes dupliquées en fonction des fields spécifiés :
 
 ```crystal
 query_set_1 = Post.all.distinct
 query_set_2 = Post.all.distinct(:title)
 ```
 
-It should be noted that it is also possible to follow associations of direct related models too by using the [double underscores notation](../queries.md#filtering-relations) (`__`). For example the following query will select distinct records based on a joined "author" attribute:
+Il est à noter qu'il est également possible de suivre les associations de modèles directement liés en utilisant la [notation double underscores](../queries.md#filtrer-les-relations) (`__`). Par exemple, la requête suivante sélectionnera des enregistrements distincts basés sur un attribut "author" joint :
 
 ```
 query_set = Post.all.distinct(:author__name)
 ```
 
-Finally, it should be noted that `#distinct` cannot be used on [sliced query sets](#range).
+Enfin, il est à noter que `#distinct` ne peut pas être utilisé sur des [query sets tronqués](#range).
 
 ### `exclude`
 
-Returns a query set whose records do not match the given set of filters.
+Retourne un query set dont les enregistrements ne correspondent pas à l'ensemble de filtres donné.
 
-The filters passed to this method method can be specified using the [standard predicate format](../queries.md#basic-querying-capabilities). If multiple filters are specified, they will be joined using an **AND** operator at the SQL level:
+Les filtres passés à cette méthode peuvent être spécifiés en utilisant le [format de prédicat standard](../queries.md#capacités-de-requêtage-basiques). Si plusieurs filtres sont spécifiés, ils seront joints en utilisant un opérateur **AND** au niveau SQL :
 
 ```crystal
 query_set = Post.all
@@ -190,7 +190,7 @@ query_set.exclude(title: "Test")
 query_set.exclude(title__startswith: "A")
 ```
 
-Complex filters can also be used as part of this method by leveraging [`q` expressions](../queries.md#complex-filters-with-q-expressions):
+Des filtres complexes peuvent également être utilisés dans le cadre de cette méthode en utilisant les [expressions `q`](../queries.md#filtres-complexes-avec-les-expressions-q) :
 
 ```crystal
 query_set = Post.all
@@ -199,9 +199,9 @@ query_set.exclude { (q(name: "Foo") | q(name: "Bar")) & q(is_published: True) }
 
 ### `filter`
 
-Returns a query set matching a specific set of filters.
+Retourne un query set correspondant à un ensemble spécifique de filtres.
 
-The filters passed to this method method can be specified using the [standard predicate format](../queries.md#basic-querying-capabilities). If multiple filters are specified, they will be joined using an **AND** operator at the SQL level:
+Les filtres passés à cette méthode peuvent être spécifiés en utilisant le [format de prédicat standard](../queries.md#capacités-de-requêtage-basiques). Si plusieurs filtres sont spécifiés, ils seront joints en utilisant un opérateur **AND** au niveau SQL :
 
 ```crystal
 query_set = Post.all
@@ -209,7 +209,7 @@ query_set.filter(title: "Test")
 query_set.filter(title__startswith: "A")
 ```
 
-Complex filters can also be used as part of this method by leveraging [`q` expressions](../queries.md#complex-filters-with-q-expressions):
+Des filtres complexes peuvent également être utilisés dans le cadre de cette méthode en utilisant les [expressions `q`](../queries.md#filtres-complexes-avec-les-expressions-q) :
 
 ```crystal
 query_set = Post.all
@@ -218,21 +218,21 @@ query_set.filter { (q(name: "Foo") | q(name: "Bar")) & q(is_published: True) }
 
 ### `join`
 
-Returns a queryset whose specified `relations` are "followed" and joined to each result (see [Queries](../queries.md#filtering-relations) for an introduction about this capability).
+Retourne un query set dont les `relations` spécifiées sont "suivies" et jointes à chaque résultat (voir [Requêtes](../queries.md#filtrer-les-relations) pour une introduction sur cette fonctionnalité).
 
-When using `#join`, the specified relationships will be followed and each record returned by the queryset will have the corresponding related objects already selected and populated. Using `#join` can result in performance improvements since it can help reduce the number of SQL queries, as illustrated by the following example:
+Avec `#join`, les relations spécifiées seront suivies et chaque enregistrement retourné par le query set aura les objets liés correspondants déjà sélectionnés et remplis. L'utilisation de `#join` peut entraîner des améliorations de performances puisqu'elle peut aider à réduire le nombre de requêtes SQL, comme illustré par l'exemple suivant :
 
 ```crystal
 query_set = Post.all
 
 p1 = query_set.get(id: 1)
-puts p1.author # hits the database to retrieve the related "author"
+puts p1.author # accède à la base de données pour récupérer l'"author" lié
 
 p2 = query_set.join(:author).get(id: 1)
-puts p2.author # doesn't hit the database since the related "author" was already selected
+puts p2.author # n'accède pas à la base de données puisque l'"author" lié a déjà été sélectionné
 ```
 
-It should be noted that it is also possible to follow foreign keys of direct related models too by using the double underscores notation (`__`). For example, the following query will select the joined "author" and its associated "profile":
+Il est à noter qu'il est également possible de suivre les clés étrangères de modèles directement liés en utilisant la notation double underscores (`__`). Par exemple, la requête suivante sélectionnera l'"author" joint et son "profile" associé :
 
 ```crystal
 query_set = Post.all
@@ -240,26 +240,26 @@ query_set.join(:author__profile)
 ```
 
 :::info
-The `#join` method also supports targeting the reverse relation of a [`one_to_one`](./fields.md#one_to_one) field (such reverse relation can be defined through the use of the [`related`](./fields.md#related-2) field option). That way, you can traverse a [`one_to_one`](./fields.md#one_to_one) field back to the model record on which the field is specified.
+La méthode `#join` supporte également le ciblage de la relation inverse d'un field [`one_to_one`](./fields.md#one_to_one) (une telle relation inverse peut être définie via l'utilisation de l'option de field [`related`](./fields.md#related-2)). De cette manière, vous pouvez traverser un field [`one_to_one`](./fields.md#one_to_one) pour revenir à l'enregistrement de modèle sur lequel le field est spécifié.
 :::
 
 ### `limit`
 
-Returns a query set that will limit the number of records returned.
+Retourne un query set qui limitera le nombre d'enregistrements retournés.
 
-This method allows to specify the maximum number of records to return. For example:
+Cette méthode permet de spécifier le nombre maximum d'enregistrements à retourner. Par exemple :
 
 ```crystal
 query_set = Post.all.limit(10)
 ```
 
-In the above example, only the first 10 records will be returned.
+Dans l'exemple ci-dessus, seuls les 10 premiers enregistrements seront retournés.
 
 ### `none`
 
-Returns a query set that will always return an empty array of records, without querying the database.
+Retourne un query set qui retournera toujours un tableau vide d'enregistrements, sans interroger la base de données.
 
-Once this method is used, any subsequent method calls (such as extra filters) will continue returning an empty array of records:
+Une fois cette méthode utilisée, tout appel de méthode ultérieur (tel que des filtres supplémentaires) continuera à retourner un tableau vide d'enregistrements :
 
 ```crystal
 query_set = Post.all
@@ -268,67 +268,67 @@ query_set.none.exists? # => false
 
 ### `offset`
 
-Returns a query set that will offset the records returned.
+Retourne un query set qui décalera les enregistrements retournés.
 
-This method allows to specify the starting point for the records to return. For example:
+Cette méthode permet de spécifier le point de départ pour les enregistrements à retourner. Par exemple :
 
 ```crystal
 query_set = Post.all.offset(10)
 ```
 
-In the above example, the records will be returned starting from the 10th record.
+Dans l'exemple ci-dessus, les enregistrements seront retournés à partir du 10e enregistrement.
 
 ### `order`
 
-Allows specifying the ordering in which records should be returned when evaluating the query set.
+Permet de spécifier l'ordre dans lequel les enregistrements doivent être retournés lors de l'évaluation du query set.
 
-Multiple fields can be specified in order to define the final ordering. For example:
+Plusieurs fields peuvent être spécifiés afin de définir l'ordre final. Par exemple :
 
 ```crystal
 query_set = Post.all
 query_set.order("-published_at", "title")
 ```
 
-In the above example, records would be ordered by descending publication date (because of the `-` prefix), and then by title (ascending).
+Dans l'exemple ci-dessus, les enregistrements seraient ordonnés par date de publication décroissante (à cause du préfixe `-`), puis par titre (croissant).
 
 ### `prefetch`
 
-Returns a query set that will automatically prefetch in a single batch the records for the specified relations (see [Queries](../queries.md#pre-fetching-relations) for an introduction about this capability).
+Retourne un query set qui pré-chargera automatiquement en un seul lot les enregistrements pour les relations spécifiées (voir [Requêtes](../queries.md#pré-charger-les-relations) pour une introduction sur cette fonctionnalité).
 
-When using `#prefetch`, the records corresponding to the specified relationships will be prefetched in single batches and each record returned by the query set will have the corresponding related objects already selected and populated. Using `#prefetch` can result in performance improvements since it can help reduce the number of SQL queries, as illustrated by the following example:
+Avec `#prefetch`, les enregistrements correspondant aux relations spécifiées seront pré-chargés en lots uniques et chaque enregistrement retourné par le query set aura les objets liés correspondants déjà sélectionnés et remplis. L'utilisation de `#prefetch` peut entraîner des améliorations de performances puisqu'elle peut aider à réduire le nombre de requêtes SQL, comme illustré par l'exemple suivant :
 
 ```crystal
 posts_1 = Post.all.to_a
-# hits the database to retrieve the related "tags" (many-to-many relation)
+# accède à la base de données pour récupérer les "tags" liés (relation many-to-many)
 puts posts_1[0].tags.to_a
 
 posts_2 = Post.all.prefetch(:tags).to_a
-# doesn't hit the database since the related "tags" relation was already prefetched
+# n'accède pas à la base de données puisque la relation "tags" a déjà été pré-chargée
 puts posts_2[0].tags
 ```
 
-It should be noted that it is also possible to follow relations and reverse relations too by using the double underscores notation(`__`). For example, the following query will prefetch the "author" relation and then the "favorite tags" relation of the author records:
+Il est à noter qu'il est également possible de suivre les relations et relations inverses en utilisant la notation double underscores (`__`). Par exemple, la requête suivante pré-chargera la relation "author" puis la relation "favorite tags" des enregistrements author :
 
 ```crystal
 query_set = Post.all
 query_set.prefetch(:author__favorite_tags)
 ```
 
-In some situations, it might be necessary to use a custom query set for the prefetched records. This is possible by using a variant of the `#prefetch` method in which a single relation name and the associated query set (`query_set` argument) are provided:
+Dans certaines situations, il peut être nécessaire d'utiliser un query set personnalisé pour les enregistrements pré-chargés. Ceci est possible en utilisant une variante de la méthode `#prefetch` dans laquelle un seul nom de relation et le query set associé (argument `query_set`) sont fournis :
 
 ```crystal
-# Query all lists and order the list items by position
+# Interroger toutes les listes et ordonner les éléments de liste par position
 query_set = List.prefetch(:items, query_set: Item.order(:position))
 ```
 
-Finally, it is worth mentioning that multiple relations can be specified to `#prefetch`. For example:
+Enfin, il est intéressant de mentionner que plusieurs relations peuvent être spécifiées à `#prefetch`. Par exemple :
 
 ```crystal
 Author.all.prefetch(:books__genres, :publisher)
 ```
 
 :::tip
-The `#prefetch` method can also be called directly on model classes:
+La méthode `#prefetch` peut également être appelée directement sur les classes de modèle :
 
 ```crystal
 Author.prefetch(:books__genres, :publisher)
@@ -337,31 +337,31 @@ Author.prefetch(:books__genres, :publisher)
 
 ### `raw`
 
-Returns a raw query set for the passed SQL query and optional parameters.
+Retourne un query set brut pour la requête SQL passée et les paramètres optionnels.
 
-This method returns a [`Marten::DB::Query::RawSet`](pathname:///api/dev/Marten/DB/Query/RawSet.html) object, which allows to iterate over the model records matched by the passed SQL query. For example:
+Cette méthode retourne un objet [`Marten::DB::Query::RawSet`](pathname:///api/dev/Marten/DB/Query/RawSet.html), qui permet d'itérer sur les enregistrements de modèle correspondant à la requête SQL passée. Par exemple :
 
 ```crystal
 Article.all.raw("SELECT * FROM articles")
 ```
 
-Additional parameters can also be specified if the query needs to be parameterized. Those can be specified as positional or named arguments. For example:
+Des paramètres supplémentaires peuvent également être spécifiés si la requête doit être paramétrée. Ceux-ci peuvent être spécifiés comme arguments positionnels ou nommés. Par exemple :
 
 ```crystal
-# Using splat positional parameters:
+# En utilisant des paramètres positionnels splat :
 Article.all.raw("SELECT * FROM articles WHERE title = ? and created_at > ?", "Hello World!", "2022-10-30")
 
-# Using an array of positional parameters:
+# En utilisant un tableau de paramètres positionnels :
 Article.all.raw("SELECT * FROM articles WHERE title = ? and created_at > ?", ["Hello World!", "2022-10-30"])
 
-# Using double splat named parameters:
+# En utilisant des paramètres nommés double splat :
 Article.all.raw(
   "SELECT * FROM articles WHERE title = :title and created_at > :created_at",
   title: "Hello World!",
   created_at: "2022-10-30"
 )
 
-# Using a hash of named parameters:
+# En utilisant un hash de paramètres nommés :
 Article.all.raw(
   "SELECT * FROM articles WHERE title = :title and created_at > :created_at",
   {
@@ -371,13 +371,13 @@ Article.all.raw(
 )
 ```
 
-Please refer to [Raw SQL](../raw-sql.md) to learn more about performing raw SQL queries.
+Veuillez vous référer à [SQL brut](../raw-sql.md) pour en savoir plus sur l'exécution de requêtes SQL brutes.
 
 ### `reverse`
 
-Allows reversing the order of the current query set.
+Permet d'inverser l'ordre du query set actuel.
 
-For example, this would return all the `Article` records ordered by descending title:
+Par exemple, ceci retournerait tous les enregistrements `Article` ordonnés par titre décroissant :
 
 ```crystal
 query_set = Article.all.order(:title)
@@ -386,46 +386,46 @@ query_set.reverse
 
 ### `using`
 
-Allows defining which database alias should be used when evaluating the query set.
+Permet de définir quel alias de base de données doit être utilisé lors de l'évaluation du query set.
 
-For example:
+Par exemple :
 
 ```crystal
-query_set_1 = Article.all.filter(published: true)               # records are retrieved from the default database
-query_set_2 = Article.all.filter(published: true).using(:other) # records are retrieved from the "other" database
+query_set_1 = Article.all.filter(published: true)               # les enregistrements sont récupérés de la base de données par défaut
+query_set_2 = Article.all.filter(published: true).using(:other) # les enregistrements sont récupérés de la base de données "other"
 ```
 
-The value passed to `#using` must be a valid database alias that was used to configure an additional database as part of the [database settings](../../development/reference/settings.md#database-settings).
+La valeur passée à `#using` doit être un alias de base de données valide qui a été utilisé pour configurer une base de données supplémentaire dans les [paramètres de base de données](../../development/reference/settings.md#database-settings).
 
-## Methods that do not return new query sets
+## Méthodes qui ne retournent pas de nouveaux query sets
 
-Query sets also provide a set of methods that will usually result in specific SQL queries to be executed in order to return values that don't correspond to new query sets.
+Les query sets fournissent également un ensemble de méthodes qui entraîneront généralement l'exécution de requêtes SQL spécifiques afin de retourner des valeurs qui ne correspondent pas à de nouveaux query sets.
 
 ### `average`
 
-Allows calculating the average of a numeric field within the records of a specific model. The `#average` method can be used as a class method from any model class, or it can be used as an instance method from any query set object. When used on a query set, it calculates the average of the specified field for the records in that query set.
+Permet de calculer la moyenne d'un field numérique à travers les enregistrements d'un modèle spécifique. La méthode `#average` peut être utilisée comme méthode de classe depuis n'importe quelle classe de modèle, ou comme méthode d'instance depuis n'importe quel objet query set. Lorsqu'elle est utilisée sur un query set, elle calcule la moyenne du field spécifié pour les enregistrements de ce query set.
 
-For example:
+Par exemple :
 
 ```crystal
-average_price = Product.average(:price) # Calculate the average price of all products
+average_price = Product.average(:price) # Calcule le prix moyen de tous les produits
 
-# Calculate the average rating for a specific category of products
+# Calcule la note moyenne pour une catégorie spécifique de produits
 electronic_products = Product.filter(category: "Electronics")
 average_rating = electronic_products.average(:rating)
 ```
 
 ### `build`
 
-Initializes a new model instance.
+Initialise une nouvelle instance de modèle.
 
-This method allows initializing a new model instance using the arguments defined in the passed double splat argument.
+Cette méthode permet d'initialiser une nouvelle instance de modèle en utilisant les arguments définis dans le double splat passé.
 
 ```crystal
 new_post = Post.all.build(title: "My blog post")
 ```
 
-This method can also be called with a block that is executed for the new object:
+Cette méthode peut également être appelée avec un bloc qui est exécuté pour le nouvel objet :
 
 ```crystal
 new_post = Post.all.build(title: "My blog post") do |p|
@@ -435,9 +435,9 @@ end
 
 ### `bulk_create`
 
-Bulk inserts the passed model instances into the database.
+Insère en masse les instances de modèle passées dans la base de données.
 
-This method allows to insert multiple model instances into the database in a single query. This can be useful when dealing with large amounts of data that need to be inserted into the database. For example:
+Cette méthode permet d'insérer plusieurs instances de modèle dans la base de données en une seule requête. Cela peut être utile lorsqu'il s'agit de grandes quantités de données qui doivent être insérées dans la base de données. Par exemple :
 
 ```crystal
 query_set = Post.all
@@ -450,7 +450,7 @@ query_set.bulk_create(
 )
 ```
 
-An optional `batch_size` argument can be passed to this method in order to specify the number of records that should be inserted in a single query. By default, all records are inserted in a single query (except for SQLite databases where the limit of variables in a single query is 999). For example:
+Un argument optionnel `batch_size` peut être passé à cette méthode afin de spécifier le nombre d'enregistrements qui doivent être insérés en une seule requête. Par défaut, tous les enregistrements sont insérés en une seule requête (sauf pour les bases de données SQLite où la limite de variables dans une seule requête est de 999). Par exemple :
 
 ```crystal
 query_set = Post.all
@@ -465,7 +465,7 @@ query_set.bulk_create(
 ```
 
 :::tip
-The `#bulk_create` method can also be called directly on model classes:
+La méthode `#bulk_create` peut également être appelée directement sur les classes de modèle :
 
 ```crystal
 Post.bulk_create(
@@ -478,38 +478,38 @@ Post.bulk_create(
 ```
 :::
 
-It is worth mentioning that this method has a few caveats:
+Il est intéressant de mentionner que cette méthode a quelques mises en garde :
 
-* The specified records are assumed to be valid and no [callbacks](../callbacks.md) will be called on them.
-* Bulk-creating records making use of multi-table inheritance is not supported.
-* If the model's primary key field is auto-incremented at the database level, the newly inserted primary keys will only be assigned to records on certain databases that support retrieving bulk-inserted rows (namely MariaDB, PostgreSQL, and SQLite).
+* Les enregistrements spécifiés sont supposés être valides et aucun [callback](../callbacks.md) ne sera appelé sur eux.
+* L'insertion en masse d'enregistrements utilisant l'héritage multi-table n'est pas supportée.
+* Si le field de clé primaire du modèle est auto-incrémenté au niveau de la base de données, les nouvelles clés primaires insérées ne seront assignées aux enregistrements que sur certaines bases de données qui supportent la récupération des lignes insérées en masse (à savoir MariaDB, PostgreSQL et SQLite).
 
 ### `count`
 
-Returns the number of records that are targeted by the current query set.
+Retourne le nombre d'enregistrements ciblés par le query set actuel.
 
-For example:
+Par exemple :
 
 ```crystal
-Article.all.count                              # returns the number of article records
-Article.all.count(:subtitle)                   # returns the number of articles where the subtitle is not null
-Article.filter(title__startswith: "Top").count # returns the number of articles whose title start with "Top"
+Article.all.count                              # retourne le nombre d'enregistrements article
+Article.all.count(:subtitle)                   # retourne le nombre d'articles où le sous-titre n'est pas null
+Article.filter(title__startswith: "Top").count # retourne le nombre d'articles dont le titre commence par "Top"
 ```
 
-Note that this method will trigger a `SELECT COUNT` SQL query if the query set was not already evaluated: when this happens, no model records will be instantiated since the records count will be determined at the database level. If the query set was already evaluated, the underlying array of records will be used to return the records count instead of running a dedicated SQL query.
+Notez que cette méthode déclenchera une requête SQL `SELECT COUNT` si le query set n'a pas encore été évalué : dans ce cas, aucun enregistrement de modèle ne sera instancié puisque le comptage sera déterminé au niveau de la base de données. Si le query set a déjà été évalué, le tableau sous-jacent d'enregistrements sera utilisé pour retourner le comptage au lieu d'exécuter une requête SQL dédiée.
 
 ### `create`
 
-Creates a model instance and saves it to the database if it is valid.
+Crée une instance de modèle et la sauvegarde dans la base de données si elle est valide.
 
-The new model instance is initialized by using the attributes defined in the passed double splat argument. Regardless of whether it is valid or not (and thus persisted to the database or not), the initialized model instance is returned by this method:
+La nouvelle instance de modèle est initialisée en utilisant les attributs définis dans le double splat passé. Qu'elle soit valide ou non (et donc persistée dans la base de données ou non), l'instance de modèle initialisée est retournée par cette méthode :
 
 ```crystal
 query_set = Post.all
 query_set.create(title: "My blog post")
 ```
 
-This method can also be called with a block that is executed for the new object. This block can be used to directly initialize the object before it is persisted to the database:
+Cette méthode peut également être appelée avec un bloc qui est exécuté pour le nouvel objet. Ce bloc peut être utilisé pour initialiser directement l'objet avant qu'il ne soit persisté dans la base de données :
 
 ```crystal
 query_set = Post.all
@@ -520,16 +520,16 @@ end
 
 ### `create!`
 
-Creates a model instance and saves it to the database if it is valid.
+Crée une instance de modèle et la sauvegarde dans la base de données si elle est valide.
 
-The model instance is initialized using the attributes defined in the passed double splat argument. If the model instance is valid, it is persisted to the database ; otherwise a `Marten::DB::Errors::InvalidRecord` exception is raised.
+L'instance de modèle est initialisée en utilisant les attributs définis dans le double splat passé. Si l'instance de modèle est valide, elle est persistée dans la base de données ; sinon une exception `Marten::DB::Errors::InvalidRecord` est levée.
 
 ```crystal
 query_set = Post.all
 query_set.create!(title: "My blog post")
 ```
 
-This method can also be called with a block that is executed for the new object. This block can be used to directly initialize the object before it is persisted to the database:
+Cette méthode peut également être appelée avec un bloc qui est exécuté pour le nouvel objet. Ce bloc peut être utilisé pour initialiser directement l'objet avant qu'il ne soit persisté dans la base de données :
 
 ```crystal
 query_set = Post.all
@@ -540,38 +540,38 @@ end
 
 ### `delete`
 
-Deletes the records corresponding to the current query set and returns the number of deleted records.
+Supprime les enregistrements correspondant au query set actuel et retourne le nombre d'enregistrements supprimés.
 
-By default, related objects will be deleted by following the [deletion strategy](./fields.md#on_delete) defined in each foreign key field if applicable, unless the `raw` argument is set to `true`. When the `raw` argument is set to `true`, a raw SQL delete statement will be used to delete all the records matching the currently applied filters. Note that using this option could cause errors if the underlying database enforces referential integrity.
+Par défaut, les objets liés seront supprimés en suivant la [stratégie de suppression](./fields.md#on_delete) définie dans chaque field de clé étrangère le cas échéant, sauf si l'argument `raw` est défini à `true`. Lorsque l'argument `raw` est défini à `true`, une instruction SQL de suppression brute sera utilisée pour supprimer tous les enregistrements correspondant aux filtres actuellement appliqués. Notez que l'utilisation de cette option pourrait causer des erreurs si la base de données sous-jacente applique l'intégrité référentielle.
 
 ```crystal
-Article.all.delete                              # deletes all the Article records
-Article.filter(title__startswith: "Top").delete # deletes all the articles whose title start with "Top"
+Article.all.delete                              # supprime tous les enregistrements Article
+Article.filter(title__startswith: "Top").delete # supprime tous les articles dont le titre commence par "Top"
 ```
 
 ### `each`
 
-Allows iterating over the records that are targeted by the current query set.
+Permet d'itérer sur les enregistrements ciblés par le query set actuel.
 
-This method can be used to define a block that iterates over the records that are targeted by a query set:
+Cette méthode peut être utilisée pour définir un bloc qui itère sur les enregistrements ciblés par un query set :
 
 ```crystal
 Post.all.each do |post|
-  # Do something with the post
+  # Faire quelque chose avec le post
 end
 ```
 
 ### `exists?`
 
-Returns `true` if the current query set matches at least one record, or `false` otherwise.
+Retourne `true` si le query set actuel correspond à au moins un enregistrement, ou `false` sinon.
 
 ```crystal
 Article.filter(title__startswith: "Top").exists?
 ```
 
-Note that this method will trigger a very simple `SELECT EXISTS` SQL query if the query set was not already evaluated: when this happens, no model records will be instantiated since the records existence will be determined at the database level. If the query set was already evaluated, the underlying array of records will be used to determine if records exist or not.
+Notez que cette méthode déclenchera une requête SQL très simple `SELECT EXISTS` si le query set n'a pas encore été évalué : dans ce cas, aucun enregistrement de modèle ne sera instancié puisque l'existence des enregistrements sera déterminée au niveau de la base de données. Si le query set a déjà été évalué, le tableau sous-jacent d'enregistrements sera utilisé pour déterminer si des enregistrements existent ou non.
 
-It should be noted that `#exists?` can also take additional filters or `q()` expressions as arguments. This allows to apply additional filters to the considered query set in order to perform the check. For example:
+Il est à noter que `#exists?` peut également prendre des filtres supplémentaires ou des expressions `q()` comme arguments. Cela permet d'appliquer des filtres supplémentaires au query set considéré afin d'effectuer la vérification. Par exemple :
 
 ```crystal
 query_set = Tag.filter(name__startswith: "c")
@@ -581,7 +581,7 @@ query_set.exists? { q(is_active: true) }
 
 ### `first`
 
-Returns the first record that is matched by the query set, or `nil` if no records are found.
+Retourne le premier enregistrement correspondant au query set, ou `nil` si aucun enregistrement n'est trouvé.
 
 ```crystal
 Article.first
@@ -590,7 +590,7 @@ Article.filter(title__startswith: "Top").first
 
 ### `first!`
 
-Returns the first record that is matched by the query set, or raises a `NilAssertionError` exception if no records are found.
+Retourne le premier enregistrement correspondant au query set, ou lève une exception `NilAssertionError` si aucun enregistrement n'est trouvé.
 
 ```crystal
 Article.first!
@@ -599,9 +599,9 @@ Article.filter(title__startswith: "Top").first!
 
 ### `get`
 
-Returns the model instance matching the given set of filters.
+Retourne l'instance de modèle correspondant à l'ensemble de filtres donné.
 
-Model fields such as primary keys or fields with a unique constraint should be used here in order to retrieve a specific record:
+Les fields de modèle tels que les clés primaires ou les fields avec une contrainte d'unicité doivent être utilisés ici afin de récupérer un enregistrement spécifique :
 
 ```crystal
 query_set = Post.all
@@ -609,7 +609,7 @@ post_1 = query_set.get(id: 123)
 post_2 = query_set.get(id: 456, is_published: false)
 ```
 
-Complex filters can also be used as part of this method by leveraging [`q` expressions](../queries.md#complex-filters-with-q-expressions):
+Des filtres complexes peuvent également être utilisés dans le cadre de cette méthode en utilisant les [expressions `q`](../queries.md#filtres-complexes-avec-les-expressions-q) :
 
 ```crystal
 query_set = Post.all
@@ -617,9 +617,9 @@ post_1 = query_set.get { q(id: 123) }
 post_2 = query_set.get { q(id: 456, is_published: false) }
 ```
 
-If the specified set of filters doesn't match any records, the returned value will be `nil`. Moreover, in order to ensure data consistency this method will raise a `Marten::DB::Errors::MultipleRecordsFound` exception if multiple records match the specified set of filters.
+Si l'ensemble de filtres spécifié ne correspond à aucun enregistrement, la valeur retournée sera `nil`. De plus, afin d'assurer la cohérence des données, cette méthode lèvera une exception `Marten::DB::Errors::MultipleRecordsFound` si plusieurs enregistrements correspondent à l'ensemble de filtres spécifié.
 
-Note that `#get` can be used to retrieve a record with a raw SQL predicate. For example:
+Notez que `#get` peut être utilisé pour récupérer un enregistrement avec un prédicat SQL brut. Par exemple :
 
 ```crystal
 Author.get("id=?", 42)
@@ -628,9 +628,9 @@ Author.get("id=:id", id: 42)
 
 ### `get!`
 
-Returns the model instance matching the given set of filters.
+Retourne l'instance de modèle correspondant à l'ensemble de filtres donné.
 
-Model fields such as primary keys or fields with a unique constraint should be used here in order to retrieve a specific record:
+Les fields de modèle tels que les clés primaires ou les fields avec une contrainte d'unicité doivent être utilisés ici afin de récupérer un enregistrement spécifique :
 
 ```crystal
 query_set = Post.all
@@ -638,7 +638,7 @@ post_1 = query_set.get!(id: 123)
 post_2 = query_set.get!(id: 456, is_published: false)
 ```
 
-Complex filters can also be used as part of this method by leveraging [`q` expressions](../queries.md#complex-filters-with-q-expressions):
+Des filtres complexes peuvent également être utilisés dans le cadre de cette méthode en utilisant les [expressions `q`](../queries.md#filtres-complexes-avec-les-expressions-q) :
 
 ```crystal
 query_set = Post.all
@@ -646,9 +646,9 @@ post_1 = query_set.get! { q(id: 123) }
 post_2 = query_set.get! { q(id: 456, is_published: false) }
 ```
 
-If the specified set of filters doesn't match any records, a `Marten::DB::Errors::RecordNotFound` exception will be raised. Moreover, in order to ensure data consistency this method will raise a `Marten::DB::Errors::MultipleRecordsFound` exception if multiple records match the specified set of filters.
+Si l'ensemble de filtres spécifié ne correspond à aucun enregistrement, une exception `Marten::DB::Errors::RecordNotFound` sera levée. De plus, afin d'assurer la cohérence des données, cette méthode lèvera une exception `Marten::DB::Errors::MultipleRecordsFound` si plusieurs enregistrements correspondent à l'ensemble de filtres spécifié.
 
-Note that `#get` can be used to retrieve a record with a raw SQL predicate. For example:
+Notez que `#get` peut être utilisé pour récupérer un enregistrement avec un prédicat SQL brut. Par exemple :
 
 ```crystal
 Author.get!("id=?", 42)
@@ -657,17 +657,17 @@ Author.get!("id=:id", id: 42)
 
 ### `get_or_create`
 
-Returns the model record matching the given set of filters or create a new one if no one is found.
+Retourne l'enregistrement de modèle correspondant à l'ensemble de filtres donné ou en crée un nouveau si aucun n'est trouvé.
 
-Model fields that uniquely identify a record should be used here. For example:
+Les fields de modèle qui identifient de manière unique un enregistrement doivent être utilisés ici. Par exemple :
 
 ```crystal
 tag = Tag.all.get_or_create(label: "crystal")
 ```
 
-When no record is found, the new model instance is initialized by using the attributes defined in the double splat arguments. Regardless of whether it is valid or not (and thus persisted to the database or not), the initialized model instance is returned by this method.
+Lorsqu'aucun enregistrement n'est trouvé, la nouvelle instance de modèle est initialisée en utilisant les attributs définis dans les arguments double splat. Qu'elle soit valide ou non (et donc persistée dans la base de données ou non), l'instance de modèle initialisée est retournée par cette méthode.
 
-This method can also be called with a block that is executed for new objects. This block can be used to directly initialize new records before they are persisted to the database:
+Cette méthode peut également être appelée avec un bloc qui est exécuté pour les nouveaux objets. Ce bloc peut être utilisé pour initialiser directement les nouveaux enregistrements avant qu'ils ne soient persistés dans la base de données :
 
 ```crystal
 tag = Tag.all.get_or_create(label: "crystal") do |new_tag|
@@ -675,21 +675,21 @@ tag = Tag.all.get_or_create(label: "crystal") do |new_tag|
 end
 ```
 
-In order to ensure data consistency, this method will raise a `Marten::DB::Errors::MultipleRecordsFound` exception if multiple records match the specified set of filters.
+Afin d'assurer la cohérence des données, cette méthode lèvera une exception `Marten::DB::Errors::MultipleRecordsFound` si plusieurs enregistrements correspondent à l'ensemble de filtres spécifié.
 
 ### `get_or_create!`
 
-Returns the model record matching the given set of filters or create a new one if no one is found.
+Retourne l'enregistrement de modèle correspondant à l'ensemble de filtres donné ou en crée un nouveau si aucun n'est trouvé.
 
-Model fields that uniquely identify a record should be used here. For example:
+Les fields de modèle qui identifient de manière unique un enregistrement doivent être utilisés ici. Par exemple :
 
 ```crystall
 tag = Tag.all.get_or_create!(label: "crystal")
 ```
 
-When no record is found, the new model instance is initialized by using the attributes defined in the double splat arguments. If the new model instance is valid, it is persisted to the database ; otherwise a `Marten::DB::Errors::InvalidRecord` exception is raised.
+Lorsqu'aucun enregistrement n'est trouvé, la nouvelle instance de modèle est initialisée en utilisant les attributs définis dans les arguments double splat. Si la nouvelle instance de modèle est valide, elle est persistée dans la base de données ; sinon une exception `Marten::DB::Errors::InvalidRecord` est levée.
 
-This method can also be called with a block that is executed for new objects. This block can be used to directly initialize new records before they are persisted to the database:
+Cette méthode peut également être appelée avec un bloc qui est exécuté pour les nouveaux objets. Ce bloc peut être utilisé pour initialiser directement les nouveaux enregistrements avant qu'ils ne soient persistés dans la base de données :
 
 ```crystal
 tag = Tag.all.get_or_create!(label: "crystal") do |new_tag|
@@ -697,13 +697,13 @@ tag = Tag.all.get_or_create!(label: "crystal") do |new_tag|
 end
 ```
 
-In order to ensure data consistency, this method will raise a `Marten::DB::Errors::MultipleRecordsFound` exception if multiple records match the specified set of filters.
+Afin d'assurer la cohérence des données, cette méthode lèvera une exception `Marten::DB::Errors::MultipleRecordsFound` si plusieurs enregistrements correspondent à l'ensemble de filtres spécifié.
 
 ### `includes?`
 
-Returns `true` if a specific model record is included in the query set.
+Retourne `true` si un enregistrement de modèle spécifique est inclus dans le query set.
 
-This method can be used to verify the membership of a specific model record in a given query set. If the query set is not evaluated yet, a dedicated SQL query will be executed in order to perform this check (without loading the entire list of records that are targeted by the query set). This is especially interesting for large query sets where we don't want all the records to be loaded in memory in order to perform such check.
+Cette méthode peut être utilisée pour vérifier l'appartenance d'un enregistrement de modèle spécifique à un query set donné. Si le query set n'est pas encore évalué, une requête SQL dédiée sera exécutée afin d'effectuer cette vérification (sans charger la liste entière des enregistrements ciblés par le query set). Ceci est particulièrement intéressant pour les grands query sets où nous ne voulons pas que tous les enregistrements soient chargés en mémoire pour effectuer une telle vérification.
 
 ```crystal
 tag = Tag.get!(name: "crystal")
@@ -713,7 +713,7 @@ query_set.includes?(tag) # => true
 
 ### `last`
 
-Returns the last record that is matched by the query set, or `nil` if no records are found.
+Retourne le dernier enregistrement correspondant au query set, ou `nil` si aucun enregistrement n'est trouvé.
 
 ```crystal
 Article.last
@@ -722,7 +722,7 @@ Article.filter(title__startswith: "Top").last
 
 ### `last!`
 
-Returns the last record that is matched by the query set, or raises a `NilAssertionError` exception if no records are found.
+Retourne le dernier enregistrement correspondant au query set, ou lève une exception `NilAssertionError` si aucun enregistrement n'est trouvé.
 
 ```crystal
 Article.last!
@@ -731,43 +731,43 @@ Article.filter(title__startswith: "Top").last!
 
 ### `maximum`
 
-Retrieves the maximum value in a specific field across all records within a query set.
+Récupère la valeur maximale d'un field spécifique à travers tous les enregistrements d'un query set.
 
 ```crystal
-Product.all.maximum(:price)  # Retrieves the highest price across all products
+Product.all.maximum(:price)  # Récupère le prix le plus élevé parmi tous les produits
 # => 125.25
 ```
 
 ### `minimum`
 
-Retrieves the minimum value in a specific field across all records within a query set.
+Récupère la valeur minimale d'un field spécifique à travers tous les enregistrements d'un query set.
 
 ```crystal
-Product.all.minimum(:price)  # Retrieves the lowest price across all products
+Product.all.minimum(:price)  # Récupère le prix le plus bas parmi tous les produits
 # => 15.99
 ```
 
 ### `paginator`
 
-Returns a paginator that can be used to paginate the current query set.
+Retourne un paginateur qui peut être utilisé pour paginer le query set actuel.
 
-This method returns a [`Marten::DB::Query::Paginator`](pathname:///Marten/DB/Query/Paginator.html) object, which can then be used to retrieve specific pages. A page size must be specified when calling this method.
+Cette méthode retourne un objet [`Marten::DB::Query::Paginator`](pathname:///Marten/DB/Query/Paginator.html), qui peut ensuite être utilisé pour récupérer des pages spécifiques. Une taille de page doit être spécifiée lors de l'appel de cette méthode.
 
-For example:
+Par exemple :
 
 ```crystal
 query_set = Article.all
 paginator = query_set.paginator(10)
-paginator.page(1) # Returns the first page of records
+paginator.page(1) # Retourne la première page d'enregistrements
 ```
 
 ### `pick`
 
-Returns specific column values for a single record without actually loading it.
+Retourne les valeurs de colonnes spécifiques pour un seul enregistrement sans le charger réellement.
 
-This method allows to easily select specific column values for a single record from the current query set. This allows retrieving specific column values without actually loading the entire record, and as such this is most useful for query sets that have been narrowed down to match a single record. The method returns an array containing the requested column values, or `nil` if no record was matched by the current query set.
+Cette méthode permet de sélectionner facilement des valeurs de colonnes spécifiques pour un seul enregistrement du query set actuel. Cela permet de récupérer des valeurs de colonnes spécifiques sans charger l'enregistrement entier, et en tant que tel c'est particulièrement utile pour les query sets qui ont été restreints pour correspondre à un seul enregistrement. La méthode retourne un tableau contenant les valeurs de colonnes demandées, ou `nil` si aucun enregistrement ne correspond au query set actuel.
 
-For example:
+Par exemple :
 
 ```crystal
 Post.filter(pk: 1).pick("title", "published")
@@ -776,11 +776,11 @@ Post.filter(pk: 1).pick("title", "published")
 
 ### `pick!`
 
-Returns specific column values for a single record without actually loading it.
+Retourne les valeurs de colonnes spécifiques pour un seul enregistrement sans le charger réellement.
 
-This method allows to easily select specific column values for a single record from the current query set. This allows retrieving specific column values without actually loading the entire record, and as such this is most useful for query sets that have been narrowed down to match a single record. The method returns an array containing the requested column values, or raises `NilAssertionError` if no record was matched by the current query set.
+Cette méthode permet de sélectionner facilement des valeurs de colonnes spécifiques pour un seul enregistrement du query set actuel. Cela permet de récupérer des valeurs de colonnes spécifiques sans charger l'enregistrement entier, et en tant que tel c'est particulièrement utile pour les query sets qui ont été restreints pour correspondre à un seul enregistrement. La méthode retourne un tableau contenant les valeurs de colonnes demandées, ou lève une `NilAssertionError` si aucun enregistrement ne correspond au query set actuel.
 
-For example:
+Par exemple :
 
 ```crystal
 Post.filter(pk: 1).pick!("title", "published")
@@ -789,11 +789,11 @@ Post.filter(pk: 1).pick!("title", "published")
 
 ### `pks`
 
-Returns the primary key values of the considered model records targeted by the current query set.
+Retourne les valeurs de clé primaire des enregistrements de modèle considérés ciblés par le query set actuel.
 
-This method returns an array containing the primary key values of the model records that are targeted by the current query set.
+Cette méthode retourne un tableau contenant les valeurs de clé primaire des enregistrements de modèle ciblés par le query set actuel.
 
-For example:
+Par exemple :
 
 ```crystal
 Post.all.pks # => [1, 2, 3]
@@ -801,11 +801,11 @@ Post.all.pks # => [1, 2, 3]
 
 ### `pluck`
 
-Returns specific column values without loading entire record objects.
+Retourne les valeurs de colonnes spécifiques sans charger les objets enregistrement entiers.
 
-This method allows to easily select specific column values from the current query set. This allows retrieving specific column values without actually loading entire records. The method returns an array containing one array with the actual column values for each record targeted by the query set.
+Cette méthode permet de sélectionner facilement des valeurs de colonnes spécifiques du query set actuel. Cela permet de récupérer des valeurs de colonnes spécifiques sans charger les enregistrements entiers. La méthode retourne un tableau contenant un tableau avec les valeurs de colonnes réelles pour chaque enregistrement ciblé par le query set.
 
-For example:
+Par exemple :
 
 ```crystal
 Post.all.pluck("title", "published")
@@ -814,28 +814,28 @@ Post.all.pluck("title", "published")
 
 ### `size`
 
-Alias for [`#count`](#count): returns the number of records that are targeted by the query set.
+Alias pour [`#count`](#count) : retourne le nombre d'enregistrements ciblés par le query set.
 
 ### `sum`
 
-Calculates the total sum of values in a specific field across all records within a query set.
+Calcule la somme totale des valeurs d'un field spécifique à travers tous les enregistrements d'un query set.
 
-Example:
+Exemple :
 
 ```crystal
-Order.all.sum(:amount)  # Calculates the total amount across all orders
+Order.all.sum(:amount)  # Calcule le montant total de toutes les commandes
 # => 7
 ```
 
 ### `to_s`
 
-Returns a string representation of the considered query set.
+Retourne une représentation en chaîne du query set considéré.
 
 ### `to_sql`
 
-Returns the SQL representation of the considered query set.
+Retourne la représentation SQL du query set considéré.
 
-For example:
+Par exemple :
 
 ```crystal
 Tag.filter(name__startswith: "r").to_sql
@@ -843,16 +843,14 @@ Tag.filter(name__startswith: "r").to_sql
 ```
 
 :::note
-The outputted SQL will vary depending on the database backend in use.
+Le SQL produit variera en fonction du backend de base de données utilisé.
 :::
 
 ### `update_or_create`
 
-Updates the model record matching the given set of filters, or creates a new one if no one is found.
+Met à jour l'enregistrement de modèle correspondant à l'ensemble de filtres donné, ou en crée un nouveau si aucun n'est trouvé.
 
-Model fields that uniquely identify a record should be used here. This method first attempts to retrieve a record that
-matches the specified filters. If it exists, the record is updated using the attributes provided in the required
-`updates` argument:
+Les fields de modèle qui identifient de manière unique un enregistrement doivent être utilisés ici. Cette méthode tente d'abord de récupérer un enregistrement correspondant aux filtres spécifiés. S'il existe, l'enregistrement est mis à jour en utilisant les attributs fournis dans l'argument `updates` requis :
 
 ```crystal
 user = User.all.update_or_create(
@@ -861,9 +859,7 @@ user = User.all.update_or_create(
 )
 ```
 
-If no matching record is found, a new one is created using the attributes defined in `updates`. If additional attributes
-should only be used when creating new records, a `defaults` argument can be provided (these attributes will then be used
-instead of `updates` when creating the record):
+Si aucun enregistrement correspondant n'est trouvé, un nouveau est créé en utilisant les attributs définis dans `updates`. Si des attributs supplémentaires ne doivent être utilisés que lors de la création de nouveaux enregistrements, un argument `defaults` peut être fourni (ces attributs seront alors utilisés à la place de `updates` lors de la création de l'enregistrement) :
 
 ```crystal
 user = User.all.update_or_create(
@@ -873,16 +869,13 @@ user = User.all.update_or_create(
 )
 ```
 
-In order to ensure data consistency, this method will raise a
-`Marten::DB::Errors::MultipleRecordsFound` exception if multiple records match the specified set of filters.
+Afin d'assurer la cohérence des données, cette méthode lèvera une exception `Marten::DB::Errors::MultipleRecordsFound` si plusieurs enregistrements correspondent à l'ensemble de filtres spécifié.
 
 ### `update_or_create!`
 
-Updates the model record matching the given set of filters, or creates a new one if no one is found.
+Met à jour l'enregistrement de modèle correspondant à l'ensemble de filtres donné, ou en crée un nouveau si aucun n'est trouvé.
 
-Model fields that uniquely identify a record should be used here. This method first attempts to retrieve a record that
-matches the specified filters. If it exists, the record is updated using the attributes provided in the required
-`updates` argument:
+Les fields de modèle qui identifient de manière unique un enregistrement doivent être utilisés ici. Cette méthode tente d'abord de récupérer un enregistrement correspondant aux filtres spécifiés. S'il existe, l'enregistrement est mis à jour en utilisant les attributs fournis dans l'argument `updates` requis :
 
 ```crystal
 user = User.all.update_or_create!(
@@ -891,9 +884,7 @@ user = User.all.update_or_create!(
 )
 ```
 
-If no matching record is found, a new one is created using the attributes defined in `updates`. If additional attributes
-should only be used when creating new records, a `defaults` argument can be provided (these attributes will then be used
-instead of `updates` when creating the record):
+Si aucun enregistrement correspondant n'est trouvé, un nouveau est créé en utilisant les attributs définis dans `updates`. Si des attributs supplémentaires ne doivent être utilisés que lors de la création de nouveaux enregistrements, un argument `defaults` peut être fourni (ces attributs seront alors utilisés à la place de `updates` lors de la création de l'enregistrement) :
 
 ```crystal
 user = User.all.update_or_create!(
@@ -903,33 +894,31 @@ user = User.all.update_or_create!(
 )
 ```
 
-In order to ensure data consistency, this method will raise a
-`Marten::DB::Errors::MultipleRecordsFound` exception if multiple records match the specified set of filters.
+Afin d'assurer la cohérence des données, cette méthode lèvera une exception `Marten::DB::Errors::MultipleRecordsFound` si plusieurs enregistrements correspondent à l'ensemble de filtres spécifié.
 
-Raises a `Marten::DB::Errors::InvalidRecord` exception if the updated or created
-record is invalid.
+Lève une exception `Marten::DB::Errors::InvalidRecord` si l'enregistrement mis à jour ou créé est invalide.
 ```
 
-### `update`
+### `update` {#update}
 
-Updates all the records matched by the current query set with the passed values.
+Met à jour tous les enregistrements correspondant au query set actuel avec les valeurs passées.
 
-This method allows to update all the records that are matched by the current query set with the values defined in the passed double splat argument. It returns the number of records that were updated:
+Cette méthode permet de mettre à jour tous les enregistrements correspondant au query set actuel avec les valeurs définies dans le double splat passé. Elle retourne le nombre d'enregistrements qui ont été mis à jour :
 
 ```crystal
 query_set = Post.all
 query_set.update(title: "Updated") # => 42
 ```
 
-It should be noted that this method results in a regular `UPDATE` SQL statement. As such, the records that are updated through the use of this method won't be instantiated nor validated, and no callbacks will be executed for them either.
+Il est à noter que cette méthode résulte en une instruction SQL `UPDATE` régulière. En tant que tel, les enregistrements mis à jour via l'utilisation de cette méthode ne seront pas instanciés ni validés, et aucun callback ne sera exécuté pour eux non plus.
 
-## Field predicates
+## Prédicats de field
 
-Below are listed all the available [field predicates](../queries.md#field-predicates) that can be used when filtering query sets.
+Ci-dessous sont listés tous les [prédicats de field](../queries.md#prédicats-de-field) disponibles qui peuvent être utilisés lors du filtrage des query sets.
 
 ### `contains`
 
-Allows filtering records based on field values that contain a specific substring. Note that this is a **case-sensitive** predicate.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui contiennent une sous-chaîne spécifique. Notez que c'est un prédicat **sensible à la casse**.
 
 ```crystal
 Article.all.filter(title__contains: "tech")
@@ -937,7 +926,7 @@ Article.all.filter(title__contains: "tech")
 
 ### `endswith`
 
-Allows filtering records based on field values that end with a specific substring. Note that this is a **case-sensitive** predicate.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui se terminent par une sous-chaîne spécifique. Notez que c'est un prédicat **sensible à la casse**.
 
 ```crystal
 Article.all.filter(title__endswith: "travel")
@@ -945,9 +934,9 @@ Article.all.filter(title__endswith: "travel")
 
 ### `exact`
 
-Allows filtering records based on a specific field value (exact match). Note that providing a `nil` value will result in a `IS NULL` check at the SQL level.
+Permet de filtrer les enregistrements en fonction d'une valeur de field spécifique (correspondance exacte). Notez que fournir une valeur `nil` résultera en une vérification `IS NULL` au niveau SQL.
 
-This is the default predicate; as such it is not necessary to specify it when filtering records. The following two query sets are equivalent:
+C'est le prédicat par défaut ; en tant que tel, il n'est pas nécessaire de le spécifier lors du filtrage des enregistrements. Les deux query sets suivants sont équivalents :
 
 ```crystal
 Article.all.filter(published: true)
@@ -956,7 +945,7 @@ Article.all.filter(published__exact: true)
 
 ### `gte`
 
-Allows filtering records based on field values that are greater than or equal to a specified value.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui sont supérieures ou égales à une valeur spécifiée.
 
 ```crystal
 Article.all.filter(rating__gte: 10)
@@ -964,7 +953,7 @@ Article.all.filter(rating__gte: 10)
 
 ### `gt`
 
-Allows filtering records based on field values that are greater than a specified value.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui sont supérieures à une valeur spécifiée.
 
 ```crystal
 Article.all.filter(rating__gt: 10)
@@ -972,7 +961,7 @@ Article.all.filter(rating__gt: 10)
 
 ### `icontains`
 
-Allows filtering records based on field values that contain a specific substring, in a case-insensitive way.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui contiennent une sous-chaîne spécifique, de manière insensible à la casse.
 
 ```crystal
 Article.all.filter(title__icontains: "tech")
@@ -980,7 +969,7 @@ Article.all.filter(title__icontains: "tech")
 
 ### `iendswith`
 
-Allows filtering records based on field values that end with a specific substring, in a case-insensitive way.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui se terminent par une sous-chaîne spécifique, de manière insensible à la casse.
 
 ```crystal
 Article.all.filter(title__iendswith: "travel")
@@ -988,7 +977,7 @@ Article.all.filter(title__iendswith: "travel")
 
 ### `iexact`
 
-Allows filtering records based on a specific field value (exact match), in a case-insensitive way.
+Permet de filtrer les enregistrements en fonction d'une valeur de field spécifique (correspondance exacte), de manière insensible à la casse.
 
 ```crystal
 Article.all.filter(title__iexact: "Top blog posts")
@@ -996,7 +985,7 @@ Article.all.filter(title__iexact: "Top blog posts")
 
 ### `istartswith`
 
-Allows filtering records based on field values that start with a specific substring, in a case-insensitive way.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui commencent par une sous-chaîne spécifique, de manière insensible à la casse.
 
 ```crystal
 Article.all.filter(title__istartswith: "top")
@@ -1004,13 +993,13 @@ Article.all.filter(title__istartswith: "top")
 
 ### `in`
 
-Allows filtering records based on field values that are contained in a specific array of values.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui sont contenues dans un tableau spécifique de valeurs.
 
 ```crystal
 Tag.all.filter(slug__in=["foo", "bar", "xyz"])
 ```
 
-Note that this predicate can also be used for filtering relation fields (such as [`many_to_one`](./fields.md#many_to_one) or [`one_to_one`](./fields.md#one_to_one) fields) using arrays of model records. For example:
+Notez que ce prédicat peut également être utilisé pour filtrer les fields de relation (tels que les fields [`many_to_one`](./fields.md#many_to_one) ou [`one_to_one`](./fields.md#one_to_one)) en utilisant des tableaux d'enregistrements de modèle. Par exemple :
 
 ```crystal
 authors = Author.filter(first_name: "John")
@@ -1019,7 +1008,7 @@ articles = Article.filter(author__in: authors)
 
 ### `isnull`
 
-Allows filtering records based on field values that should be null or not null.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui doivent être null ou non null.
 
 ```crystal
 Article.all.filter(subtitle__isnull: true)
@@ -1028,7 +1017,7 @@ Article.all.filter(subtitle__isnull: false)
 
 ### `lte`
 
-Allows filtering records based on field values that are less than or equal to a specified value.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui sont inférieures ou égales à une valeur spécifiée.
 
 ```crystal
 Article.all.filter(rating__lte: 10)
@@ -1036,7 +1025,7 @@ Article.all.filter(rating__lte: 10)
 
 ### `lt`
 
-Allows filtering records based on field values that are less than a specified value.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui sont inférieures à une valeur spécifiée.
 
 ```crystal
 Article.all.filter(rating__lt: 10)
@@ -1044,7 +1033,7 @@ Article.all.filter(rating__lt: 10)
 
 ### `startswith`
 
-Allows filtering records based on field values that start with a specific substring. Note that this is a **case-sensitive** predicate.
+Permet de filtrer les enregistrements en fonction des valeurs de field qui commencent par une sous-chaîne spécifique. Notez que c'est un prédicat **sensible à la casse**.
 
 ```crystal
 Article.all.filter(title__startswith: "Top")

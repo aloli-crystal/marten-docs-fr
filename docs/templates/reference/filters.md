@@ -1,99 +1,99 @@
 ---
-title: Template filters
-description: Template filters reference.
+title: Filters de template
+description: Référence des filters de template.
 ---
 
-This page provides a reference for all the available filters that can be used when defining [templates](../introduction.md).
+Cette page fournit une référence pour tous les filters disponibles qui peuvent être utilisés lors de la définition de [templates](../introduction.md).
 
 ## `capitalize`
 
-The `capitalize` filter allows to modify a string so that the first letter is converted to uppercase and all the subsequent letters are converted to lowercase.
+Le filter `capitalize` permet de modifier une chaîne de caractères de sorte que la première lettre soit convertie en majuscule et que toutes les lettres suivantes soient converties en minuscules.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|capitalize }}
 ```
 
-If `value` is "marten", the output will be "Marten".
+Si `value` est "marten", la sortie sera "Marten".
 
 ## `default`
 
-The `default` filter allows to fallback to a specific value if the left side of the filter expression is empty or not truthy. A filter argument is mandatory. It should be noted that empty strings are considered truthy and will be returned by this filter.
+Le filter `default` permet de revenir à une valeur spécifique si le côté gauche de l'expression de filter est vide ou non véridique. Un argument de filter est obligatoire. Il est à noter que les chaînes vides sont considérées comme véridiques et seront retournées par ce filter.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|default:"foobar" }}
 ```
 
-If `value` is `nil` (or `0` or `false`), the output will be "foobar".
+Si `value` est `nil` (ou `0` ou `false`), la sortie sera "foobar".
 
 ## `downcase`
 
-The `downcase` filter allows to convert a string so that each of its characters is lowercase.
+Le filter `downcase` permet de convertir une chaîne de caractères de sorte que chacun de ses caractères soit en minuscule.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|downcase }}
 ```
 
-If `value` is "Hello", then the output will be "hello".
+Si `value` est "Hello", alors la sortie sera "hello".
 
 ## `escape`
 
-The `escape` filter replaces special characters (namely `&`, `<`, `>`, `"` and `'`)  in the template variable with their corresponding HTML entities.
+Le filter `escape` remplace les caractères spéciaux (à savoir `&`, `<`, `>`, `"` et `'`) dans la variable de template par leurs entités HTML correspondantes.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|escape }}
 ```
 
-If `value` is `<b>Let's do it</b>`, then the output will be `&lt;b&gt;Let&#39;s do it&lt;/b&gt;`.
+Si `value` est `<b>Let's do it</b>`, alors la sortie sera `&lt;b&gt;Let&#39;s do it&lt;/b&gt;`.
 
 ## `join`
 
-The `join` filter converts an array of elements into a string separated by `arg`.
+Le filter `join` convertit un tableau d'éléments en une chaîne séparée par `arg`.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|join: arg }}
 ```
 
-If `value` is `["Bananas","Apples","Oranges"]` and `arg` is `, `, then the output will be "Bananas, Apples, Oranges".
+Si `value` est `["Bananas","Apples","Oranges"]` et `arg` est `, `, alors la sortie sera "Bananas, Apples, Oranges".
 
 ## `linebreaks`
 
-The `linebreaks` filter allows to convert a string replacing all newlines with HTML line breaks (`<br />`).
+Le filter `linebreaks` permet de convertir une chaîne en remplaçant tous les retours à la ligne par des sauts de ligne HTML (`<br />`).
 
-For example:
+Par exemple :
 
 ```html
 {{ value|linebreaks }}
 ```
 
-If `value` is `Hello\nWorld`, then the output will be `Hello<br />World`.
+Si `value` est `Hello\nWorld`, alors la sortie sera `Hello<br />World`.
 
 ## `safe`
 
-The `safe` filter allows to mark that a string is safe and that it should not be escaped before being inserted in the final output of a rendered template. Indeed, string values are always automatically HTML-escaped by default in templates.
+Le filter `safe` permet de marquer qu'une chaîne est sûre et qu'elle ne doit pas être échappée avant d'être insérée dans la sortie finale d'un template rendu. En effet, les valeurs de chaînes sont toujours automatiquement échappées en HTML par défaut dans les templates.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|safe }}
 ```
 
-If `value` is `<p>Hello</p>`, then the output will be `<p>Hello</p>` as well.
+Si `value` est `<p>Hello</p>`, alors la sortie sera également `<p>Hello</p>`.
 
 ## `size`
 
-The `size` filter allows returning the size of a string or an enumerable object.
+Le filter `size` permet de retourner la taille d'une chaîne ou d'un objet énumérable.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|size }}
@@ -101,46 +101,46 @@ For example:
 
 ## `split`
 
-The `split` filter converts a string into an array of elements separated by `arg`.
+Le filter `split` convertit une chaîne en un tableau d'éléments séparés par `arg`.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|split: arg }}
 ```
 
-If `value` is `Bananas,Apples,Oranges` and `arg` is `,`, then the output will be ["Bananas","Apples","Oranges"].
+Si `value` est `Bananas,Apples,Oranges` et `arg` est `,`, alors la sortie sera ["Bananas","Apples","Oranges"].
 
 ## `time`
 
-The `time` filter allows outputting the string representation of a time variable. It requires the specification of a filter argument, which is the format string used to format the time (whose available directives are part of [`Time::Format`](https://crystal-lang.org/api/Time/Format.html)).
+Le filter `time` permet d'afficher la représentation en chaîne d'une variable temporelle. Il nécessite la spécification d'un argument de filter, qui est la chaîne de format utilisée pour formater l'heure (dont les directives disponibles font partie de [`Time::Format`](https://crystal-lang.org/api/Time/Format.html)).
 
 ```html
 {{ value | time: "%Y-%m-%d" }}
 ```
 
-In the above example, the output will be a date string such as `2023-09-25`.
+Dans l'exemple ci-dessus, la sortie sera une chaîne de date telle que `2023-09-25`.
 
 ## `underscore`
 
-The `underscore` filter allows to convert a string to its underscored version.
+Le filter `underscore` permet de convertir une chaîne en sa version avec des tirets bas.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|underscore }}
 ```
 
-If `value` is "FooBar", then the output will be "foo_bar".
+Si `value` est "FooBar", alors la sortie sera "foo_bar".
 
 ## `upcase`
 
-The `upcase` filter allows to convert a string so that each of its characters is uppercase.
+Le filter `upcase` permet de convertir une chaîne de caractères de sorte que chacun de ses caractères soit en majuscule.
 
-For example:
+Par exemple :
 
 ```html
 {{ value|upcase }}
 ```
 
-If `value` is "Hello", then the output will be "HELLO".
+Si `value` est "Hello", alors la sortie sera "HELLO".

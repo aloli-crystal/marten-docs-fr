@@ -1,37 +1,37 @@
 ---
-title: Generators
-description: Learn how to use generators in Marten.
+title: Générateurs
+description: Apprenez à utiliser les générateurs dans Marten.
 ---
 
-Marten features a generator mechanism that simplifies the creation of various abstractions, files, and structures within an existing project. This feature facilitates the generation of key components such as [models](../models-and-databases/introduction.md), [schemas](../schemas/introduction.md), [emails](../emailing/introduction.md), or [applications](./applications.md). By leveraging generators, developers can improve their workflow and speed up the development of their Marten projects while following best practices.
+Marten dispose d'un mécanisme de générateurs qui simplifie la création de diverses abstractions, fichiers et structures au sein d'un projet existant. Cette fonctionnalité facilite la génération de composants clés tels que les [modèles](../models-and-databases/introduction.md), les [schemas](../schemas/introduction.md), les [emails](../emailing/introduction.md) ou les [applications](./applications.md). En tirant parti des générateurs, les développeurs peuvent améliorer leur flux de travail et accélérer le développement de leurs projets Marten tout en suivant les bonnes pratiques.
 
-## Usage
+## Utilisation
 
-Generators can be invoked by leveraging the [`marten gen`](./reference/management-commands.md#gen) management command. This command is intended to be used as follows:
+Les générateurs peuvent être invoqués en utilisant la commande de gestion [`marten gen`](./reference/management-commands.md#gen). Cette commande est destinée à être utilisée comme suit :
 
 ```bash
 marten gen [generator] [options] [arguments]
 ```
 
-As you can see, the `marten gen` command must be used with a specific **generator** name, possibly followed by **options** and **arguments** (which may be required or not depending on the considered generator). All the built-in generators are listed in the [generators reference](./reference/generators.md).
+Comme vous pouvez le voir, la commande `marten gen` doit être utilisée avec un nom de **générateur** spécifique, éventuellement suivi d'**options** et d'**arguments** (qui peuvent être requis ou non selon le générateur considéré). Tous les générateurs intégrés sont listés dans la [référence des générateurs](./reference/generators.md).
 
-### Displaying help information
+### Afficher les informations d'aide
 
-You can display help information about a specific generator by using the `marten gen` command as follows:
+Vous pouvez afficher les informations d'aide d'un générateur spécifique en utilisant la commande `marten gen` comme suit :
 
 ```bash
 marten gen [generator] --help
 ```
 
-### Listing generators
+### Lister les générateurs
 
-It is possible to list all the available generators within a project by running the `marten gen` command as follows:
+Il est possible de lister tous les générateurs disponibles dans un projet en exécutant la commande `marten gen` comme suit :
 
 ```bash
 marten gen
 ```
 
-This should output something like this:
+Cela devrait produire quelque chose comme ceci :
 
 ```
 Usage: marten gen [options] [generator]
@@ -62,46 +62,46 @@ Run a generator followed by --help to see generator specific information, ex:
 marten gen [generator] --help
 ```
 
-## Examples
+## Exemples
 
-### Generating a model
+### Générer un modèle
 
-Generating a model can be achieved with the [`model`](./reference/generators.md#model) generator:
+La génération d'un modèle peut être réalisée avec le générateur [`model`](./reference/generators.md#model) :
 
 ```bash
-# Generate a model in the main app:
+# Générer un modèle dans l'application principale :
 marten gen model User name:string email:string
 
-# Generate a model in the admin app:
+# Générer un modèle dans l'application admin :
 marten gen model User name:string email:string --app admin
 
-# Generate a model with a many-to-one reference:
+# Générer un modèle avec une référence many-to-one :
 marten gen model Article label:string body:text author:many_to_one{User}
 
-# Generate a model with a parent class:
+# Générer un modèle avec une classe parente :
 marten gen model Admin::User name:string email:string --parent User
 
-# Generate a model without timestamps:
+# Générer un modèle sans timestamps :
 marten gen model User name:string email:string --no-timestamps
 ```
 
-### Generating an email
+### Générer un email
 
-Generating an email can be achieved with the [`email`](./reference/generators.md#email) generator:
-
-```bash
-marten gen email TestEmail            # Generate a new TestEmail email in the main application
-marten gen email TestEmail --app blog # Generate a new TestEmail email in the blog application
-```
-
-### Generating an application
-
-Generating an application can be achieved with the [`app`](./reference/generators.md#app) generator:
+La génération d'un email peut être réalisée avec le générateur [`email`](./reference/generators.md#email) :
 
 ```bash
-marten gen app blogging # Generate a new 'blogging' application
+marten gen email TestEmail            # Générer un nouvel email TestEmail dans l'application principale
+marten gen email TestEmail --app blog # Générer un nouvel email TestEmail dans l'application blog
 ```
 
-## Available generators
+### Générer une application
 
-Please head over to the [generators reference](./reference/generators.md) to see a list of all the available generators.
+La génération d'une application peut être réalisée avec le générateur [`app`](./reference/generators.md#app) :
+
+```bash
+marten gen app blogging # Générer une nouvelle application 'blogging'
+```
+
+## Générateurs disponibles
+
+Veuillez vous rendre sur la [référence des générateurs](./reference/generators.md) pour voir la liste de tous les générateurs disponibles.

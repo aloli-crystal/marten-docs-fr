@@ -1,16 +1,16 @@
 ---
-title: Routing
-description: Learn how to map handlers to routes.
-sidebar_label: Routing
+title: Routage
+description: Apprenez à associer les handlers aux routes.
+sidebar_label: Routage
 ---
 
-Marten gives you the ability to design your URLs the way you want, by allowing you to easily map routes to specific [handlers](./introduction.md), and by letting you generate paths and URLs from your application code.
+Marten vous donne la possibilité de concevoir vos URLs comme vous le souhaitez, en vous permettant d'associer facilement des routes à des [handlers](./introduction.md) spécifiques, et en vous laissant générer des chemins et des URLs depuis le code de votre application.
 
-## The basics
+## Les bases
 
-In order to access a handler via a browser, it is necessary to map it to a URL route. To do so, route "maps" can be used to define mappings between route paths and existing handler classes. These route maps can be as long or as short as needed, but it is generally a good idea to create sub routes maps that are included in the main routes map.
+Pour accéder à un handler via un navigateur, il est nécessaire de l'associer à une route URL. Pour ce faire, des « cartes » de routes peuvent être utilisées pour définir les correspondances entre les chemins de route et les classes de handler existantes. Ces cartes de routes peuvent être aussi longues ou aussi courtes que nécessaire, mais il est généralement préférable de créer des sous-cartes de routes qui sont incluses dans la carte de routes principale.
 
-The main routes map usually lives in the `config/routes.cr` file. For example, the content of such a file could look like this:
+La carte de routes principale se trouve généralement dans le fichier `config/routes.cr`. Par exemple, le contenu d'un tel fichier pourrait ressembler à ceci :
 
 ```crystal
 Marten.routes.draw do
@@ -20,17 +20,17 @@ Marten.routes.draw do
 end
 ```
 
-As you can see, routes are defined by calling a `#path` method that requires three arguments:
+Comme vous pouvez le voir, les routes sont définies en appelant une méthode `#path` qui nécessite trois arguments :
 
-* the first argument is the route pattern, which is a string like `/foo/bar` and which can contain additional [parameters](#specifying-route-parameters)
-* the second argument is the handler class associated with the specified route
-* the last argument is the route name, which is an identifier that can later be used in your codebase to generate the full URL for a specific route, and optionally inject parameters in it (see [Reverse URL resolutions](#reverse-url-resolutions))
+* le premier argument est le pattern de route, qui est une chaîne comme `/foo/bar` et qui peut contenir des [paramètres](#spécifier-les-paramètres-de-route) supplémentaires
+* le deuxième argument est la classe de handler associée à la route spécifiée
+* le dernier argument est le nom de la route, qui est un identifiant pouvant être utilisé ultérieurement dans votre code pour générer l'URL complète d'une route spécifique, et éventuellement y injecter des paramètres (voir [Résolutions inversées d'URL](#résolutions-inversées-durl))
 
 :::tip
-It is possible to map multiple routes to the same handler class if necessary. This can be useful if you need to provide route aliases for some handlers for example.
+Il est possible d'associer plusieurs routes à la même classe de handler si nécessaire. Cela peut être utile si vous avez besoin de fournir des alias de route pour certains handlers par exemple.
 :::
 
-These routes are evaluated and constructed at runtime, which means that you can define conditional routes if you need to. For example, a "debug" handler (only available in a development environment) could be added to the above routes map with the following addition:
+Ces routes sont évaluées et construites au moment de l'exécution, ce qui signifie que vous pouvez définir des routes conditionnelles si nécessaire. Par exemple, un handler de « débogage » (uniquement disponible dans un environnement de développement) pourrait être ajouté à la carte de routes ci-dessus avec l'ajout suivant :
 
 ```crystal
 Marten.routes.draw do
@@ -47,38 +47,38 @@ Marten.routes.draw do
 end
 ```
 
-When a URL is requested, Marten runs through all the defined routes to identify a matching one. The handler associated with this route will be initialized from the route parameters (if there are any) and the handler object will be used to respond to the considered request.
+Lorsqu'une URL est demandée, Marten parcourt toutes les routes définies pour identifier une correspondance. Le handler associé à cette route sera initialisé à partir des paramètres de route (s'il y en a) et l'objet handler sera utilisé pour répondre à la requête considérée.
 
-It should be noted that if no route is matched for a specific URL, Marten will automatically return a 404 Not Found response, by leveraging a configurable [error handler](./error-handlers.md).
+Il convient de noter que si aucune route ne correspond à une URL spécifique, Marten retournera automatiquement une réponse 404 Not Found, en utilisant un [handler d'erreur](./error-handlers.md) configurable.
 
-## Specifying route parameters
+## Spécifier les paramètres de route
 
-As highlighted in the previous examples, route parameters can be defined using angle brackets. Each route parameter must define a mandatory name and an optional type using the following syntaxes:
+Comme mis en évidence dans les exemples précédents, les paramètres de route peuvent être définis en utilisant des chevrons. Chaque paramètre de route doit définir un nom obligatoire et un type optionnel en utilisant les syntaxes suivantes :
 
 * `<name>`
 * `<name:type>`
 
-When no type is specified for a parameter, any string excluding the forward slash character (**`/`**) will be matched.
+Lorsqu'aucun type n'est spécifié pour un paramètre, toute chaîne de caractères excluant le caractère barre oblique (**`/`**) sera acceptée.
 
-The following route parameter types are available:
+Les types de paramètres de route suivants sont disponibles :
 
 | Type | Description |
 | ----------- | ----------- |
-| `str` or `string` | Matches any non-empty string (excluding the forward slash character **`/`**). This is the default parameter type used for untyped parameters (eg. `<myparam>`). |
-| `int` | Matches zero or any positive integer. These parameter values are always deserialized as `UInt64` objects. |
-| `path` | Matches any non-empty strings including forward slash characters (**`/`**). For example `foo/bar/xyz` could be matched by this parameter type. |
-| `slug` | Matches any string containing only ASCII letters, numbers, hyphen, and underscore characters. For example `my-first-project-01` could be matched by this parameter type. |
-| `uuid` | Matches a valid UUID string. These parameter values are always deserialized as `UUID` objects. |
+| `str` ou `string` | Correspond à toute chaîne non vide (excluant le caractère barre oblique **`/`**). C'est le type de paramètre par défaut utilisé pour les paramètres non typés (par ex. `<myparam>`). |
+| `int` | Correspond à zéro ou tout entier positif. Les valeurs de ces paramètres sont toujours désérialisées en objets `UInt64`. |
+| `path` | Correspond à toute chaîne non vide incluant les caractères barre oblique (**`/`**). Par exemple `foo/bar/xyz` pourrait être accepté par ce type de paramètre. |
+| `slug` | Correspond à toute chaîne contenant uniquement des lettres ASCII, des chiffres, des tirets et des caractères de soulignement. Par exemple `my-first-project-01` pourrait être accepté par ce type de paramètre. |
+| `uuid` | Correspond à une chaîne UUID valide. Les valeurs de ces paramètres sont toujours désérialisées en objets `UUID`. |
 
-It should be noted that it is possible to register custom route parameter implementations if needed. See [Create custom route parameters](./how-to/create-custom-route-parameters.md) to learn more about this capability.
+Il convient de noter qu'il est possible d'enregistrer des implémentations de paramètres de route personnalisés si nécessaire. Consultez [Créer des paramètres de route personnalisés](./how-to/create-custom-route-parameters.md) pour en savoir plus sur cette fonctionnalité.
 
-## Defining included routes
+## Définir des routes incluses
 
-The main routes map (which usually lives in the `config/routes.cr` file) does not have to be a "flat" definition of all the available routes. Indeed, you can define "sub" routes maps if you need to and "include" these in your main routes map.
+La carte de routes principale (qui se trouve généralement dans le fichier `config/routes.cr`) n'a pas besoin d'être une définition « plate » de toutes les routes disponibles. En effet, vous pouvez définir des sous-cartes de routes si nécessaire et les « inclure » dans votre carte de routes principale.
 
-This capability can be extremely useful to "include" a set of routes from an installed application (a third-party library or one of your in-project applications). This also allows better organizing route namespaces and bundling a set of related routes under a similar prefix.
+Cette fonctionnalité peut être extrêmement utile pour « inclure » un ensemble de routes depuis une application installée (une bibliothèque tierce ou l'une de vos applications intégrées au projet). Cela permet également de mieux organiser les espaces de noms de routes et de regrouper un ensemble de routes connexes sous un préfixe similaire.
 
-For example, a main routes map and an article routes map could be defined as follows:
+Par exemple, une carte de routes principale et une carte de routes d'articles pourraient être définies comme suit :
 
 ```crystal
 ARTICLE_ROUTES = Marten::Routing::Map.draw do
@@ -95,9 +95,9 @@ Marten.routes.draw do
 end
 ```
 
-In the above example, the following URLs would be generated by Marten in addition to the root URL:
+Dans l'exemple ci-dessus, les URLs suivantes seraient générées par Marten en plus de l'URL racine :
 
-| URL | Handler | Name |
+| URL | Handler | Nom |
 | --- | ---- | ---- |
 | `/articles` | `ArticlesHandler` | `articles:list` |
 | `/articles/create` | `ArticleCreateHandler` | `articles:create` |
@@ -105,10 +105,10 @@ In the above example, the following URLs would be generated by Marten in additio
 | `/articles/<pk:int>/update` | `ArticleUpdateHandler` | `articles:update` |
 | `/articles/<pk:int>/delete` | `ArticleDeleteHandler` | `articles:delete` |
 
-As you can see, both the URLs and the route names end up being prefixed respectively with the path and the name specified in the including route.
+Comme vous pouvez le voir, les URLs et les noms de routes finissent par être préfixés respectivement avec le chemin et le nom spécifiés dans la route d'inclusion.
 
 :::info
-The `name` parameter for included routes is optional, i.e. `path "/articles", ARTICLE_ROUTES` is also valid. Please note that this will increase the possibility of a name collision and it is, therefore, advisable to prefix the individual paths of the included route, e.g. `article_list`, `article_create`, etc.
+Le paramètre `name` pour les routes incluses est optionnel, c'est-à-dire que `path "/articles", ARTICLE_ROUTES` est également valide. Veuillez noter que cela augmentera la possibilité d'une collision de noms et il est donc conseillé de préfixer les chemins individuels de la route incluse, par ex. `article_list`, `article_create`, etc.
 
 ```crystal
 ARTICLE_ROUTES = Marten::Routing::Map.draw do
@@ -121,14 +121,14 @@ Marten.routes.draw do
 end
 ```
 
-This example will generate the following URLs:
+Cet exemple générera les URLs suivantes :
 
-| URL | Handler | Name |
+| URL | Handler | Nom |
 | --- | ------- | ---- |
 | `/articles` | `ArticlesHandler` | `articles_list` |
 | `/articles/create` | `ArticlesCreateHandler` | `articles_create` |
 
-It is also possible to add a namespace to the included route at the map level:
+Il est également possible d'ajouter un espace de noms à la route incluse au niveau de la carte :
 
 ```crystal
 ARTICLE_ROUTES = Marten::Routing::Map.draw(:article) do
@@ -140,28 +140,28 @@ Marten.routes.draw do
 end
 ```
 
-This example will generate the following URLs:
+Cet exemple générera les URLs suivantes :
 
-| URL | Handler | Name |
+| URL | Handler | Nom |
 | --- | ------- | ---- |
 | `/articles` | `ArticlesHandler` | `articles:list` |
 :::
 
-Note that the sub-routes map does not have to live in the `config/routes.cr` file: it can technically live anywhere in your codebase. The ideal way to define the routes map of a specific application would be to put it in a `routes.cr` file in the application's directory.
+Notez que la sous-carte de routes n'a pas besoin de résider dans le fichier `config/routes.cr` : elle peut techniquement se trouver n'importe où dans votre base de code. La manière idéale de définir la carte de routes d'une application spécifique serait de la placer dans un fichier `routes.cr` dans le répertoire de l'application.
 
-When Marten encounters a path that leads to another sub-routes map, it chops off the part of the URL that was matched up to that point and then forwards the remaining to the sub-routes map in order to see if it is matched by one of the underlying routes.
+Lorsque Marten rencontre un chemin menant à une autre sous-carte de routes, il découpe la partie de l'URL qui a été reconnue jusqu'à ce point puis transmet le reste à la sous-carte de routes pour voir si elle est reconnue par l'une des routes sous-jacentes.
 
-## Reverse URL resolutions
+## Résolutions inversées d'URL
 
-When working with web applications, a frequent need is to generate URLs in their final forms. To do so, you will want to avoid hard-coding URLs and instead leverage the ability to generate them from their associated names: this is what we call a reverse URL resolution.
+Lorsque l'on travaille avec des applications web, un besoin fréquent est de générer les URLs dans leur forme finale. Pour ce faire, vous voudrez éviter de coder en dur les URLs et plutôt exploiter la capacité de les générer à partir de leurs noms associés : c'est ce que nous appelons une résolution inversée d'URL.
 
-"Reversing" a URL is as simple as calling the [`Marten::Routing::Map#reverse`](pathname:///api/dev/Marten/Routing/Map.html#reverse(name%3AString|Symbol%2Cparams%3AHash(String|Symbol%2CParameter%3A%3ATypes))-instance-method) method from the main routes map, which is accessible through the use of the [`Marten#routes`](pathname:///api/dev/Marten.html#routes-class-method) method:
+« Inverser » une URL est aussi simple que d'appeler la méthode [`Marten::Routing::Map#reverse`](pathname:///api/dev/Marten/Routing/Map.html#reverse(name%3AString|Symbol%2Cparams%3AHash(String|Symbol%2CParameter%3A%3ATypes))-instance-method) depuis la carte de routes principale, accessible via la méthode [`Marten#routes`](pathname:///api/dev/Marten.html#routes-class-method) :
 
 ```crystal
 Marten.routes.reverse("home") # will return "/"
 ```
 
-In order to reverse a URL from within a handler class, you can simply leverage the [`Marten::Handlers::Base#reverse`](pathname:///api/dev/Marten/Handlers/Base.html#reverse(*args%2C**options)-instance-method) handler method:
+Pour inverser une URL depuis une classe de handler, vous pouvez simplement exploiter la méthode de handler [`Marten::Handlers::Base#reverse`](pathname:///api/dev/Marten/Handlers/Base.html#reverse(*args%2C**options)-instance-method) :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -171,18 +171,18 @@ class MyHandler < Marten::Handler
 end
 ```
 
-As highlighted previously, some routes require one or more parameters and in order to reverse these URLs you can simply specify these parameters as arguments when calling `#reverse`:
+Comme souligné précédemment, certaines routes nécessitent un ou plusieurs paramètres et pour inverser ces URLs, vous pouvez simplement spécifier ces paramètres comme arguments lors de l'appel à `#reverse` :
 
 ```crystal
 Marten.routes.reverse("article_detail", pk: 42) # will return "/articles/42"
 ```
 
-Finally, it should be noted that the namespaces that are created when defining [included routes](#defining-included-routes) also apply when reversing the corresponding URLs. For example, the name allowing to reverse the URL associated with the `ArticleUpdateHandler` in the previous snippet would be `articles:update`:
+Enfin, il convient de noter que les espaces de noms créés lors de la définition de [routes incluses](#définir-des-routes-incluses) s'appliquent également lors de l'inversion des URLs correspondantes. Par exemple, le nom permettant d'inverser l'URL associée à `ArticleUpdateHandler` dans l'extrait précédent serait `articles:update` :
 
 ```crystal
 Marten.routes.reverse("articles:update", pk: 42) # will return "/articles/42/update"
 ```
 
-## Localization
+## Localisation
 
-Routes can be localized to accommodate the requirements of multi-locales projects. Please refer to [Localized routes](../i18n/localized-routes.md) to learn more about this capability.
+Les routes peuvent être localisées pour répondre aux besoins des projets multi-langues. Veuillez vous référer à [Routes localisées](../i18n/localized-routes.md) pour en savoir plus sur cette fonctionnalité.

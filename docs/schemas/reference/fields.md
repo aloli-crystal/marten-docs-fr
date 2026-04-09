@@ -1,25 +1,25 @@
 ---
-title: Schema fields
-description: Schema fields reference.
+title: Champs de schema
+description: Référence des champs de schema.
 ---
 
-This page provides a reference for all the available field options and field types that can be used when defining schemas.
+Cette page fournit une référence pour toutes les options de champ et types de champ disponibles qui peuvent être utilisés lors de la définition de schemas.
 
-## Common field options
+## Options communes des champs
 
-The following field options can be used for all the available field types when declaring schema fields using the `field` macro.
+Les options de champ suivantes peuvent être utilisées pour tous les types de champ disponibles lors de la déclaration de champs de schema avec la macro `field`.
 
 ### `required`
 
-The `required` argument can be used to specify whether a schema field is required or not required. The default value for this argument is `true`.
+L'argument `required` peut être utilisé pour spécifier si un champ de schema est obligatoire ou non. La valeur par défaut de cet argument est `true`.
 
-## Field types
+## Types de champ
 
 ### `array`
 
-An `array` field allows validating a list of values, with each value subject to the validation rules of an array member field. The type of the underlying array member field must be specified through the use of the [`of`](#of) option. This option must reference an [existing schema field type](#field-types) (such as `string`, `enum`, etc).
+Un champ `array` permet de valider une liste de valeurs, chaque valeur étant soumise aux règles de validation d'un champ membre du tableau. Le type du champ membre du tableau sous-jacent doit être spécifié via l'utilisation de l'option [`of`](#of). Cette option doit référencer un [type de champ de schema existant](#types-de-champ) (tel que `string`, `enum`, etc.).
 
-For example, the following schema allows validating an array of strings:
+Par exemple, le schema suivant permet de valider un tableau de chaînes de caractères :
 
 ```crystal
 class ColorsSchema < Marten::Schema
@@ -27,7 +27,7 @@ class ColorsSchema < Marten::Schema
 end
 ```
 
-It is possible to specify options that are specific to the chosen array member field. For example:
+Il est possible de spécifier des options spécifiques au champ membre du tableau choisi. Par exemple :
 
 ```crystal
 class ColorsSchema < Marten::Schema
@@ -36,23 +36,23 @@ end
 ```
 
 :::info
-The definition of nested array fields is not permitted.
+La définition de champs de tableau imbriqués n'est pas permise.
 :::
 
 #### `of`
 
-The `of` option is mandatory for `array` fields and allows specifying the type of the underlying array member field. This option must reference an [existing schema field type](#field-types) (such as `string`, `enum`, etc).
+L'option `of` est obligatoire pour les champs `array` et permet de spécifier le type du champ membre du tableau sous-jacent. Cette option doit référencer un [type de champ de schema existant](#types-de-champ) (tel que `string`, `enum`, etc.).
 
 ### `bool`
 
-A `bool` field allows validating boolean values.
+Un champ `bool` permet de valider des valeurs booléennes.
 
 ### `date`
 
-A `date` field allows validating date values. Fields using this type are converted to `Time` objects in Crystal.
+Un champ `date` permet de valider des valeurs de date. Les champs utilisant ce type sont convertis en objets `Time` en Crystal.
 
 :::info
-`date` fields automatically attempt to deserialize incoming values using a predefined set of input formats. These formats are localized and configurable through the `marten.schema.field.date.input_formats` translation key. If Marten does not supply translations for the locale you're using, you can define custom localized formats within your project. For detailed instructions, see [Defining Translations](../../i18n/introduction.md#defining-translations). For example:
+Les champs `date` tentent automatiquement de désérialiser les valeurs entrantes en utilisant un ensemble prédéfini de formats d'entrée. Ces formats sont localisés et configurables via la clé de traduction `marten.schema.field.date.input_formats`. Si Marten ne fournit pas de traductions pour la locale que vous utilisez, vous pouvez définir des formats localisés personnalisés dans votre projet. Pour des instructions détaillées, voir [Définir des traductions](../../i18n/introduction.md#defining-translations). Par exemple :
 
 
 ```yaml
@@ -74,15 +74,15 @@ en:
             - "%d %B, %Y"
 ```
 
-If none of the localized input formats can successfully parse the incoming raw date value, `date` fields will fall back to the formats specified in the [`date_input_formats`](../../development/reference/settings.md#date_input_formats) setting.
+Si aucun des formats d'entrée localisés ne parvient à analyser la valeur de date brute entrante, les champs `date` se rabattront sur les formats spécifiés dans le paramètre [`date_input_formats`](../../development/reference/settings.md#date_input_formats).
 :::
 
 ### `date_time`
 
-A `date_time` field allows validating date time values. Fields using this type are converted to `Time` objects in Crystal.
+Un champ `date_time` permet de valider des valeurs de date/heure. Les champs utilisant ce type sont convertis en objets `Time` en Crystal.
 
 :::info
-`date_time` fields automatically attempt to deserialize incoming values using a predefined set of input formats. These formats are localized and configurable through the `marten.schema.field.date_time.input_formats` translation key. If Marten does not supply translations for the locale you're using, you can define custom localized formats within your project. For detailed instructions, see [Defining Translations](../../i18n/introduction.md#defining-translations). For example:
+Les champs `date_time` tentent automatiquement de désérialiser les valeurs entrantes en utilisant un ensemble prédéfini de formats d'entrée. Ces formats sont localisés et configurables via la clé de traduction `marten.schema.field.date_time.input_formats`. Si Marten ne fournit pas de traductions pour la locale que vous utilisez, vous pouvez définir des formats localisés personnalisés dans votre projet. Pour des instructions détaillées, voir [Définir des traductions](../../i18n/introduction.md#defining-translations). Par exemple :
 
 
 ```yaml
@@ -100,32 +100,32 @@ en:
             - "%m/%d/%Y %H:%M"
 ```
 
-If none of the localized input formats can successfully parse the incoming raw date time value, `date_time` fields will fall back to the formats specified in the [`date_time_input_formats`](../../development/reference/settings.md#date_time_input_formats) setting.
+Si aucun des formats d'entrée localisés ne parvient à analyser la valeur de date/heure brute entrante, les champs `date_time` se rabattront sur les formats spécifiés dans le paramètre [`date_time_input_formats`](../../development/reference/settings.md#date_time_input_formats).
 :::
 
 ### `duration`
 
-A `duration` field allows validating duration values, which map to [`Time::Span`](https://crystal-lang.org/api/Time/Span.html) objects in Crystal. `duration` fields expect serialized values to be in the `DD.HH:MM:SS.nnnnnnnnn` format (with `n` corresponding to nanoseconds) or in the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Durations) format (eg. `P3DT2H15M20S`, which corresponds to a `3.2:15:20` time span).
+Un champ `duration` permet de valider des valeurs de durée, qui correspondent à des objets [`Time::Span`](https://crystal-lang.org/api/Time/Span.html) en Crystal. Les champs `duration` attendent des valeurs sérialisées au format `DD.HH:MM:SS.nnnnnnnnn` (avec `n` correspondant aux nanosecondes) ou au format [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Durations) (par exemple `P3DT2H15M20S`, qui correspond à un intervalle de temps `3.2:15:20`).
 
 ### `email`
 
-An `email` field allows validating email address values. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un champ `email` permet de valider des valeurs d'adresses email. En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 #### `max_size`
 
-The `max_size` argument allows defining the maximum size allowed for the email address string. The default value for this argument is `254` (in accordance with RFCs 3696 and 5321).
+L'argument `max_size` permet de définir la taille maximale autorisée pour la chaîne d'adresse email. La valeur par défaut de cet argument est `254` (conformément aux RFC 3696 et 5321).
 
 #### `min_size`
 
-The `min_size` argument allows defining the minimum size allowed for the email address string. The default value for this argument is `nil`, which means that the minimum size is not validated by default.
+L'argument `min_size` permet de définir la taille minimale autorisée pour la chaîne d'adresse email. La valeur par défaut de cet argument est `nil`, ce qui signifie que la taille minimale n'est pas validée par défaut.
 
 #### `strip`
 
-The `strip` argument allows defining whether the string value should be stripped of leading and trailing whitespaces. The default is `true`.
+L'argument `strip` permet de définir si la valeur de la chaîne doit être débarrassée des espaces en début et en fin. La valeur par défaut est `true`.
 
 ### `enum`
 
-An `enum` field allows validating string values against the values of a specific [`Enum`](https://crystal-lang.org/api/Enum.html). When defining `enum` fields, it's necessary to specify a `values` argument that matches the actual enum:
+Un champ `enum` permet de valider des valeurs de chaîne par rapport aux valeurs d'un [`Enum`](https://crystal-lang.org/api/Enum.html) spécifique. Lors de la définition de champs `enum`, il est nécessaire de spécifier un argument `values` qui correspond à l'enum réel :
 
 ```crystal
 enum Category
@@ -146,46 +146,46 @@ schema.valid?   # => true
 schema.category # => Category::BLOG
 ```
 
-In addition to the [common field options](#common-field-options), such fields support the following arguments:
+En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 #### `values`
 
-The `values` argument **is required** and allows to specify the actual enum class that should be used for the field. Only string values matching the values of the enum will be validated by the field.
+L'argument `values` **est obligatoire** et permet de spécifier la classe enum réelle qui doit être utilisée pour le champ. Seules les valeurs de chaîne correspondant aux valeurs de l'enum seront validées par le champ.
 
 ### `file`
 
-A `file` field allows validating uploaded files. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un champ `file` permet de valider des fichiers téléversés. En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 #### `allow_empty_files`
 
-The `allow_empty_files` argument allows defining whether empty files are allowed or not when files are validated. The default value is `false`.
+L'argument `allow_empty_files` permet de définir si les fichiers vides sont autorisés ou non lors de la validation des fichiers. La valeur par défaut est `false`.
 
 #### `max_name_size`
 
-The `max_name_size` argument allows defining the maximum file name size allowed. The default value is `nil`, which means that uploaded file name sizes are not validated.
+L'argument `max_name_size` permet de définir la taille maximale du nom de fichier autorisée. La valeur par défaut est `nil`, ce qui signifie que les tailles de nom de fichier téléversé ne sont pas validées.
 
 ### `float`
 
-A `float` field allows validating float values. Fields using this type are converted to `Float64` objects in Crystal. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un champ `float` permet de valider des valeurs à virgule flottante. Les champs utilisant ce type sont convertis en objets `Float64` en Crystal. En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 #### `max_value`
 
-The `max_value` argument allows defining the maximum value allowed. The default value for this argument is `nil`, which means that the maximum value is not validated by default.
+L'argument `max_value` permet de définir la valeur maximale autorisée. La valeur par défaut de cet argument est `nil`, ce qui signifie que la valeur maximale n'est pas validée par défaut.
 
 #### `min_value`
 
-The `min_value` argument allows defining the minimum value allowed. The default value for this argument is `nil`, which means that the minimum value is not validated by default.
+L'argument `min_value` permet de définir la valeur minimale autorisée. La valeur par défaut de cet argument est `nil`, ce qui signifie que la valeur minimale n'est pas validée par défaut.
 
 ### `image`
 
-An `image` field allows validating uploaded files by ensuring that they are indeed images. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un champ `image` permet de valider des fichiers téléversés en s'assurant qu'il s'agit bien d'images. En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 :::info
-The [crystal-vips](https://github.com/naqvis/crystal-vips) shard is required for defining `image` schema fields. If this shard is not installed and required by your project, it will not be possible to use `image` schema fields and compilation errors will be raised.
+Le shard [crystal-vips](https://github.com/naqvis/crystal-vips) est requis pour définir des champs de schema `image`. Si ce shard n'est pas installé et requis par votre projet, il ne sera pas possible d'utiliser les champs de schema `image` et des erreurs de compilation seront levées.
 
-As such, make sure that:
+En tant que tel, assurez-vous que :
 
-1. Your project's `shard.yml` includes:
+1. Le `shard.yml` de votre projet inclut :
 
 ```yaml
 dependencies:
@@ -193,7 +193,7 @@ dependencies:
     github: naqvis/crystal-vips
 ```
 
-2. Your project's `src/project.cr` includes:
+2. Le fichier `src/project.cr` de votre projet inclut :
 
 ```crystal
 require "vips"
@@ -202,23 +202,23 @@ require "vips"
 
 #### `max_name_size`
 
-The `max_name_size` argument allows defining the maximum file name size allowed. The default value is `nil`, which means that uploaded file name sizes are not validated.
+L'argument `max_name_size` permet de définir la taille maximale du nom de fichier autorisée. La valeur par défaut est `nil`, ce qui signifie que les tailles de nom de fichier téléversé ne sont pas validées.
 
 ### `int`
 
-An `int` field allows validating integer values. Fields using this type are converted to `Int64` objects in Crystal. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un champ `int` permet de valider des valeurs entières. Les champs utilisant ce type sont convertis en objets `Int64` en Crystal. En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 #### `max_value`
 
-The `max_value` argument allows defining the maximum value allowed. The default value for this argument is `nil`, which means that the maximum value is not validated by default.
+L'argument `max_value` permet de définir la valeur maximale autorisée. La valeur par défaut de cet argument est `nil`, ce qui signifie que la valeur maximale n'est pas validée par défaut.
 
 #### `min_value`
 
-The `min_value` argument allows defining the minimum value allowed. The default value for this argument is `nil`, which means that the minimum value is not validated by default.
+L'argument `min_value` permet de définir la valeur minimale autorisée. La valeur par défaut de cet argument est `nil`, ce qui signifie que la valeur minimale n'est pas validée par défaut.
 
 ### `json`
 
-A `json` field allows validating JSON values, which are automatically parsed to [`JSON::Any`](https://crystal-lang.org/api/JSON/Any.html) objects. Additionally, it is also possible to leverage the [`serializable`](#serializable) option in order to specify a class that makes use of [`JSON::Serializable`](https://crystal-lang.org/api/JSON/Serializable.html). When doing so, the parsing of the JSON values will result in the initialization of the corresponding serializable objects:
+Un champ `json` permet de valider des valeurs JSON, qui sont automatiquement analysées en objets [`JSON::Any`](https://crystal-lang.org/api/JSON/Any.html). De plus, il est possible d'utiliser l'option [`serializable`](#serializable) afin de spécifier une classe qui utilise [`JSON::Serializable`](https://crystal-lang.org/api/JSON/Serializable.html). Ce faisant, l'analyse des valeurs JSON résultera en l'initialisation des objets sérialisables correspondants :
 
 ```crystal
 class MySerializable
@@ -240,56 +240,56 @@ schema.metadata! # => MySerializable object
 
 #### `serializable`
 
-The `serializable` arguments allows to specify that a class making use of [`JSON::Serializable`](https://crystal-lang.org/api/JSON/Serializable.html) should be used in order to parse the JSON values for the schema field at hand. When specifying a `serializable` class, the values returned for the considered schema fields will be instances of that class instead of [`JSON::Any`](https://crystal-lang.org/api/JSON/Any.html) objects.
+L'argument `serializable` permet de spécifier qu'une classe utilisant [`JSON::Serializable`](https://crystal-lang.org/api/JSON/Serializable.html) doit être utilisée pour analyser les valeurs JSON du champ de schema en question. Lors de la spécification d'une classe `serializable`, les valeurs retournées pour les champs de schema considérés seront des instances de cette classe au lieu d'objets [`JSON::Any`](https://crystal-lang.org/api/JSON/Any.html).
 
 ### `slug`
 
-A `slug` field allows validating slug values (ie. strings that can only include characters, numbers, dashes, and underscores). In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un champ `slug` permet de valider des valeurs de slug (c'est-à-dire des chaînes qui ne peuvent contenir que des caractères, des chiffres, des tirets et des tirets bas). En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 #### `max_size`
 
-The `max_size` argument allows defining the maximum size allowed for the slug string. The default value for this argument is `50`.
+L'argument `max_size` permet de définir la taille maximale autorisée pour la chaîne de slug. La valeur par défaut de cet argument est `50`.
 
 #### `min_size`
 
-The `min_size` argument allows defining the minimum size allowed for the slug string. The default value for this argument is `nil`, which means that the minimum size is not validated by default.
+L'argument `min_size` permet de définir la taille minimale autorisée pour la chaîne de slug. La valeur par défaut de cet argument est `nil`, ce qui signifie que la taille minimale n'est pas validée par défaut.
 
 #### `strip`
 
-The `strip` argument allows defining whether the string value should be stripped of leading and trailing whitespaces. The default is `true`.
+L'argument `strip` permet de définir si la valeur de la chaîne doit être débarrassée des espaces en début et en fin. La valeur par défaut est `true`.
 
 ### `string`
 
-A `string` field allows validating string values. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un champ `string` permet de valider des valeurs de chaîne de caractères. En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 #### `max_size`
 
-The `max_size` argument allows defining the maximum size allowed for the string. The default value for this argument is `nil`, which means that the maximum size is not validated by default.
+L'argument `max_size` permet de définir la taille maximale autorisée pour la chaîne. La valeur par défaut de cet argument est `nil`, ce qui signifie que la taille maximale n'est pas validée par défaut.
 
 #### `min_size`
 
-The `min_size` argument allows defining the minimum size allowed for the string. The default value for this argument is `nil`, which means that the minimum size is not validated by default.
+L'argument `min_size` permet de définir la taille minimale autorisée pour la chaîne. La valeur par défaut de cet argument est `nil`, ce qui signifie que la taille minimale n'est pas validée par défaut.
 
 #### `strip`
 
-The `strip` argument allows defining whether the string value should be stripped of leading and trailing whitespaces. The default is `true`.
+L'argument `strip` permet de définir si la valeur de la chaîne doit être débarrassée des espaces en début et en fin. La valeur par défaut est `true`.
 
 ### `uuid`
 
-A `uuid` field allows validating Universally Unique IDentifiers (UUID) values. Fields using this type are converted to `UUID` objects in Crystal.
+Un champ `uuid` permet de valider des valeurs d'identifiants universellement uniques (UUID). Les champs utilisant ce type sont convertis en objets `UUID` en Crystal.
 
 ### `url`
 
-A `url` field allows validating URL address values. In addition to the [common field options](#common-field-options), such fields support the following arguments:
+Un champ `url` permet de valider des valeurs d'adresses URL. En plus des [options communes des champs](#options-communes-des-champs), ces champs supportent les arguments suivants :
 
 #### `max_size`
 
-The `max_size` argument allows defining the maximum size allowed for the URL string. The default value for this argument is `200`.
+L'argument `max_size` permet de définir la taille maximale autorisée pour la chaîne URL. La valeur par défaut de cet argument est `200`.
 
 #### `min_size`
 
-The `min_size` argument allows defining the minimum size allowed for the URL string. The default value for this argument is `nil`, which means that the minimum size is not validated by default.
+L'argument `min_size` permet de définir la taille minimale autorisée pour la chaîne URL. La valeur par défaut de cet argument est `nil`, ce qui signifie que la taille minimale n'est pas validée par défaut.
 
 #### `strip`
 
-The `strip` argument allows defining whether the string value should be stripped of leading and trailing whitespaces. The default is `true`.
+L'argument `strip` permet de définir si la valeur de la chaîne doit être débarrassée des espaces en début et en fin. La valeur par défaut est `true`.

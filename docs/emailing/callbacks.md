@@ -1,18 +1,18 @@
 ---
-title: Email callbacks
-description: Learn how to define email callbacks.
+title: Callbacks d'email
+description: Apprenez à définir des callbacks d'email.
 sidebar_label: Callbacks
 ---
 
-Callbacks enable you to define logic that is triggered at different stages of an email's lifecycle. This document covers the available callbacks and introduces you to the associated API, which you can use to define hooks in your emails.
+Les callbacks vous permettent de définir une logique qui est déclenchée à différentes étapes du cycle de vie d'un email. Ce document couvre les callbacks disponibles et vous présente l'API associée, que vous pouvez utiliser pour définir des hooks dans vos emails.
 
-## Overview
+## Vue d'ensemble
 
-As stated above, callbacks are methods that will be called when specific events occur for a specific email instance. They need to be registered explicitly in your email classes.
+Comme indiqué ci-dessus, les callbacks sont des méthodes qui seront appelées lorsque des événements spécifiques se produisent pour une instance d'email donnée. Ils doivent être enregistrés explicitement dans vos classes d'email.
 
-Registering a callback is as simple as calling the right callback macro (eg. `#before_deliver`) with a symbol of the name of the method to call when the callback is executed.
+L'enregistrement d'un callback est aussi simple qu'appeler la bonne macro de callback (ex. `#before_deliver`) avec un symbole du nom de la méthode à appeler lorsque le callback est exécuté.
 
-For example, the following email leverages the [`#after_deliver`](#after_deliver) callback in order to emit a specific StatsD metric:
+Par exemple, l'email suivant utilise le callback [`#after_deliver`](#after_deliver) afin d'émettre une métrique StatsD spécifique :
 
 ```crystal
 require "statsd"
@@ -36,11 +36,11 @@ class WelcomeEmail < Marten::Email
 end
 ```
 
-## Available callbacks
+## Callbacks disponibles
 
 ### `before_deliver`
 
-`before_deliver` callbacks are executed _before_ an email is delivered (as part of the email's [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method) method). For example, this capability can be leveraged to mutate the considered email instance before the actual email gets delivered:
+Les callbacks `before_deliver` sont exécutés _avant_ qu'un email ne soit envoyé (dans le cadre de la méthode [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method) de l'email). Par exemple, cette capacité peut être utilisée pour muter l'instance d'email considérée avant que l'email réel ne soit envoyé :
 
 ```crystal
 class WelcomeEmail < Marten::Email
@@ -62,7 +62,7 @@ end
 
 ### `after_deliver`
 
-`after_deliver` callbacks are executed _after_ an email is delivered (as part of the email's [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method) method). For example, such callbacks can be leveraged to increment email-specific metrics:
+Les callbacks `after_deliver` sont exécutés _après_ qu'un email est envoyé (dans le cadre de la méthode [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method) de l'email). Par exemple, de tels callbacks peuvent être utilisés pour incrémenter des métriques spécifiques aux emails :
 
 ```crystal
 require "statsd"
@@ -88,9 +88,9 @@ end
 
 ### `before_render`
 
-`before_render` callbacks are invoked prior to rendering a template when generating the HTML or text body of the email. This means that these callbacks are executed when calling either the [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method), [`#html_body`](pathname:///api/dev/Marten/Emailing/Email.html#html_body%3AString|Nil-instance-method), or [`#text_body`](pathname:///api/dev/Marten/Emailing/Email.html#text_body%3AString|Nil-instance-method) methods.
+Les callbacks `before_render` sont invoqués avant le rendu d'un template lors de la génération du corps HTML ou texte de l'email. Cela signifie que ces callbacks sont exécutés lors de l'appel des méthodes [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method), [`#html_body`](pathname:///api/dev/Marten/Emailing/Email.html#html_body%3AString|Nil-instance-method) ou [`#text_body`](pathname:///api/dev/Marten/Emailing/Email.html#text_body%3AString|Nil-instance-method).
 
-Typically, these callbacks can be used to add new variables to the global email template context, in order to make them available to the template runtime. This can be useful if your email has some instance variables that you want to expose to your email template. For example:
+Typiquement, ces callbacks peuvent être utilisés pour ajouter de nouvelles variables au contexte global de template de l'email, afin de les rendre disponibles au runtime du template. Cela peut être utile si votre email a des variables d'instance que vous souhaitez exposer à votre template d'email. Par exemple :
 
 ```crystal
 class WelcomeEmail < Marten::Email

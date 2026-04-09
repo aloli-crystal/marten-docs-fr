@@ -1,24 +1,24 @@
 ---
-title: Create custom file storages
-description: Learn how to create custom file storages.
+title: Créer des stockages de fichiers personnalisés
+description: Apprenez à créer des stockages de fichiers personnalisés.
 ---
 
-Marten uses a file storage mechanism to perform file operations like saving files, deleting files, generating URLs, ... This file storages mechanism allows to save files in different backends by leveraging a standardized API. You can leverage this capability to implement custom file storages (which you can then use for [assets](../../assets/introduction.md) or as part of [file model fields](../uploading-files.md#persisting-uploaded-files-in-model-records)).
+Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations sur les fichiers comme la sauvegarde, la suppression, la génération d'URL, etc. Ce mécanisme de stockage de fichiers permet de sauvegarder les fichiers dans différents backends en utilisant une API standardisée. Vous pouvez exploiter cette fonctionnalité pour implémenter des stockages de fichiers personnalisés (que vous pouvez ensuite utiliser pour les [assets](../../assets/introduction.md) ou dans le cadre de [champs de modèle file](../uploading-files.md#persister-les-fichiers-téléversés-dans-les-enregistrements-de-modèle)).
 
-## Basic file storage implementation
+## Implémentation basique d'un stockage de fichiers
 
-File storages are implemented as subclasses of the [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html) abstract class. As such, they must implement a set of mandatory methods which provide the following functionalities:
+Les stockages de fichiers sont implémentés comme des sous-classes de la classe abstraite [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html). En tant que tels, ils doivent implémenter un ensemble de méthodes obligatoires qui fournissent les fonctionnalités suivantes :
 
-* saving files ([`#save`](pathname:///api/dev/Marten/Core/Storage/Base.html#save(filepath%3AString%2Ccontent%3AIO)%3AString-instance-method))
-* deleting files ([`#delete`](pathname:///api/dev/Marten/Core/Storage/Base.html#delete(filepath%3AString)%3ANil-instance-method))
-* opening files ([`#open`](pathname:///api/dev/Marten/Core/Storage/Base.html#open(filepath%3AString)%3AIO-instance-method))
-* verifying that files exist ([`#exist?`](pathname:///api/dev/Marten/Core/Storage/Base.html#exists%3F(filepath%3AString)%3ABool-instance-method))
-* retrieving file sizes ([`#size`](pathname:///api/dev/Marten/Core/Storage/Base.html#size(filepath%3AString)%3AInt64-instance-method))
-* retrieving file URLs ([`#url`](pathname:///api/dev/Marten/Core/Storage/Base.html#url(filepath%3AString)%3AString-instance-method))
+* sauvegarder des fichiers ([`#save`](pathname:///api/dev/Marten/Core/Storage/Base.html#save(filepath%3AString%2Ccontent%3AIO)%3AString-instance-method))
+* supprimer des fichiers ([`#delete`](pathname:///api/dev/Marten/Core/Storage/Base.html#delete(filepath%3AString)%3ANil-instance-method))
+* ouvrir des fichiers ([`#open`](pathname:///api/dev/Marten/Core/Storage/Base.html#open(filepath%3AString)%3AIO-instance-method))
+* vérifier que des fichiers existent ([`#exist?`](pathname:///api/dev/Marten/Core/Storage/Base.html#exists%3F(filepath%3AString)%3ABool-instance-method))
+* récupérer les tailles de fichiers ([`#size`](pathname:///api/dev/Marten/Core/Storage/Base.html#size(filepath%3AString)%3AInt64-instance-method))
+* récupérer les URL de fichiers ([`#url`](pathname:///api/dev/Marten/Core/Storage/Base.html#url(filepath%3AString)%3AString-instance-method))
 
-Note that you can fully customize how file storage objects are initialized.
+Notez que vous pouvez entièrement personnaliser la façon dont les objets de stockage de fichiers sont initialisés.
 
-For example, a custom-made "file system" storage (that reads and writes files in a specific folder of the local file system) could be implemented as follows:
+Par exemple, un stockage « système de fichiers » fait maison (qui lit et écrit des fichiers dans un dossier spécifique du système de fichiers local) pourrait être implémenté comme suit :
 
 ```crystal
 require "file_utils"
@@ -70,9 +70,9 @@ class FileSystem < Marten::Core::Storage::Base
 end
 ```
 
-## Using custom file storages
+## Utiliser des stockages de fichiers personnalisés
 
-You have many options when it comes to using your custom file storage classes, and those depend on what you are trying to do:
+Vous avez plusieurs options lorsqu'il s'agit d'utiliser vos classes de stockage de fichiers personnalisées, et celles-ci dépendent de ce que vous essayez de faire :
 
-* if you want to use a custom storage for [assets](../../assets/introduction.md), then you will likely want to assign an instance of your custom storage class to the [`assets.storage`](../../development/reference/settings.md#storage) setting (see [Assets storage](../../assets/introduction.md#assets-storage) to learn more about assets storages specifically)
-* if you want to use a custom storage for all your [file model fields](../../models-and-databases/reference/fields.md#file), then you will likely want to assign an instance of your custom storage class to the [`media_files.storage`](../../development/reference/settings.md#storage-1) setting (see [File storages](../managing-files.md#file-storages) to learn more about file storages specifically)
+* si vous souhaitez utiliser un stockage personnalisé pour les [assets](../../assets/introduction.md), vous voudrez probablement assigner une instance de votre classe de stockage personnalisée au paramètre [`assets.storage`](../../development/reference/settings.md#storage) (voir [Stockage des assets](../../assets/introduction.md#stockage-des-assets) pour en savoir plus sur les stockages d'assets spécifiquement)
+* si vous souhaitez utiliser un stockage personnalisé pour tous vos [champs de modèle file](../../models-and-databases/reference/fields.md#file), vous voudrez probablement assigner une instance de votre classe de stockage personnalisée au paramètre [`media_files.storage`](../../development/reference/settings.md#storage-1) (voir [Stockages de fichiers](../managing-files.md#stockages-de-fichiers) pour en savoir plus sur les stockages de fichiers spécifiquement)

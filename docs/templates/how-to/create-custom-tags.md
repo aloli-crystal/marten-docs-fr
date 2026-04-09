@@ -1,29 +1,29 @@
 ---
-title: Create custom template tags
-sidebar_label: Create custom tags
-description: How to create custom template tags.
+title: Créer des tags de template personnalisés
+sidebar_label: Créer des tags personnalisés
+description: Comment créer des tags de template personnalisés.
 ---
 
-Marten has built-in support for common [template tags](../reference/tags.md), but the framework also allows you to write your own template tags that you can leverage as part of your project's templates.
+Marten dispose d'un support intégré pour les [tags de template](../reference/tags.md) courants, mais le framework vous permet également d'écrire vos propres tags de template que vous pouvez utiliser dans les templates de votre projet.
 
-## Defining a template tag
+## Définir un tag de template
 
-Template tags are subclasses of the [`Marten::Template::Tag::Base`](pathname:///api/dev/Marten/Template/Tag/Base.html) abstract class. When writing custom template tags, you will usually want to define two methods in your tag classes: the `#initialize` and the `#render` methods. These two methods are called at different moments in a template's lifecycle:
+Les tags de template sont des sous-classes de la classe abstraite [`Marten::Template::Tag::Base`](pathname:///api/dev/Marten/Template/Tag/Base.html). Lors de l'écriture de tags de template personnalisés, vous voudrez généralement définir deux méthodes dans vos classes de tags : les méthodes `#initialize` et `#render`. Ces deux méthodes sont appelées à différents moments du cycle de vie d'un template :
 
-* the `#initialize` method is used to initialize a template tag object and it is called at **parsing time**: this means that it is the responsibility of this method to ensure that the content of the template tag is valid from a parsing standpoint
-* the `#render` method is called at **rendering time** to apply the tag's logic: this means that the method is only called for valid template tag statements that were parsed without errors
+* la méthode `#initialize` est utilisée pour initialiser un objet tag de template et elle est appelée au moment de l'**analyse** : cela signifie qu'il est de la responsabilité de cette méthode de s'assurer que le contenu du tag de template est valide du point de vue de l'analyse
+* la méthode `#render` est appelée au moment du **rendu** pour appliquer la logique du tag : cela signifie que la méthode n'est appelée que pour les instructions de tag de template valides qui ont été analysées sans erreur
 
-Since tags are created and processed when the template is parsed, they can theoretically be used to implement any kind of behavior. That being said, there are a few patterns that are frequently used when writing tags that you might want to consider to help you get started:
+Puisque les tags sont créés et traités lors de l'analyse du template, ils peuvent théoriquement être utilisés pour implémenter tout type de comportement. Cela dit, il existe quelques patterns fréquemment utilisés lors de l'écriture de tags que vous pourriez vouloir considérer pour vous aider à démarrer :
 
-* **simple tags:** tags outputting a value that can (optionally) be assigned to a new variable
-* **inclusion tags:** tags including and rendering other templates
-* **closable tags:** tags involving closing statements and doing something with the output of a block
+* **tags simples :** tags produisant une valeur qui peut (optionnellement) être assignée à une nouvelle variable
+* **tags d'inclusion :** tags incluant et rendant d'autres templates
+* **tags fermants :** tags impliquant des instructions de fermeture et faisant quelque chose avec la sortie d'un bloc
 
-### Simple tags
+### Tags simples
 
-Simple tags usually output a value while allowing this value to be assigned to a new variable (that will be added to the template context). They can eventually take arguments in order to return the right result at rendering time.
+Les tags simples produisent généralement une valeur tout en permettant à cette valeur d'être assignée à une nouvelle variable (qui sera ajoutée au contexte du template). Ils peuvent éventuellement prendre des arguments afin de retourner le résultat correct au moment du rendu.
 
-Let's take the example of a `local_time` template tag that outputs the string representation of the local time and that takes one mandatory argument (the [format](https://crystal-lang.org/api/Time/Format.html) used to output the time). Such a template tag could be implemented as follows:
+Prenons l'exemple d'un tag de template `local_time` qui affiche la représentation en chaîne de l'heure locale et qui prend un argument obligatoire (le [format](https://crystal-lang.org/api/Time/Format.html) utilisé pour afficher l'heure). Un tel tag de template pourrait être implémenté comme suit :
 
 ```crystal
 class LocalTimeTag < Marten::Template::Tag::Base
@@ -67,19 +67,19 @@ class LocalTimeTag < Marten::Template::Tag::Base
 end
 ```
 
-As you can see template tags are initialized from a parser (instance of [Marten::Template::Parser](pathname:///api/dev/Marten/Template/Parser.html)) and the raw "source" of the template tag (that is the content between the `{%` and `%}` tag delimiters). The `#initialize` method is responsible for extracting any information that might be necessary to implement the template tag's logic. In the case of the `local_time` template tag, we must take care of a few things:
+Comme vous pouvez le voir, les tags de template sont initialisés à partir d'un parser (instance de [Marten::Template::Parser](pathname:///api/dev/Marten/Template/Parser.html)) et de la « source » brute du tag de template (c'est-à-dire le contenu entre les délimiteurs de tag `{%` et `%}`). La méthode `#initialize` est responsable de l'extraction de toute information nécessaire à l'implémentation de la logique du tag de template. Dans le cas du tag de template `local_time`, nous devons prendre soin de quelques éléments :
 
-* ensure that we have a format specified as argument (and raise an invalid syntax error otherwise)
-* initialize a filter expression (instance of [Marten::Template::FilterExpression](pathname:///api/dev/Marten/Template/FilterExpression.html)) from the format argument: this is necessary because the argument can be a string literal or variable with filters applied to it
-* verify if the output of the template tag is assigned to a variable by looking for an `as` statement: if that's the case the name of the variable is persisted in a dedicated instance variable
+* s'assurer que nous avons un format spécifié comme argument (et lever une erreur de syntaxe invalide sinon)
+* initialiser une expression de filter (instance de [Marten::Template::FilterExpression](pathname:///api/dev/Marten/Template/FilterExpression.html)) à partir de l'argument de format : cela est nécessaire car l'argument peut être une chaîne littérale ou une variable avec des filters appliqués
+* vérifier si la sortie du tag de template est assignée à une variable en cherchant une instruction `as` : si c'est le cas, le nom de la variable est conservé dans une variable d'instance dédiée
 
-The `#render` method is called at rendering time: it takes the current context object as argument and must return a string. In the above example, this method "resolves" the time format expression that was identified at initialization time from the context (which is necessary if it was a variable) and generates the right time representation. If the tag wasn't specified with an `as` variable, then this value is simply returned, otherwise, it is persisted in the context and an empty string is returned.
+La méthode `#render` est appelée au moment du rendu : elle prend l'objet contexte courant comme argument et doit retourner une chaîne de caractères. Dans l'exemple ci-dessus, cette méthode « résout » l'expression de format horaire identifiée au moment de l'initialisation à partir du contexte (ce qui est nécessaire s'il s'agissait d'une variable) et génère la bonne représentation temporelle. Si le tag n'a pas été spécifié avec une variable `as`, alors cette valeur est simplement retournée, sinon, elle est conservée dans le contexte et une chaîne vide est retournée.
 
-### Inclusion tags
+### Tags d'inclusion
 
-Inclusion tags are similar to simple tags: they can take arguments (mandatory or not), and assign their outputs to variables, but the difference is that they render a template in order to produce the final output.
+Les tags d'inclusion sont similaires aux tags simples : ils peuvent prendre des arguments (obligatoires ou non), et assigner leurs sorties à des variables, mais la différence est qu'ils rendent un template pour produire la sortie finale.
 
-Let's take the example of a `list` template tag that outputs the elements of an array in a regular `ul` HTML tag. The template being rendered by such template tag could look like this:
+Prenons l'exemple d'un tag de template `list` qui affiche les éléments d'un tableau dans un tag HTML `ul` classique. Le template rendu par un tel tag de template pourrait ressembler à ceci :
 
 ```html title=path/to/list_tag.html
 <ul>
@@ -89,7 +89,7 @@ Let's take the example of a `list` template tag that outputs the elements of an 
 </ul>
 ```
 
-And the template tag itself could be implemented as follows:
+Et le tag de template lui-même pourrait être implémenté comme suit :
 
 ```crystal
 class ListTag < Marten::Template::Tag::Base
@@ -138,16 +138,16 @@ class ListTag < Marten::Template::Tag::Base
 end
 ```
 
-As you can see, the implementation of this tag looks quite similar to the one highlighted in [Simple tags](#simple-tags). The only differences that are worth noting here are:
+Comme vous pouvez le voir, l'implémentation de ce tag ressemble beaucoup à celle mise en évidence dans [Tags simples](#tags-simples). Les seules différences dignes de mention ici sont :
 
-1. the argument of the template tag corresponds to the list of items that should be rendered
-2. the `#render` method explicitly renders the template mentioned previously by using a context with the "list" object in it (the [`#stack`](pathname:///api/dev/Marten/Template/Context.html#stack(%26)%3ANil-instance-method) method allows to create a new context where new values are stacked over the existing ones). The output of this rendering operation is either assigned to a variable or returned directly depending on whether the `as` statement was used
+1. l'argument du tag de template correspond à la liste des éléments qui doivent être rendus
+2. la méthode `#render` rend explicitement le template mentionné précédemment en utilisant un contexte avec l'objet « list » dedans (la méthode [`#stack`](pathname:///api/dev/Marten/Template/Context.html#stack(%26)%3ANil-instance-method) permet de créer un nouveau contexte où de nouvelles valeurs sont empilées sur les existantes). La sortie de cette opération de rendu est soit assignée à une variable, soit retournée directement selon que l'instruction `as` a été utilisée ou non
 
-### Closable tags
+### Tags fermants
 
-Closable tags involve a closing statement, like this is the case for the `{% block %}...{% endblock %}` template tag for example. Usually, such tags will "capture" all the nodes between the opening tag and the closing tag, render them at rendering time, and do something with the output of this rendering.
+Les tags fermants impliquent une instruction de fermeture, comme c'est le cas pour le tag de template `{% block %}...{% endblock %}` par exemple. Généralement, de tels tags « capturent » tous les nœuds entre le tag d'ouverture et le tag de fermeture, les rendent au moment du rendu, et font quelque chose avec la sortie de ce rendu.
 
-To illustrate this, let's take the example of a `spaceless` tag that will remove whitespaces, tabs and new lines between HTML tags. Such a template tag could be implemented as follows:
+Pour illustrer cela, prenons l'exemple d'un tag `spaceless` qui supprimera les espaces, tabulations et retours à la ligne entre les tags HTML. Un tel tag de template pourrait être implémenté comme suit :
 
 ```crystal
 class SpacelessTag < Marten::Template::Base
@@ -164,23 +164,23 @@ class SpacelessTag < Marten::Template::Base
 end
 ```
 
-In this example, the `#initialize` method explicitly calls the parser's [`#parse`](pathname:///api/dev/Marten/Template/Parser.html#parse(up_to%3AArray(String)%3F%3Dnil)%3ANodeSet-instance-method) in order to parse the following "nodes" up to the expected closing tag (`endspaceless` in this case). If the specified closing tag is not encountered, the parser will automatically raise a syntax error. The obtained nodes are returned as a "node set" (instance of [`Marten::Template::NodeSet`](pathname:///api/dev/Marten/Template/NodeSet.html)): this is a special object returned by the template parser that maps to multiple parsed nodes (those can be tags, variables, or plain text values) that can be rendered through a [`#render`](pathname:///api/dev/Marten/Template/NodeSet.html#render(context%3AContext)-instance-method) method at rendering time.
+Dans cet exemple, la méthode `#initialize` appelle explicitement la méthode [`#parse`](pathname:///api/dev/Marten/Template/Parser.html#parse(up_to%3AArray(String)%3F%3Dnil)%3ANodeSet-instance-method) du parser afin d'analyser les « nœuds » suivants jusqu'au tag de fermeture attendu (`endspaceless` dans ce cas). Si le tag de fermeture spécifié n'est pas rencontré, le parser lèvera automatiquement une erreur de syntaxe. Les nœuds obtenus sont retournés sous forme de « jeu de nœuds » (instance de [`Marten::Template::NodeSet`](pathname:///api/dev/Marten/Template/NodeSet.html)) : c'est un objet spécial retourné par le parser de template qui correspond à plusieurs nœuds analysés (ceux-ci peuvent être des tags, des variables ou des valeurs de texte brut) qui peuvent être rendus via une méthode [`#render`](pathname:///api/dev/Marten/Template/NodeSet.html#render(context%3AContext)-instance-method) au moment du rendu.
 
-The `#render` method of the above tag is relatively simple: it simply "renders" the node set corresponding to the template nodes that were extracted between the `{% spaceless %}...{% endspaceless %}` tags and then removes any whitespaces between the HTML tags in the output.
+La méthode `#render` du tag ci-dessus est relativement simple : elle « rend » simplement le jeu de nœuds correspondant aux nœuds de template extraits entre les tags `{% spaceless %}...{% endspaceless %}` puis supprime tous les espaces entre les tags HTML dans la sortie.
 
-## Registering template tags
+## Enregistrer des tags de template
 
-In order to be able to use custom template tags, you must register them to Marten's global template tags registry.
+Afin de pouvoir utiliser des tags de template personnalisés, vous devez les enregistrer dans le registre global des tags de template de Marten.
 
-To do so, you will have to call the [`Marten::Template::Tag#register`](pathname:///api/dev/Marten/Template/Tag.html#register(tag_name%3AString|Symbol%2Ctag_klass%3ABase.class)-class-method) method with the name of the tag you wish to use in templates, and the template tag class.
+Pour ce faire, vous devrez appeler la méthode [`Marten::Template::Tag#register`](pathname:///api/dev/Marten/Template/Tag.html#register(tag_name%3AString|Symbol%2Ctag_klass%3ABase.class)-class-method) avec le nom du tag que vous souhaitez utiliser dans les templates, et la classe du tag de template.
 
-For example:
+Par exemple :
 
 ```crystal
 Marten::Template::Tag.register("local_time", LocalTimeTag)
 ```
 
-With the above registration, you could technically use this tag (the one from the above [Simple tags](#simple-tags) section) as follows:
+Avec l'enregistrement ci-dessus, vous pourriez techniquement utiliser ce tag (celui de la section [Tags simples](#tags-simples) ci-dessus) comme suit :
 
 ```html
 {% local_time "%Y-%m-%d %H:%M:%S %:z" %}

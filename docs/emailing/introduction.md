@@ -1,16 +1,16 @@
 ---
-title: Introduction to emails
-description: Learn how to define emails in a Marten project and how to deliver them.
+title: Introduction aux emails
+description: Apprenez à définir des emails dans un projet Marten et comment les envoyer.
 sidebar_label: Introduction
 ---
 
-Marten lets you define emails in a very declarative way and gives you the ability to fully customize the content of these emails, their properties and associated header values, and obviously how they should be delivered.
+Marten vous permet de définir des emails de manière très déclarative et vous donne la possibilité de personnaliser entièrement le contenu de ces emails, leurs propriétés et les valeurs d'en-têtes associées, et évidemment comment ils doivent être envoyés.
 
-## Email definition
+## Définition d'un email
 
-Emails must be defined as subclasses of the [`Emailing::Email`](pathname:///api/dev/Marten/Emailing/Email.html) abstract class and they usually live in an `emails` folder at the root of an application. These classes can define to which email addresses the email is sent (including CC or BCC addresses) and with which [templates](../templates.mdx) the body of the email (HTML or plain text) is rendered.
+Les emails doivent être définis comme des sous-classes de la classe abstraite [`Emailing::Email`](pathname:///api/dev/Marten/Emailing/Email.html) et ils résident généralement dans un dossier `emails` à la racine d'une application. Ces classes peuvent définir à quelles adresses email l'email est envoyé (y compris les adresses CC ou BCC) et avec quels [templates](../templates.mdx) le corps de l'email (HTML ou texte brut) est rendu.
 
-For example, the following snippet defines a simple email that is sent to a specific user's email address:
+Par exemple, l'extrait suivant définit un email simple qui est envoyé à l'adresse email d'un utilisateur spécifique :
 
 ```crystal
 class WelcomeEmail < Marten::Email
@@ -25,21 +25,21 @@ end
 ```
 
 :::info
-It is not necessary to systematically specify the `from` email address with the [`#from`](pathname:///api/dev/Marten/Emailing/Email.html#from(value)-macro) macro. Indeed, unless specified, the default "from" email address that is defined in the [`emailing.from_address`](../development/reference/settings.md#from_address) setting is automatically used.
+Il n'est pas nécessaire de spécifier systématiquement l'adresse email `from` avec la macro [`#from`](pathname:///api/dev/Marten/Emailing/Email.html#from(value)-macro). En effet, sauf indication contraire, l'adresse email "from" par défaut définie dans le paramètre [`emailing.from_address`](../development/reference/settings.md#from_address) est automatiquement utilisée.
 :::
 
-In the above snippet, a `WelcomeEmail` email class is defined by inheriting from the [`Emailing::Email`](pathname:///api/dev/Marten/Emailing/Email.html) abstract class. This email is initialized with a hypothetical `User` record, and this user's email address is used as the recipient email (through the use of the [`#to`](pathname:///api/dev/Marten/Emailing/Email.html#to(value)-macro) macro). Other email properties are also defined in the above snippet, such as the "from" email address ([`#from`](pathname:///api/dev/Marten/Emailing/Email.html#from(value)-macro) macro) and the subject of the email ([`#subject`](pathname:///api/dev/Marten/Emailing/Email.html#subject(value)-macro) macro).
+Dans l'extrait ci-dessus, une classe d'email `WelcomeEmail` est définie en héritant de la classe abstraite [`Emailing::Email`](pathname:///api/dev/Marten/Emailing/Email.html). Cet email est initialisé avec un enregistrement hypothétique `User`, et l'adresse email de cet utilisateur est utilisée comme destinataire (via la macro [`#to`](pathname:///api/dev/Marten/Emailing/Email.html#to(value)-macro)). D'autres propriétés de l'email sont également définies dans l'extrait ci-dessus, comme l'adresse email "from" (macro [`#from`](pathname:///api/dev/Marten/Emailing/Email.html#from(value)-macro)) et le sujet de l'email (macro [`#subject`](pathname:///api/dev/Marten/Emailing/Email.html#subject(value)-macro)).
 
-### Specifying email properties
+### Spécifier les propriétés de l'email
 
-Most email properties (eg. from address, recipient addresses, etc) can be specified in two ways:
+La plupart des propriétés de l'email (ex. adresse from, adresses destinataires, etc.) peuvent être spécifiées de deux manières :
 
-* through the use of a dedicated macro
-* by overriding a corresponding method in the email class
+* via l'utilisation d'une macro dédiée
+* en surchargeant une méthode correspondante dans la classe de l'email
 
-Indeed, it is convenient to define email properties through the use of the dedicated macros: [`#from`](pathname:///api/dev/Marten/Emailing/Email.html#from(value)-macro) for the sender email, [`#to`](pathname:///api/dev/Marten/Emailing/Email.html#to(value)-macro) for the recipient addresses, [`#cc`](pathname:///api/dev/Marten/Emailing/Email.html#cc(value)-macro) for the CC addresses, [`#bcc`](pathname:///api/dev/Marten/Emailing/Email.html#bcc(value)-macro) for the BCC addresses, [`#reply_to`](pathname:///api/dev/Marten/Emailing/Email.html#reply_to(value)-macro) for the Reply-To address, and [`#subject`](pathname:///api/dev/Marten/Emailing/Email.html#subject(value)-macro) for the email subject.
+En effet, il est pratique de définir les propriétés de l'email via l'utilisation des macros dédiées : [`#from`](pathname:///api/dev/Marten/Emailing/Email.html#from(value)-macro) pour l'email expéditeur, [`#to`](pathname:///api/dev/Marten/Emailing/Email.html#to(value)-macro) pour les adresses destinataires, [`#cc`](pathname:///api/dev/Marten/Emailing/Email.html#cc(value)-macro) pour les adresses CC, [`#bcc`](pathname:///api/dev/Marten/Emailing/Email.html#bcc(value)-macro) pour les adresses BCC, [`#reply_to`](pathname:///api/dev/Marten/Emailing/Email.html#reply_to(value)-macro) pour l'adresse Reply-To, et [`#subject`](pathname:///api/dev/Marten/Emailing/Email.html#subject(value)-macro) pour le sujet de l'email.
 
-That being said, if more complicated logics need to be implemented to generate these email properties, it is perfectly possible to simply override the corresponding method in the considered email class. For example:
+Cela dit, si des logiques plus complexes doivent être implémentées pour générer ces propriétés d'email, il est parfaitement possible de simplement surcharger la méthode correspondante dans la classe d'email considérée. Par exemple :
 
 ```crystal
 class WelcomeEmail < Marten::Email
@@ -60,9 +60,9 @@ class WelcomeEmail < Marten::Email
 end
 ```
 
-### Defining HTML and text bodies
+### Définir les corps HTML et texte
 
-The HTML body (and optionally text body) of the email is rendered using a [template](../templates.mdx) whose name can be specified by using the [`#template_name`](pathname:///api/dev/Marten/Emailing/Email.html#template_name(template_name%3AString%3F%2Ccontent_type%3AContentType|String|Symbol%3DContentType%3A%3AHTML)%3ANil-class-method) class method. By default, unless explicitly specified, it is assumed that the template specified to this method is used for rendering the HTML body of the email. That being said, it is possible to explicitly specify for which content type the template should be used by specifying an optional `content_type` argument as follows:
+Le corps HTML (et optionnellement le corps texte) de l'email est rendu en utilisant un [template](../templates.mdx) dont le nom peut être spécifié en utilisant la méthode de classe [`#template_name`](pathname:///api/dev/Marten/Emailing/Email.html#template_name(template_name%3AString%3F%2Ccontent_type%3AContentType|String|Symbol%3DContentType%3A%3AHTML)%3ANil-class-method). Par défaut, sauf indication explicite, il est supposé que le template spécifié à cette méthode est utilisé pour le rendu du corps HTML de l'email. Cela dit, il est possible de spécifier explicitement pour quel type de contenu le template devrait être utilisé en spécifiant un argument optionnel `content_type` comme suit :
 
 ```crystal
 class WelcomeEmail < Marten::Email
@@ -76,17 +76,17 @@ class WelcomeEmail < Marten::Email
 end
 ```
 
-Note that it is perfectly valid to specify one template for rendering the HTML body AND another one for rendering the text body (like in the above example).
+Notez qu'il est parfaitement valide de spécifier un template pour le rendu du corps HTML ET un autre pour le rendu du corps texte (comme dans l'exemple ci-dessus).
 
 :::info
-Note that you can define [`#html_body`](pathname:///api/dev/Marten/Emailing/Email.html#html_body%3AString%3F-instance-method) and [`#text_body`](pathname:///api/dev/Marten/Emailing/Email.html#html_body%3AString%3F-instance-method) methods if you need to override the logic that allows generating the HTML or text body of your email.
+Notez que vous pouvez définir des méthodes [`#html_body`](pathname:///api/dev/Marten/Emailing/Email.html#html_body%3AString%3F-instance-method) et [`#text_body`](pathname:///api/dev/Marten/Emailing/Email.html#html_body%3AString%3F-instance-method) si vous avez besoin de surcharger la logique qui permet de générer le corps HTML ou texte de votre email.
 :::
 
-### Modifying the template context
+### Modifier le contexte du template
 
-All emails have access to a [`#context`](pathname:///api/dev/Marten/Emailing/Email.html#context-instance-method) method that returns a [template](../templates/introduction.md) context object. This "global" context object is available for the lifetime of the considered email and can be mutated in order to define which variables are made available to the template runtime when rendering templates in order to generate the HTML/text bodies of your email (which happens when [sending the email](#sending-emails)).
+Tous les emails ont accès à une méthode [`#context`](pathname:///api/dev/Marten/Emailing/Email.html#context-instance-method) qui retourne un objet contexte de [template](../templates/introduction.md). Cet objet contexte "global" est disponible pendant toute la durée de vie de l'email considéré et peut être muté afin de définir quelles variables sont rendues disponibles au runtime du template lors du rendu des templates pour générer les corps HTML/texte de votre email (ce qui se produit lors de l'[envoi de l'email](#envoyer-des-emails)).
 
-To modify this context object effectively, it's recommended to utilize [`before_render`](./callbacks.md#before_render) callbacks, which are invoked just before rendering a template within your email. For example, this can be achieved as follows:
+Pour modifier cet objet contexte efficacement, il est recommandé d'utiliser des callbacks [`before_render`](./callbacks.md#before_render), qui sont invoqués juste avant le rendu d'un template dans votre email. Par exemple, cela peut être réalisé comme suit :
 
 ```crystal
 class WelcomeEmail < Marten::Email
@@ -106,13 +106,13 @@ class WelcomeEmail < Marten::Email
 end
 ```
 
-In the above example, the [`before_render`](./callbacks.md#before_render) callback simply assigns a new `user` variable to the email template context. Consequently, a corresponding `{{ user }}` variable will be available in the template configured for this email (`emails/welcome_email.html` in this case).
+Dans l'exemple ci-dessus, le callback [`before_render`](./callbacks.md#before_render) assigne simplement une nouvelle variable `user` au contexte de template de l'email. Par conséquent, une variable `{{ user }}` correspondante sera disponible dans le template configuré pour cet email (`emails/welcome_email.html` dans ce cas).
 
-### Defining custom headers
+### Définir des en-têtes personnalisés
 
-If you need to insert custom headers into your emails, then you can easily do so by defining a `#headers` method in your email class. This method must return a hash of string keys and values.
+Si vous devez insérer des en-têtes personnalisés dans vos emails, vous pouvez facilement le faire en définissant une méthode `#headers` dans votre classe d'email. Cette méthode doit retourner un hash de clés et valeurs de type string.
 
-For example:
+Par exemple :
 
 ```crystal
 class WelcomeEmail < Marten::Email
@@ -128,25 +128,25 @@ class WelcomeEmail < Marten::Email
 end
 ```
 
-## Sending emails
+## Envoyer des emails
 
-Emails are sent _synchronously_ through the use of the [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method). For example, the `WelcomeEmail` email defined in the previous sections could be initialized and delivered by doing:
+Les emails sont envoyés _de manière synchrone_ via l'utilisation de [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method). Par exemple, l'email `WelcomeEmail` défini dans les sections précédentes pourrait être initialisé et envoyé en faisant :
 
 ```crystal
 email = WelcomeEmail.new(user)
 email.deliver
 ```
 
-When calling [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method), the considered email will be delivered by using the currently configured [emailing backend](#emailing-backends).
+Lors de l'appel à [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method), l'email considéré sera envoyé en utilisant le [backend d'emailing](#backends-demailing) actuellement configuré.
 
-## Emailing backends
+## Backends d'emailing
 
-Emailing backends define _how_ emails are actually sent when [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method) gets called. For example, a [development backend](./reference/backends.md#development-backend) might simply "collect" the sent emails and print their information to the standard output. Other backends might also integrate with existing email services or interact with an SMTP server to ensure email delivery.
+Les backends d'emailing définissent _comment_ les emails sont réellement envoyés lorsque [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method) est appelé. Par exemple, un [backend de développement](./reference/backends.md#development-backend) pourrait simplement "collecter" les emails envoyés et afficher leurs informations sur la sortie standard. D'autres backends pourraient également s'intégrer avec des services d'email existants ou interagir avec un serveur SMTP pour assurer la livraison des emails.
 
-Which backend is used when sending emails is something that is controlled by the [`emailing.backend`](../development/reference/settings.md#backend-1) setting. All the available emailing backends are listed in the [emailing backend reference](./reference/backends.md).
+Quel backend est utilisé lors de l'envoi d'emails est contrôlé par le paramètre [`emailing.backend`](../development/reference/settings.md#backend-1). Tous les backends d'emailing disponibles sont listés dans la [référence des backends d'emailing](./reference/backends.md).
 
 :::tip
-If necessary, it is also possible to override which emailing backend is used on a per-email basis by leveraging the [`#backend`](pathname:///api/dev/Marten/Emailing/Email.html#backend(backend%3ABackend%3A%3ABase)%3ANil-class-method) class method. For example:
+Si nécessaire, il est également possible de surcharger quel backend d'emailing est utilisé par email en utilisant la méthode de classe [`#backend`](pathname:///api/dev/Marten/Emailing/Email.html#backend(backend%3ABackend%3A%3ABase)%3ANil-class-method). Par exemple :
 
 ```crystal
 class WelcomeEmail < Marten::Email
@@ -165,6 +165,6 @@ end
 
 ## Callbacks
 
-It is possible to define callbacks in order to bind methods and logics to specific events in the lifecycle of your emails. For example, it is possible to define callbacks that run before or after an email gets delivered.
+Il est possible de définir des callbacks afin de lier des méthodes et des logiques à des événements spécifiques du cycle de vie de vos emails. Par exemple, il est possible de définir des callbacks qui s'exécutent avant ou après l'envoi d'un email.
 
-Please head over to the [Email callbacks](./callbacks.md) guide in order to learn more about email callbacks.
+Veuillez consulter le guide [Callbacks d'email](./callbacks.md) pour en savoir plus sur les callbacks d'email.

@@ -1,29 +1,29 @@
 ---
-title: Create emailing backends
-description: How to create custom emailing backends.
+title: Créer des backends d'emailing
+description: Comment créer des backends d'emailing personnalisés.
 ---
 
-Marten lets you easily create custom [emailing backends](../introduction.md#emailing-backends) that you can then use as part of your application when it comes to sending emails.
+Marten vous permet de créer facilement des [backends d'emailing](../introduction.md#backends-demailing) personnalisés que vous pouvez ensuite utiliser dans votre application pour l'envoi d'emails.
 
-## Basic backend definition
+## Définition basique d'un backend
 
-Defining an emailing backend is as simple as creating a class that inherits from the [`Marten::Emailing::Backend::Base`](pathname:///api/dev/Marten/Emailing/Backend/Base.html) abstract class and that implements a unique `#deliver` method. This method takes a single `email` argument (instance of [`Marten::Emailing::Email`](pathname:///api/dev/Marten/Emailing/Email.html)), corresponding to the email to deliver.
+Définir un backend d'emailing est aussi simple que de créer une classe qui hérite de la classe abstraite [`Marten::Emailing::Backend::Base`](pathname:///api/dev/Marten/Emailing/Backend/Base.html) et qui implémente une méthode `#deliver` unique. Cette méthode prend un seul argument `email` (instance de [`Marten::Emailing::Email`](pathname:///api/dev/Marten/Emailing/Email.html)), correspondant à l'email à envoyer.
 
-For example:
+Par exemple :
 
 ```crystal
 class CustomEmailingBackend < Marten::Emailing::Backend::Base
   def deliver(email : Email)
-    # Deliver the email!
+    # Envoyer l'email !
   end
 end
 ```
 
-## Enabling the use of custom emailing backends
+## Activer l'utilisation de backends d'emailing personnalisés
 
-Custom emailing backends can be used by assigning an instance of the corresponding class to the [`emailing.backend`](../../development/reference/settings.md#backend-1) setting.
+Les backends d'emailing personnalisés peuvent être utilisés en assignant une instance de la classe correspondante au paramètre [`emailing.backend`](../../development/reference/settings.md#backend-1).
 
-For example:
+Par exemple :
 
 ```crystal
 config.emailing.backend = CustomEmailingBackend.new

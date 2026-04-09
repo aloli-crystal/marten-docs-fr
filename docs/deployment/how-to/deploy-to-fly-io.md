@@ -1,27 +1,27 @@
 ---
-title: Deploy to Fly.io
-description: Learn how to deploy a Marten project to Fly.io.
+title: Déployer sur Fly.io
+description: Apprenez à déployer un projet Marten sur Fly.io.
 ---
 
-This guide covers how to deploy a Marten project to [Fly.io](https://fly.io).
+Ce guide couvre comment déployer un projet Marten sur [Fly.io](https://fly.io).
 
-## Prerequisites
+## Prérequis
 
-To complete the steps in this guide, you will need:
+Pour compléter les étapes de ce guide, vous aurez besoin de :
 
-* An active account on [Fly.io](https://fly.io).
-* The Fly.io CLI [installed](https://fly.io/docs/hands-on/install-flyctl/) and correctly [configured](https://fly.io/docs/getting-started/log-in-to-fly/).
-* A functional Marten project.
+* Un compte actif sur [Fly.io](https://fly.io).
+* Le CLI Fly.io [installé](https://fly.io/docs/hands-on/install-flyctl/) et correctement [configuré](https://fly.io/docs/getting-started/log-in-to-fly/).
+* Un projet Marten fonctionnel.
 
-## Make your Marten project Fly.io-ready
+## Rendre votre projet Marten prêt pour Fly.io
 
-Before creating the Fly.io application, it is important to ensure that your project is properly configured for deployment to Fly.io. This section outlines some steps to ensure that your project can be deployed to Fly.io without issues.
+Avant de créer l'application Fly.io, il est important de s'assurer que votre projet est correctement configuré pour le déploiement sur Fly.io. Cette section décrit quelques étapes pour s'assurer que votre projet peut être déployé sur Fly.io sans problèmes.
 
-### Create a `Dockerfile`
+### Créer un `Dockerfile`
 
-We will be deploying our Marten project to Fly.io by leveraging a [Dockerfile strategy](https://fly.io/docs/languages-and-frameworks/dockerfile/). A `Dockerfile` is a text file that contains a set of instructions for building a [Docker](https://www.docker.com/) image. It typically includes a base image, commands to install dependencies, and steps to configure the environment and copy files into the image.
+Nous déploierons notre projet Marten sur Fly.io en utilisant une [stratégie Dockerfile](https://fly.io/docs/languages-and-frameworks/dockerfile/). Un `Dockerfile` est un fichier texte qui contient un ensemble d'instructions pour construire une image [Docker](https://www.docker.com/). Il inclut typiquement une image de base, des commandes pour installer les dépendances, et des étapes pour configurer l'environnement et copier les fichiers dans l'image.
 
-Your `Dockerfile` should be placed at the root of your project folder and should contain the following content at least:
+Votre `Dockerfile` devrait être placé à la racine du dossier de votre projet et devrait contenir le contenu suivant au minimum :
 
 ```Dockerfile title="Dockerfile"
 FROM crystallang/crystal:latest
@@ -41,9 +41,9 @@ RUN crystal build src/server.cr -o bin/server --release
 CMD ["/app/bin/server"]
 ```
 
-As you can see, this Dockerfile builds a Docker image based on the latest version of the Crystal programming language image. It also installs your project's Crystal dependencies, runs the [`collectassets`](../../development/reference/management-commands.md) management command, and compiles your server's binary.
+Comme vous pouvez le voir, ce Dockerfile construit une image Docker basée sur la dernière version de l'image du langage de programmation Crystal. Il installe également les dépendances Crystal de votre projet, exécute la commande de gestion [`collectassets`](../../development/reference/management-commands.md) et compile le binaire de votre serveur.
 
-It should be noted that this Dockerfile could perform additional operations if needed. For example, some projects may require Node.js in order to install additional dependencies and build your project's assets. This could be achieved with the following additions:
+Il convient de noter que ce Dockerfile pourrait effectuer des opérations supplémentaires si nécessaire. Par exemple, certains projets peuvent nécessiter Node.js pour installer des dépendances supplémentaires et construire les assets de votre projet. Cela pourrait être réalisé avec les ajouts suivants :
 
 ```Dockerfile title="Dockerfile"
 FROM crystallang/crystal:latest
@@ -73,82 +73,82 @@ RUN crystal build src/server.cr -o bin/server --release
 CMD ["/app/bin/server"]
 ```
 
-### Configure your production server's host and port
+### Configurer l'hôte et le port du serveur de production
 
-You should ensure that your production server can be accessed from other containers, and on a specific port. To do so, it's important to set the [`host`](../../development/reference/settings.md#host) setting to `0.0.0.0` and the [`port`](../../development/reference/settings.md#port) setting to a specific value such as `8000` (which is the port we'll be using throughout this guide).
+Vous devriez vous assurer que votre serveur de production peut être accédé depuis d'autres conteneurs, et sur un port spécifique. Pour ce faire, il est important de définir le paramètre [`host`](../../development/reference/settings.md#host) sur `0.0.0.0` et le paramètre [`port`](../../development/reference/settings.md#port) sur une valeur spécifique comme `8000` (qui est le port que nous utiliserons tout au long de ce guide).
 
-This can be achieved by updating your `config/settings/production.cr` production settings file as follows:
+Cela peut être réalisé en mettant à jour votre fichier de paramètres de production `config/settings/production.cr` comme suit :
 
 ```crystal title="config/settings/production.cr"
 Marten.configure :production do |config|
   config.host = "0.0.0.0"
   config.port = 8000
 
-  # Other settings...
+  # Autres paramètres...
 end
 ```
 
-### Configure key settings from environment variables
+### Configurer les paramètres clés depuis les variables d'environnement
 
-When deploying to Fly.io, you will have to set a few environment variables (later in this guide) that will be used to populate key settings. This should be the case for the [`secret_key`](../../development/reference/settings.md#secret_key) and [`allowed_hosts`](../../development/reference/settings.md#allowed_hosts) settings at least.
+Lors du déploiement sur Fly.io, vous devrez définir quelques variables d'environnement (plus tard dans ce guide) qui seront utilisées pour remplir les paramètres clés. Cela devrait être le cas pour les paramètres [`secret_key`](../../development/reference/settings.md#secret_key) et [`allowed_hosts`](../../development/reference/settings.md#allowed_hosts) au minimum.
 
-As such, it is important to ensure that your project populates these settings by reading their values in corresponding environment variables. This can be achieved by updating your `config/settings/production.cr` production settings file as follows:
+Ainsi, il est important de s'assurer que votre projet remplit ces paramètres en lisant leurs valeurs dans les variables d'environnement correspondantes. Cela peut être réalisé en mettant à jour votre fichier de paramètres de production `config/settings/production.cr` comme suit :
 
 ```crystal title="config/settings/production.cr"
 Marten.configure :production do |config|
   config.secret_key = ENV.fetch("MARTEN_SECRET_KEY", "")
   config.allowed_hosts = ENV.fetch("MARTEN_ALLOWED_HOSTS", "").split(",")
 
-  # Other settings...
+  # Autres paramètres...
 end
 ```
 
-It should be noted that if your application requires a database, you should also make sure to parse the `DATABASE_URL` environment variable and to configure your [database settings](../../development/reference/settings.md#database-settings) from the parsed database URL properties. The `DATABASE_URL` variable contains a URL-encoded string that specifies the connection details of your database, such as the database type, hostname, port, username, password, and database name.
+Il convient de noter que si votre application nécessite une base de données, vous devriez également vous assurer d'analyser la variable d'environnement `DATABASE_URL` et de configurer vos [paramètres de base de données](../../development/reference/settings.md#database-settings) à partir des propriétés de l'URL de base de données analysée. La variable `DATABASE_URL` contient une chaîne encodée en URL qui spécifie les détails de connexion de votre base de données, comme le type de base de données, le nom d'hôte, le port, le nom d'utilisateur, le mot de passe et le nom de la base de données.
 
-This can be accomplished as follows for a PostgreSQL database:
+Cela peut être accompli comme suit pour une base de données PostgreSQL :
 
 ```crystal title="config/settings/production.cr"
 Marten.configure :production do |config|
   if ENV.has_key?("DATABASE_URL")
-    # Note: DATABASE_URL isn't available at build time...
+    # Note: DATABASE_URL n'est pas disponible au moment de la compilation...
     config.database url: ENV.fetch("DATABASE_URL") do |db|
-      # Fly.io's Postgres works over an internal & encrypted network which does not support SSL.
-      # Hence, SSL must be disabled.
+      # Le Postgres de Fly.io fonctionne sur un réseau interne et chiffré qui ne supporte pas SSL.
+      # Par conséquent, SSL doit être désactivé.
       db.options = {"sslmode" => "disable"}
     end
   end
 
-  # Other settings...
+  # Autres paramètres...
 end
 ```
 
-### Optional: set up the asset serving middleware
+### Optionnel : configurer le middleware de service d'assets
 
-In order to easily serve your application's assets in Fly.io, you can make use of the [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware) middleware. Indeed, it won't be possible to configure a web server such as [Nginx](https://nginx.org) to serve your assets directly on Fly.io if you intend to use a "local file system" asset store (such as [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)).
+Afin de servir facilement les assets de votre application sur Fly.io, vous pouvez utiliser le middleware [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware). En effet, il ne sera pas possible de configurer un serveur web comme [Nginx](https://nginx.org) pour servir directement vos assets sur Fly.io si vous avez l'intention d'utiliser un store d'assets "système de fichiers local" (comme [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)).
 
-To palliate this, you can make use of the [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware) middleware. Obviously, this is not necessary if you intend to leverage a cloud storage provider (like Amazon's S3 or GCS) to store and serve your collected assets (in this case, you can simply skip this section).
+Pour pallier cela, vous pouvez utiliser le middleware [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware). Évidemment, cela n'est pas nécessaire si vous avez l'intention d'utiliser un fournisseur de stockage cloud (comme Amazon S3 ou GCS) pour stocker et servir vos assets collectés (dans ce cas, vous pouvez simplement passer cette section).
 
-In order to use this middleware, you can "insert" the corresponding class at the beginning of the [`middleware`](../../development/reference/settings.md#middleware) setting when defining production settings. For example:
+Pour utiliser ce middleware, vous pouvez "insérer" la classe correspondante au début du paramètre [`middleware`](../../development/reference/settings.md#middleware) lors de la définition des paramètres de production. Par exemple :
 
 ```crystal
 Marten.configure :production do |config|
   config.middleware.unshift(Marten::Middleware::AssetServing)
 
-  # Other settings...
+  # Autres paramètres...
 end
 ```
 
-The middleware will serve the collected assets available under the assets root ([`assets.root`](../../development/reference/settings.md#root) setting). It is also important to note that the [`assets.url`](../../development/reference/settings.md#url) setting must align with the Marten application domain or correspond to a relative URL path (e.g., `/assets/`) for this middleware to work correctly.
+Le middleware servira les assets collectés disponibles sous la racine des assets (paramètre [`assets.root`](../../development/reference/settings.md#root)). Il est également important de noter que le paramètre [`assets.url`](../../development/reference/settings.md#url) doit correspondre au domaine de l'application Marten ou correspondre à un chemin d'URL relatif (ex. `/assets/`) pour que ce middleware fonctionne correctement.
 
-## Create the Fly.io app
+## Créer l'application Fly.io
 
-To begin, the initial action required is to generate your Fly.io application itself. This can be achieved by executing the `fly launch` command as follows:
+Pour commencer, l'action initiale requise est de générer votre application Fly.io elle-même. Cela peut être réalisé en exécutant la commande `fly launch` comme suit :
 
 ```bash
 fly launch --no-deploy --no-cache --internal-port 8000 --name <yourapp> --env MARTEN_ALLOWED_HOSTS=<yourapp>.fly.dev
 ```
 
-The above command creates a Fly.io application whose internal port is set to `8000` while also ensuring that the `MARTEN_ALLOWED_HOSTS` environment variable is set to your future app domain. The command will ask you to choose a specific [region](https://fly.io/docs/reference/regions/) for your application and will create a `fly.toml` file whose content should look like this:
+La commande ci-dessus crée une application Fly.io dont le port interne est défini sur `8000` tout en s'assurant que la variable d'environnement `MARTEN_ALLOWED_HOSTS` est définie sur le futur domaine de votre application. La commande vous demandera de choisir une [région](https://fly.io/docs/reference/regions/) spécifique pour votre application et créera un fichier `fly.toml` dont le contenu devrait ressembler à ceci :
 
 ```toml title="fly.toml"
 app = "<yourapp>"
@@ -164,39 +164,39 @@ primary_region = "<yourregion>"
   auto_start_machines = true
 ```
 
-The `fly.toml` is a configuration file used by Fly.io to know how to deploy your application to the Fly.io platform.
+Le `fly.toml` est un fichier de configuration utilisé par Fly.io pour savoir comment déployer votre application sur la plateforme Fly.io.
 
 :::info
-In this guide, the `<yourapp>` placeholder refers to the Fly.io application name that you have chosen for your project. You should replace `<yourapp>` with the actual name of your application in all the relevant commands and code snippets mentioned in this guide.
+Dans ce guide, l'espace réservé `<yourapp>` fait référence au nom de l'application Fly.io que vous avez choisi pour votre projet. Vous devriez remplacer `<yourapp>` par le nom réel de votre application dans toutes les commandes et extraits de code pertinents mentionnés dans ce guide.
 :::
 
-## Set up environment secrets
+## Configurer les secrets d'environnement
 
-It is recommended to define the `MARTEN_SECRET_KEY` environment variable order to populate the [`secret_key`](../../development/reference/settings.md#secret_key) setting, as mentioned in [Configure key settings from environment variables](#configure-key-settings-from-environment-variables).
+Il est recommandé de définir la variable d'environnement `MARTEN_SECRET_KEY` afin de remplir le paramètre [`secret_key`](../../development/reference/settings.md#secret_key), comme mentionné dans [Configurer les paramètres clés depuis les variables d'environnement](#configurer-les-paramètres-clés-depuis-les-variables-denvironnement).
 
-Fly.io gives the ability to define such sensitive setting values using [runtime secrets](https://fly.io/docs/reference/secrets/). In this light, we can create a `MARTEN_SECRET_KEY` secret by using the `fly secrets` command as follows:
+Fly.io offre la possibilité de définir de telles valeurs de paramètres sensibles en utilisant des [secrets au runtime](https://fly.io/docs/reference/secrets/). Dans cette optique, nous pouvons créer un secret `MARTEN_SECRET_KEY` en utilisant la commande `fly secrets` comme suit :
 
 ```bash
 fly secrets set MARTEN_SECRET_KEY=$(openssl rand -hex 16)
 ```
 
-## Set up a database
+## Configurer une base de données
 
-You'll need to provision a Fly.io PostgreSQL database if your application makes use of models and migrations (otherwise you can skip this step!). 
+Vous devrez provisionner une base de données PostgreSQL Fly.io si votre application utilise des modèles et des migrations (sinon vous pouvez passer cette étape !).
 
-In this light, you first need to create a PostgreSQL cluster with the following command:
+Dans cette optique, vous devez d'abord créer un cluster PostgreSQL avec la commande suivante :
 
 ```bash
 fly pg create --name <yourapp>-db
 ```
 
-Then you will need to "attach" the PostgreSQL cluster you just created with your actual application. This can be achieved with the following command:
+Ensuite, vous devrez "attacher" le cluster PostgreSQL que vous venez de créer à votre application réelle. Cela peut être réalisé avec la commande suivante :
 
 ```bash
 fly postgres attach <yourapp>-db --app <yourapp>
 ```
 
-Additionally, you will want to ensure that migrations are automatically applied every time your project is deployed. To do so, you can update the `fly.toml` file that was generated previously and add the following section to it:
+De plus, vous voudrez vous assurer que les migrations sont automatiquement appliquées à chaque fois que votre projet est déployé. Pour ce faire, vous pouvez mettre à jour le fichier `fly.toml` qui a été généré précédemment et y ajouter la section suivante :
 
 ```toml title="fly.toml"
 app = "<yourapp>"
@@ -217,12 +217,12 @@ primary_region = "<yourregion>"
   release_command = "bin/manage migrate"
 ```
 
-## Deploy the application
+## Déployer l'application
 
-The final step is to upload your application's code to Fly.io. This can be done by using the following command:
+La dernière étape est de télécharger le code de votre application sur Fly.io. Cela peut être fait en utilisant la commande suivante :
 
 ```bash
 fly deploy
 ```
 
-It is worth mentioning that a few things will happen when you push your application's code to Fly.io like in the above example. Indeed, Fly.io will build a Docker image of your application based on the `Dockerfile` you defined [previously](#create-a-dockerfile) and then push it to the Fly.io registry (a private Docker registry maintained by Fly.io). Once this is done, it will launch a Docker container by using the obtained Docker image, and then route incoming traffic to the running container.
+Il est important de mentionner que quelques choses se produiront lorsque vous pousserez le code de votre application sur Fly.io comme dans l'exemple ci-dessus. En effet, Fly.io construira une image Docker de votre application basée sur le `Dockerfile` que vous avez défini [précédemment](#créer-un-dockerfile) puis la poussera vers le registre Fly.io (un registre Docker privé maintenu par Fly.io). Une fois cela fait, il lancera un conteneur Docker en utilisant l'image Docker obtenue, puis routera le trafic entrant vers le conteneur en cours d'exécution.

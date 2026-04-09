@@ -1,34 +1,33 @@
 ---
 title: Context producers
-description: Context producers reference.
+description: Référence des context producers.
 ---
 
-This page provides a reference for all the available context producers that can be used when rendering [templates](../introduction.md).
+Cette page fournit une référence pour tous les context producers disponibles qui peuvent être utilisés lors du rendu de [templates](../introduction.md).
 
-## Debug context producer
+## Context producer Debug
 
-**Class:** [`Marten::Template::ContextProducer::Debug`](pathname:///api/dev/Marten/Template/ContextProducer/Debug.html)
+**Classe :** [`Marten::Template::ContextProducer::Debug`](pathname:///api/dev/Marten/Template/ContextProducer/Debug.html)
 
-The Debug context producer contributes a `debug` variable to the context: the associated value is `true` or `false` depending on whether [debug mode](../../development/reference/settings.md#debug) is enabled for the project or not.
+Le context producer Debug contribue une variable `debug` au contexte : la valeur associée est `true` ou `false` selon que le [mode debug](../../development/reference/settings.md#debug) est activé ou non pour le projet.
 
-## Flash context producer
+## Context producer Flash
 
-**Class:** [`Marten::Template::ContextProducer::Flash`](pathname:///api/dev/Marten/Template/ContextProducer/Flash.html)
+**Classe :** [`Marten::Template::ContextProducer::Flash`](pathname:///api/dev/Marten/Template/ContextProducer/Flash.html)
 
-The Flash context producer contributes a `flash` variable to the context: this variable corresponds to the [flash store](../../handlers-and-http/introduction.md#using-the-flash-store) that is associated with the current HTTP request. If the template context is not initialized with an HTTP request object, then no variables are inserted.
+Le context producer Flash contribue une variable `flash` au contexte : cette variable correspond au [store flash](../../handlers-and-http/introduction.md#using-the-flash-store) associé à la requête HTTP courante. Si le contexte du template n'est pas initialisé avec un objet de requête HTTP, aucune variable n'est insérée.
 
-## I18n context producer
+## Context producer I18n
 
-**Class:** [`Marten::Template::ContextProducer::I18n`](pathname:///api/dev/Marten/Template/ContextProducer/I18n.html)
+**Classe :** [`Marten::Template::ContextProducer::I18n`](pathname:///api/dev/Marten/Template/ContextProducer/I18n.html)
 
-The I18n context producer contributes I18n-related variables to the context:
+Le context producer I18n contribue des variables liées à l'I18n au contexte :
 
-* `locale`: the current locale
-* `available_locales`: an array of all the available locales that can be activated for the project
+* `locale` : la locale courante
+* `available_locales` : un tableau de toutes les locales disponibles qui peuvent être activées pour le projet
 
-## Request context producer
+## Context producer Request
 
-**Class:** [`Marten::Template::ContextProducer::Request`](pathname:///api/dev/Marten/Template/ContextProducer/Request.html)
+**Classe :** [`Marten::Template::ContextProducer::Request`](pathname:///api/dev/Marten/Template/ContextProducer/Request.html)
 
-The Request context producer contributes a `request` variable to the context: this variable corresponds to the current HTTP request object. If the template context is not initialized with an HTTP request object, then no variables are inserted.
-
+Le context producer Request contribue une variable `request` au contexte : cette variable correspond à l'objet de requête HTTP courante. Si le contexte du template n'est pas initialisé avec un objet de requête HTTP, aucune variable n'est insérée.

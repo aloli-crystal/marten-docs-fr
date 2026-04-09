@@ -1,15 +1,15 @@
 ---
-title: Relationships
-description: Learn how to define relationships in models.
+title: Relations
+description: Apprenez à définir des relations dans les modèles.
 ---
 
-Marten offers a powerful and intuitive solution for defining the three most common types of database relationships (many-to-one, one-to-one, and many-to-many) through the use of [model fields](./introduction.md#model-fields). By leveraging these special fields, developers can enhance their application's data modeling and streamline data access.
+Marten offre une solution puissante et intuitive pour définir les trois types les plus courants de relations de base de données (many-to-one, one-to-one et many-to-many) grâce à l'utilisation de [fields de modèle](./introduction.md#fields-de-modèle). En exploitant ces fields spéciaux, les développeurs peuvent améliorer la modélisation des données de leur application et simplifier l'accès aux données.
 
-## Many-to-one relationships
+## Relations many-to-one
 
-Many-to-one relationships can be defined through the use of [`many_to_one`](./reference/fields.md#many_to_one) fields. This special field type requires the utilization of the [`to`](./reference/fields.md#to-1) argument, allowing to explicitly define the target model class associated with the current model.
+Les relations many-to-one peuvent être définies via l'utilisation de fields [`many_to_one`](./reference/fields.md#many_to_one). Ce type de field spécial nécessite l'utilisation de l'argument [`to`](./reference/fields.md#to-1), permettant de définir explicitement la classe de modèle cible associée au modèle actuel.
 
-For example, an `Article` model could have a many-to-one field towards an `Author` model. In such case, an `Article` record would only have one associated `Author` record, but every `Author` record could be associated with many `Article` records:
+Par exemple, un modèle `Article` pourrait avoir un field many-to-one vers un modèle `Author`. Dans ce cas, un enregistrement `Article` n'aurait qu'un seul enregistrement `Author` associé, mais chaque enregistrement `Author` pourrait être associé à de nombreux enregistrements `Article` :
 
 ```crystal
 class Author < Marten::Model
@@ -25,23 +25,23 @@ class Article < Marten::Model
 end
 ```
 
-### Interacting with related records
+### Interagir avec les enregistrements liés
 
-Like for any other [model fields](./introduction.md#model-fields), Marten automatically generates getters and setters allowing to interact with the field's value.
+Comme pour tout autre [field de modèle](./introduction.md#fields-de-modèle), Marten génère automatiquement des getters et setters permettant d'interagir avec la valeur du field.
 
-With the above snippet, it would be possible to access the `Author` record associated with a specific `Article` record by leveraging the `#author` and `#author=` methods. For example:
+Avec l'extrait ci-dessus, il serait possible d'accéder à l'enregistrement `Author` associé à un enregistrement `Article` spécifique en utilisant les méthodes `#author` et `#author=`. Par exemple :
 
 ```crystal
-# Create two authors
+# Créer deux auteurs
 author_1 = Author.create!(full_name: "Foo Bar")
 author_2 = Author.create!(full_name: "John Doe")
 
-# Create an article
+# Créer un article
 article = Article.create!(title: "First article", author: author_1)
 article.author!.id # => 1
 article.author # => #<Author:0x101590c40 id: 1, full_name: "Foo Bar">
 
-# Change the article author
+# Changer l'auteur de l'article
 article.author = author_2
 article.save!
 article.author!.id # => 2
@@ -49,9 +49,9 @@ article.author # => #<Author:0x101590c41 id: 2, full_name: "John Doe">
 ```
 
 :::tip
-Note that you can also access the related record's ID directly without actually loading it by leveraging the `#<field_name>_id` method (which corresponds to the actual name of the column used to persist the reference to the related record's primary key in the model table).
+Notez que vous pouvez également accéder directement à l'ID de l'enregistrement lié sans le charger en utilisant la méthode `#<field_name>_id` (qui correspond au nom réel de la colonne utilisée pour persister la référence à la clé primaire de l'enregistrement lié dans la table du modèle).
 
-For instance, using the model definitions provided earlier, you could perform the following operation:
+Par exemple, en utilisant les définitions de modèle fournies précédemment, vous pourriez effectuer l'opération suivante :
 
 ```crystal
 author = Author.create!(full_name: "Foo Bar")
@@ -60,11 +60,11 @@ article.author_id # => 1
 ```
 :::
 
-### Backward relations
+### Relations inverses
 
-By default, [`many_to_one`](./reference/fields.md#many_to_one) fields do not establish a backward relation. This means that you cannot directly retrieve records that target a specific related record starting from the related record itself. For instance, by default, it is not possible to retrieve all the `Article` records associated with a specific `Author` record.
+Par défaut, les fields [`many_to_one`](./reference/fields.md#many_to_one) n'établissent pas de relation inverse. Cela signifie que vous ne pouvez pas directement récupérer les enregistrements qui ciblent un enregistrement lié spécifique à partir de l'enregistrement lié lui-même. Par exemple, par défaut, il n'est pas possible de récupérer tous les enregistrements `Article` associés à un enregistrement `Author` spécifique.
 
-To enable this capability, you need to make use of the [`related`](./reference/fields.md#related-1) argument when defining your  [`many_to_one`](./reference/fields.md#many_to_one) field. For instance, we could modify the previous model definitions as follows in order to define an `articles` backward relation and to let `Author` records expose their related `Article` records:
+Pour activer cette fonctionnalité, vous devez utiliser l'argument [`related`](./reference/fields.md#related-1) lors de la définition de votre field [`many_to_one`](./reference/fields.md#many_to_one). Par exemple, nous pourrions modifier les définitions de modèle précédentes comme suit afin de définir une relation inverse `articles` et permettre aux enregistrements `Author` d'exposer leurs enregistrements `Article` liés :
 
 ```crystal
 class Author < Marten::Model
@@ -80,47 +80,47 @@ class Article < Marten::Model
 end
 ```
 
-When the [`related`](./reference/fields.md#related-1) argument is used, a method will be automatically created on the targeted model by using the chosen argument's value. For example, this means that all the `Article` records associated with a specific `Author` record will be accessible through the use of the `Author#articles` method:
+Lorsque l'argument [`related`](./reference/fields.md#related-1) est utilisé, une méthode sera automatiquement créée sur le modèle ciblé en utilisant la valeur de l'argument choisi. Par exemple, cela signifie que tous les enregistrements `Article` associés à un enregistrement `Author` spécifique seront accessibles via l'utilisation de la méthode `Author#articles` :
 
 ```crystal
-# Create two authors
+# Créer deux auteurs
 author_1 = Author.create!(full_name: "Foo Bar")
 author_2 = Author.create!(full_name: "John Doe")
 
-# Create articles
+# Créer des articles
 article_1 = Article.create!(title: "First article", author: author_1)
 article_2 = Article.create!(title: "Second article", author: author_2)
 article_3 = Article.create!(title: "Third article", author: author_1)
 
-# List the first author's articles
+# Lister les articles du premier auteur
 author_1.articles.to_a # [#<Article:0x1036e3ee0 id: 1, title: "First article", author_id: 1>,
                        #  #<Article:0x1036e3e70 id: 3, title: "Third article", author_id: 1>]
 
-# Create an article associated with the first author
+# Créer un article associé au premier auteur
 article_4 = author_1.articles.create!(title: "Fourth article")
 article_4.author # => #<Author:0x101590c40 id: 1, full_name: "Foo Bar">
 ```
 
 :::tip
-The method generated for the backward relation returns a [query set](./queries.md) that you can use to further filter the list of records. For example:
+La méthode générée pour la relation inverse retourne un [query set](./queries.md) que vous pouvez utiliser pour filtrer davantage la liste des enregistrements. Par exemple :
 
 ```crystal
 author.articles.filter(title__startswith: "Top")
 ```
 :::
 
-### Deletion strategy
+### Stratégie de suppression
 
-When defining [`many_to_one`](./reference/fields.md#many_to_one) fields, it is highly advisable to specify a deletion strategy for the associated relation. This configuration determines the behavior of records with many-to-one fields when one of the records referred to by such fields gets deleted.
+Lors de la définition de fields [`many_to_one`](./reference/fields.md#many_to_one), il est fortement conseillé de spécifier une stratégie de suppression pour la relation associée. Cette configuration détermine le comportement des enregistrements avec des fields many-to-one lorsque l'un des enregistrements référencés par ces fields est supprimé.
 
-Such behavior can be configured by leveraging the [`on_delete`](./reference/fields.md#on_delete) argument when defining [`many_to_one`](./reference/fields.md#many_to_one) fields. This argument allows specifying the deletion strategy to adopt when a related record (one that is targeted by the [`many_to_one`](./reference/fields.md#many_to_one) field) is deleted. This argument accepts the following values (expressed as symbols):
+Un tel comportement peut être configuré en utilisant l'argument [`on_delete`](./reference/fields.md#on_delete) lors de la définition des fields [`many_to_one`](./reference/fields.md#many_to_one). Cet argument permet de spécifier la stratégie de suppression à adopter lorsqu'un enregistrement lié (celui qui est ciblé par le field [`many_to_one`](./reference/fields.md#many_to_one)) est supprimé. Cet argument accepte les valeurs suivantes (exprimées en tant que symboles) :
 
-* `:do_nothing`: This is the default strategy. With this strategy, Marten won't do anything to ensure that records referencing the record being deleted are deleted or updated. If the database enforces referential integrity (which will be the case for foreign key fields), this means that deleting a record could result in database errors.
-* `:cascade`: This strategy can be used to perform cascade deletions. When deleting a record, Marten will try to first destroy the other records that reference the object being deleted.
-* `:protect`: This strategy allows explicitly preventing the deletion of records if they are referenced by other records. This means that attempting to delete a "protected" record will result in a `Marten::DB::Errors::ProtectedRecord` error.
-* `:set_null`: This strategy will set the reference column to `null` when the related record is deleted.
+* `:do_nothing` : C'est la stratégie par défaut. Avec cette stratégie, Marten ne fera rien pour s'assurer que les enregistrements référençant l'enregistrement supprimé sont supprimés ou mis à jour. Si la base de données applique l'intégrité référentielle (ce qui sera le cas pour les fields de clé étrangère), cela signifie que supprimer un enregistrement pourrait entraîner des erreurs de base de données.
+* `:cascade` : Cette stratégie peut être utilisée pour effectuer des suppressions en cascade. Lors de la suppression d'un enregistrement, Marten essaiera d'abord de détruire les autres enregistrements qui référencent l'objet supprimé.
+* `:protect` : Cette stratégie permet d'empêcher explicitement la suppression d'enregistrements s'ils sont référencés par d'autres enregistrements. Cela signifie que tenter de supprimer un enregistrement "protégé" entraînera une erreur `Marten::DB::Errors::ProtectedRecord`.
+* `:set_null` : Cette stratégie mettra la colonne de référence à `null` lorsque l'enregistrement lié est supprimé.
 
-For example, we could modify our previous model definition so that `Article` records are cascade-deleted if the associated `Author` records are destroyed:
+Par exemple, nous pourrions modifier notre définition de modèle précédente pour que les enregistrements `Article` soient supprimés en cascade si les enregistrements `Author` associés sont détruits :
 
 ```crystal
 class Author < Marten::Model
@@ -136,29 +136,29 @@ class Article < Marten::Model
 end
 ```
 
-With this change, if we try to delete an `Author` record, we should notice that the associated `Article` records are deleted as well:
+Avec cette modification, si nous essayons de supprimer un enregistrement `Author`, nous devrions constater que les enregistrements `Article` associés sont également supprimés :
 
 ```crystal
-# Create two authors
+# Créer deux auteurs
 author_1 = Author.create!(full_name: "Foo Bar")
 author_2 = Author.create!(full_name: "John Doe")
 
-# Create articles
+# Créer des articles
 article_1 = Article.create!(title: "First article", author: author_1)
 article_2 = Article.create!(title: "Second article", author: author_2)
 article_3 = Article.create!(title: "Third article", author: author_1)
 
-# Delete the first author
+# Supprimer le premier auteur
 author_1.delete
 
 article_1.reload # => raises Marten::DB::Errors::RecordNotFound
 ```
 
-## One-to-one relationships
+## Relations one-to-one
 
-One-to-one relationships can be defined through the use of [`one_to_one`](./reference/fields.md#one_to_one) fields. This special field type requires the utilization of the [`to`](./reference/fields.md#to-2) argument, allowing to explicitly define the target model class associated with the current model.
+Les relations one-to-one peuvent être définies via l'utilisation de fields [`one_to_one`](./reference/fields.md#one_to_one). Ce type de field spécial nécessite l'utilisation de l'argument [`to`](./reference/fields.md#to-2), permettant de définir explicitement la classe de modèle cible associée au modèle actuel.
 
-For example, a `User` model could have a one-to-one field towards a `Profile` model. In such case, the `User` model could only have one associated `Profile` record, and the reverse would be true as well (a `Profile` record could only have one associated `User` record):
+Par exemple, un modèle `User` pourrait avoir un field one-to-one vers un modèle `Profile`. Dans ce cas, le modèle `User` ne pourrait avoir qu'un seul enregistrement `Profile` associé, et l'inverse serait également vrai (un enregistrement `Profile` ne pourrait avoir qu'un seul enregistrement `User` associé) :
 
 ```crystal
 class Profile < Marten::Model
@@ -175,25 +175,25 @@ end
 ```
 
 :::info
-A one-to-one field is really similar to a many-to-one field, but with an additional unicity constraint.
+Un field one-to-one est très similaire à un field many-to-one, mais avec une contrainte d'unicité supplémentaire.
 :::
 
-### Interacting with related records
+### Interagir avec les enregistrements liés
 
-Like for any other [model fields](./introduction.md#model-fields), Marten automatically generates getters and setters allowing to interact with the field's value.
+Comme pour tout autre [field de modèle](./introduction.md#fields-de-modèle), Marten génère automatiquement des getters et setters permettant d'interagir avec la valeur du field.
 
-With the above snippet, it would be possible to access the `Profile` record associated with a specific `User` record by leveraging the `#profile` and `#profile=` methods. For example:
+Avec l'extrait ci-dessus, il serait possible d'accéder à l'enregistrement `Profile` associé à un enregistrement `User` spécifique en utilisant les méthodes `#profile` et `#profile=`. Par exemple :
 
 ```crystal
-# Create two users
+# Créer deux utilisateurs
 user_1 = User.create!(email: "test1@example.com", profile: Profile.create!(full_name: "Foo Bar"))
 user_2 = User.create!(email: "test2@example.com", profile: Profile.create!(full_name: "John Doe"))
 
-# Access a user's profile
+# Accéder au profil d'un utilisateur
 user_1.profile!.id # => 1
 user_1.profile # => #<Profile:0x101590c40 id: 1, full_name: "Foo Bar">
 
-# Change a user's profile
+# Changer le profil d'un utilisateur
 user_1.profile = Profile.create!(full_name: "New Profile")
 user_1.save!
 user_1.profile!.id # => 3
@@ -201,9 +201,9 @@ user_1.profile # => #<Profile:0x101590c41 id: 3, full_name: "New Profile">
 ```
 
 :::tip
-Like for [many-to-one relationships](#many-to-one-relationships), you can also access the related record's ID directly without actually loading it by leveraging the `#<field_name>_id` method (which corresponds to the actual name of the column used to persist the reference to the related record's primary key in the model table).
+Comme pour les [relations many-to-one](#relations-many-to-one), vous pouvez également accéder directement à l'ID de l'enregistrement lié sans le charger en utilisant la méthode `#<field_name>_id` (qui correspond au nom réel de la colonne utilisée pour persister la référence à la clé primaire de l'enregistrement lié dans la table du modèle).
 
-For instance, using the model definitions provided earlier, you could perform the following operation:
+Par exemple, en utilisant les définitions de modèle fournies précédemment, vous pourriez effectuer l'opération suivante :
 
 ```crystal
 user = User.create!(email: "test1@example.com", profile: Profile.create!(full_name: "Foo Bar"))
@@ -211,11 +211,11 @@ user.profile_id # => 1
 ```
 :::
 
-### Backward relations
+### Relations inverses
 
-By default, [`one_to_one`](./reference/fields.md#one_to_one) fields do not establish a backward relation. This means that you cannot directly retrieve the record that targets a specific related record starting from the related record itself. For instance, by default, it is not possible to retrieve the `User` record associated with a specific `Profile` record.
+Par défaut, les fields [`one_to_one`](./reference/fields.md#one_to_one) n'établissent pas de relation inverse. Cela signifie que vous ne pouvez pas directement récupérer l'enregistrement qui cible un enregistrement lié spécifique à partir de l'enregistrement lié lui-même. Par exemple, par défaut, il n'est pas possible de récupérer l'enregistrement `User` associé à un enregistrement `Profile` spécifique.
 
-To enable this capability, you need to make use of the [`related`](./reference/fields.md#related-2) argument when defining your  [`one_to_one`](./reference/fields.md#one_to_one) field. For instance, we could modify the previous model definitions as follows in order to define a `user` backward relation and to let `Profile` records expose their related `User` record:
+Pour activer cette fonctionnalité, vous devez utiliser l'argument [`related`](./reference/fields.md#related-2) lors de la définition de votre field [`one_to_one`](./reference/fields.md#one_to_one). Par exemple, nous pourrions modifier les définitions de modèle précédentes comme suit afin de définir une relation inverse `user` et permettre aux enregistrements `Profile` d'exposer leur enregistrement `User` lié :
 
 ```crystal
 class Profile < Marten::Model
@@ -231,51 +231,51 @@ class User < Marten::Model
 end
 ```
 
-When the [`related`](./reference/fields.md#related-2) argument is used, a method will be automatically created on the targeted model by using the chosen argument's value. For example, this means that the `User` record associated with a specific `Profile` record will be accessible through the use of the `Profile#user` method:
+Lorsque l'argument [`related`](./reference/fields.md#related-2) est utilisé, une méthode sera automatiquement créée sur le modèle ciblé en utilisant la valeur de l'argument choisi. Par exemple, cela signifie que l'enregistrement `User` associé à un enregistrement `Profile` spécifique sera accessible via l'utilisation de la méthode `Profile#user` :
 
 ```crystal
-# Create two profiles
+# Créer deux profils
 profile_1 = Profile.create!(full_name: "Foo Bar")
 profile_2 = Profile.create!(full_name: "John Doe")
 
-# Create two users
+# Créer deux utilisateurs
 user_1 = User.create!(email: "test1@example.com", profile: profile_1)
 user_2 = User.create!(email: "test2@example.com", profile: profile_2)
 
-# Get the first profile's user
+# Obtenir l'utilisateur du premier profil
 profile_1.user # => #<User:0x1036e3ee0 id: 1, email: "test1@example.com", profile_id: 1>
 ```
 
 :::tip
-Note that in the previous example, `#user` could return `nil` if no `User` record is available for the considered profile. A nil-safe version of the related method is also automatically defined with the following name: `#<related_name>!`. For example:
+Notez que dans l'exemple précédent, `#user` pourrait retourner `nil` si aucun enregistrement `User` n'est disponible pour le profil considéré. Une version nil-safe de la méthode liée est également automatiquement définie avec le nom suivant : `#<related_name>!`. Par exemple :
 
 ```crystal
-# Create two profiles
+# Créer deux profils
 profile_1 = Profile.create!(full_name: "Foo Bar")
 profile_2 = Profile.create!(full_name: "John Doe")
 
-# Create two users
+# Créer deux utilisateurs
 user_1 = User.create!(email: "test1@example.com", profile: profile_1)
 user_2 = User.create!(email: "test2@example.com", profile: profile_2)
 
-# Delete the first user
+# Supprimer le premier utilisateur
 user_1.delete
 
-# Get the first profile's user
+# Obtenir l'utilisateur du premier profil
 profile_1.user! # => raises Marten::DB::Errors::RecordNotFound
 ```
 :::
 
-### Deletion strategy
+### Stratégie de suppression
 
-Like for [many-to-one relationships](#deletion-strategy), the deletion strategy to use for [`one_to_one`](./reference/fields.md#one_to_one) fields can be configured by leveraging the [`on_delete`](./reference/fields.md#on_delete-1) argument. This argument allows specifying the deletion strategy to adopt when a related record (one that is targeted by the [`many_to_one`](./reference/fields.md#many_to_one) field) is deleted. This argument accepts the following values (expressed as symbols):
+Comme pour les [relations many-to-one](#stratégie-de-suppression), la stratégie de suppression à utiliser pour les fields [`one_to_one`](./reference/fields.md#one_to_one) peut être configurée en utilisant l'argument [`on_delete`](./reference/fields.md#on_delete-1). Cet argument permet de spécifier la stratégie de suppression à adopter lorsqu'un enregistrement lié (celui qui est ciblé par le field [`many_to_one`](./reference/fields.md#many_to_one)) est supprimé. Cet argument accepte les valeurs suivantes (exprimées en tant que symboles) :
 
-* `:do_nothing`: This is the default strategy. With this strategy, Marten won't do anything to ensure that the record referencing the record being deleted is deleted or updated. If the database enforces referential integrity (which will be the case for foreign key fields), this means that deleting a record could result in database errors.
-* `:cascade`: This strategy can be used to perform cascade deletions. When deleting a record, Marten will try to first destroy the other record that references the object being deleted.
-* `:protect`: This strategy allows explicitly preventing the deletion of the record if is is referenced by another record. This means that attempting to delete a "protected" record will result in a `Marten::DB::Errors::ProtectedRecord` error.
-* `:set_null`: This strategy will set the reference column to `null` when the related record is deleted.
+* `:do_nothing` : C'est la stratégie par défaut. Avec cette stratégie, Marten ne fera rien pour s'assurer que l'enregistrement référençant l'enregistrement supprimé est supprimé ou mis à jour. Si la base de données applique l'intégrité référentielle (ce qui sera le cas pour les fields de clé étrangère), cela signifie que supprimer un enregistrement pourrait entraîner des erreurs de base de données.
+* `:cascade` : Cette stratégie peut être utilisée pour effectuer des suppressions en cascade. Lors de la suppression d'un enregistrement, Marten essaiera d'abord de détruire l'autre enregistrement qui référence l'objet supprimé.
+* `:protect` : Cette stratégie permet d'empêcher explicitement la suppression de l'enregistrement s'il est référencé par un autre enregistrement. Cela signifie que tenter de supprimer un enregistrement "protégé" entraînera une erreur `Marten::DB::Errors::ProtectedRecord`.
+* `:set_null` : Cette stratégie mettra la colonne de référence à `null` lorsque l'enregistrement lié est supprimé.
 
-For example, we could modify our previous model definition so that a `User` record is cascade-deleted if the associated `Profile` records is destroyed:
+Par exemple, nous pourrions modifier notre définition de modèle précédente pour qu'un enregistrement `User` soit supprimé en cascade si l'enregistrement `Profile` associé est détruit :
 
 ```crystal
 class Profile < Marten::Model
@@ -291,28 +291,28 @@ class User < Marten::Model
 end
 ```
 
-With this change, if we try to delete a `Profile` record, we should notice that the associated `User` records is deleted as well:
+Avec cette modification, si nous essayons de supprimer un enregistrement `Profile`, nous devrions constater que l'enregistrement `User` associé est également supprimé :
 
 ```crystal
-# Create two profiles
+# Créer deux profils
 profile_1 = Profile.create!(full_name: "Foo Bar")
 profile_2 = Profile.create!(full_name: "John Doe")
 
-# Create two users
+# Créer deux utilisateurs
 user_1 = User.create!(email: "test1@example.com", profile: profile_1)
 user_2 = User.create!(email: "test2@example.com", profile: profile_2)
 
-# Delete the first profile
+# Supprimer le premier profil
 profile_1.delete
 
 user_1.reload # => raises Marten::DB::Errors::RecordNotFound
 ```
 
-## Many-to-many relationships
+## Relations many-to-many
 
-Many-to-many relationships can be defined through the use of [`many_to_many`](./reference/fields.md#many_to_many) fields. This special field type requires the utilization of the [`to`](./reference/fields.md#to) argument, allowing to explicitly define the target model class associated with the current model.
+Les relations many-to-many peuvent être définies via l'utilisation de fields [`many_to_many`](./reference/fields.md#many_to_many). Ce type de field spécial nécessite l'utilisation de l'argument [`to`](./reference/fields.md#to), permettant de définir explicitement la classe de modèle cible associée au modèle actuel.
 
-For example, an `Article` model could have a many-to-many field towards a `Tag` model. In such case, an `Article` record could have many associated `Tag` records, and every `Tag` record could be associated with many `Article` records as well:
+Par exemple, un modèle `Article` pourrait avoir un field many-to-many vers un modèle `Tag`. Dans ce cas, un enregistrement `Article` pourrait avoir de nombreux enregistrements `Tag` associés, et chaque enregistrement `Tag` pourrait également être associé à de nombreux enregistrements `Article` :
 
 ```crystal
 class Tag < Marten::Model
@@ -328,50 +328,50 @@ class Article < Marten::Model
 end
 ```
 
-### Interacting with related records
+### Interagir avec les enregistrements liés
 
-[`many_to_many`](./reference/fields.md#many_to_many) fields exhibit unique characteristics compared to other relationship fields. When using [`many_to_many`](./reference/fields.md#many_to_many) fields in Marten, the framework generates a `#<field_name>` getter method that returns a specialized [query set](./queries.md) that not only enables filtering of targeted records but also facilitates the dynamic addition and removal of records to/from the set.
+Les fields [`many_to_many`](./reference/fields.md#many_to_many) présentent des caractéristiques uniques par rapport aux autres fields de relation. Lorsque vous utilisez des fields [`many_to_many`](./reference/fields.md#many_to_many) dans Marten, le framework génère une méthode getter `#<field_name>` qui retourne un [query set](./queries.md) spécialisé qui non seulement permet le filtrage des enregistrements ciblés, mais facilite également l'ajout et la suppression dynamiques d'enregistrements vers/depuis l'ensemble.
 
-With the above snippet, it would be possible to access the `Tags` records associated with a specific `Article` record by leveraging the `#tags` method. For example:
+Avec l'extrait ci-dessus, il serait possible d'accéder aux enregistrements `Tags` associés à un enregistrement `Article` spécifique en utilisant la méthode `#tags`. Par exemple :
 
 ```crystal
-# Create three tags
+# Créer trois tags
 tag_1 = Tag.create!(label: "Tag 1")
 tag_2 = Tag.create!(label: "Tag 2")
 tag_3 = Tag.create!(label: "Tag 3")
 
-# Create one article
+# Créer un article
 article = Article.create!(title: "My article")
 
-# Add one tag to the article
+# Ajouter un tag à l'article
 article.tags.add(tag_1)
 article.tags.to_a # => [#<Tag:0x1036e3ee0 id: 1, label: "Tag 1">]
 
-# Add two tags to the article
+# Ajouter deux tags à l'article
 article.tags.add(tag_2, tag_3)
 article.tags.to_a # => [#<Tag:0x1036e3ee0 id: 1, label: "Tag 1">,
                   #     #<Tag:0x1036e3ee1 id: 2, label: "Tag 2">,
                   #     #<Tag:0x1036e3ee2 id: 3, label: "Tag 3">]
 
-# Filter the article's tags
+# Filtrer les tags de l'article
 article.tags.filter(label: "Tag 1").to_a # => [#<Tag:0x1036e3ee0 id: 1, label: "Tag 1">]
 
-# Remove a tag from the article's tags
+# Supprimer un tag des tags de l'article
 article.tags.remove(tag_2)
 article.tags.to_a # => [#<Tag:0x1036e3ee0 id: 1, label: "Tag 1">,
                   #     #<Tag:0x1036e3ee2 id: 3, label: "Tag 3">]
 
-# Clear the article's tags
+# Vider les tags de l'article
 article.tags.clear
 ```
 
-Take note of the utilization of the [`#add`](pathname:///api/dev/Marten/DB/Query/ManyToManySet.html#add(*objs%3AM)-instance-method) and [`#remove`](pathname:///api/dev/Marten/DB/Query/ManyToManySet.html#remove(*objs%3AM)%3ANil-instance-method) methods, facilitating the addition or removal of objects from the record's many-to-many collection of associated items. These methods are callable with single or multiple records as parameters, as well as with arrays of records for streamlined addition or removal.
+Notez l'utilisation des méthodes [`#add`](pathname:///api/dev/Marten/DB/Query/ManyToManySet.html#add(*objs%3AM)-instance-method) et [`#remove`](pathname:///api/dev/Marten/DB/Query/ManyToManySet.html#remove(*objs%3AM)%3ANil-instance-method), qui facilitent l'ajout ou la suppression d'objets de la collection many-to-many d'éléments associés à l'enregistrement. Ces méthodes peuvent être appelées avec un ou plusieurs enregistrements comme paramètres, ainsi qu'avec des tableaux d'enregistrements pour un ajout ou une suppression simplifiés.
 
-### Backward relations
+### Relations inverses
 
-By default, [`many_to_many`](./reference/fields.md#many_to_many) fields do not establish a backward relation. This means that you cannot directly retrieve records that target a specific related record starting from the related record itself. For instance, by default, it is not possible to retrieve all the `Article` records associated with a specific `Tag` record.
+Par défaut, les fields [`many_to_many`](./reference/fields.md#many_to_many) n'établissent pas de relation inverse. Cela signifie que vous ne pouvez pas directement récupérer les enregistrements qui ciblent un enregistrement lié spécifique à partir de l'enregistrement lié lui-même. Par exemple, par défaut, il n'est pas possible de récupérer tous les enregistrements `Article` associés à un enregistrement `Tag` spécifique.
 
-To enable this capability, you need to make use of the [`related`](./reference/fields.md#related-1) argument when defining your  [`many_to_many`](./reference/fields.md#many_to_many) field. For instance, we could modify the previous model definitions as follows in order to define an `articles` backward relation and to let `Tag` records expose their related `Article` records:
+Pour activer cette fonctionnalité, vous devez utiliser l'argument [`related`](./reference/fields.md#related-1) lors de la définition de votre field [`many_to_many`](./reference/fields.md#many_to_many). Par exemple, nous pourrions modifier les définitions de modèle précédentes comme suit afin de définir une relation inverse `articles` et permettre aux enregistrements `Tag` d'exposer leurs enregistrements `Article` liés :
 
 ```crystal
 class Tag < Marten::Model
@@ -387,33 +387,33 @@ class Article < Marten::Model
 end
 ```
 
-When the [`related`](./reference/fields.md#related) argument is used, a method will be automatically created on the targeted model by using the chosen argument's value. For example, this means that all the `Article` records associated with a specific `Tag` record will be accessible through the use of the `Tag#articles` method:
+Lorsque l'argument [`related`](./reference/fields.md#related) est utilisé, une méthode sera automatiquement créée sur le modèle ciblé en utilisant la valeur de l'argument choisi. Par exemple, cela signifie que tous les enregistrements `Article` associés à un enregistrement `Tag` spécifique seront accessibles via l'utilisation de la méthode `Tag#articles` :
 
 ```crystal
-# Create three tags
+# Créer trois tags
 tag_1 = Tag.create!(label: "Tag 1")
 tag_2 = Tag.create!(label: "Tag 2")
 tag_3 = Tag.create!(label: "Tag 3")
 
-# Create two articles
+# Créer deux articles
 article_1 = Article.create!(title: "First article")
 article_2 = Article.create!(title: "Second article")
 
-# Add tags to the articles
+# Ajouter des tags aux articles
 article_1.tags.add(tag_1, tag_2)
 article_2.tags.add(tag_2, tag_3)
 
-# Retrieve the second tag's articles
+# Récupérer les articles du deuxième tag
 tag_2.articles.to_a # => [#<Article:0x1036e3ee0 id: 1, title: "First article">,
                     #     #<Article:0x1036e3ee2 id: 3, title: "Second article">]
 tag_2.articles.filter(title: "First article").to_a # => [#<Article:0x1036e3ee0 id: 1, title: "First article">]
 ```
 
-## Polymorphic relationships
+## Relations polymorphiques
 
-Polymorphic relationships can be defined through the use of [`polymorphic`](./reference/fields.md#polymorphic) fields. Those are useful when you want to store a reference to a record whose model can vary among a predefined set of possible types.
+Les relations polymorphiques peuvent être définies via l'utilisation de fields [`polymorphic`](./reference/fields.md#polymorphic). Ceux-ci sont utiles lorsque vous souhaitez stocker une référence à un enregistrement dont le modèle peut varier parmi un ensemble prédéfini de types possibles.
 
-This special field type requires the utilization of the [`to`](./reference/fields.md#to-3) argument, allowing to explicitly define the model classes that can be related to the model where the `polymorphic` field is defined. For example, a `Comment` model could have a polymorphic field towards an `Article` or a `Recipe` model. In such case, a `Comment` record could be associated with an `Article` or a `Recipe` record, and each of these models could have many associated `Comment` records:
+Ce type de field spécial nécessite l'utilisation de l'argument [`to`](./reference/fields.md#to-3), permettant de définir explicitement les classes de modèle qui peuvent être liées au modèle où le field `polymorphic` est défini. Par exemple, un modèle `Comment` pourrait avoir un field polymorphique vers un modèle `Article` ou un modèle `Recipe`. Dans ce cas, un enregistrement `Comment` pourrait être associé à un enregistrement `Article` ou `Recipe`, et chacun de ces modèles pourrait avoir de nombreux enregistrements `Comment` associés :
 
 ```crystal
 class Article < Marten::Model
@@ -434,51 +434,51 @@ class Comment < Marten::Model
 end
 ```
 
-Under the hood, the framework keeps track of both the target object's primary key and its model type, allowing it to resolve the relationship dynamically when accessed. This means that polymorphic fields contribute two columns to the model table: `<field_name>_type` and `<field_name>_id`, where `field_name` is the name of the polymorphic field. The `_type` column is used to store the type of the related record (the class name of the related record), and the `_id` column is used to store the ID of the related record. In the previous example, the `Comment` model would have two columns named `target_type` and `target_id` because of the `target` polymorphic field.
+Sous le capot, le framework garde trace à la fois de la clé primaire de l'objet cible et de son type de modèle, lui permettant de résoudre la relation dynamiquement lors de l'accès. Cela signifie que les fields polymorphiques contribuent deux colonnes à la table du modèle : `<field_name>_type` et `<field_name>_id`, où `field_name` est le nom du field polymorphique. La colonne `_type` est utilisée pour stocker le type de l'enregistrement lié (le nom de classe de l'enregistrement lié), et la colonne `_id` est utilisée pour stocker l'ID de l'enregistrement lié. Dans l'exemple précédent, le modèle `Comment` aurait deux colonnes nommées `target_type` et `target_id` à cause du field polymorphique `target`.
 
-### Interacting with related records
+### Interagir avec les enregistrements liés
 
-Marten automatically generates getters and setters for polymorphic fields, allowing to interact with the field's value. On top of that, Marten also generates a set of methods allowing to access the related record based on its type as well as numerous helper methods.
+Marten génère automatiquement des getters et setters pour les fields polymorphiques, permettant d'interagir avec la valeur du field. En plus de cela, Marten génère également un ensemble de méthodes permettant d'accéder à l'enregistrement lié en fonction de son type ainsi que de nombreuses méthodes utilitaires.
 
-For example:
+Par exemple :
 
 ```crystal
-# Create an article
+# Créer un article
 article = Article.create!(title: "This is an article")
 
-# Create a recipe
+# Créer une recette
 recipe = Recipe.create!(title: "This is a recipe")
 
-# Create a comment
+# Créer un commentaire
 comment = Comment.create!(text: "This is a comment", target: article)
 
-# Regular getter methods
+# Méthodes getter standard
 comment.target      # => #<Article:0x1036e3ee0 id: 1, title: "This is an article">
 comment.target_type # => "Article"
 comment.target_id   # => 1
 
-# Type class getter method
-comment.target_class  # => Article (or nil if no related record is set)
-comment.target_class! # => Article (or raise if no related record is set)
+# Méthode getter de classe de type
+comment.target_class  # => Article (ou nil si aucun enregistrement lié n'est défini)
+comment.target_class! # => Article (ou lève une exception si aucun enregistrement lié n'est défini)
 
-# Predicate helper methods
+# Méthodes de prédicat utilitaires
 comment.article_target? # => true
 comment.recipe_target?  # => false
 
-# Typed getters methods
-comment.article_target  # => Returns the associated Recipe record if the targeted record is indeed a Recipe record (or nil otherwise)
-comment.article_target! # => Returns the associated Recipe record if the targeted record is indeed a Recipe record (or raise otherwise)
+# Méthodes getter typées
+comment.article_target  # => Retourne l'enregistrement Recipe associé si l'enregistrement ciblé est bien un enregistrement Recipe (ou nil sinon)
+comment.article_target! # => Retourne l'enregistrement Recipe associé si l'enregistrement ciblé est bien un enregistrement Recipe (ou lève une exception sinon)
 
-# Type-specific model scopes (generated based on the specified type classes)
-Comment.with_article_target # => Returns all the comments associated with Article records
-Comment.with_recipe_target  # => Returns all the comments associated with Recipe records
+# Scopes de modèle spécifiques au type (générés en fonction des classes de type spécifiées)
+Comment.with_article_target # => Retourne tous les commentaires associés aux enregistrements Article
+Comment.with_recipe_target  # => Retourne tous les commentaires associés aux enregistrements Recipe
 ```
 
-### Backward relations
+### Relations inverses
 
-By default, [`polymorphic`](./reference/fields.md#polymorphic) fields do not establish a backward relation. This means that you cannot directly retrieve records that target a specific related record starting from the related record itself. For instance, by default, it is not possible to retrieve all the `Comment` records associated with a specific `Article` or `Recipe` record.
+Par défaut, les fields [`polymorphic`](./reference/fields.md#polymorphic) n'établissent pas de relation inverse. Cela signifie que vous ne pouvez pas directement récupérer les enregistrements qui ciblent un enregistrement lié spécifique à partir de l'enregistrement lié lui-même. Par exemple, par défaut, il n'est pas possible de récupérer tous les enregistrements `Comment` associés à un enregistrement `Article` ou `Recipe` spécifique.
 
-To enable this capability, you need to make use of the [`related`](./reference/fields.md#related-3) argument when defining your  [`polymorphic`](./reference/fields.md#polymorphic) field. For instance, we could modify the previous model definitions as follows in order to define a `comments` backward relation and to let `Article` and `Recipe` records expose their related `Comment` records:
+Pour activer cette fonctionnalité, vous devez utiliser l'argument [`related`](./reference/fields.md#related-3) lors de la définition de votre field [`polymorphic`](./reference/fields.md#polymorphic). Par exemple, nous pourrions modifier les définitions de modèle précédentes comme suit afin de définir une relation inverse `comments` et permettre aux enregistrements `Article` et `Recipe` d'exposer leurs enregistrements `Comment` liés :
 
 ```crystal
 class Comment < Marten::Model
@@ -489,41 +489,41 @@ class Comment < Marten::Model
 end
 ```
 
-When the [`related`](./reference/fields.md#related-3) argument is used, a method will be automatically created on the targeted model by using the chosen argument's value. For example, this means that all the `Comment` records associated with a specific `Article` or `Recipe` record will be accessible through the use of the `Article#comments` or `Recipe#comments` methods:
+Lorsque l'argument [`related`](./reference/fields.md#related-3) est utilisé, une méthode sera automatiquement créée sur le modèle ciblé en utilisant la valeur de l'argument choisi. Par exemple, cela signifie que tous les enregistrements `Comment` associés à un enregistrement `Article` ou `Recipe` spécifique seront accessibles via l'utilisation des méthodes `Article#comments` ou `Recipe#comments` :
 
 ```crystal
-# Create an article
+# Créer un article
 article = Article.create!(title: "This is an article")
 
-# Create a recipe
+# Créer une recette
 recipe = Recipe.create!(title: "This is a recipe")
 
-# Create comments
+# Créer des commentaires
 Comment.create!(text: "This is a comment", target: article)
 Comment.create!(text: "This is a comment", target: recipe)
 
-# Get the article's comments
+# Obtenir les commentaires de l'article
 article.comments.to_a # => [#<Comment:0x1036e3ee0 id: 1, text: "This is a comment">]
 
-# Get the recipe's comments
+# Obtenir les commentaires de la recette
 recipe.comments.to_a # => [#<Comment:0x1036e3ee1 id: 2, text: "This is a comment">]
 ```
 
 :::tip
-The method generated for the backward relation returns a [query set](./queries.md) that you can use to further filter the list of records. For example:
+La méthode générée pour la relation inverse retourne un [query set](./queries.md) que vous pouvez utiliser pour filtrer davantage la liste des enregistrements. Par exemple :
 
 ```crystal
 article.comments.filter(text__startswith: "This is")
 ```
 :::
 
-## Advanced topics
+## Sujets avancés
 
-### Recursive relationships
+### Relations récursives
 
-All the relationship fields mentioned previously support defining recursive relations, ie. relations that target the same model as the model defining the relation field. To do so, you can define a [`many_to_one`](./reference/fields.md#many_to_one), [`one_to_one`](./reference/fields.md#one_to_one), or [`many_to_many`](./reference/fields.md#many_to_many) field whose `to` argument is set to the `self` keyword.
+Tous les fields de relation mentionnés précédemment supportent la définition de relations récursives, c'est-à-dire des relations qui ciblent le même modèle que celui définissant le field de relation. Pour ce faire, vous pouvez définir un field [`many_to_one`](./reference/fields.md#many_to_one), [`one_to_one`](./reference/fields.md#one_to_one) ou [`many_to_many`](./reference/fields.md#many_to_many) dont l'argument `to` est défini sur le mot-clé `self`.
 
-For example:
+Par exemple :
 
 ```crystal
 class TreeNode < Marten::Model
@@ -534,4 +534,4 @@ class TreeNode < Marten::Model
 end
 ```
 
-In the above snippet, the `TreeNode` model will have a relation to itself through the `parent` field.
+Dans l'extrait ci-dessus, le modèle `TreeNode` aura une relation vers lui-même via le field `parent`.

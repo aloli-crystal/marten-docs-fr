@@ -1,15 +1,15 @@
 ---
-title: Table options
-description: Table options reference.
+title: Options de table
+description: Référence des options de table.
 ---
 
-This page provides a reference for all the table options that can be leveraged when defining models.
+Cette page fournit une référence pour toutes les options de table qui peuvent être utilisées lors de la définition de modèles.
 
-## Table name
+## Nom de la table
 
-Table names for models are automatically generated from the model name and the label of the associated application. That being said, it is possible to specifically override the name of a model table by leveraging the [`#db_table`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_table(db_table%3AString|Symbol)-instance-method) class method, which requires a table name string or symbol.
+Les noms de table pour les modèles sont automatiquement générés à partir du nom du modèle et du label de l'application associée. Cela dit, il est possible de remplacer spécifiquement le nom de la table d'un modèle en utilisant la méthode de classe [`#db_table`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_table(db_table%3AString|Symbol)-instance-method), qui nécessite une chaîne ou un symbole de nom de table.
 
-For example:
+Par exemple :
 
 ```crystal
 class Article < Marten::Model
@@ -22,11 +22,11 @@ class Article < Marten::Model
 end
 ```
 
-## Table indexes
+## Index de table
 
-Multifields indexes can be configured in a model by leveraging the [`#db_index`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_index(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method) class method. This method requires an index name argument as well as an array of targeted field names.
+Les index multi-fields peuvent être configurés dans un modèle en utilisant la méthode de classe [`#db_index`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_index(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method). Cette méthode nécessite un argument de nom d'index ainsi qu'un tableau de noms de fields ciblés.
 
-For example:
+Par exemple :
 
 ```crystal
 class Person < Marten::Model
@@ -39,11 +39,11 @@ class Person < Marten::Model
 end
 ```
 
-## Table unique constraints
+## Contraintes d'unicité de table
 
-Multifields unique constraints can be configured in a model by leveraging the [`#db_unique_constraint`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_unique_constraint(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method) class method. This method requires an index name argument as well as an array of targeted field names.
+Les contraintes d'unicité multi-fields peuvent être configurées dans un modèle en utilisant la méthode de classe [`#db_unique_constraint`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_unique_constraint(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method). Cette méthode nécessite un argument de nom d'index ainsi qu'un tableau de noms de fields ciblés.
 
-For example:
+Par exemple :
 
 ```crystal
 class Booking < Marten::Model

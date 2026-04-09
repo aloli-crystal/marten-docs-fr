@@ -1,17 +1,17 @@
 ---
-title: Schema validations
-description: Learn how to validate data with schemas.
+title: Validations de schema
+description: Apprenez à valider des données avec les schemas.
 sidebar_label: Validations
 ---
 
-The main goal of schemas is to validate data and request parameters. As such, schemas provide a convenient mechanism allowing to define validation rules. These rules can be inherited from the fields in your schema depending on the options you used and the type of your fields. They can also be explicitly specified in your schema class, which is useful if you need to implement custom validation logics.
+L'objectif principal des schemas est de valider les données et les paramètres de requête. En tant que tels, les schemas fournissent un mécanisme pratique permettant de définir des règles de validation. Ces règles peuvent être héritées des champs de votre schema selon les options que vous avez utilisées et le type de vos champs. Elles peuvent également être explicitement spécifiées dans votre classe schema, ce qui est utile si vous devez implémenter des logiques de validation personnalisées.
 
 
-## Overview
+## Vue d'ensemble
 
-### A short example
+### Un court exemple
 
-Let's consider the following example:
+Considérons l'exemple suivant :
 
 ```crystal
 class UserSchema < Marten::Schema
@@ -19,9 +19,9 @@ class UserSchema < Marten::Schema
 end
 ```
 
-In the above snippet, a `UserSchema` schema is defined and it is specified that the `name` field must be present (`required: true`) and that the associated value cannot exceed 128 characters.
+Dans le fragment ci-dessus, un schema `UserSchema` est défini et il est spécifié que le champ `name` doit être présent (`required: true`) et que la valeur associée ne peut pas dépasser 128 caractères.
 
-Given these characteristics, it is possible to initialize `UserSchema` instances and validate data through the use of the `#valid?` method:
+Étant donné ces caractéristiques, il est possible d'initialiser des instances de `UserSchema` et de valider des données via l'utilisation de la méthode `#valid?` :
 
 ```crystal
 schema_1 = UserSchema.new(Marten::Schema::DataHash.new)
@@ -34,11 +34,11 @@ schema_3 = UserSchema.new(Marten::Schema::DataHash{ "name" => "John Doe") })
 schema_3.valid?                       # => true
 ```
 
-As you can see in the above examples, the first two schemas are invalid because either the `name` field is not specified or because its value exceeds the maximum characters limit. The last schema is valid though because it has a `name` field that is less than 128 characters.
+Comme vous pouvez le voir dans les exemples ci-dessus, les deux premiers schemas sont invalides soit parce que le champ `name` n'est pas spécifié, soit parce que sa valeur dépasse la limite maximale de caractères. Le dernier schema est cependant valide car il a un champ `name` qui fait moins de 128 caractères.
 
-### Running schema validations
+### Exécuter les validations de schema
 
-As highlighted in the previous section, schema validation rules will be executed when calling the `#valid?` and `#invalid?` methods: these methods return `true` or `false` depending on whether the data is valid or invalid.
+Comme souligné dans la section précédente, les règles de validation de schema seront exécutées lors de l'appel des méthodes `#valid?` et `#invalid?` : ces méthodes retournent `true` ou `false` selon que les données sont valides ou invalides.
 
 ```crystal
 schema = UserSchema.new(Marten::Schema::DataHash.new)
@@ -46,20 +46,20 @@ schema.valid?     # => false
 schema.invalid?   # => true
 ```
 
-## Field validation rules
+## Règles de validation des champs
 
-As mentioned previously, fields can contribute validation rules to your schemas. These validation rules can be inherited:
+Comme mentionné précédemment, les champs peuvent contribuer des règles de validation à vos schemas. Ces règles de validation peuvent être héritées :
 
-* from the field type itself: some fields will validate that values are of a specific type (for example a `uuid` field will not validate values that don't correspond to valid UUIDs)
-* from the field options you define (for example fields using `required: true` will result in errors if the field is missing from the validated data)
+* du type de champ lui-même : certains champs valideront que les valeurs sont d'un type spécifique (par exemple un champ `uuid` ne validera pas les valeurs qui ne correspondent pas à des UUID valides)
+* des options de champ que vous définissez (par exemple les champs utilisant `required: true` résulteront en erreurs si le champ est manquant dans les données validées)
 
-Please refer to the [fields reference](./reference/fields.md) to learn more about the supported field types and their associated options.
+Veuillez consulter la [référence des champs](./reference/fields.md) pour en savoir plus sur les types de champs supportés et leurs options associées.
 
-## Custom validation rules
+## Règles de validation personnalisées
 
-Custom validation rules can be defined through the use of the `#validate` macro. This macro lets you configure the name of a validation method that should be called when a schema instance is validated. Inside this method, you can implement any validation logic that you might require and add errors to the schema instance if the data is invalid.
+Des règles de validation personnalisées peuvent être définies via l'utilisation de la macro `#validate`. Cette macro vous permet de configurer le nom d'une méthode de validation qui doit être appelée lorsqu'une instance de schema est validée. À l'intérieur de cette méthode, vous pouvez implémenter toute logique de validation dont vous pourriez avoir besoin et ajouter des erreurs à l'instance de schema si les données sont invalides.
 
-For example:
+Par exemple :
 
 ```crystal
 class SignUpSchema < Marten::Schema
@@ -79,21 +79,21 @@ class SignUpSchema < Marten::Schema
 end
 ```
 
-In the above snippet, a custom validation method ensures that the `password1` and `password2` fields have the exact same value. If that's not the case, then a specific error (that is not associated with any fields) is added to the schema instance (which makes it invalid). It's interesting to note the use of the `#validated_data` method here: this method returns a hash of all the values that were previously sanitized and validated. You can make use of it when defining custom validation rules: indeed, these rules always run _after_ all the fields have been individually validated first.
+Dans le fragment ci-dessus, une méthode de validation personnalisée s'assure que les champs `password1` et `password2` ont exactement la même valeur. Si ce n'est pas le cas, alors une erreur spécifique (qui n'est associée à aucun champ) est ajoutée à l'instance de schema (ce qui la rend invalide). Il est intéressant de noter l'utilisation de la méthode `#validated_data` ici : cette méthode retourne un hash de toutes les valeurs qui ont été précédemment assainies et validées. Vous pouvez l'utiliser lors de la définition de règles de validation personnalisées : en effet, ces règles s'exécutent toujours _après_ que tous les champs ont été individuellement validés en premier.
 
 :::important
-You can define multiple validation rules in your schema classes. When doing so, don't forget that these custom validation rules are called in the order they are defined.
+Vous pouvez définir plusieurs règles de validation dans vos classes schema. Ce faisant, n'oubliez pas que ces règles de validation personnalisées sont appelées dans l'ordre dans lequel elles sont définies.
 :::
 
-## Validation errors
+## Erreurs de validation
 
-Methods like `#valid?` or `#invalid?` only let you know whether a schema instance is valid or invalid for a specific data set. But you'll likely want to know exactly what are the actual errors or how to add new ones.
+Des méthodes comme `#valid?` ou `#invalid?` vous permettent uniquement de savoir si une instance de schema est valide ou invalide pour un jeu de données spécifique. Mais vous voudrez probablement savoir exactement quelles sont les erreurs réelles ou comment en ajouter de nouvelles.
 
-As such, every schema instance has an associated error set, which is an instance of [`Marten::Core::Validation::ErrorSet`](pathname:///api/dev/Marten/Core/Validation/ErrorSet.html).
+En tant que tel, chaque instance de schema a un ensemble d'erreurs associé, qui est une instance de [`Marten::Core::Validation::ErrorSet`](pathname:///api/dev/Marten/Core/Validation/ErrorSet.html).
 
-### Inspecting errors
+### Inspecter les erreurs
 
-A schema instance error set lets you access all the errors of a specific schema instance. For example:
+L'ensemble d'erreurs d'une instance de schema vous permet d'accéder à toutes les erreurs d'une instance de schema spécifique. Par exemple :
 
 ```crystal
 schema = UserSchema.new(Marten::Schema::DataHash.new)
@@ -113,13 +113,13 @@ schema.errors
 #          @type="required">]>
 ```
 
-As you can see, the error set gives you the ability to know how many errors are affecting your schema instance. Each error provides some additional information as well:
+Comme vous pouvez le voir, l'ensemble d'erreurs vous donne la possibilité de connaître le nombre d'erreurs affectant votre instance de schema. Chaque erreur fournit également des informations supplémentaires :
 
-* the associated field name (which can be `nil` if the error is global)
-* the error message
-* the error type, which is optional (`required` in the previous example)
+* le nom du champ associé (qui peut être `nil` si l'erreur est globale)
+* le message d'erreur
+* le type d'erreur, qui est optionnel (`required` dans l'exemple précédent)
 
-You can also access the errors that are associated with a specific field very easily by using the `#[]` method:
+Vous pouvez également accéder aux erreurs associées à un champ spécifique très facilement en utilisant la méthode `#[]` :
 
 ```crystal
 schema.errors[:name]
@@ -129,18 +129,18 @@ schema.errors[:name]
 #      @type="required">]
 ```
 
-Global errors (errors affecting the whole schema instances or multiple fields at once) can be listed through the use of the `#global` method.
+Les erreurs globales (erreurs affectant l'ensemble de l'instance de schema ou plusieurs champs à la fois) peuvent être listées via l'utilisation de la méthode `#global`.
 
-### Adding errors
+### Ajouter des erreurs
 
-Errors can be added to an error set through the use of the `#add` method. This method takes a field name, a message, and an optional error type:
+Les erreurs peuvent être ajoutées à un ensemble d'erreurs via l'utilisation de la méthode `#add`. Cette méthode prend un nom de champ, un message et un type d'erreur optionnel :
 
 ```crystal
 schema.errors.add(:name, "Name is invalid")                      # error type is "invalid"
 schema.errors.add(:name, "Name is invalid", type: :invalid_name) # error type is "invalid_name"
 ```
 
-Global errors can be specified through the use of an alternative `#add` method that doesn't take a field name:
+Les erreurs globales peuvent être spécifiées via l'utilisation d'une méthode `#add` alternative qui ne prend pas de nom de champ :
 
 ```crystal
 schema.errors.add("User is invalid")                      # error type is "invalid"

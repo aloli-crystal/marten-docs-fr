@@ -1,40 +1,40 @@
 ---
-title: Configure database backends
-description: How to configure database backends.
+title: Configurer les backends de base de données
+description: Comment configurer les backends de base de données.
 ---
 
-This guide provides instructions on configuring new database backends or changing the existing database backend within your existing Marten projects.
+Ce guide fournit des instructions pour configurer de nouveaux backends de base de données ou changer le backend de base de données existant dans vos projets Marten existants.
 
-## Context
+## Contexte
 
-Marten officially supports **MariaDB**, **MySQL**, **PostgreSQL**, and **SQLite3** databases. New Marten projects default to utilizing a SQLite3 database, a lightweight serverless database application that is typically pre-installed on most existing operating systems. This makes it an excellent choice for a development or testing database, but you may want to use a more powerful database such as MariaDB, MySQL, or PostgreSQL. In this light, this guide explains what steps should be taken in order to use your database backend of choice in a Marten project.
+Marten prend officiellement en charge les bases de données **MariaDB**, **MySQL**, **PostgreSQL** et **SQLite3**. Les nouveaux projets Marten utilisent par défaut une base de données SQLite3, une application de base de données légère sans serveur qui est généralement préinstallée sur la plupart des systèmes d'exploitation existants. Cela en fait un excellent choix pour une base de données de développement ou de test, mais vous pourriez vouloir utiliser une base de données plus puissante comme MariaDB, MySQL ou PostgreSQL. Dans cette optique, ce guide explique quelles étapes doivent être suivies pour utiliser le backend de base de données de votre choix dans un projet Marten.
 
-## Prerequisites
+## Prérequis
 
-This guide presupposes that you already have a functional Marten project available. If you don't, you can easily create one using the following command:
+Ce guide suppose que vous disposez déjà d'un projet Marten fonctionnel. Si ce n'est pas le cas, vous pouvez facilement en créer un en utilisant la commande suivante :
 
 ```bash
 marten new project
 ```
 
-Furthermore, it assumes that your preferred database is properly configured and ready for use. If this isn't the case, please consult the respective official documentation to install your chosen database:
+De plus, il suppose que votre base de données préférée est correctement configurée et prête à l'emploi. Si ce n'est pas le cas, veuillez consulter la documentation officielle respective pour installer la base de données de votre choix :
 
-* [PostgreSQL Installation Guide](https://wiki.postgresql.org/wiki/Detailed_installation_guides)
-* [MariaDB Installation Guide](https://mariadb.com/kb/en/getting-installing-and-upgrading-mariadb)
-* [MySQL Installation Guide](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
-* [SQLite Installation Guide](https://www.tutorialspoint.com/sqlite/sqlite_installation.htm)
+* [Guide d'installation PostgreSQL](https://wiki.postgresql.org/wiki/Detailed_installation_guides)
+* [Guide d'installation MariaDB](https://mariadb.com/kb/en/getting-installing-and-upgrading-mariadb)
+* [Guide d'installation MySQL](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
+* [Guide d'installation SQLite](https://www.tutorialspoint.com/sqlite/sqlite_installation.htm)
 
-## Installing the right database shard
+## Installer le bon shard de base de données
 
-For each database, a dedicated Crystal shard is required. Depending on your chosen database, you must include one of the following entries in your project's `shard.yml` file:
+Pour chaque base de données, un shard Crystal dédié est requis. Selon la base de données choisie, vous devez inclure l'une des entrées suivantes dans le fichier `shard.yml` de votre projet :
 
-* [crystal-pg](https://github.com/will/crystal-pg) (required for PostgreSQL databases)
-* [crystal-mysql](https://github.com/crystal-lang/crystal-mysql) (required for MariaDB or MySQL databases)
-* [crystal-sqlite3](https://github.com/crystal-lang/crystal-sqlite3) (required for SQLite3 databases)
+* [crystal-pg](https://github.com/will/crystal-pg) (requis pour les bases de données PostgreSQL)
+* [crystal-mysql](https://github.com/crystal-lang/crystal-mysql) (requis pour les bases de données MariaDB ou MySQL)
+* [crystal-sqlite3](https://github.com/crystal-lang/crystal-sqlite3) (requis pour les bases de données SQLite3)
 
-This means that your `shard.yml` file should resemble one of the following examples:
+Cela signifie que votre fichier `shard.yml` devrait ressembler à l'un des exemples suivants :
 
-### MariaDB or MySQL
+### MariaDB ou MySQL
 
 ```yaml
 name: myproject
@@ -79,13 +79,13 @@ dependencies:
     github: crystal-lang/crystal-sqlite3
 ```
 
-## Adding the right DB Crystal requirement
+## Ajouter le bon require Crystal pour la base de données
 
-After you've included the correct Crystal shard in your project's `shard.yml` file, the subsequent task is to add the corresponding requirement in the `src/project.cr` file. This file contains all the requirements of your project (including Marten itself) and is automatically generated by the [`new`](../reference/management-commands.md#new) management command.
+Après avoir inclus le bon shard Crystal dans le fichier `shard.yml` de votre projet, la tâche suivante est d'ajouter le require correspondant dans le fichier `src/project.cr`. Ce fichier contient tous les requires de votre projet (y compris Marten lui-même) et est automatiquement généré par la commande de gestion [`new`](../reference/management-commands.md#new).
 
-Please consult the examples below to determine which requirement you should include based on your selected database backend:
+Veuillez consulter les exemples ci-dessous pour déterminer quel require vous devez inclure en fonction du backend de base de données sélectionné :
 
-### MariaDB or MySQL
+### MariaDB ou MySQL
 
 ```crystal
 # Third party requirements.
@@ -118,14 +118,14 @@ require "marten"
 require "sqlite3"
 ```
 
-## Configuring your database
+## Configurer votre base de données
 
-The last step involves configuring database settings so that they target the database you intend to use with your Marten project. While a comprehensive list of configuration options is available in the [Database settings reference](../reference/settings.md#database-settings), the following sections offer example configurations tailored to each supported database backend.
+La dernière étape consiste à configurer les paramètres de base de données afin qu'ils ciblent la base de données que vous souhaitez utiliser avec votre projet Marten. Bien qu'une liste complète des options de configuration soit disponible dans la [référence des paramètres de base de données](../reference/settings.md#database-settings), les sections suivantes offrent des exemples de configuration adaptés à chaque backend de base de données pris en charge.
 
-### MariaDB or MySQL
+### MariaDB ou MySQL
 
 ```crystal
-# Using a block:
+# En utilisant un bloc :
 config.database do |db|
   db.backend = :mysql
   db.host = "localhost"
@@ -135,14 +135,14 @@ config.database do |db|
   db.password = "insecure"
 end
 
-# Using a connection URL:
+# En utilisant une URL de connexion :
 config.database url: "mysql://my_user:insecure@localhost:1234/my_db"
 ```
 
 ### PostgreSQL
 
 ```crystal
-# Using a block:
+# En utilisant un bloc :
 config.database do |db|
   db.backend = :postgresql
   db.host = "localhost"
@@ -152,19 +152,19 @@ config.database do |db|
   db.password = "insecure"
 end
 
-# Using a connection URL:
+# En utilisant une URL de connexion :
 config.database url: "postgres://my_user:insecure@localhost:1234/my_db"
 ```
 
 ### SQLite3
 
 ```crystal
-# Using a block:
+# En utilisant un bloc :
 config.database do |db|
   db.backend = :sqlite
   db.name = "my_db.db"
 end
 
-# Using a connection URL:
+# En utilisant une URL de connexion :
 config.database url: "sqlite3://my_db.db"
 ```

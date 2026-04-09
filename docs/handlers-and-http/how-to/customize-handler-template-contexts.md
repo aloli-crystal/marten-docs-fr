@@ -1,25 +1,25 @@
 ---
-title: Customize handler template contexts
-sidebar_label: Customize handler contexts
-description: How to customize handler template contexts.
+title: Personnaliser les contextes de template des handlers
+sidebar_label: Personnaliser les contextes des handlers
+description: Comment personnaliser les contextes de template des handlers.
 ---
 
-This guide covers how to easily customize the [template context](../../templates/introduction.md) of handlers involving template renderings and how to add variables to it. Doing so will allow you to leverage custom variables in your handler templates and easily manipulate the appearance and content of your web pages, tailoring them to suit your specific needs and preferences.
+Ce guide explique comment personnaliser facilement le [contexte de template](../../templates/introduction.md) des handlers impliquant des rendus de templates et comment y ajouter des variables. Cela vous permettra d'exploiter des variables personnalisées dans vos templates de handler et de manipuler facilement l'apparence et le contenu de vos pages web, en les adaptant à vos besoins et préférences spécifiques.
 
-## Requirements
+## Prérequis
 
-It is possible to customize the template context used by most handlers involving template renderings. This is the case for:
+Il est possible de personnaliser le contexte de template utilisé par la plupart des handlers impliquant des rendus de templates. C'est le cas pour :
 
-* Handlers that make use of the [`#render`](../introduction.md#render) helper method.
-* Handlers that inherit from the [`Marten::Handlers::Template`](../reference/generic-handlers.md#rendering-a-template), [`Marten::Handlers::Schema`](../reference/generic-handlers.md#processing-a-schema), [`Marten::Handlers::RecordCreate`](../reference/generic-handlers.md#creating-a-record), [`Marten::Handlers::RecordDetail`](../reference/generic-handlers.md#displaying-a-record), [`Marten::Handlers::RecordUpdate`](../reference/generic-handlers.md#updating-a-record), or [`Marten::Handlers::RecordDelete`](../reference/generic-handlers.md#deleting-a-record) generic handlers.
+* Les handlers qui utilisent la méthode d'aide [`#render`](../introduction.md#render).
+* Les handlers qui héritent des handlers génériques [`Marten::Handlers::Template`](../reference/generic-handlers.md#rendu-dun-template), [`Marten::Handlers::Schema`](../reference/generic-handlers.md#traitement-dun-schéma), [`Marten::Handlers::RecordCreate`](../reference/generic-handlers.md#création-dun-enregistrement), [`Marten::Handlers::RecordDetail`](../reference/generic-handlers.md#affichage-dun-enregistrement), [`Marten::Handlers::RecordUpdate`](../reference/generic-handlers.md#mise-à-jour-dun-enregistrement) ou [`Marten::Handlers::RecordDelete`](../reference/generic-handlers.md#suppression-dun-enregistrement).
 
-## Customizing the template context of a handler
+## Personnaliser le contexte de template d'un handler
 
-If your handler adheres to the [requirements](#requirements) mentioned above, then the simplest way to customize what variables are made available to the considered template context is to leverage the [`#before_render`](../callbacks.md#before_render) callback.
+Si votre handler respecte les [prérequis](#prérequis) mentionnés ci-dessus, alors la manière la plus simple de personnaliser les variables rendues disponibles au contexte de template considéré est d'utiliser le callback [`#before_render`](../callbacks.md#before_render).
 
-This callback is invoked prior to rendering a template when generating a response that incorporates its content. This means that they can be used to add new variables to the [global handler template context](../introduction.md#global-template-context) so that they become accessible to the template runtime.
+Ce callback est invoqué avant le rendu d'un template lors de la génération d'une réponse qui incorpore son contenu. Cela signifie qu'il peut être utilisé pour ajouter de nouvelles variables au [contexte de template global du handler](../introduction.md#contexte-de-template-global) afin qu'elles deviennent accessibles au runtime du template.
 
-For example:
+Par exemple :
 
 ```crystal
 class MyHandler < Marten::Handlers::Template
@@ -32,13 +32,13 @@ class MyHandler < Marten::Handlers::Template
 end
 ```
 
-In the above snippet, a very simple handler (that inherits from the [`Marten::Handlers::Template`](../reference/generic-handlers.md#rendering-a-template) generic handler) defines a [`#before_render`](../callbacks.md#before_render) callback in which a `foo` variable is added to the template context.
+Dans l'extrait ci-dessus, un handler très simple (qui hérite du handler générique [`Marten::Handlers::Template`](../reference/generic-handlers.md#rendu-dun-template)) définit un callback [`#before_render`](../callbacks.md#before_render) dans lequel une variable `foo` est ajoutée au contexte de template.
 
-## A concrete example: currently active link in navigation sections
+## Un exemple concret : lien actuellement actif dans les sections de navigation
 
-To exemplify this functionality, let's consider a straightforward scenario involving navigation sections. Typically, it's essential to determine the currently active item within the navigation. This can be effortlessly accomplished by utilizing a dedicated template variable.
+Pour illustrer cette fonctionnalité, considérons un scénario simple impliquant des sections de navigation. Typiquement, il est essentiel de déterminer l'élément actuellement actif dans la navigation. Cela peut être facilement accompli en utilisant une variable de template dédiée.
 
-For example, let's assume that our navigation template looks something like this:
+Par exemple, supposons que notre template de navigation ressemble à ceci :
 
 ```html
 <nav class="navbar navbar-light">
@@ -58,11 +58,11 @@ For example, let's assume that our navigation template looks something like this
 </nav>
 ```
 
-This template utilizes a `nav_bar_item` variable to determine the currently active navigation bar item and applies a dedicated `active` CSS class to the corresponding link based on the value of this variable.
+Ce template utilise une variable `nav_bar_item` pour déterminer l'élément de barre de navigation actuellement actif et applique une classe CSS dédiée `active` au lien correspondant en fonction de la valeur de cette variable.
 
-In order for this navigation to work as intended, we need to ensure that the applicable handlers define the `nav_bar_item` template variables. We could utilize the method described previously and simply define a [`#before_render`](../callbacks.md#before_render) callback in the handlers that need to define this template variable. A better solution though would be to define a concern module that eases the process of doing this.
+Pour que cette navigation fonctionne comme prévu, nous devons nous assurer que les handlers applicables définissent les variables de template `nav_bar_item`. Nous pourrions utiliser la méthode décrite précédemment et simplement définir un callback [`#before_render`](../callbacks.md#before_render) dans les handlers qui ont besoin de définir cette variable de template. Une meilleure solution serait cependant de définir un module concern qui facilite ce processus.
 
-For example, we could define a `NavBarActiveable` module that automatically sets the `nav_bar_item` template variable based on the value of a class variable that is set by handler classes making use of it:
+Par exemple, nous pourrions définir un module `NavBarActiveable` qui définit automatiquement la variable de template `nav_bar_item` en fonction de la valeur d'une variable de classe définie par les classes de handler qui l'utilisent :
 
 ```crystal
 module NavBarActiveable
@@ -86,7 +86,7 @@ module NavBarActiveable
 end
 ```
 
-Using this approach, defining the `nav_bar_item` variable in a handler would be as simple as including the `NavBarActiveable` module in the handler class and calling the `#nav_bar_item` method:
+En utilisant cette approche, définir la variable `nav_bar_item` dans un handler serait aussi simple qu'inclure le module `NavBarActiveable` dans la classe de handler et appeler la méthode `#nav_bar_item` :
 
 ```crystal
 class MyHandler < Marten::Handlers::Template

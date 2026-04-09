@@ -1,18 +1,18 @@
 ---
 title: Sessions
-description: Learn how to use sessions to persist data between requests.
+description: Apprenez à utiliser les sessions pour persister des données entre les requêtes.
 sidebar_label: Sessions
 ---
 
-Sessions can be used to store small amounts of data that will be persisted between requests, on a per-visitor basis. This data is usually stored on the backend side (depending on the chosen session storage), and it is associated with a session ID that is persisted on the client through the use of a dedicated cookie.
+Les sessions peuvent être utilisées pour stocker de petites quantités de données qui seront persistées entre les requêtes, sur une base par visiteur. Ces données sont généralement stockées côté serveur (selon le stockage de session choisi), et elles sont associées à un identifiant de session qui est persisté côté client via un cookie dédié.
 
 ## Configuration
 
-In order to use sessions, you need to make sure that the [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html) middleware is part of your project's middleware chain, which can be configured in the [`middleware`](../development/reference/settings.md#middleware) setting. Note that the session middleware class is automatically added to this setting when initializing new projects.
+Pour utiliser les sessions, vous devez vous assurer que le middleware [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html) fait partie de la chaîne de middlewares de votre projet, qui peut être configurée dans le paramètre [`middleware`](../development/reference/settings.md#middleware). Notez que la classe du middleware de session est automatiquement ajoutée à ce paramètre lors de l'initialisation de nouveaux projets.
 
-If your project does not require the use of sessions, you can simply ensure that the [`middleware`](../development/reference/settings.md#middleware) setting does not include the [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html) middleware class.
+Si votre projet ne nécessite pas l'utilisation de sessions, vous pouvez simplement vous assurer que le paramètre [`middleware`](../development/reference/settings.md#middleware) n'inclut pas la classe de middleware [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html).
 
-How the session ID cookie is generated can also be tweaked by leveraging the following settings:
+La manière dont le cookie d'identifiant de session est généré peut également être ajustée en exploitant les paramètres suivants :
 
 * [`sessions.cookie_domain`](../development/reference/settings.md#cookie_domain-1)
 * [`sessions.cookie_http_only`](../development/reference/settings.md#cookie_http_only-1)
@@ -21,23 +21,23 @@ How the session ID cookie is generated can also be tweaked by leveraging the fol
 * [`sessions.cookie_same_site`](../development/reference/settings.md#cookie_same_site-1)
 * [`sessions.cookie_secure`](../development/reference/settings.md#cookie_secure-1)
 
-## Session stores
+## Magasins de sessions
 
-How session data is actually persisted can be defined by configuring the right session store backend, which can be done through the use of the [`sessions.store`](../development/reference/settings.md#store) setting.
+La manière dont les données de session sont effectivement persistées peut être définie en configurant le bon backend de magasin de sessions, ce qui peut être fait via le paramètre [`sessions.store`](../development/reference/settings.md#store).
 
-By default, sessions are encrypted and stored within a single cookie (`:cookie` session store). Cookies have a 4K size limit, which is usually sufficient in order to persist things like a user ID and flash messages. `:cookie` is the only store that is built in the Marten web framework presently.
+Par défaut, les sessions sont chiffrées et stockées dans un seul cookie (magasin de sessions `:cookie`). Les cookies ont une limite de taille de 4K, ce qui est généralement suffisant pour persister des éléments comme un identifiant utilisateur et des messages flash. `:cookie` est le seul magasin intégré au framework web Marten actuellement.
 
 :::info
-The `cookie` store leverages a [`Marten::Core::Encryptor`](pathname:///api/dev/Marten/Core/Encryptor.html) encryptor object in order to encrypt and sign session data. This means that session data is encrypted with an **aes-256-cbc** cipher and signed with HMAC signatures that use the **SHA256** hash algorithm.
+Le magasin `cookie` utilise un objet chiffreur [`Marten::Core::Encryptor`](pathname:///api/dev/Marten/Core/Encryptor.html) pour chiffrer et signer les données de session. Cela signifie que les données de session sont chiffrées avec un chiffrement **aes-256-cbc** et signées avec des signatures HMAC utilisant l'algorithme de hachage **SHA256**.
 :::
 
-Other session stores can be installed as separate shards. For example, the [`marten-db-session`](https://github.com/martenframework/marten-db-session) shard can be leveraged to persist session data in the database while the [`marten-redis-session`](https://github.com/martenframework/marten-redis-session) shard can be used for persisting session data using Redis.
+D'autres magasins de sessions peuvent être installés en tant que shards séparés. Par exemple, le shard [`marten-db-session`](https://github.com/martenframework/marten-db-session) peut être utilisé pour persister les données de session dans la base de données tandis que le shard [`marten-redis-session`](https://github.com/martenframework/marten-redis-session) peut être utilisé pour persister les données de session avec Redis.
 
-## Using sessions
+## Utiliser les sessions
 
-### Setting and retrieving session values
+### Définir et récupérer des valeurs de session
 
-When the [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html) middleware is used, each HTTP request object will have a [`#session`](pathname:///api/dev//Marten/HTTP/Request.html#session-instance-method) method returning the session store for the current request. The session store is an instance of [`Marten::HTTP::Session::Store::Base`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html) and provides a hash-like interface:
+Lorsque le middleware [`Marten::Middleware::Session`](pathname:///api/dev/Marten/Middleware/Session.html) est utilisé, chaque objet de requête HTTP aura une méthode [`#session`](pathname:///api/dev//Marten/HTTP/Request.html#session-instance-method) retournant le magasin de sessions pour la requête en cours. Le magasin de sessions est une instance de [`Marten::HTTP::Session::Store::Base`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html) et fournit une interface de type hash :
 
 ```crystal
 # Persisting values:
@@ -54,10 +54,10 @@ request.session.delete(:foo)
 request.session.empty?
 ```
 
-Both symbol and string keys can be used when trying to interact with the session store, but only **string values** can be stored.
+Les clés sous forme de symboles et de chaînes de caractères peuvent être utilisées pour interagir avec le magasin de sessions, mais seules des **valeurs de type chaîne** peuvent être stockées.
 
 :::tip
-If you are trying to access the session store from within a handler, it should be noted that you can leverage the `#session` method instead of using the request object:
+Si vous essayez d'accéder au magasin de sessions depuis un handler, il convient de noter que vous pouvez utiliser la méthode `#session` au lieu d'utiliser l'objet de requête :
 
 ```crystal
 class MyHandler < Marten::Handler
@@ -69,15 +69,15 @@ end
 ```
 :::
 
-### Customizing session expiry times
+### Personnaliser les durées d'expiration des sessions
 
-By default, most session stores will expire session entries based on the value of the [`sessions.cookie_max_age`](../development/reference/settings.md#cookie_max_age-1) setting. That being said, it is possible to customize when a specific session is set to expire by using one of the following methods:
+Par défaut, la plupart des magasins de sessions feront expirer les entrées de session en fonction de la valeur du paramètre [`sessions.cookie_max_age`](../development/reference/settings.md#cookie_max_age-1). Cela dit, il est possible de personnaliser le moment où une session spécifique est configurée pour expirer en utilisant l'une des méthodes suivantes :
 
-* [`#expires_at=`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html#expires_at%3D(value%3ATime)-instance-method) allows to set the time when the session should expire by specifying a [`Time`](https://crystal-lang.org/api/Time.html) object or an integer (number of seconds).
-* [`#expires_at_browser_close=`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html#expires_at_browser_close%3D(value%3ABool)-instance-method) allows to set whether the session should expire when the browser is closed.
-* [`#expires_in=`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html#expires_in%3D(value%3ATime%3A%3ASpan)-instance-method) allows to set the session's expiration duration with [`Time::Span`](https://crystal-lang.org/api/Time/Span.html) object.
+* [`#expires_at=`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html#expires_at%3D(value%3ATime)-instance-method) permet de définir le moment où la session doit expirer en spécifiant un objet [`Time`](https://crystal-lang.org/api/Time.html) ou un entier (nombre de secondes).
+* [`#expires_at_browser_close=`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html#expires_at_browser_close%3D(value%3ABool)-instance-method) permet de définir si la session doit expirer lorsque le navigateur est fermé.
+* [`#expires_in=`](pathname:///api/dev/Marten/HTTP/Session/Store/Base.html#expires_in%3D(value%3ATime%3A%3ASpan)-instance-method) permet de définir la durée d'expiration de la session avec un objet [`Time::Span`](https://crystal-lang.org/api/Time/Span.html).
 
-For example:
+Par exemple :
 
 ```crystal
 request.session[:foo] = "bar"

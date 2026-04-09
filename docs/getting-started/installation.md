@@ -1,81 +1,81 @@
 ---
 title: Installation
-description: Get started by installing Marten and its dependencies.
+description: Démarrez en installant Marten et ses dépendances.
 ---
 
-This guide will help you get started in order to install Marten and its dependencies. Let's get started!
+Ce guide vous aidera à démarrer pour installer Marten et ses dépendances. C'est parti !
 
-## Install Crystal
+## Installer Crystal
 
-Marten is a Crystal web framework; as such Crystal must be installed on your system. There are many ways to install Crystal, but we'll only highlight what we think are the most common ones here for the sake of simplicity: using Homebrew (macOS or Linux) or the APT package manager (Ubuntu, Debian). Please refer to the official [Crystal installation guide](https://crystal-lang.org/install/) if these methods don't work for you.
+Marten est un framework web Crystal ; Crystal doit donc être installé sur votre système. Il existe de nombreuses façons d'installer Crystal, mais nous ne mettrons en avant ici que les plus courantes par souci de simplicité : via Homebrew (macOS ou Linux) ou le gestionnaire de paquets APT (Ubuntu, Debian). Veuillez consulter le [guide d'installation officiel de Crystal](https://crystal-lang.org/install/) si ces méthodes ne fonctionnent pas pour vous.
 
-### Using Homebrew
+### Via Homebrew
 
-On macOS or Linux, Crystal can be installed using [Homebrew](https://brew.sh/) (also known as Linuxbrew) by running the following command:
+Sur macOS ou Linux, Crystal peut être installé via [Homebrew](https://brew.sh/) (également connu sous le nom de Linuxbrew) en exécutant la commande suivante :
 
 ```bash
 brew install crystal
 ```
 
-### Using APT
+### Via APT
 
-On Ubuntu, Debian or any other Linux distribution using the APT package manager, Crystal can be installed by running the following command:
+Sur Ubuntu, Debian ou toute autre distribution Linux utilisant le gestionnaire de paquets APT, Crystal peut être installé en exécutant la commande suivante :
 
 ```bash
 curl -fsSL https://crystal-lang.org/install.sh | sudo bash
 ```
 
-### Using pacman
+### Via pacman
 
-On ArchLinux and derivates you can install Crystal and the `shards` command line tool through Pacman:
+Sur ArchLinux et ses dérivés, vous pouvez installer Crystal et l'outil en ligne de commande `shards` via Pacman :
 
 ```bash
 sudo pacman -S crystal shards
 ```
 
-## Install a database
+## Installer une base de données
 
-Marten officially supports **MariaDB**, **MySQL**, **PostgreSQL**, and **SQLite3** databases. New Marten projects will use a SQLite database by default: this lightweight serverless database application is usually already pre-installed on most of the existing operating systems, which makes it an ideal candidate for a development or a testing database. As such, if you choose to use SQLite for your new Marten project, you can very probably skip this section.
+Marten prend officiellement en charge les bases de données **MariaDB**, **MySQL**, **PostgreSQL** et **SQLite3**. Les nouveaux projets Marten utilisent une base de données SQLite par défaut : cette base de données légère sans serveur est généralement déjà pré-installée sur la plupart des systèmes d'exploitation existants, ce qui en fait un candidat idéal pour une base de données de développement ou de test. Ainsi, si vous choisissez d'utiliser SQLite pour votre nouveau projet Marten, vous pouvez très probablement ignorer cette section.
 
-Marten also has built-in support for PostgreSQL, MariaDB, and MySQL. Please refer to the applicable official documentation to install your database of choice:
+Marten dispose également d'un support natif pour PostgreSQL, MariaDB et MySQL. Veuillez consulter la documentation officielle applicable pour installer la base de données de votre choix :
 
-* [PostgreSQL Installation Guide](https://wiki.postgresql.org/wiki/Detailed_installation_guides)
-* [MariaDB Installation Guide](https://mariadb.com/kb/en/getting-installing-and-upgrading-mariadb)
-* [MySQL Installation Guide](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
-* [SQLite Installation Guide](https://www.tutorialspoint.com/sqlite/sqlite_installation.htm)
+* [Guide d'installation de PostgreSQL](https://wiki.postgresql.org/wiki/Detailed_installation_guides)
+* [Guide d'installation de MariaDB](https://mariadb.com/kb/en/getting-installing-and-upgrading-mariadb)
+* [Guide d'installation de MySQL](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
+* [Guide d'installation de SQLite](https://www.tutorialspoint.com/sqlite/sqlite_installation.htm)
 
-Each database necessitates the use of a dedicated shard (a package of Crystal code). If you're just beginning with the framework or planning to follow the [tutorial](./tutorial.md), there's no immediate need to install these shards. However, if you intend to employ other databases like MariaDB, MySQL, or PostgreSQL, you may need to install database-specific shards. You can find instructions on how to do this in the [Configure database backends](../development/how-to/configure-database-backends.md) section.
+Chaque base de données nécessite l'utilisation d'un shard dédié (un paquet de code Crystal). Si vous débutez avec le framework ou prévoyez de suivre le [tutoriel](./tutorial.md), il n'est pas nécessaire d'installer ces shards immédiatement. Cependant, si vous souhaitez utiliser d'autres bases de données comme MariaDB, MySQL ou PostgreSQL, vous devrez peut-être installer des shards spécifiques à la base de données. Vous trouverez les instructions pour ce faire dans la section [Configurer les backends de base de données](../development/how-to/configure-database-backends.md).
 
-## Install Marten
+## Installer Marten
 
-The next step is to install the Marten CLI. This tool will let you easily generate new Marten projects or applications.
+L'étape suivante consiste à installer le CLI Marten. Cet outil vous permettra de générer facilement de nouveaux projets ou applications Marten.
 
-### Using Homebrew
+### Via Homebrew
 
-On macOS or Linux, Marten can be installed using [Homebrew](https://brew.sh/) (also known as Linuxbrew) by running the following commands:
+Sur macOS ou Linux, Marten peut être installé via [Homebrew](https://brew.sh/) (également connu sous le nom de Linuxbrew) en exécutant les commandes suivantes :
 
 ```bash
 brew tap martenframework/marten
 brew install marten
 ```
 
-### Using AUR on ArchLinux and derivates
+### Via AUR sur ArchLinux et ses dérivés
 
-Assuming you use some AUR helper (`yay` in this example) it will be as simple as:
+En supposant que vous utilisez un assistant AUR (`yay` dans cet exemple), ce sera aussi simple que :
 
 ```bash
 yay -S marten
 ```
 
-Once the installation is complete, you should be able to use the `marten` command:
+Une fois l'installation terminée, vous devriez pouvoir utiliser la commande `marten` :
 
 ```bash
 marten -v
 ```
 
-### From the sources
+### Depuis les sources
 
-Marten can be installed from the sources by running the following commands:
+Marten peut être installé depuis les sources en exécutant les commandes suivantes :
 
 ```bash
 git clone https://github.com/martenframework/marten
@@ -85,14 +85,14 @@ crystal build src/marten_cli.cr -o bin/marten
 mv bin/marten /usr/local/bin
 ```
 
-Once the above steps are done, you should be able to verify that the `marten` command works as expected by running:
+Une fois les étapes ci-dessus terminées, vous devriez pouvoir vérifier que la commande `marten` fonctionne correctement en exécutant :
 
 ```bash
 marten -v
 ```
 
-## Next steps
+## Prochaines étapes
 
-_Congrats! You’re in._
+_Félicitations ! Vous êtes prêt._
 
-You can now move on to the [introduction tutorial](./tutorial.md).
+Vous pouvez maintenant passer au [tutoriel d'introduction](./tutorial.md).

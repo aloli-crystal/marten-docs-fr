@@ -1,21 +1,21 @@
 ---
-title: Template tags
-description: Template tags reference.
+title: Tags de template
+description: Référence des tags de template.
 ---
 
-This page provides a reference for all the available tags that can be used when defining [templates](../introduction.md).
+Cette page fournit une référence pour tous les tags disponibles qui peuvent être utilisés lors de la définition de [templates](../introduction.md).
 
 ## `asset`
 
-The `asset` template tag allows to generate the URL of a given [asset](../../assets/introduction.md). It must take at least one argument (the filepath of the asset).
+Le tag de template `asset` permet de générer l'URL d'un [asset](../../assets/introduction.md) donné. Il doit prendre au moins un argument (le chemin du fichier de l'asset).
 
-For example, the following line is a valid usage of the `asset` tag and will output the path or URL of the `app/app.css` asset:
+Par exemple, la ligne suivante est une utilisation valide du tag `asset` et affichera le chemin ou l'URL de l'asset `app/app.css` :
 
 ```html
 {% asset "app/app.css" %}
 ```
 
-Optionally, resolved asset URLs can be assigned to a specific variable using the `as` keyword:
+Optionnellement, les URL d'assets résolues peuvent être assignées à une variable spécifique en utilisant le mot-clé `as` :
 
 ```html
 {% asset "app/app.css" as my_var %}
@@ -23,17 +23,17 @@ Optionally, resolved asset URLs can be assigned to a specific variable using the
 
 ## `assign`
 
-The `assign` template tag allows to define a new variable that will be stored in the template's context.
+Le tag de template `assign` permet de définir une nouvelle variable qui sera stockée dans le contexte du template.
 
-For example:
+Par exemple :
 
 ```html
 {% assign my_var = "Hello World!" %}
 ```
 
-By default, variables assigned using this template tag will overwrite any existing variables with the same name in the template context. To prevent overwriting existing variables, you can append `unless assigned` after the assignment to ensure that new variables are only assigned if there isn't already one with the same name present.
+Par défaut, les variables assignées en utilisant ce tag de template écraseront toute variable existante portant le même nom dans le contexte du template. Pour empêcher l'écrasement des variables existantes, vous pouvez ajouter `unless assigned` après l'assignation pour garantir que les nouvelles variables ne soient assignées que s'il n'y en a pas déjà une avec le même nom.
 
-For example:
+Par exemple :
 
 ```html
 {% assign my_var = "Hello World!" unless defined %}
@@ -41,13 +41,13 @@ For example:
 
 ## `block`
 
-The `block` template tag allows to define that some specific portions of a template can be overridden by child templates. This tag is only useful when used in conjunction with the [`extend`](#extend) tag. See [Template inheritance](../introduction.md#template-inheritance) to learn more about this capability.
+Le tag de template `block` permet de définir que certaines portions spécifiques d'un template peuvent être surchargées par des templates enfants. Ce tag n'est utile que lorsqu'il est utilisé conjointement avec le tag [`extend`](#extend). Voir [Héritage de templates](../introduction.md#héritage-de-templates) pour en savoir plus sur cette fonctionnalité.
 
 ## `cache`
 
-The `cache` template tag allows to cache the content of a template fragment (enclosed within the `{% cache %}...{% endcache %}` tags) for a specific duration. This caching operation is done by leveraging the configured [cache store](../../caching/introduction.md#configuration-and-cache-stores).
+Le tag de template `cache` permet de mettre en cache le contenu d'un fragment de template (contenu entre les tags `{% cache %}...{% endcache %}`) pour une durée spécifique. Cette opération de mise en cache est effectuée en utilisant le [store de cache](../../caching/introduction.md#configuration-and-cache-stores) configuré.
 
-At least a cache key and and a cache expiry (expressed in seconds) must be specified when using this tag:
+Au minimum, une clé de cache et une expiration de cache (exprimée en secondes) doivent être spécifiées lors de l'utilisation de ce tag :
 
 ```html
 {% cache "mykey" 3600 %}
@@ -55,7 +55,7 @@ At least a cache key and and a cache expiry (expressed in seconds) must be speci
 {% endcache %}
 ```
 
-It should be noted that the `cache` template tag also supports specifying additional "vary on" arguments that allow to invalidate the cache based on the value of other template variables:
+Il est à noter que le tag de template `cache` supporte également la spécification d'arguments supplémentaires « vary on » qui permettent d'invalider le cache en fonction de la valeur d'autres variables de template :
 
 ```html
 {% cache "mykey" 3600 current_locale user.id %}
@@ -65,9 +65,9 @@ It should be noted that the `cache` template tag also supports specifying additi
 
 ## `capture`
 
-The `capture` template tag allows to define that the output of a block of code should be stored in a new variable.
+Le tag de template `capture` permet de définir que la sortie d'un bloc de code doit être stockée dans une nouvelle variable.
 
-For example:
+Par exemple :
 
 ```html
 {% capture my_var %}
@@ -75,11 +75,11 @@ For example:
 {% endcapture %}
 ```
 
-Assuming the variable `name` is assigned the value "John Doe" upon rendering this snippet, the variable `my_var` will hold the string "Hello World, John Doe!".
+En supposant que la variable `name` est assignée à la valeur "John Doe" lors du rendu de ce fragment, la variable `my_var` contiendra la chaîne "Hello World, John Doe!".
 
-By default, variables assigned using this template tag will overwrite any existing variables with the same name in the template context. To prevent overwriting existing variables, you can append `unless assigned` after the variable name to ensure that new variables are only assigned if there isn't already one with the same name present.
+Par défaut, les variables assignées en utilisant ce tag de template écraseront toute variable existante portant le même nom dans le contexte du template. Pour empêcher l'écrasement des variables existantes, vous pouvez ajouter `unless assigned` après le nom de la variable pour garantir que les nouvelles variables ne soient assignées que s'il n'y en a pas déjà une avec le même nom.
 
-For example:
+Par exemple :
 
 ```html
 {% capture my_var unless defined %}
@@ -89,9 +89,9 @@ For example:
 
 ## `csrf_input`
 
-The `csrf_input` template tag allows generating a hidden HTML input containing the CSRF token (computed for the request at hand). This tag can only be used in templates that are rendered as part of a handler (for example by leveraging [`#render`](../../handlers-and-http/introduction.md#render) or one of the [generic handlers](../../handlers-and-http/generic-handlers.md) involving rendered templates).
+Le tag de template `csrf_input` permet de générer un champ de formulaire HTML caché contenant le jeton CSRF (calculé pour la requête en cours). Ce tag ne peut être utilisé que dans des templates rendus dans le cadre d'un handler (par exemple en utilisant [`#render`](../../handlers-and-http/introduction.md#render) ou l'un des [handlers génériques](../../handlers-and-http/generic-handlers.md) impliquant des templates rendus).
 
-This can be used to ensure the CSRF token gets inserted into a form so that it gets sent to the handler processing the form data for example. Indeed, handlers will automatically perform a CSRF check in order to protect unsafe requests (ie. requests whose methods are not `GET`, `HEAD`, `OPTIONS`, or `TRACE`):
+Il peut être utilisé pour s'assurer que le jeton CSRF est inséré dans un formulaire afin qu'il soit envoyé au handler traitant les données du formulaire par exemple. En effet, les handlers effectueront automatiquement une vérification CSRF afin de protéger les requêtes non sûres (c'est-à-dire les requêtes dont les méthodes ne sont pas `GET`, `HEAD`, `OPTIONS` ou `TRACE`) :
 
 ```html
 <form method="post" action="" enctype="multipart/form-data">
@@ -101,7 +101,7 @@ This can be used to ensure the CSRF token gets inserted into a form so that it g
 </form>
 ```
 
-The above template will output the following HTML:
+Le template ci-dessus produira le HTML suivant :
 
 ```html
 <form method="post" action="" enctype="multipart/form-data">
@@ -112,11 +112,11 @@ The above template will output the following HTML:
 </form>
 ```
 
-Where `<csrfToken>` is the actual CSRF token.
+Où `<csrfToken>` est le véritable jeton CSRF.
 
-See [Cross-Site Request Forgery protection](../../security/csrf.md) to learn more about this.
+Voir [Protection contre le Cross-Site Request Forgery](../../security/csrf.md) pour en savoir plus.
 
-Optionally, the output of the `csrf_input` template tag can be assigned to a specific variable using the `as` keyword:
+Optionnellement, la sortie du tag de template `csrf_input` peut être assignée à une variable spécifique en utilisant le mot-clé `as` :
 
 ```html
 {% csrf_input as my_var %}
@@ -124,9 +124,9 @@ Optionally, the output of the `csrf_input` template tag can be assigned to a spe
 
 ## `csrf_token`
 
-The `csrf_token` template tag allows to compute and insert the value of the CSRF token into a template. This tag can only be used in templates that are rendered as part of a handler (for example by leveraging [`#render`](../../handlers-and-http/introduction.md#render) or one of the [generic handlers](../../handlers-and-http/generic-handlers.md) involving rendered templates).
+Le tag de template `csrf_token` permet de calculer et d'insérer la valeur du jeton CSRF dans un template. Ce tag ne peut être utilisé que dans des templates rendus dans le cadre d'un handler (par exemple en utilisant [`#render`](../../handlers-and-http/introduction.md#render) ou l'un des [handlers génériques](../../handlers-and-http/generic-handlers.md) impliquant des templates rendus).
 
-This can be used to insert the CSRF token into a hidden form input so that it gets sent to the handler processing the form data for example. Indeed, handlers will automatically perform a CSRF check in order to protect unsafe requests (ie. requests whose methods are not `GET`, `HEAD`, `OPTIONS`, or `TRACE`):
+Il peut être utilisé pour insérer le jeton CSRF dans un champ de formulaire caché afin qu'il soit envoyé au handler traitant les données du formulaire par exemple. En effet, les handlers effectueront automatiquement une vérification CSRF afin de protéger les requêtes non sûres (c'est-à-dire les requêtes dont les méthodes ne sont pas `GET`, `HEAD`, `OPTIONS` ou `TRACE`) :
 
 ```html
 <form method="post" action="" enctype="multipart/form-data">
@@ -136,9 +136,9 @@ This can be used to insert the CSRF token into a hidden form input so that it ge
 </form>
 ```
 
-See [Cross-Site Request Forgery protection](../../security/csrf.md) to learn more about this.
+Voir [Protection contre le Cross-Site Request Forgery](../../security/csrf.md) pour en savoir plus.
 
-Optionally, the output of the `csrf_token` template tag can be assigned to a specific variable using the `as` keyword:
+Optionnellement, la sortie du tag de template `csrf_token` peut être assignée à une variable spécifique en utilisant le mot-clé `as` :
 
 ```html
 {% csrf_token as my_var %}
@@ -146,9 +146,9 @@ Optionally, the output of the `csrf_token` template tag can be assigned to a spe
 
 ## `escape`
 
-The `escape` tag is used to enable or disable [auto-escaping](../introduction.md#auto-escaping) for a block of code. It takes one argument, either `on` or `off`, to enable or disable auto-escaping, respectively.
+Le tag `escape` est utilisé pour activer ou désactiver l'[auto-échappement](../introduction.md#auto-échappement) pour un bloc de code. Il prend un argument, soit `on` soit `off`, pour activer ou désactiver l'auto-échappement respectivement.
 
-For example:
+Par exemple :
 
 ```html
 {% escape off %}
@@ -158,13 +158,13 @@ For example:
 
 ## `extend`
 
-The `extend` template tag allows to define that a template inherits from a specific base template. This tag must be used with one mandatory argument, which can be either a string literal or a variable that will be resolved at runtime. This mechanism is useful only if the base template defines [blocks](#block) that are overridden or extended by the child template. See [Template inheritance](../introduction.md#template-inheritance) to learn more about this capability.
+Le tag de template `extend` permet de définir qu'un template hérite d'un template de base spécifique. Ce tag doit être utilisé avec un argument obligatoire, qui peut être soit une chaîne littérale soit une variable qui sera résolue au moment du rendu. Ce mécanisme n'est utile que si le template de base définit des [blocs](#block) qui sont surchargés ou étendus par le template enfant. Voir [Héritage de templates](../introduction.md#héritage-de-templates) pour en savoir plus sur cette fonctionnalité.
 
 ## `for`
 
-The `for` template tag allows to loop over the items of iterable objects and it also handles fallbacks through the use of the `else` inner block. It should be noted that the `for` template tag requires a closing `endfor` tag.
+Le tag de template `for` permet de parcourir les éléments d'objets itérables et gère également les replis grâce à l'utilisation du bloc interne `else`. Il est à noter que le tag de template `for` nécessite un tag de fermeture `endfor`.
 
-For example:
+Par exemple :
 
 ```html
 {% for item in items %}
@@ -174,7 +174,7 @@ For example:
 {% endfor %}
 ```
 
-It should be noted that `for` loops support unpacking multiple items when applicable (eg. when iterating over hashes or enumerables containing arrays or tuples):
+Il est à noter que les boucles `for` supportent le dépaquetage de plusieurs éléments lorsque c'est applicable (par exemple lors de l'itération sur des hashes ou des énumérables contenant des tableaux ou des tuples) :
 
 ```html
 {% for label, url in navigation_items %}
@@ -182,26 +182,26 @@ It should be noted that `for` loops support unpacking multiple items when applic
 {% endfor %}
 ```
 
-Finally, loops give access to a special `loop` variable _inside_ the loop in order to expose information about the iteration process:
+Enfin, les boucles donnent accès à une variable spéciale `loop` _à l'intérieur_ de la boucle afin d'exposer des informations sur le processus d'itération :
 
 | Variable | Description |
 | -------- | ----------- |
-| `loop.index` | The index of the current iteration (1-indexed) |
-| `loop.index0` | The index of the current iteration (0-indexed) |
-| `loop.revindex` | The index of the current iteration counting from the end of the loop (1-indexed) |
-| `loop.revindex0` | The index of the current iteration counting from the end of the loop (0-indexed) |
-| `loop.first?` | A boolean indicating if this is the first iteration of the loop |
-| `loop.last?` | A boolean indicating if this is the last iteration of the loop |
-| `loop.length` | The total number of iterations in the loop |
-| `loop.even?` | A boolean indicating if the index of the current iteration (0-indexed) is even |
-| `loop.odd?` | A boolean indicating if the index of the current iteration (0-indexed) is odd |
-| `loop.parent` | The parent's `loop` variable (only for nested for loops) |
+| `loop.index` | L'index de l'itération courante (indexé à partir de 1) |
+| `loop.index0` | L'index de l'itération courante (indexé à partir de 0) |
+| `loop.revindex` | L'index de l'itération courante en comptant depuis la fin de la boucle (indexé à partir de 1) |
+| `loop.revindex0` | L'index de l'itération courante en comptant depuis la fin de la boucle (indexé à partir de 0) |
+| `loop.first?` | Un booléen indiquant si c'est la première itération de la boucle |
+| `loop.last?` | Un booléen indiquant si c'est la dernière itération de la boucle |
+| `loop.length` | Le nombre total d'itérations dans la boucle |
+| `loop.even?` | Un booléen indiquant si l'index de l'itération courante (indexé à partir de 0) est pair |
+| `loop.odd?` | Un booléen indiquant si l'index de l'itération courante (indexé à partir de 0) est impair |
+| `loop.parent` | La variable `loop` du parent (uniquement pour les boucles for imbriquées) |
 
 ## `if`
 
-The `if` template tag makes it possible to define conditions allowing to control which blocks should be executed. An `if` tag must always start with an `if` condition, followed by any number of intermediate `elsif` conditions and an optional (and final) `else` block. It also requires a closing `endif` tag.
+Le tag de template `if` permet de définir des conditions contrôlant quels blocs doivent être exécutés. Un tag `if` doit toujours commencer par une condition `if`, suivie d'un nombre quelconque de conditions intermédiaires `elsif` et d'un bloc final `else` optionnel. Il nécessite également un tag de fermeture `endif`.
 
-For example:
+Par exemple :
 
 ```html
 {% if my_var == 0 %}
@@ -215,21 +215,21 @@ For example:
 {% endif %}
 ```
 
-The supported operators are listed in the [operators reference](./operators.md).
+Les opérateurs supportés sont listés dans la [référence des opérateurs](./operators.md).
 
 ## `include`
 
-The `include` template tag allows to include and render another template using the current context. This tag must be used with one mandatory argument: the name of the template to include, which can be either a string literal or a variable that will be resolved at runtime.
+Le tag de template `include` permet d'inclure et de rendre un autre template en utilisant le contexte courant. Ce tag doit être utilisé avec un argument obligatoire : le nom du template à inclure, qui peut être soit une chaîne littérale soit une variable qui sera résolue au moment du rendu.
 
-For example:
+Par exemple :
 
 ```html
 {% include "path/to/my_snippet.html" %}
 ```
 
-Included templates are rendered using the context of the including template. This means that all the variables that are expected or provided to the including template can also be used as part of the included template.
+Les templates inclus sont rendus en utilisant le contexte du template incluant. Cela signifie que toutes les variables attendues ou fournies au template incluant peuvent également être utilisées dans le template inclus.
 
-For example:
+Par exemple :
 
 ```html title="hello.html"
 Hello, {{ name }}! {% include "question.html" %}
@@ -239,21 +239,21 @@ Hello, {{ name }}! {% include "question.html" %}
 How are you {{ name }}?
 ```
 
-If `name` is "John", then the output will be "Hello, John! How are you John?".
+Si `name` est "John", alors la sortie sera "Hello, John! How are you John?".
 
-It should be noted that additional variables that are specific to the included template only can be specified using the `with` keyword:
+Il est à noter que des variables supplémentaires spécifiques uniquement au template inclus peuvent être spécifiées en utilisant le mot-clé `with` :
 
 ```html
 {% include "path/to/my_snippet.html" with new_var="hello" %}
 ```
 
-Multiple variables can also be specified if necessary. In that case, variable assignments must be separated by commas. For example:
+Plusieurs variables peuvent également être spécifiées si nécessaire. Dans ce cas, les assignations de variables doivent être séparées par des virgules. Par exemple :
 
 ```html
 {% include "path/to/my_snippet.html" with var1="foo", var2="bar" %}
 ```
 
-Additionally, it is important to note that the accessibility of outer context variables for included templates depends on the value of the [`templates.isolated_inclusions`](../../development/reference/settings.md#isolated_inclusions) setting. By default, this setting is set to `false`, which means that included templates have access to the outer context variables. However, it is important to note that this behavior can be modified for each inclusion, regardless of the value of the [`templates.isolated_inclusions`](../../development/reference/settings.md#isolated_inclusions) setting. This can be achieved by appending the `isolated` modifier to specify that the included template must not access the outer context, or using the `contextual` modifier to indicate that it should have access. For example:
+De plus, il est important de noter que l'accessibilité des variables de contexte externe pour les templates inclus dépend de la valeur du paramètre [`templates.isolated_inclusions`](../../development/reference/settings.md#isolated_inclusions). Par défaut, ce paramètre est défini à `false`, ce qui signifie que les templates inclus ont accès aux variables de contexte externe. Cependant, il est important de noter que ce comportement peut être modifié pour chaque inclusion, quelle que soit la valeur du paramètre [`templates.isolated_inclusions`](../../development/reference/settings.md#isolated_inclusions). Cela peut être réalisé en ajoutant le modificateur `isolated` pour spécifier que le template inclus ne doit pas accéder au contexte externe, ou en utilisant le modificateur `contextual` pour indiquer qu'il doit y avoir accès. Par exemple :
 
 ```html
 <!-- The included snippet does not have access to the outer context. -->
@@ -264,23 +264,23 @@ Additionally, it is important to note that the accessibility of outer context va
 ```
 
 :::caution
-Templates that are included using the `include` template are parsed and rendered _when_ the including template is rendered as well. Included templates are not parsed when the including template is parsed itself. This means that the including template and the included template are always rendered _separately_.
+Les templates inclus en utilisant le tag de template `include` sont analysés et rendus _lorsque_ le template incluant est également rendu. Les templates inclus ne sont pas analysés lorsque le template incluant est analysé lui-même. Cela signifie que le template incluant et le template inclus sont toujours rendus _séparément_.
 :::
 
 ## `localize`
 
-The `localize` template tag allows performing localization of values such as dates, numbers, and times by using the [I18n gem](https://crystal-i18n.github.io/localization.html), which is leveraged by Marten for its [internationalization features](../../i18n/introduction.md). It must take at least one argument (the value to localize) followed by an optional `format` keyword argument.
+Le tag de template `localize` permet d'effectuer la localisation de valeurs telles que les dates, les nombres et les heures en utilisant le [gem I18n](https://crystal-i18n.github.io/localization.html), qui est utilisé par Marten pour ses [fonctionnalités d'internationalisation](../../i18n/introduction.md). Il doit prendre au moins un argument (la valeur à localiser) suivi d'un argument optionnel de mot-clé `format`.
 
-For example, the following lines are valid usages of the `localize` tag:
+Par exemple, les lignes suivantes sont des utilisations valides du tag `localize` :
 
 ```html
 {% localize created_at %}
 {% localize price format: "currency" %}
 ```
 
-The provided values and the `format` argument can be resolved as template variables too, but they can also be defined as literal values if necessary. The `format` argument must match a key defined in the locale file.
+Les valeurs fournies et l'argument `format` peuvent également être résolus comme variables de template, mais ils peuvent aussi être définis comme valeurs littérales si nécessaire. L'argument `format` doit correspondre à une clé définie dans le fichier de locale.
 
-Optionally, the result of the localization can be assigned to a specific variable using the `as` keyword:
+Optionnellement, le résultat de la localisation peut être assigné à une variable spécifique en utilisant le mot-clé `as` :
 
 ```html
 {% localize created_at format: "short" as localized_date %}
@@ -288,20 +288,20 @@ Optionally, the result of the localization can be assigned to a specific variabl
 
 ## `l`
 
-Alias for [`localize`](#localize).
+Alias pour [`localize`](#localize).
 
 ## `local_time`
 
-The `local_time` template tag allows to output the string representation of the local time. It must take one argument (the [format](https://crystal-lang.org/api/Time/Format.html) used to output the time).
+Le tag de template `local_time` permet d'afficher la représentation en chaîne de l'heure locale. Il doit prendre un argument (le [format](https://crystal-lang.org/api/Time/Format.html) utilisé pour afficher l'heure).
 
-For example, the following lines are valid usages of the `local_time` tag:
+Par exemple, les lignes suivantes sont des utilisations valides du tag `local_time` :
 
 ```html
 {% local_time "%Y" %}
 {% local_time "%Y-%m-%d %H:%M:%S %:z" %}
 ```
 
-Optionally, the output of this tag can be assigned to a specific variable using the `as` keyword:
+Optionnellement, la sortie de ce tag peut être assignée à une variable spécifique en utilisant le mot-clé `as` :
 
 ```html
 {% local_time "%Y" as current_year %}
@@ -309,9 +309,9 @@ Optionally, the output of this tag can be assigned to a specific variable using 
 
 ## `method_input`
 
-The `method_input` template tag creates a hidden form input tag. This input tag has the name `_method` and gets the value assigned provided by the first tag argument
+Le tag de template `method_input` crée un champ de formulaire caché. Ce champ a le nom `_method` et reçoit la valeur fournie par le premier argument du tag.
 
-For example:
+Par exemple :
 
 ```html
 <form action="/articles/create" method="post">
@@ -326,13 +326,13 @@ For example:
 
 ## `reverse`
 
-Alias for [`url`](#url).
+Alias pour [`url`](#url).
 
 ## `spaceless`
 
-The `spaceless` template tag allows to remove whitespaces, tabs, and new lines between HTML tags. Whitespaces inside tags are left untouched. It should be noted that the `spaceless` template tag requires a closing `endspaceless` tag.
+Le tag de template `spaceless` permet de supprimer les espaces, tabulations et retours à la ligne entre les tags HTML. Les espaces à l'intérieur des tags sont laissés intacts. Il est à noter que le tag de template `spaceless` nécessite un tag de fermeture `endspaceless`.
 
-For example:
+Par exemple :
 
 ```html
 {% spaceless %}
@@ -342,7 +342,7 @@ For example:
 {% endspaceless %}
 ```
 
-Would output the following:
+Produirait la sortie suivante :
 
 ```html
 <p><a href="/sign-in">Sign In</a></p>
@@ -350,22 +350,22 @@ Would output the following:
 
 ## `super`
 
-The `super` template tag allows to render the content of a block from a parent template (in a situation where both the `extend` and `block` tags are used). This can be useful in situations where blocks in a child template need to extend (add content) to a parent's block content instead of overwriting it. See [Template inheritance](../introduction.md#template-inheritance) to learn more about this capability.
+Le tag de template `super` permet de rendre le contenu d'un bloc d'un template parent (dans une situation où les tags `extend` et `block` sont utilisés). Cela peut être utile dans les situations où les blocs d'un template enfant doivent étendre (ajouter du contenu) le contenu d'un bloc parent au lieu de le remplacer. Voir [Héritage de templates](../introduction.md#héritage-de-templates) pour en savoir plus sur cette fonctionnalité.
 
 ## `translate`
 
-The `translate` template tag allows to perform translation lookups by using the [I18n configuration](../../development/reference/settings.md#i18n-settings) of the project. It must take at least one argument (the translation key) followed by keyword arguments.
+Le tag de template `translate` permet d'effectuer des recherches de traduction en utilisant la [configuration I18n](../../development/reference/settings.md#i18n-settings) du projet. Il doit prendre au moins un argument (la clé de traduction) suivi d'arguments de mots-clés.
 
-For example the following lines are valid usages of the `translate` tag:
+Par exemple, les lignes suivantes sont des utilisations valides du tag `translate` :
 
 ```html
 {% translate "simple.translation" %}
 {% translate "simple.interpolation" value: 'test' %}
 ```
 
-Translation keys and parameter values can be resolved as template variables too, but they can also be defined as literal values if necessary.
+Les clés de traduction et les valeurs de paramètres peuvent également être résolues comme variables de template, mais elles peuvent aussi être définies comme valeurs littérales si nécessaire.
 
-Optionally, resolved translations can be assigned to a specific variable using the `as` keyword:
+Optionnellement, les traductions résolues peuvent être assignées à une variable spécifique en utilisant le mot-clé `as` :
 
 ```html
 {% translate "simple.interpolation" value: 'test' as my_var %}
@@ -373,17 +373,17 @@ Optionally, resolved translations can be assigned to a specific variable using t
 
 ## `trans`
 
-Alias for [`translate`](#translate).
+Alias pour [`translate`](#translate).
 
 ## `t`
 
-Alias for [`translate`](#translate).
+Alias pour [`translate`](#translate).
 
 ## `unless`
 
-The `unless` template tag makes it possible to define conditions allowing to control which blocks should be executed. An `unless` tag must always start with an `unless` condition, followed by an optional (and final) `else` block. It also requires a closing `endunless` tag.
+Le tag de template `unless` permet de définir des conditions contrôlant quels blocs doivent être exécutés. Un tag `unless` doit toujours commencer par une condition `unless`, suivie d'un bloc final `else` optionnel. Il nécessite également un tag de fermeture `endunless`.
 
-For example:
+Par exemple :
 
 ```html
 {% unless my_var == 0 %}
@@ -393,22 +393,22 @@ For example:
 {% endunless %}
 ```
 
-The `unless` template tag supports the same [operators](./operators.md) as the ones supported by the [`if`](#if) template tag.
+Le tag de template `unless` supporte les mêmes [opérateurs](./operators.md) que ceux supportés par le tag de template [`if`](#if).
 
 ## `url`
 
-The `url` template tag allows to perform [URL lookups](../../handlers-and-http/routing.md#reverse-url-resolutions). It must take at least one argument (the name of the targeted handler) followed by optional keyword arguments (if the route requires parameters).
+Le tag de template `url` permet d'effectuer des [résolutions d'URL](../../handlers-and-http/routing.md#reverse-url-resolutions). Il doit prendre au moins un argument (le nom du handler ciblé) suivi d'arguments de mots-clés optionnels (si la route nécessite des paramètres).
 
-For example, the following lines are valid usages of the `url` tag:
+Par exemple, les lignes suivantes sont des utilisations valides du tag `url` :
 
 ```html
 {% url "my_handler" %}
 {% url "my_other_handler" arg1: var1, arg2: var2 %}
 ```
 
-URL names and parameter values can be resolved as template variables too, but they can also be defined as literal values if necessary.
+Les noms d'URL et les valeurs de paramètres peuvent également être résolus comme variables de template, mais ils peuvent aussi être définis comme valeurs littérales si nécessaire.
 
-Optionally, resolved URLs can be assigned to a specific variable using the `as` keyword:
+Optionnellement, les URL résolues peuvent être assignées à une variable spécifique en utilisant le mot-clé `as` :
 
 ```html
 {% url "my_other_handler" arg1: var1, arg2: var2 as my_var %}
@@ -416,9 +416,9 @@ Optionally, resolved URLs can be assigned to a specific variable using the `as` 
 
 ## `verbatim`
 
-The `verbatim` template tag prevents the content of the tag to be processed by the template engine. It should be noted that the `verbatim` template tag requires a closing `endverbatim` tag.
+Le tag de template `verbatim` empêche le contenu du tag d'être traité par le moteur de templates. Il est à noter que le tag de template `verbatim` nécessite un tag de fermeture `endverbatim`.
 
-For example:
+Par exemple :
 
 ```
 {% verbatim %}
@@ -426,13 +426,13 @@ For example:
 {% endverbatim  %}
 ```
 
-Would output `This should not be {{ processed }}.`.
+Produirait la sortie `This should not be {{ processed }}.`.
 
 ## `with`
 
-The `with` template tag assigns one or more variables inside a block. After the end of the block has been reached the block variables are no longer available.
+Le tag de template `with` assigne une ou plusieurs variables à l'intérieur d'un bloc. Après la fin du bloc, les variables du bloc ne sont plus disponibles.
 
-For example:
+Par exemple :
 
 ```
 {% with x = 'Hello World', y = 1 %}
@@ -440,4 +440,4 @@ For example:
 {% endwith %}
 ```
 
-Would output `Hello World 1!`.
+Produirait la sortie `Hello World 1!`.

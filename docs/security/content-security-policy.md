@@ -1,26 +1,26 @@
 ---
 title: Content Security Policy
-description: Learn how to configure the Content-Security-Policy (CSP) header.
+description: Apprenez à configurer l'en-tête Content-Security-Policy (CSP).
 ---
 
-Marten offers a convenient mechanism to define the Content-Security-Policy header, which serves as a safeguard against vulnerabilities such as cross-site scripting (XSS) and injection attacks. This mechanism enables the specification of a trusted resource allowlist, enhancing security measures.
+Marten offre un mécanisme pratique pour définir l'en-tête Content-Security-Policy, qui sert de protection contre les vulnérabilités telles que le cross-site scripting (XSS) et les attaques par injection. Ce mécanisme permet la spécification d'une liste d'autorisation de ressources de confiance, renforçant les mesures de sécurité.
 
-## Overview
+## Vue d'ensemble
 
-The [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) (CSP) header is a collection of guidelines that the browser follows to allow specific sources for scripts, styles, embedded content, and more. It ensures that only these approved sources are allowed while blocking all other sources.
+L'en-tête [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) (CSP) est un ensemble de directives que le navigateur suit pour autoriser des sources spécifiques pour les scripts, les styles, le contenu embarqué et plus encore. Il garantit que seules ces sources approuvées sont autorisées tout en bloquant toutes les autres sources.
 
-Utilizing the Content-Security-Policy header in a web application is a great way to mitigate or eliminate cross-site scripting (XSS) vulnerabilities. By implementing an effective Content-Security-Policy, the inclusion of inline scripts is prevented, and only scripts from trusted sources in separate files are allowed.
+L'utilisation de l'en-tête Content-Security-Policy dans une application web est un excellent moyen d'atténuer ou d'éliminer les vulnérabilités de cross-site scripting (XSS). En implémentant une Content-Security-Policy efficace, l'inclusion de scripts en ligne est empêchée, et seuls les scripts provenant de sources de confiance dans des fichiers séparés sont autorisés.
 
-## Basic usage
+## Utilisation basique
 
-Marten's Content-Security-Policy mechanism involves using a dedicated middleware: the [Content-Security-Policy middleware](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware). To ensure that your project is using this middleware, you can add the [`Marten::Middleware::ContentSecurityPolicy`](pathname:///api/dev/Marten/Middleware/ContentSecurityPolicy.html) class to the [`middleware`](../development/reference/settings.md#middleware) setting as follows:
+Le mécanisme Content-Security-Policy de Marten implique l'utilisation d'un middleware dédié : le [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware). Pour vous assurer que votre projet utilise ce middleware, vous pouvez ajouter la classe [`Marten::Middleware::ContentSecurityPolicy`](pathname:///api/dev/Marten/Middleware/ContentSecurityPolicy.html) au paramètre [`middleware`](../development/reference/settings.md#middleware) comme suit :
 
 ```crystal title="config/settings/base.cr"
 Marten.configure do |config|
   config.middleware = [
     // highlight-next-line
     Marten::Middleware::ContentSecurityPolicy,
-    # Other middlewares...
+    # Autres middlewares...
     Marten::Middleware::Session,
     Marten::Middleware::Flash,
     Marten::Middleware::I18n,
@@ -28,9 +28,9 @@ Marten.configure do |config|
 end
 ```
 
-The [Content-Security-Policy middleware](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) guarantees the presence of the Content-Security-Policy header in the response's headers. By default, the middleware will include a Content-Security-Policy header that corresponds to the policy defined in the [`content_security_policy`](../development/reference/settings.md#content-security-policy-settings) settings. However, if a [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) object is explicitly assigned to the request object, it will take precedence over the default policy and be used instead.
+Le [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) garantit la présence de l'en-tête Content-Security-Policy dans les en-têtes de la réponse. Par défaut, le middleware inclura un en-tête Content-Security-Policy qui correspond à la politique définie dans les paramètres [`content_security_policy`](../development/reference/settings.md#content-security-policy-settings). Cependant, si un objet [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) est explicitement assigné à l'objet requête, il prendra le pas sur la politique par défaut et sera utilisé à la place.
 
-When enabling the [Content-Security-Policy middleware](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware), it is recommended to define a default Content-Security-Policy by leveraging the [`content_security_policy`](../development/reference/settings.md#content-security-policy-settings) settings. For example:
+Lors de l'activation du [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware), il est recommandé de définir une Content-Security-Policy par défaut en utilisant les paramètres [`content_security_policy`](../development/reference/settings.md#content-security-policy-settings). Par exemple :
 
 ```crystal title="config/settings/base.cr"
 Marten.configure do |config|
@@ -39,9 +39,9 @@ Marten.configure do |config|
 end
 ```
 
-## Disabling the CSP header in specific handlers
+## Désactiver l'en-tête CSP dans des handlers spécifiques
 
-You can decide to disable or enable the use of the Content-Security-Policy header on a per-[handler](../handlers-and-http.mdx) basis. To do so, you can simply make use of the [`#exempt_from_content_security_policy`](pathname:///api/dev/Marten/Handlers/ContentSecurityPolicy/ClassMethods.html#exempt_from_content_security_policy(exempt:Bool):Nil-instance-method) class method, which takes a single boolean as argument:
+Vous pouvez décider de désactiver ou d'activer l'utilisation de l'en-tête Content-Security-Policy par [handler](../handlers-and-http.mdx). Pour ce faire, vous pouvez simplement utiliser la méthode de classe [`#exempt_from_content_security_policy`](pathname:///api/dev/Marten/Handlers/ContentSecurityPolicy/ClassMethods.html#exempt_from_content_security_policy(exempt:Bool):Nil-instance-method), qui prend un seul booléen comme argument :
 
 ```crystal
 class ProtectedHandler < Marten::Handler
@@ -57,9 +57,9 @@ class UnprotectedHandler < Marten::Handler
 end
 ```
 
-## Overriding the CSP header in specific handlers
+## Surcharger l'en-tête CSP dans des handlers spécifiques
 
-Sometimes you may also need to override the content of the Content-Security-Policy header on a per-[handler](../handlers-and-http.mdx) basis. To do so, you can make use of the [`#content_security_policy`](pathname:///api/dev/Marten/Handlers/ContentSecurityPolicy/ClassMethods.html#content_security_policy(%26content_security_policy_block%3AHTTP%3A%3AContentSecurityPolicy->)-instance-method) class method, which yields a [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) object that you can configure (by adding/modifying/removing CSP directives) for the handler at hand. For example:
+Parfois, vous pourriez également avoir besoin de surcharger le contenu de l'en-tête Content-Security-Policy par [handler](../handlers-and-http.mdx). Pour ce faire, vous pouvez utiliser la méthode de classe [`#content_security_policy`](pathname:///api/dev/Marten/Handlers/ContentSecurityPolicy/ClassMethods.html#content_security_policy(%26content_security_policy_block%3AHTTP%3A%3AContentSecurityPolicy->)-instance-method), qui fournit un objet [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) que vous pouvez configurer (en ajoutant/modifiant/supprimant des directives CSP) pour le handler en question. Par exemple :
 
 ```crystal
 class ProtectedHandler < Marten::Handler
@@ -71,11 +71,11 @@ class ProtectedHandler < Marten::Handler
 end
 ```
 
-## Using a CSP nonce
+## Utiliser un nonce CSP
 
-CSP nonces serve as a valuable tool to enable the execution or rendering of specific elements, such as inline script or style tags, by the browser. When a tag contains the correct nonce value in a `nonce` attribute, the browser grants permission for its execution or rendering, while blocking others that lack the expected nonce value.
+Les nonces CSP servent d'outil précieux pour permettre l'exécution ou le rendu d'éléments spécifiques, comme les tags de script ou de style en ligne, par le navigateur. Lorsqu'un tag contient la bonne valeur de nonce dans un attribut `nonce`, le navigateur accorde la permission pour son exécution ou son rendu, tout en bloquant les autres qui n'ont pas la valeur de nonce attendue.
 
-You can configure Marten so that it automatically adds a nonce to an explicit set of Content-Security-Policy directives. This can be achieved by specifying the list of intended CSP directives in the [`content_security_policy.nonce_directives`](../development/reference/settings.md#nonce_directives) setting. For example:
+Vous pouvez configurer Marten pour qu'il ajoute automatiquement un nonce à un ensemble explicite de directives Content-Security-Policy. Cela peut être réalisé en spécifiant la liste des directives CSP prévues dans le paramètre [`content_security_policy.nonce_directives`](../development/reference/settings.md#nonce_directives). Par exemple :
 
 ```crystal title="config/settings/base.cr"
 Marten.configure do |config|
@@ -83,9 +83,9 @@ Marten.configure do |config|
 end
 ```
 
-For example, if this setting is set to `["script-src", "style-src"]`, a `nonce-<b64-value>` value will be added to the `script-src` and `style-src` directives in the Content-Security-Policy header value. The nonce is a randomly generated Base64 value (generated through the use of [`Random::Secure#urlsafe_base64`](https://crystal-lang.org/api/Random.html#urlsafe_base64(n:Int=16,padding=false):String-instance-method)).
+Par exemple, si ce paramètre est défini sur `["script-src", "style-src"]`, une valeur `nonce-<b64-value>` sera ajoutée aux directives `script-src` et `style-src` dans la valeur de l'en-tête Content-Security-Policy. Le nonce est une valeur Base64 générée aléatoirement (générée via l'utilisation de [`Random::Secure#urlsafe_base64`](https://crystal-lang.org/api/Random.html#urlsafe_base64(n:Int=16,padding=false):String-instance-method)).
 
-To make the browser do anything with the nonce value, you will need to include it in the attributes of the tags that you wish to mark as safe. In this light, you can use the [`Marten::HTTP::Request#content_security_policy_nonce`](pathname:///api/dev/Marten/HTTP/Request.html#content_security_policy_nonce-instance-method) method, which returns the CSP nonce value for the current request. This method can also be called from within [templates](../templates.mdx), making it easy to generate `script` or `style` tags containing the right `nonce` attribute:
+Pour que le navigateur fasse quoi que ce soit avec la valeur du nonce, vous devrez l'inclure dans les attributs des tags que vous souhaitez marquer comme sûrs. Dans cette optique, vous pouvez utiliser la méthode [`Marten::HTTP::Request#content_security_policy_nonce`](pathname:///api/dev/Marten/HTTP/Request.html#content_security_policy_nonce-instance-method), qui retourne la valeur du nonce CSP pour la requête actuelle. Cette méthode peut également être appelée depuis les [templates](../templates.mdx), ce qui facilite la génération de tags `script` ou `style` contenant le bon attribut `nonce` :
 
 ```html
 <script nonce="{{ request.content_security_policy_nonce }}">

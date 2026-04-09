@@ -1,16 +1,16 @@
 ---
-title: Uploading files
-description: Learn how to upload files.
-sidebar_label: Uploading files
+title: Téléverser des fichiers
+description: Apprenez à téléverser des fichiers.
+sidebar_label: Téléverser des fichiers
 ---
 
-Marten gives you the ability to interact with uploaded files. These files are made available with each HTTP request object, and it is also possible to validate them using schemas. The following document explains how to expect and manipulate uploaded files, and what are their associated characteristics.
+Marten vous donne la possibilité d'interagir avec les fichiers téléversés. Ces fichiers sont rendus disponibles avec chaque objet de requête HTTP, et il est également possible de les valider en utilisant des schemas. Le document suivant explique comment attendre et manipuler les fichiers téléversés, et quelles sont leurs caractéristiques associées.
 
-## Accessing uploaded files
+## Accéder aux fichiers téléversés
 
-Uploaded files are made available in the [`#data`](pathname:///api/dev/Marten/HTTP/Request.html#data%3AParams%3A%3AData-instance-method) hash-like object of any HTTP request object (instance of [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)). These file objects are instances of the [`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html) class.
+Les fichiers téléversés sont rendus disponibles dans l'objet de type hash [`#data`](pathname:///api/dev/Marten/HTTP/Request.html#data%3AParams%3A%3AData-instance-method) de tout objet de requête HTTP (instance de [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)). Ces objets fichier sont des instances de la classe [`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html).
 
-For example, you could access and process an `uploaded_file` file originating from an HTML form using a handler like this:
+Par exemple, vous pourriez accéder et traiter un fichier `uploaded_file` provenant d'un formulaire HTML en utilisant un handler comme celui-ci :
 
 ```crystal
 class ProcessUploadedFileHandler < Marten::Handler
@@ -21,21 +21,21 @@ class ProcessUploadedFileHandler < Marten::Handler
 end
 ```
 
-[`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html) objects give you access to the following key methods, which allow you to interact with the uploaded file and its content:
+Les objets [`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html) vous donnent accès aux méthodes clés suivantes, qui vous permettent d'interagir avec le fichier téléversé et son contenu :
 
-* `#filename` returns the name of the uploaded file
-* `#size` returns the size of the uploaded file
-* `#io` returns a regular [`IO`](https://crystal-lang.org/api/IO.html) object allowing to read the content of the file and interact with it
+* `#filename` retourne le nom du fichier téléversé
+* `#size` retourne la taille du fichier téléversé
+* `#io` retourne un objet [`IO`](https://crystal-lang.org/api/IO.html) classique permettant de lire le contenu du fichier et d'interagir avec lui
 
-:::info Where are uploaded files stored?
-All uploaded files are automatically persisted to a temporary file in the system's temporary directory (usually this corresponds to the `/tmp` folder).
+:::info Où sont stockés les fichiers téléversés ?
+Tous les fichiers téléversés sont automatiquement persistés dans un fichier temporaire dans le répertoire temporaire du système (généralement cela correspond au dossier `/tmp`).
 :::
 
-## Expecting uploaded files with schemas
+## Attendre des fichiers téléversés avec les schemas
 
-If you use [schemas](../schemas/introduction.md) to validate input data (such as form data), then it's worth noting that you can explicitly define that you expect files in the validated data. The simplest way to do that is to make use of the [`file`](../schemas/reference/fields.md#file) or [`image`](../schemas/reference/fields.md#image) schema field.
+Si vous utilisez des [schemas](../schemas/introduction.md) pour valider les données d'entrée (telles que les données de formulaire), il est intéressant de noter que vous pouvez explicitement définir que vous attendez des fichiers dans les données validées. La façon la plus simple de faire cela est d'utiliser le champ de schema [`file`](../schemas/reference/fields.md#file) ou [`image`](../schemas/reference/fields.md#image).
 
-For example, you could define the following schema:
+Par exemple, vous pourriez définir le schema suivant :
 
 ```crystal
 class UploadFileSchema < Marten::Schema
@@ -43,7 +43,7 @@ class UploadFileSchema < Marten::Schema
 end
 ```
 
-And use it in a regular [schema generic handler](../handlers-and-http/reference/generic-handlers.md#processing-a-schema) like this:
+Et l'utiliser dans un [handler générique de schema](../handlers-and-http/reference/generic-handlers.md#processing-a-schema) classique comme ceci :
 
 ```crystal
 class UploadFileHandler < Marten::Handlers::Schema
@@ -60,13 +60,13 @@ class UploadFileHandler < Marten::Handlers::Schema
 end
 ```
 
-The presence/absence of the file (and - optionally - some of its attributes) will be validated according to the schema definition when `POST` requests are processed by the handler.
+La présence/absence du fichier (et - optionnellement - certains de ses attributs) sera validée conformément à la définition du schema lorsque les requêtes `POST` seront traitées par le handler.
 
-## Persisting uploaded files in model records
+## Persister les fichiers téléversés dans les enregistrements de modèle
 
-Models can define [`file`](../models-and-databases/reference/fields.md#file) or [`image`](../models-and-databases/reference/fields.md#image) fields and persist "references" of uploaded files in their rows. This allows "retaining" specific uploaded files and associating their references with specific model records.
+Les modèles peuvent définir des champs [`file`](../models-and-databases/reference/fields.md#file) ou [`image`](../models-and-databases/reference/fields.md#image) et persister des « références » de fichiers téléversés dans leurs lignes. Cela permet de « conserver » des fichiers téléversés spécifiques et d'associer leurs références à des enregistrements de modèle spécifiques.
 
-For example, we could modify the handler in the previous section so that it persists and associate the uploaded file to a new `Attachment` record as follows:
+Par exemple, nous pourrions modifier le handler de la section précédente pour qu'il persiste et associe le fichier téléversé à un nouvel enregistrement `Attachment` comme suit :
 
 ```crystal
 class UploadFileHandler < Marten::Handlers::Schema
@@ -84,4 +84,4 @@ class UploadFileHandler < Marten::Handlers::Schema
 end
 ```
 
-Here, the `UploadFileHandler` inherits from the [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) generic handler. It would also make sense to leverage the [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) generic handler to process the schema and create the `Attachment` record at the same time.
+Ici, le `UploadFileHandler` hérite du handler générique [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html). Il serait également pertinent d'utiliser le handler générique [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) pour traiter le schema et créer l'enregistrement `Attachment` en même temps.

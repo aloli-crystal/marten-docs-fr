@@ -1,18 +1,18 @@
 ---
-title: Model validations
-description: Learn how to validate model records.
+title: Validations de modèles
+description: Apprenez à valider les enregistrements de modèles.
 sidebar_label: Validations
 ---
 
-Model instances _should_ be validated before being persisted to the database. As such models provide a convenient way to define validation rules through the use of model fields and through the use of a custom validation rules DSL. The underlying validation logics are completely database-agnostic, cannot be skipped (unless explicitly specified), and can be unit-tested easily.
+Les instances de modèles _doivent_ être validées avant d'être persistées dans la base de données. À ce titre, les modèles fournissent un moyen pratique de définir des règles de validation grâce à l'utilisation des fields de modèle et d'un DSL de règles de validation personnalisées. Les logiques de validation sous-jacentes sont entièrement indépendantes de la base de données, ne peuvent pas être contournées (sauf spécification explicite), et peuvent être facilement testées unitairement.
 
-Validation rules can be inherited from the fields in your model depending on the options you used and the type of your fields (for example fields using `blank: false` will make the associated record validation fail if the field value is blank). They can also be explicitly specified in your model class, which is useful if you need to implement custom validation logics.
+Les règles de validation peuvent être héritées des fields de votre modèle selon les options que vous avez utilisées et le type de vos fields (par exemple, les fields utilisant `blank: false` feront échouer la validation de l'enregistrement associé si la valeur du field est vide). Elles peuvent également être spécifiées explicitement dans votre classe de modèle, ce qui est utile si vous devez implémenter des logiques de validation personnalisées.
 
-## Overview
+## Vue d'ensemble
 
-### A short example
+### Un court exemple
 
-Let's consider the following example:
+Considérons l'exemple suivant :
 
 ```crystal
 class User < Marten::Model
@@ -21,9 +21,9 @@ class User < Marten::Model
 end
 ```
 
-In the above snippet, a `User` model is defined and it is specified that the `name` field must be present (`blank: false`) and that the associated value cannot exceed 128 characters.
+Dans l'extrait ci-dessus, un modèle `User` est défini et il est spécifié que le field `name` doit être présent (`blank: false`) et que la valeur associée ne peut pas dépasser 128 caractères.
 
-Given these characteristics, it is possible to create `User` instances and to validate them through the use of the `#valid?` method:
+Étant donné ces caractéristiques, il est possible de créer des instances `User` et de les valider via l'utilisation de la méthode `#valid?` :
 
 ```crystal
 user_1 = User.new
@@ -36,13 +36,13 @@ user_3 = User.new(name: "John Doe")
 user_3.valid?                       # => true
 ```
 
-As you can see in the above examples, the first two users are invalid because either the `name` is not specified or because its value exceeds the maximum characters limit. The last user is valid though because it has a `name` that is less than 128 characters.
+Comme vous pouvez le voir dans les exemples ci-dessus, les deux premiers utilisateurs sont invalides car soit le `name` n'est pas spécifié, soit sa valeur dépasse la limite maximale de caractères. Le dernier utilisateur est cependant valide car il a un `name` de moins de 128 caractères.
 
-### When does model validation happen?
+### Quand la validation de modèle se produit-elle ?
 
-Model instances are validated when they are created or updated, before any values are persisted to the database. Methods like `#create` or `#save` automatically run validations. They return `false` to indicate that the considered object is invalid (and they return `true` if the object is valid). The `#create` and `#save` methods also have bang counterparts (`#create!` and `#save!`) that will explicitly raise a validation error (instance of `Marten::DB::Errors::InvalidRecord`) in case of invalid records.
+Les instances de modèles sont validées lorsqu'elles sont créées ou mises à jour, avant que les valeurs ne soient persistées dans la base de données. Les méthodes comme `#create` ou `#save` exécutent automatiquement les validations. Elles retournent `false` pour indiquer que l'objet considéré est invalide (et elles retournent `true` si l'objet est valide). Les méthodes `#create` et `#save` ont également des variantes bang (`#create!` et `#save!`) qui lèveront explicitement une erreur de validation (instance de `Marten::DB::Errors::InvalidRecord`) en cas d'enregistrements invalides.
 
-For example:
+Par exemple :
 
 ```crystal
 user = User.new
@@ -52,11 +52,11 @@ user.save!
 # => Unhandled exception: Record is invalid (Marten::DB::Errors::InvalidRecord)
 ```
 
-When validating model records, the validation rules that are inherited by fields will be executed first and then any custom validation rule defined in the model will be applied.
+Lors de la validation des enregistrements de modèles, les règles de validation héritées des fields seront exécutées en premier, puis toute règle de validation personnalisée définie dans le modèle sera appliquée.
 
-### Running model validations
+### Exécuter les validations de modèle
 
-As mentioned previously, validation rules will be executed automatically when calling the `#create` or `#save` methods on a model record. It is also possible to manually verify whether a model instance is valid or not using the `#valid?` and `#invalid?` methods:
+Comme mentionné précédemment, les règles de validation seront exécutées automatiquement lors de l'appel des méthodes `#create` ou `#save` sur un enregistrement de modèle. Il est également possible de vérifier manuellement si une instance de modèle est valide ou non en utilisant les méthodes `#valid?` et `#invalid?` :
 
 ```crystal
 user = User.new
@@ -64,20 +64,20 @@ user.valid?     # => false
 user.invalid?   # => true
 ```
 
-## Field validation rules
+## Règles de validation des fields
 
-As mentioned previously, fields can contribute validation rules to your models. These validation rules can be inherited:
+Comme mentionné précédemment, les fields peuvent contribuer des règles de validation à vos modèles. Ces règles de validation peuvent être héritées :
 
-* from the field type itself: some fields will validate that values are of a specific type (for example a `uuid` field will not validate values that don't correspond to valid UUIDs)
-* from the field options you define (for example fields using `blank: true` accept empty values)
+* du type de field lui-même : certains fields valideront que les valeurs sont d'un type spécifique (par exemple, un field `uuid` ne validera pas les valeurs qui ne correspondent pas à des UUID valides)
+* des options de field que vous définissez (par exemple, les fields utilisant `blank: true` acceptent les valeurs vides)
 
-Please refer to the [fields reference](./reference/fields.md) in order to learn more about the supported field types and their associated options.
+Veuillez vous référer à la [référence des fields](./reference/fields.md) pour en savoir plus sur les types de fields supportés et leurs options associées.
 
-## Custom validation rules
+## Règles de validation personnalisées
 
-Custom validate rules can be defined through the use of the `#validate` macro. This macro lets you configure the name of a validation method that should be called when a model instance is validated. Inside this method, you can implement any validation logic that you might require and add errors to your model instances if they are identified as invalid.
+Les règles de validation personnalisées peuvent être définies via l'utilisation de la macro `#validate`. Cette macro vous permet de configurer le nom d'une méthode de validation qui sera appelée lorsqu'une instance de modèle est validée. À l'intérieur de cette méthode, vous pouvez implémenter toute logique de validation dont vous pourriez avoir besoin et ajouter des erreurs à vos instances de modèle si elles sont identifiées comme invalides.
 
-For example:
+Par exemple :
 
 ```crystal
 class User < Marten::Model
@@ -92,17 +92,17 @@ class User < Marten::Model
 end
 ```
 
-In the above snippet, a custom validation method ensures that the `name` of a `User` model instance can't be set to `"admin"`: if the name is set to `"admin"`, then a specific error (associated with the `name` attribute) is added to the model instance (which makes it invalid).
+Dans l'extrait ci-dessus, une méthode de validation personnalisée s'assure que le `name` d'une instance du modèle `User` ne peut pas être défini à `"admin"` : si le nom est défini à `"admin"`, alors une erreur spécifique (associée à l'attribut `name`) est ajoutée à l'instance de modèle (ce qui la rend invalide).
 
-## Validation errors
+## Erreurs de validation
 
-Methods like `#valid?` or `#invalid?` only let you know whether a model instance is valid or invalid. But you'll likely want to know exactly what are the actual errors or how to add new ones.
+Les méthodes comme `#valid?` ou `#invalid?` vous permettent uniquement de savoir si une instance de modèle est valide ou invalide. Mais vous voudrez probablement connaître exactement les erreurs réelles ou savoir comment en ajouter de nouvelles.
 
-As such, every model instance has an associated error set, which is an instance of [`Marten::Core::Validation::ErrorSet`](pathname:///api/dev/Marten/Core/Validation/ErrorSet.html).
+À ce titre, chaque instance de modèle possède un ensemble d'erreurs associé, qui est une instance de [`Marten::Core::Validation::ErrorSet`](pathname:///api/dev/Marten/Core/Validation/ErrorSet.html).
 
-### Inspecting errors
+### Inspecter les erreurs
 
-A model instance error set lets you access all the errors of a specific model instance. For example:
+Un ensemble d'erreurs d'instance de modèle vous permet d'accéder à toutes les erreurs d'une instance de modèle spécifique. Par exemple :
 
 ```crystal
 user = User.new
@@ -122,13 +122,13 @@ user.errors
 #          @type="blank">]>
 ```
 
-As you can see, the error set gives you the ability to know how many errors are affecting your model instance. Each error provides some additional information as well:
+Comme vous pouvez le voir, l'ensemble d'erreurs vous donne la possibilité de savoir combien d'erreurs affectent votre instance de modèle. Chaque erreur fournit également des informations supplémentaires :
 
-* the associated field name (which can be `nil` if the error is global)
-* the error message
-* the error type, which is optional (`blank` in the previous example)
+* le nom du field associé (qui peut être `nil` si l'erreur est globale)
+* le message d'erreur
+* le type d'erreur, qui est optionnel (`blank` dans l'exemple précédent)
 
-You can also access the errors that are associated with a specific field very easily by using the `#[]` method:
+Vous pouvez également accéder très facilement aux erreurs associées à un field spécifique en utilisant la méthode `#[]` :
 
 ```crystal
 user.errors[:name]
@@ -138,27 +138,27 @@ user.errors[:name]
 #      @type="blank">]
 ```
 
-Global errors (errors affecting the whole model instances or multiple fields at once) can be listed through the use of the `#global` method.
+Les erreurs globales (erreurs affectant l'ensemble de l'instance de modèle ou plusieurs fields à la fois) peuvent être listées via l'utilisation de la méthode `#global`.
 
-### Adding errors
+### Ajouter des erreurs
 
-Errors can be added to an error set through the use of the `#add` method. This method takes a field name, a message, and an optional error type:
+Des erreurs peuvent être ajoutées à un ensemble d'erreurs via l'utilisation de la méthode `#add`. Cette méthode prend un nom de field, un message et un type d'erreur optionnel :
 
 ```crystal
 user.errors.add(:name, "Name is invalid")                      # error type is "invalid"
 user.errors.add(:name, "Name is invalid", type: :invalid_name) # error type is "invalid_name"
 ```
 
-Global errors can be specified through the use of an alternative `#add` method that doesn't take a field name:
+Les erreurs globales peuvent être spécifiées via l'utilisation d'une méthode `#add` alternative qui ne prend pas de nom de field :
 
 ```crystal
 user.errors.add("User is invalid")                      # error type is "invalid"
 user.errors.add("User is invalid", type: :invalid_user) # error type is "invalid_user"
 ```
 
-## Skipping validations
+## Ignorer les validations
 
-Model validations can be explicitly skipped when using the `#save` or `#save!` methods. To do so, the `validate: false` argument can be used:
+Les validations de modèle peuvent être explicitement ignorées lors de l'utilisation des méthodes `#save` ou `#save!`. Pour ce faire, l'argument `validate: false` peut être utilisé :
 
 ```crystal
 user = User.new
@@ -166,5 +166,5 @@ user.save(validate: false)
 ```
 
 :::caution
-It is generally not a good idea to skip validation that way. This technique should be used with caution!
+Il n'est généralement pas recommandé d'ignorer les validations de cette manière. Cette technique doit être utilisée avec prudence !
 :::

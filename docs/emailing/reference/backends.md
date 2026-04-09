@@ -1,31 +1,31 @@
 ---
-title: Emailing backends
-description: Emailing backends reference.
+title: Backends d'emailing
+description: Référence des backends d'emailing.
 sidebar_label: Backends
 ---
 
-## Built-in backends
+## Backends intégrés
 
-### Development backend
+### Backend de développement
 
-This is the default backend used as part of the [`emailing.backend`](../../development/reference/settings.md#backend-1) setting.
+C'est le backend par défaut utilisé dans le cadre du paramètre [`emailing.backend`](../../development/reference/settings.md#backend-1).
 
-This backend "collects" all the emails that are "delivered", which can be used in specs in order to test sent emails. This "collect" behavior can be disabled if necessary, and the backend can also be configured to print email details to the standard output.
+Ce backend "collecte" tous les emails qui sont "envoyés", ce qui peut être utilisé dans les specs pour tester les emails envoyés. Ce comportement de "collecte" peut être désactivé si nécessaire, et le backend peut également être configuré pour afficher les détails des emails sur la sortie standard.
 
-For example:
+Par exemple :
 
 ```crystal
 config.emailing.backend = Marten::Emailing::Backend::Development.new(print_emails: true, collect_emails: false)
 ```
 
-## Other backends
+## Autres backends
 
-Additional emailing backend shards are also maintained under the umbrella of the Marten project or by the community itself and can be used as part of your application depending on your specific email sending requirements:
+Des shards de backend d'emailing supplémentaires sont également maintenus sous l'égide du projet Marten ou par la communauté elle-même et peuvent être utilisés dans votre application selon vos besoins spécifiques d'envoi d'emails :
 
-* [`marten-smtp-emailing`](https://github.com/martenframework/marten-smtp-emailing) provides an SMTP emailing backend
-* [`marten-sendgrid-emailing`](https://github.com/martenframework/marten-sendgrid-emailing) provides a [Sendgrid](https://sendgrid.com/) emailing backend
-* [`marten-mailgun-emailing`](https://github.com/martenframework/marten-mailgun-emailing) provides a [Mailgun](https://www.mailgun.com/) emailing backend
+* [`marten-smtp-emailing`](https://github.com/martenframework/marten-smtp-emailing) fournit un backend d'emailing SMTP
+* [`marten-sendgrid-emailing`](https://github.com/martenframework/marten-sendgrid-emailing) fournit un backend d'emailing [Sendgrid](https://sendgrid.com/)
+* [`marten-mailgun-emailing`](https://github.com/martenframework/marten-mailgun-emailing) fournit un backend d'emailing [Mailgun](https://www.mailgun.com/)
 
 :::info
-Feel free to contribute to this page and add links to your shards if you've created emailing backends that are not listed here!
+N'hésitez pas à contribuer à cette page et à ajouter des liens vers vos shards si vous avez créé des backends d'emailing qui ne sont pas listés ici !
 :::

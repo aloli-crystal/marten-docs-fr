@@ -1,26 +1,26 @@
 ---
-title: Clickjacking protection
-description: Learn about clickjacking and how Marten helps protect against this type of attacks.
+title: Protection contre le clickjacking
+description: Découvrez le clickjacking et comment Marten aide à protéger contre ce type d'attaques.
 ---
 
-This document describes Marten's clickjacking protection mechanism as well as the various tools that you can use in order to configure and make use of it.
+Ce document décrit le mécanisme de protection contre le clickjacking de Marten ainsi que les divers outils que vous pouvez utiliser pour le configurer et l'utiliser.
 
-## Overview
+## Vue d'ensemble
 
-Clickjacking attacks involve a malicious website embedding another unprotected website in a frame. This can lead to users performing unintended actions on the targeted website.
+Les attaques de clickjacking impliquent un site web malveillant intégrant un autre site web non protégé dans un cadre. Cela peut conduire les utilisateurs à effectuer des actions non intentionnelles sur le site ciblé.
 
-The best way to mitigate this risk is to rely on the X-Frame-Options header: this header indicates whether or not the protected resource is allowed to be embedded into a frame, and if so under which conditions. The X-Frame-Options header can be set to `DENY` or `SAMEORIGIN`:
+La meilleure façon d'atténuer ce risque est de s'appuyer sur l'en-tête X-Frame-Options : cet en-tête indique si la ressource protégée est autorisée ou non à être intégrée dans un cadre, et si oui sous quelles conditions. L'en-tête X-Frame-Options peut être défini sur `DENY` ou `SAMEORIGIN` :
 
-* `DENY` means that the response cannot be displayed inside a frame at all
-* `SAMEORIGINS` means that the browser will allow the response to be displayed inside a frame if the site defining the frame is the same as the one serving the actual resource
+* `DENY` signifie que la réponse ne peut pas être affichée dans un cadre du tout
+* `SAMEORIGINS` signifie que le navigateur autorisera l'affichage de la réponse dans un cadre si le site définissant le cadre est le même que celui servant la ressource réelle
 
-## Basic usage
+## Utilisation basique
 
-Marten's clickjacking protection involves using a dedicated middleware: the [X-Frame-Options middleware](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware). This middleware is automatically added to the [`middleware`](../development/reference/settings.md#middleware) setting when generating projects via the [`new`](../development/reference/management-commands.md#new) management command.
+La protection contre le clickjacking de Marten implique l'utilisation d'un middleware dédié : le [middleware X-Frame-Options](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware). Ce middleware est automatiquement ajouté au paramètre [`middleware`](../development/reference/settings.md#middleware) lors de la génération de projets via la commande de gestion [`new`](../development/reference/management-commands.md#new).
 
-The [X-Frame-Options middleware](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) simply sets the X-Frame-Options header in order to prevent the considered Marten website from being inserted into a frame. The value that is used for the X-Frame-Options header depends on the value of the [`x_frame_options`](../development/reference/settings.md#x_frame_options) setting (whose default value is `DENY`).
+Le [middleware X-Frame-Options](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) définit simplement l'en-tête X-Frame-Options afin d'empêcher le site Marten considéré d'être inséré dans un cadre. La valeur utilisée pour l'en-tête X-Frame-Options dépend de la valeur du paramètre [`x_frame_options`](../development/reference/settings.md#x_frame_options) (dont la valeur par défaut est `DENY`).
 
-It should be noted that you can decide to disable or enable the use of the [X-Frame-Options middleware](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) on a per-handler basis. To do so, you can simply make use of the [`#exempt_from_x_frame_options`](pathname:///api/dev/Marten/Handlers/XFrameOptions/ClassMethods.html#exempt_from_x_frame_options(exempt%3ABool)%3ANil-instance-method) class method, which takes a single boolean as arguments:
+Il convient de noter que vous pouvez décider de désactiver ou d'activer l'utilisation du [middleware X-Frame-Options](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) par handler. Pour ce faire, vous pouvez simplement utiliser la méthode de classe [`#exempt_from_x_frame_options`](pathname:///api/dev/Marten/Handlers/XFrameOptions/ClassMethods.html#exempt_from_x_frame_options(exempt%3ABool)%3ANil-instance-method), qui prend un seul booléen comme argument :
 
 ```crystal
 class ProtectedHandler < Marten::Handler

@@ -1,16 +1,16 @@
 ---
-title: Introduction to models
-description: Learn how to define models and interact with model records.
+title: Introduction aux modèles
+description: Apprenez à définir des modèles et à interagir avec les enregistrements de modèles.
 sidebar_label: Introduction
 ---
 
-Models define what data can be persisted and manipulated by a Marten application. They explicitly specify fields and rules that map to database tables and columns. As such, they correspond to the layer of the framework that is responsible for representing business data and logic.
+Les modèles définissent quelles données peuvent être persistées et manipulées par une application Marten. Ils spécifient explicitement les fields et les règles qui correspondent aux tables et colonnes de la base de données. En tant que tels, ils correspondent à la couche du framework responsable de la représentation des données et de la logique métier.
 
-## Basic model definition
+## Définition basique d'un modèle
 
-Marten models must be defined as subclasses of the [`Marten::Model`](pathname:///api/dev/Marten/DB/Model.html) base class; they explicitly define "fields" through the use of the `field` macro. These classes and fields map to database tables and columns that can be queried through the use of an automatically-generated database access API (see [Queries](./queries.md) for more details).
+Les modèles Marten doivent être définis comme des sous-classes de la classe de base [`Marten::Model`](pathname:///api/dev/Marten/DB/Model.html) ; ils définissent explicitement des "fields" via l'utilisation de la macro `field`. Ces classes et fields correspondent aux tables et colonnes de la base de données qui peuvent être interrogées grâce à une API d'accès à la base de données générée automatiquement (voir [Requêtes](./queries.md) pour plus de détails).
 
-For example, the following code snippet defines a simple `Article` model:
+Par exemple, l'extrait de code suivant définit un modèle `Article` simple :
 
 ```crystal
 class Article < Marten::Model
@@ -20,7 +20,7 @@ class Article < Marten::Model
 end
 ```
 
-In the above example, `id`, `title`, and `content` are fields of the `Article` model. Each of these fields map to a database column in a table whose name is automatically inferred from the model name (and its associated application). If it was to be manually created using plain SQL, the `Article` model would correspond to the following statement (using the PostgreSQL syntax):
+Dans l'exemple ci-dessus, `id`, `title` et `content` sont des fields du modèle `Article`. Chacun de ces fields correspond à une colonne de base de données dans une table dont le nom est automatiquement déduit du nom du modèle (et de son application associée). Si elle devait être créée manuellement en SQL pur, le modèle `Article` correspondrait à l'instruction suivante (en utilisant la syntaxe PostgreSQL) :
 
 ```sql
 CREATE TABLE myapp_articles (
@@ -30,11 +30,11 @@ CREATE TABLE myapp_articles (
 );
 ```
 
-## Models and installed apps
+## Modèles et applications installées
 
-A model's application needs to be explicitly added to the list of installed applications for the considered project. Indeed, Marten requires projects to explicitly declare the applications they are using in the `installed_apps` configuration option. Model tables and migrations will only be created/applied for model classes that are provided by _installed apps_.
+L'application d'un modèle doit être explicitement ajoutée à la liste des applications installées pour le projet considéré. En effet, Marten exige que les projets déclarent explicitement les applications qu'ils utilisent dans l'option de configuration `installed_apps`. Les tables et migrations de modèles ne seront créées/appliquées que pour les classes de modèles fournies par les _applications installées_.
 
-For example, if the above `Article` model was associated with a `MyApp` application class, it would be possible to ensure that it is used by ensuring that the `installed_app` configuration option is as follows:
+Par exemple, si le modèle `Article` ci-dessus était associé à une classe d'application `MyApp`, il serait possible de s'assurer qu'il est utilisé en vérifiant que l'option de configuration `installed_app` est la suivante :
 
 ```crystal
 Marten.configure do |config|
@@ -45,11 +45,11 @@ Marten.configure do |config|
 end
 ```
 
-## Model fields
+## Fields de modèle
 
-Model classes must define _fields_. Fields allow to specify the attributes of a model and they map to actual database columns. They are defined through the use of the `field` macro.
+Les classes de modèles doivent définir des _fields_. Les fields permettent de spécifier les attributs d'un modèle et ils correspondent aux colonnes réelles de la base de données. Ils sont définis via l'utilisation de la macro `field`.
 
-For example:
+Par exemple :
 
 ```crystal
 class Author < Marten::Model
@@ -66,49 +66,49 @@ class Article < Marten::Model
 end
 ```
 
-### Field ID and field type
+### Identifiant et type de field
 
-Every field in a model class must contain two mandatory positional arguments: a field identifier and a field type.
+Chaque field dans une classe de modèle doit contenir deux arguments positionnels obligatoires : un identifiant de field et un type de field.
 
-The field identifier is used by Marten in order to determine the name of the corresponding database column. This identifier is also used to generate the Crystal bindings that allow you to interact with field values through getters and setters.
+L'identifiant de field est utilisé par Marten pour déterminer le nom de la colonne de base de données correspondante. Cet identifiant est également utilisé pour générer les bindings Crystal qui vous permettent d'interagir avec les valeurs des fields via des getters et setters.
 
-The field type determines a few other things:
+Le type de field détermine plusieurs choses :
 
-* the type of the corresponding database column (for example `INTEGER`, `TEXT`, etc)
-* the getter and setter methods that are generated for the field in the model class
-* how field values are actually validated
+* le type de la colonne de base de données correspondante (par exemple `INTEGER`, `TEXT`, etc.)
+* les méthodes getter et setter qui sont générées pour le field dans la classe de modèle
+* la manière dont les valeurs du field sont effectivement validées
 
-Marten provides numerous built-in field types that cover common web development needs. The complete list of supported fields is covered in the [model fields reference](./reference/fields.md).
+Marten fournit de nombreux types de fields intégrés qui couvrent les besoins courants du développement web. La liste complète des fields supportés est disponible dans la [référence des fields de modèle](./reference/fields.md).
 
 :::note
-It is possible to write custom model fields and use them in your model definitions. See [How to create custom model fields](./how-to/create-custom-model-fields.md) for more details.
+Il est possible d'écrire des fields de modèle personnalisés et de les utiliser dans vos définitions de modèles. Voir [Guide pratique : créer des fields de modèle personnalisés](./how-to/create-custom-model-fields.md) pour plus de détails.
 :::
 
-### Common field options
+### Options communes des fields
 
-In addition to their identifiers and types, fields can take keyword arguments that allow to further configure their behaviors and how they map to database columns. Most of the time those additional keyword arguments are optional, but they can be mandatory depending on the considered field type.
+En plus de leurs identifiants et types, les fields peuvent prendre des arguments nommés qui permettent de configurer davantage leurs comportements et la manière dont ils correspondent aux colonnes de la base de données. La plupart du temps, ces arguments nommés supplémentaires sont optionnels, mais ils peuvent être obligatoires selon le type de field considéré.
 
-Some of these optional field arguments are shared across all the available fields. Below is a list of the ones you'll encounter most frequently.
+Certains de ces arguments optionnels sont partagés par tous les fields disponibles. Voici une liste de ceux que vous rencontrerez le plus fréquemment.
 
 #### `null`
 
-The `null` argument allows defining whether a field is allowed to store `NULL` values in the database. The default value for this argument is `false`.
+L'argument `null` permet de définir si un field est autorisé à stocker des valeurs `NULL` dans la base de données. La valeur par défaut de cet argument est `false`.
 
 #### `blank`
 
-The `blank` argument allows defining whether a field is allowed to receive blank values from a validation perspective. The fields with `blank: false` that receive blank values will make their associated model record validation fail. The default value for this argument is `false`.
+L'argument `blank` permet de définir si un field est autorisé à recevoir des valeurs vides du point de vue de la validation. Les fields avec `blank: false` qui reçoivent des valeurs vides feront échouer la validation de l'enregistrement de modèle associé. La valeur par défaut de cet argument est `false`.
 
 #### `default`
 
-The `default` argument allows defining a default value for a given field. The default value for this argument is `nil`.
+L'argument `default` permet de définir une valeur par défaut pour un field donné. La valeur par défaut de cet argument est `nil`.
 
 #### `unique`
 
-The `unique` argument allows defining that values for a specific field must be unique throughout the associated table. The default value for this argument is `false`.
+L'argument `unique` permet de définir que les valeurs d'un field spécifique doivent être uniques dans toute la table associée. La valeur par défaut de cet argument est `false`.
 
-### Mandatory primary key
+### Clé primaire obligatoire
 
-All Marten models must define one (and only one) primary key field. This primary key field will usually be an `int` or a `big_int` field using the `primary_key: true` and `auto: true` arguments, like in the following example:
+Tous les modèles Marten doivent définir un (et un seul) field de clé primaire. Ce field de clé primaire sera généralement un field `int` ou `big_int` utilisant les arguments `primary_key: true` et `auto: true`, comme dans l'exemple suivant :
 
 ```crystal
 class MyModel < Marten::Model
@@ -116,7 +116,7 @@ class MyModel < Marten::Model
 end
 ```
 
-It should be noted that the primary key can correspond to any other field type. For example, your primary key could correspond to an `uuid` field:
+Il est à noter que la clé primaire peut correspondre à tout autre type de field. Par exemple, votre clé primaire pourrait correspondre à un field `uuid` :
 
 ```crystal
 class MyModel < Marten::Model
@@ -130,15 +130,15 @@ class MyModel < Marten::Model
 end
 ```
 
-### Relationships
+### Relations
 
-Marten provides special fields allowing to define the three most common types of database relationships: many-to-many, many-to-one, and one-to-one.
+Marten fournit des fields spéciaux permettant de définir les trois types les plus courants de relations de base de données : many-to-many, many-to-one et one-to-one.
 
-#### Many-to-one relationships
+#### Relations many-to-one
 
-Many-to-one relationships can be defined through the use of [`many_to_one`](./reference/fields.md#many_to_one) fields. This special field type requires the use of a special `to` argument in order to specify the model class to which the current model is related.
+Les relations many-to-one peuvent être définies via l'utilisation de fields [`many_to_one`](./reference/fields.md#many_to_one). Ce type de field spécial nécessite l'utilisation d'un argument spécial `to` afin de spécifier la classe de modèle à laquelle le modèle actuel est relié.
 
-For example, an `Article` model could have a many-to-one field towards an `Author` model. In such case, an `Article` record would only have one associated `Author` record, but every `Author` record could be associated with many `Article` records:
+Par exemple, un modèle `Article` pourrait avoir un field many-to-one vers un modèle `Author`. Dans ce cas, un enregistrement `Article` n'aurait qu'un seul enregistrement `Author` associé, mais chaque enregistrement `Author` pourrait être associé à de nombreux enregistrements `Article` :
 
 ```crystal
 class Author < Marten::Model
@@ -152,7 +152,7 @@ end
 ```
 
 :::tip
-It is possible to define recursive relationships by leveraging the `self` keyword. For example, if you want to define a many-to-one relationship field that targets that same model, you can do so easily by using `self` as the value for the `to` argument:
+Il est possible de définir des relations récursives en utilisant le mot-clé `self`. Par exemple, si vous souhaitez définir un field de relation many-to-one qui cible le même modèle, vous pouvez le faire facilement en utilisant `self` comme valeur de l'argument `to` :
 
 ```crystal
 class TreeNode < Marten::Model
@@ -163,14 +163,14 @@ end
 :::
 
 :::info
-Please refer to [Many-to-one relationships](./relationships.md#many-to-one-relationships) to learn more about this type of model relationship.
+Veuillez vous référer à [Relations many-to-one](./relationships.md#relations-many-to-one) pour en savoir plus sur ce type de relation de modèle.
 :::
 
-#### One-to-one relationships
+#### Relations one-to-one
 
-One-to-one relationships can be defined through the use of [`one_to_one`](./reference/fields.md#one_to_one) fields. This special field type requires the use of a special `to` argument in order to specify the model class to which the current model is related.
+Les relations one-to-one peuvent être définies via l'utilisation de fields [`one_to_one`](./reference/fields.md#one_to_one). Ce type de field spécial nécessite l'utilisation d'un argument spécial `to` afin de spécifier la classe de modèle à laquelle le modèle actuel est relié.
 
-For example, a `User` model could have a one-to-one field towards a `Profile` model. In such case, the `User` model could only have one associated `Profile` record, and the reverse would be true as well (a `Profile` record could only have one associated `User` record). In fact, a one-to-one field is really similar to a many-to-one field, but with an additional unicity constraint:
+Par exemple, un modèle `User` pourrait avoir un field one-to-one vers un modèle `Profile`. Dans ce cas, le modèle `User` ne pourrait avoir qu'un seul enregistrement `Profile` associé, et l'inverse serait également vrai (un enregistrement `Profile` ne pourrait avoir qu'un seul enregistrement `User` associé). En fait, un field one-to-one est très similaire à un field many-to-one, mais avec une contrainte d'unicité supplémentaire :
 
 ```crystal
 class Profile < Marten::Model
@@ -184,14 +184,14 @@ end
 ```
 
 :::info
-Please refer to [One-to-one relationships](./relationships.md#one-to-one-relationships) to learn more about this type of model relationship.
+Veuillez vous référer à [Relations one-to-one](./relationships.md#relations-one-to-one) pour en savoir plus sur ce type de relation de modèle.
 :::
 
-#### Many-to-many relationships
+#### Relations many-to-many
 
-Many-to-many relationships can be defined through the use of [`many_to_many`](./reference/fields.md#many_to_many) fields. This special field type requires the use of a special `to` argument in order to specify the model class to which the current model is related.
+Les relations many-to-many peuvent être définies via l'utilisation de fields [`many_to_many`](./reference/fields.md#many_to_many). Ce type de field spécial nécessite l'utilisation d'un argument spécial `to` afin de spécifier la classe de modèle à laquelle le modèle actuel est relié.
 
-For example, an `Article` model could have a many-to-many field towards a `Tag` model. In such case, an `Article` record could have many associated `Tag` records, and every `Tag` record could be associated with many `Article` records as well:
+Par exemple, un modèle `Article` pourrait avoir un field many-to-many vers un modèle `Tag`. Dans ce cas, un enregistrement `Article` pourrait avoir de nombreux enregistrements `Tag` associés, et chaque enregistrement `Tag` pourrait également être associé à de nombreux enregistrements `Article` :
 
 ```crystal
 class Tag < Marten::Model
@@ -205,12 +205,12 @@ end
 ```
 
 :::info
-Please refer to [Many-to-many relationships](./relationships.md#many-to-many-relationships) to learn more about this type of model relationship.
+Veuillez vous référer à [Relations many-to-many](./relationships.md#relations-many-to-many) pour en savoir plus sur ce type de relation de modèle.
 :::
 
-### Timestamps
+### Horodatages
 
-Marten lets you easily add automatic `created_at` / `updated_at` [`date_time`](./reference/fields.md#date_time) fields to your models by leveraging the [`#with_timestamp_fields`](pathname:///api/dev/Marten/DB/Model/Table.html#with_timestamp_fields-macro) macro:
+Marten vous permet d'ajouter facilement des fields [`date_time`](./reference/fields.md#date_time) automatiques `created_at` / `updated_at` à vos modèles en utilisant la macro [`#with_timestamp_fields`](pathname:///api/dev/Marten/DB/Model/Table.html#with_timestamp_fields-macro) :
 
 ```crystal
 class Article < Marten::Model
@@ -222,9 +222,9 @@ class Article < Marten::Model
 end
 ```
 
-The `created_at` field is populated with the current time when new records are created while the `updated_at` field is refreshed with the current time whenever records are updated.
+Le field `created_at` est rempli avec l'heure actuelle lors de la création de nouveaux enregistrements, tandis que le field `updated_at` est actualisé avec l'heure actuelle à chaque mise à jour des enregistrements.
 
-Note that using [`#with_timestamp_fields`](pathname:///api/dev/Marten/DB/Model/Table.html#with_timestamp_fields-macro) is technically equivalent as defining two `created_at` and `updated_at` [`date_time`](./reference/fields.md#date_time) fields as follows:
+Notez que l'utilisation de [`#with_timestamp_fields`](pathname:///api/dev/Marten/DB/Model/Table.html#with_timestamp_fields-macro) est techniquement équivalente à définir deux fields [`date_time`](./reference/fields.md#date_time) `created_at` et `updated_at` comme suit :
 
 ```crystal
 class Article < Marten::Model
@@ -238,15 +238,15 @@ class Article < Marten::Model
 end
 ```
 
-## Multifields indexes and unique constraints
+## Index et contraintes d'unicité multi-fields
 
-Single model fields can be indexed or associated with a unique constraint _individually_ by leveraging the [`index`](./reference/fields.md#index) and [`unique`](./reference/fields.md#unique) field options. That being said, it is sometimes necessary to configure multifields indexes or unique constraints.
+Les fields de modèle individuels peuvent être indexés ou associés à une contrainte d'unicité _individuellement_ en utilisant les options de field [`index`](./reference/fields.md#index) et [`unique`](./reference/fields.md#unique). Cependant, il est parfois nécessaire de configurer des index ou des contraintes d'unicité multi-fields.
 
-### Multifields indexes
+### Index multi-fields
 
-Multifields indexes can be configured in a model by leveraging the [`#db_index`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_index(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method) class method. This method requires an index name argument as well as an array of targeted field names.
+Les index multi-fields peuvent être configurés dans un modèle en utilisant la méthode de classe [`#db_index`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_index(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method). Cette méthode nécessite un argument de nom d'index ainsi qu'un tableau de noms de fields ciblés.
 
-For example:
+Par exemple :
 
 ```crystal
 class Person < Marten::Model
@@ -258,11 +258,11 @@ class Person < Marten::Model
 end
 ```
 
-### Multifields unique constraints
+### Contraintes d'unicité multi-fields
 
-Multifields unique constraints can be configured in a model by leveraging the [`#db_unique_constraint`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_unique_constraint(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method) class method. This method requires an index name argument as well as an array of targeted field names.
+Les contraintes d'unicité multi-fields peuvent être configurées dans un modèle en utilisant la méthode de classe [`#db_unique_constraint`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_unique_constraint(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method). Cette méthode nécessite un argument de nom d'index ainsi qu'un tableau de noms de fields ciblés.
 
-For example:
+Par exemple :
 
 ```crystal
 class Booking < Marten::Model
@@ -274,29 +274,29 @@ class Booking < Marten::Model
 end
 ```
 
-The above constraint ensures that each room can only be booked for each date.
+La contrainte ci-dessus garantit que chaque salle ne peut être réservée qu'une seule fois par date.
 
-## CRUD operations
+## Opérations CRUD
 
-CRUD stands for **C**reate, **R**ead, **U**pdate, and **D**elete. Marten provides a set of methods and tools allowing applications to read and manipulate data stored in model tables.
+CRUD signifie **C**reate (Créer), **R**ead (Lire), **U**pdate (Mettre à jour) et **D**elete (Supprimer). Marten fournit un ensemble de méthodes et d'outils permettant aux applications de lire et manipuler les données stockées dans les tables de modèles.
 
-### Create
+### Créer
 
-Model records can be created through the use of the `#new` and `#create` methods. The `#new` method will simply initialize a new model record that is not persisted in the database. The `#create` method will initialize the new model record using the specified attributes and persist it to the database.
+Les enregistrements de modèles peuvent être créés via l'utilisation des méthodes `#new` et `#create`. La méthode `#new` initialisera simplement un nouvel enregistrement de modèle qui n'est pas persisté dans la base de données. La méthode `#create` initialisera le nouvel enregistrement de modèle en utilisant les attributs spécifiés et le persistera dans la base de données.
 
-For example, it would be possible to create a new `Article` model record by specifying its `title` and `content` attribute values through the use of the `#create` method as follows:
+Par exemple, il serait possible de créer un nouvel enregistrement du modèle `Article` en spécifiant les valeurs de ses attributs `title` et `content` via l'utilisation de la méthode `#create` comme suit :
 
 ```crystal
 Article.create(title: "My article", content: "Learn how to build web apps with Marten!")
 ```
 
-The same `Article` record could be initialized (but not saved!) through the use of the `new` method as follows:
+Le même enregistrement `Article` pourrait être initialisé (mais pas sauvegardé !) via l'utilisation de la méthode `new` comme suit :
 
 ```crystal
 Article.new(title: "My article", content: "Learn how to build web apps with Marten!")
 ```
 
-It should be noted that field values can be assigned after a model instance has been initialized. For example, the previous example is equivalent to the following snippet:
+Il est à noter que les valeurs des fields peuvent être assignées après l'initialisation d'une instance de modèle. Par exemple, l'exemple précédent est équivalent à l'extrait suivant :
 
 ```crystal
 article = Article.new
@@ -304,9 +304,9 @@ article.title = "My article"
 article.content = "Learn how to build web apps with Marten!"
 ```
 
-A model instance that was initialized like in the previous example will not be persisted to the database automatically. In this situation, it is possible to ensure that the corresponding record is created in the database by using the `#save` method (`article.save`).
+Une instance de modèle initialisée comme dans l'exemple précédent ne sera pas automatiquement persistée dans la base de données. Dans cette situation, il est possible de s'assurer que l'enregistrement correspondant est créé dans la base de données en utilisant la méthode `#save` (`article.save`).
 
-Finally it should be noted that both `#create` and `#new` support an optional block that will receive the initialized model record. This allows to initialize attributes or to call additional methods on the record being initialized:
+Enfin, il est à noter que `#create` et `#new` supportent un bloc optionnel qui recevra l'enregistrement de modèle initialisé. Cela permet d'initialiser des attributs ou d'appeler des méthodes supplémentaires sur l'enregistrement en cours d'initialisation :
 
 ```crystal
 Article.create do |article|
@@ -315,33 +315,33 @@ Article.create do |article|
 end
 ```
 
-### Read
+### Lire
 
-Marten models provide a powerful API allowing to read and query records. This is achieved by constructing "query sets". A query set is a representation of records collections from the database that can be filtered.
+Les modèles Marten fournissent une API puissante permettant de lire et interroger les enregistrements. Ceci est réalisé en construisant des "query sets". Un query set est une représentation de collections d'enregistrements de la base de données qui peuvent être filtrés.
 
-For example, it is possible to return a collection of all the `Article` model records using:
+Par exemple, il est possible de retourner une collection de tous les enregistrements du modèle `Article` en utilisant :
 
 ```crystal
 Article.all
 ```
 
-It is possible to retrieve a specific record matching a set of filters (for example the value of an identifier) by using:
+Il est possible de récupérer un enregistrement spécifique correspondant à un ensemble de filtres (par exemple la valeur d'un identifiant) en utilisant :
 
 ```crystal
 Article.get(id: 42)
 ```
 
-Finally the following snippet showcases how to filter `Article` records by title and to sort them by creation date in reverse chronological order:
+Enfin, l'extrait suivant montre comment filtrer les enregistrements `Article` par titre et les trier par date de création en ordre chronologique inverse :
 
 ```crystal
 Article.filter(name: "My article").order("-created_at")
 ```
 
-Please head over to the [Model queries](./queries.md) guide in order to learn more about model querying capabilities.
+Veuillez consulter le guide [Requêtes de modèles](./queries.md) pour en savoir plus sur les capacités de requêtage des modèles.
 
-### Update
+### Mettre à jour
 
-Once a model record has been retrieved from the database, it is possible to update it by modifying its attributes and calling the `#save` method:
+Une fois qu'un enregistrement de modèle a été récupéré de la base de données, il est possible de le mettre à jour en modifiant ses attributs et en appelant la méthode `#save` :
 
 ```crystal
 article = Article.get(id: 42)
@@ -349,22 +349,22 @@ article.title = "Updated!"
 article.save
 ```
 
-Marten also provide the ability to update the records that are targeted by a specific query set through the use of the `#update` method, like in the following example:
+Marten fournit également la possibilité de mettre à jour les enregistrements ciblés par un query set spécifique via l'utilisation de la méthode `#update`, comme dans l'exemple suivant :
 
 ```crystal
 Article.filter(title: "My article").update(title: "Updated!")
 ```
 
-#### Updating specific columns
+#### Mise à jour de colonnes spécifiques {#updating-specific-columns}
 
-If you need to update only specific columns without running validations or callbacks, you can use the `#update_columns` or `#update_columns!` methods:
+Si vous devez mettre à jour uniquement des colonnes spécifiques sans exécuter les validations ou les callbacks, vous pouvez utiliser les méthodes `#update_columns` ou `#update_columns!` :
 
 ```crystal
 article = Article.get(id: 42)
 article.update_columns(title: "Updated!")
 ```
 
-These methods are useful when you want to efficiently update a subset of fields without triggering the full save lifecycle. The `#update_columns!` variant will raise an error if called on a new (unsaved) record:
+Ces méthodes sont utiles lorsque vous souhaitez mettre à jour efficacement un sous-ensemble de fields sans déclencher le cycle de vie complet de la sauvegarde. La variante `#update_columns!` lèvera une erreur si elle est appelée sur un enregistrement nouveau (non sauvegardé) :
 
 ```crystal
 article = Article.new
@@ -372,19 +372,19 @@ article.update_columns!(title: "New article")  # Raises Marten::DB::Errors::Unme
 ```
 
 :::caution
-The `#update_columns` and `#update_columns!` methods bypass model validations and lifecycle callbacks (such as `before_update`, `after_update`, etc.). Use them with caution and only when you're certain that skipping these checks is safe for your application.
+Les méthodes `#update_columns` et `#update_columns!` contournent les validations de modèle et les callbacks du cycle de vie (tels que `before_update`, `after_update`, etc.). Utilisez-les avec prudence et uniquement lorsque vous êtes certain que sauter ces vérifications est sûr pour votre application.
 :::
 
-### Delete
+### Supprimer
 
-Once a model record has been retrieved from the database, it is possible to delete it by using the `#delete` method:
+Une fois qu'un enregistrement de modèle a été récupéré de la base de données, il est possible de le supprimer en utilisant la méthode `#delete` :
 
 ```crystal
 article = Article.get(id: 42)
 article.delete
 ```
 
-Marten also provide the ability to delete the records that are targeted by a specific query set through the use of the `#delete` method, like in the following example:
+Marten fournit également la possibilité de supprimer les enregistrements ciblés par un query set spécifique via l'utilisation de la méthode `#delete`, comme dans l'exemple suivant :
 
 ```crystal
 Article.filter(title: "My article").delete
@@ -392,9 +392,9 @@ Article.filter(title: "My article").delete
 
 ## Validations
 
-Marten lets you specify how to validate model records before they are persisted to the database. These validation rules can be inherited from the fields in your model depending on the options you used (for example fields using `blank: false` will make the associated record validation fail if the field value is blank). They can also be explicitly specified in your model class, which is useful if you need to implement custom validation logics.
+Marten vous permet de spécifier comment valider les enregistrements de modèles avant qu'ils ne soient persistés dans la base de données. Ces règles de validation peuvent être héritées des fields de votre modèle selon les options que vous avez utilisées (par exemple, les fields utilisant `blank: false` feront échouer la validation de l'enregistrement associé si la valeur du field est vide). Elles peuvent également être spécifiées explicitement dans votre classe de modèle, ce qui est utile si vous devez implémenter des logiques de validation personnalisées.
 
-For example:
+Par exemple :
 
 ```crystal
 class User < Marten::Model
@@ -409,7 +409,7 @@ class User < Marten::Model
 end
 ```
 
-Most of the methods presented above that actually persist model records to the database (like `#create` or `#save`) run these validation rules. This means that they will automatically validate the considered records before propagating any changes to the database. It should be noted that in the event that a record is invalid, these methods will return `false` to indicate that the considered object is invalid (and they will return `true` if the object is valid). The `#create` and `#save` methods also have bang counterparts (`#create!` and `#save!`) that will explicitly raise a validation error in case of invalid records:
+La plupart des méthodes présentées ci-dessus qui persistent effectivement les enregistrements de modèles dans la base de données (comme `#create` ou `#save`) exécutent ces règles de validation. Cela signifie qu'elles valideront automatiquement les enregistrements considérés avant de propager les modifications vers la base de données. Il est à noter que dans le cas où un enregistrement est invalide, ces méthodes retourneront `false` pour indiquer que l'objet considéré est invalide (et elles retourneront `true` si l'objet est valide). Les méthodes `#create` et `#save` ont également des variantes bang (`#create!` et `#save!`) qui lèveront explicitement une erreur de validation en cas d'enregistrements invalides :
 
 ```crystal
 article = Article.new
@@ -419,19 +419,19 @@ article.save!
 # => Unhandled exception: Record is invalid (Marten::DB::Errors::InvalidRecord)
 ```
 
-Please head over to the [Model validations](./validations.md) guide in order to learn more about model validations.
+Veuillez consulter le guide [Validations de modèles](./validations.md) pour en savoir plus sur les validations de modèles.
 
-## Inheritance
+## Héritage
 
-Model classes can inherit from each other. This allows you to easily reuse the field definitions and table attributes of a parent model within a child model.
+Les classes de modèles peuvent hériter les unes des autres. Cela vous permet de réutiliser facilement les définitions de fields et les attributs de table d'un modèle parent dans un modèle enfant.
 
-Presently, the Marten web framework allows [abstract model inheritance](#abstract-model-inheritance) (which is useful in order to reuse shared model fields and patterns over multiple child models without having a database table created for the parent model) and [multi-table inheritance](#multi-table-inheritance).
+Actuellement, le framework web Marten permet [l'héritage de modèle abstrait](#héritage-de-modèle-abstrait) (utile pour réutiliser des fields de modèle et des patterns partagés sur plusieurs modèles enfants sans qu'une table de base de données soit créée pour le modèle parent) et [l'héritage multi-table](#héritage-multi-table).
 
-### Abstract model inheritance
+### Héritage de modèle abstrait
 
-You can define abstract model classes by leveraging [Crystal's abstract type mechanism](https://crystal-lang.org/reference/syntax_and_semantics/virtual_and_abstract_types.html). Doing so allows to easily reuse model field definitions, table properties, and custom logics within child models. In this situation, the parent's model does not contribute any table to the considered database.
+Vous pouvez définir des classes de modèles abstraites en utilisant [le mécanisme de type abstrait de Crystal](https://crystal-lang.org/reference/syntax_and_semantics/virtual_and_abstract_types.html). Cela permet de réutiliser facilement les définitions de fields, les propriétés de table et les logiques personnalisées dans les modèles enfants. Dans cette situation, le modèle parent ne contribue aucune table à la base de données considérée.
 
-For example:
+Par exemple :
 
 ```crystal
 abstract class Person < Marten::Model
@@ -445,13 +445,13 @@ class Student < Person
 end
 ```
 
-The `Student` model will have four model fields in total (`id`, `name`, `email`, and `grade`). Moreover, all the methods of the parent model fields will be available on the child model. It should be noted that in this case the `Person` model cannot be used like a regular model: for example, trying to query records will return an error since no table is actually associated with the abstract model. Since it is an [abstract type](https://crystal-lang.org/reference/syntax_and_semantics/virtual_and_abstract_types.html), the `Student` class can't be instantiated either.
+Le modèle `Student` aura quatre fields au total (`id`, `name`, `email` et `grade`). De plus, toutes les méthodes des fields du modèle parent seront disponibles sur le modèle enfant. Il est à noter que dans ce cas, le modèle `Person` ne peut pas être utilisé comme un modèle régulier : par exemple, essayer d'interroger des enregistrements retournera une erreur puisqu'aucune table n'est réellement associée au modèle abstrait. Puisqu'il s'agit d'un [type abstrait](https://crystal-lang.org/reference/syntax_and_semantics/virtual_and_abstract_types.html), la classe `Student` ne peut pas non plus être instanciée.
 
-### Multi table inheritance
+### Héritage multi-table
 
-Marten also supports another form of model inheritance, where each model in the hierarchy is a concrete model (i.e., a model that is not abstract). In this situation, each model can be used/queried individually and has its own associated table. The framework upholds "links" between each model that uses multi table inheritance and its parent models in order to ensure that the relational structure and inheritance hierarchy are accurately maintained.
+Marten supporte également une autre forme d'héritage de modèle, où chaque modèle dans la hiérarchie est un modèle concret (c'est-à-dire un modèle qui n'est pas abstrait). Dans cette situation, chaque modèle peut être utilisé/interrogé individuellement et possède sa propre table associée. Le framework maintient des "liens" entre chaque modèle qui utilise l'héritage multi-table et ses modèles parents afin de s'assurer que la structure relationnelle et la hiérarchie d'héritage sont correctement maintenues.
 
-For example, let's consider the following models:
+Par exemple, considérons les modèles suivants :
 
 ```crystal
 class Person < Marten::Model
@@ -465,14 +465,14 @@ class Employee < Person
 end
 ```
 
-All the fields defined in the `Person` model will be accessible when interacting with records of the `Employee` model, despite the fact that the data itself is stored in distinct tables. This means that it will be possible to filter `Employee` records using fields defined in the `Person` model, and to interact with the corresponding attributes when manipulating the obtained model instances:
+Tous les fields définis dans le modèle `Person` seront accessibles lors de l'interaction avec les enregistrements du modèle `Employee`, malgré le fait que les données elles-mêmes sont stockées dans des tables distinctes. Cela signifie qu'il sera possible de filtrer les enregistrements `Employee` en utilisant les fields définis dans le modèle `Person`, et d'interagir avec les attributs correspondants lors de la manipulation des instances de modèle obtenues :
 
 ```crystal
 employee = Employee.filter(first_name: "John").first!
 employee.first_name # => "John"
 ```
 
-Initializing or creating `Employee` records will also work as you would expect if all the fields were defined in the `Employee` model class:
+L'initialisation ou la création d'enregistrements `Employee` fonctionnera également comme vous l'attendriez si tous les fields étaient définis dans la classe de modèle `Employee` :
 
 ```crystal
 employee = Employee.create!(
@@ -482,27 +482,27 @@ employee = Employee.create!(
 )
 ```
 
-Additionally, it's important to note that attempting to filter or retrieve `Person` records will return `Person` instances. When manipulating a parent model instance, it is possible to get a child model record by calling the `#<child_model>` method - with `child_model` being the downcased version of the child model name. For example:
+De plus, il est important de noter que tenter de filtrer ou récupérer des enregistrements `Person` retournera des instances `Person`. Lors de la manipulation d'une instance de modèle parent, il est possible d'obtenir un enregistrement de modèle enfant en appelant la méthode `#<child_model>` - où `child_model` est la version en minuscules du nom du modèle enfant. Par exemple :
 
 ```crystal
 person = Person.filter(first_name: "John").first!
 person.employee # => #<Employee:0x101590c40 person_ptr_id: 1, first_name: "John" ...>
 ```
 
-You should note that if the `Person` record is not an employee, then calling `#employee` will return `nil`.
+Vous devez noter que si l'enregistrement `Person` n'est pas un employé, alors l'appel à `#employee` retournera `nil`.
 
 :::note
-It's important to note that when retrieving and filtering model records that utilize multi-table inheritance (such as child model records), there will be added join operations within the underlying SQL queries. These joins are necessary to assemble the complete data from various related tables, potentially affecting the overall query performance.
+Il est important de noter que lors de la récupération et du filtrage d'enregistrements de modèles qui utilisent l'héritage multi-table (comme les enregistrements de modèles enfants), il y aura des opérations de jointure supplémentaires dans les requêtes SQL sous-jacentes. Ces jointures sont nécessaires pour assembler les données complètes à partir des différentes tables liées, ce qui peut potentiellement affecter les performances globales des requêtes.
 :::
 
 ## Callbacks
 
-It is possible to define callbacks in your model in order to bind methods and logics to specific events in the life cycle of your model records. For example, it is possible to define callbacks that run before a record gets created, or before it is destroyed.
+Il est possible de définir des callbacks dans votre modèle afin de lier des méthodes et des logiques à des événements spécifiques du cycle de vie de vos enregistrements de modèles. Par exemple, il est possible de définir des callbacks qui s'exécutent avant la création d'un enregistrement, ou avant sa destruction.
 
-Please head over to the [Model callbacks](./callbacks.md) guide in order to learn more about model callbacks.
+Veuillez consulter le guide [Callbacks de modèles](./callbacks.md) pour en savoir plus sur les callbacks de modèles.
 
 ## Migrations
 
-When working with models, it is necessary to ensure that any changes made to model definitions are applied at the database level. This is achieved through the use of migrations. 
+Lorsque vous travaillez avec des modèles, il est nécessaire de s'assurer que toute modification apportée aux définitions de modèles est appliquée au niveau de la base de données. Ceci est réalisé grâce à l'utilisation des migrations.
 
-Marten provides a migrations mechanism that is designed to be automatic: this means that migrations will be automatically generated from your model definitions when you run a dedicated command (the `genmigrations` command). Please head over to [Model migrations](./migrations.md) in order to learn more about migrations generations and the associated workflows.
+Marten fournit un mécanisme de migrations conçu pour être automatique : cela signifie que les migrations seront automatiquement générées à partir de vos définitions de modèles lorsque vous exécuterez une commande dédiée (la commande `genmigrations`). Veuillez consulter [Migrations de modèles](./migrations.md) pour en savoir plus sur la génération de migrations et les workflows associés.
