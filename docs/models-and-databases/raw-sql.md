@@ -19,7 +19,7 @@ end
 ```
 
 :::tip
-Vous devez connaître le nom de la table du modèle que vous ciblez pour utiliser la méthode de query set [`#raw`](./reference/query-set.md#raw). Sauf si vous avez explicitement remplacé ce nom en utilisant la méthode de classe [`#db_table`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_table(db_table%3AString|Symbol)-instance-method), le nom de la table du modèle est automatiquement généré par Marten en utilisant le format suivant : `<app_name>_<model_name>` (`model_name` étant la version en underscore du nom de classe du modèle).
+Vous devez connaître le nom de la table du modèle que vous ciblez pour utiliser la méthode de query set [`#raw`](./reference/query-set.md#raw). Sauf si vous avez explicitement remplacé ce nom en utilisant la méthode de classe [`#db_table`](https://martenframework.com/docs/api/dev/Marten/DB/Model/Table/ClassMethods.html#db_table(db_table%3AString|Symbol)-instance-method), le nom de la table du modèle est automatiquement généré par Marten en utilisant le format suivant : `<app_name>_<model_name>` (`model_name` étant la version en underscore du nom de classe du modèle).
 :::
 
 Il est à noter que vous pouvez également "injecter" des paramètres dans votre requête SQL. Pour ce faire, vous avez deux options : soit vous spécifiez ces paramètres comme arguments positionnels, soit vous les spécifiez comme arguments nommés. Les paramètres positionnels doivent être spécifiés en utilisant la syntaxe `?` tandis que les paramètres nommés doivent être spécifiés en utilisant le format `:param`.
@@ -160,7 +160,7 @@ end
 ```
 
 :::tip
-Si vous utilisez plusieurs bases de données et devez exécuter des instructions SQL sur une base de données qui n'est pas celle par défaut, vous pouvez récupérer l'objet de connexion DB considéré en utilisant la méthode [`Marten::DB::Connection#get`](pathname:///api/dev/Marten/DB/Connection.html#get(db_alias%3AString|Symbol)-class-method). Cette méthode nécessite simplement un argument correspondant à l'alias DB que vous souhaitez récupérer (c'est-à-dire l'alias que vous avez assigné à la base de données dans la [configuration des bases de données](../development/reference/settings.md#database-settings)) et retourne la connexion DB correspondante :
+Si vous utilisez plusieurs bases de données et devez exécuter des instructions SQL sur une base de données qui n'est pas celle par défaut, vous pouvez récupérer l'objet de connexion DB considéré en utilisant la méthode [`Marten::DB::Connection#get`](https://martenframework.com/docs/api/dev/Marten/DB/Connection.html#get(db_alias%3AString|Symbol)-class-method). Cette méthode nécessite simplement un argument correspondant à l'alias DB que vous souhaitez récupérer (c'est-à-dire l'alias que vous avez assigné à la base de données dans la [configuration des bases de données](../development/reference/settings.md#database-settings)) et retourne la connexion DB correspondante :
 
 ```crystal
 db = Marten::DB::Connection.get(:other_db)
@@ -171,7 +171,7 @@ end
 ```
 :::
 
-La méthode [`#open`](pathname:///api/dev/Marten/DB/Connection/Base.html#open(%26)-instance-method) permet d'ouvrir une connexion à la base de données considérée, que vous pouvez ensuite utiliser pour effectuer des requêtes. Cette méthode utilise le [mécanisme d'ouverture DB de Crystal](https://crystal-lang.org/reference/database/index.html#open-database) et elle retourne les mêmes objets de connexion DB que vous obtiendriez si vous utilisiez `DB#open` directement :
+La méthode [`#open`](https://martenframework.com/docs/api/dev/Marten/DB/Connection/Base.html#open(%26)-instance-method) permet d'ouvrir une connexion à la base de données considérée, que vous pouvez ensuite utiliser pour effectuer des requêtes. Cette méthode utilise le [mécanisme d'ouverture DB de Crystal](https://crystal-lang.org/reference/database/index.html#open-database) et elle retourne les mêmes objets de connexion DB que vous obtiendriez si vous utilisiez `DB#open` directement :
 
 ```crystal
 Marten::DB::Connection.default.open do |db|

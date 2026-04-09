@@ -105,10 +105,10 @@ En utilisant le client de test, vous pouvez facilement simuler diverses requête
 
 #### Un exemple simple
 
-Pour utiliser le client de test, vous pouvez soit initialiser un objet [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec/Client.html) soit utiliser le client de test par spec fourni par la méthode [`Marten::Spec#client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method). L'initialisation de nouveaux objets [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method) vous permet de définir des propriétés à l'échelle du client, comme un type de contenu par défaut.
+Pour utiliser le client de test, vous pouvez soit initialiser un objet [`Marten::Spec::Client`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html) soit utiliser le client de test par spec fourni par la méthode [`Marten::Spec#client`](https://martenframework.com/docs/api/dev/Marten/Spec.html#client%3AClient-class-method). L'initialisation de nouveaux objets [`Marten::Spec::Client`](https://martenframework.com/docs/api/dev/Marten/Spec.html#client%3AClient-class-method) vous permet de définir des propriétés à l'échelle du client, comme un type de contenu par défaut.
 
 :::info
-Notez que le client retourné par la méthode [`Marten::Spec#client`](pathname:///api/dev/Marten/Spec.html#client%3AClient-class-method) est mémorisé et est réinitialisé après _chaque_ exécution de spec.
+Notez que le client retourné par la méthode [`Marten::Spec#client`](https://martenframework.com/docs/api/dev/Marten/Spec.html#client%3AClient-class-method) est mémorisé et est réinitialisé après _chaque_ exécution de spec.
 :::
 
 Voyons une manière simple d'utiliser le client de test et de vérifier les réponses correspondantes :
@@ -127,7 +127,7 @@ end
 ```
 
 :::tip
-Dans l'exemple ci-dessus, nous spécifions simplement un chemin "brut" en codant sa valeur en dur. Dans un scénario réel, vous voudrez probablement [résoudre les URLs de vos handlers](../handlers-and-http/routing.md#reverse-url-resolutions) en utilisant la méthode [`Marten::Routing::Map#reverse`](pathname:///api/dev/Marten/Routing/Map.html#reverse(name%3AString|Symbol%2Cparams%3AHash(String|Symbol%2CParameter%3A%3ATypes))-instance-method) de la carte de routes principale (de cette façon, vous ne codez pas en dur les chemins de routes dans vos specs). Par exemple
+Dans l'exemple ci-dessus, nous spécifions simplement un chemin "brut" en codant sa valeur en dur. Dans un scénario réel, vous voudrez probablement [résoudre les URLs de vos handlers](../handlers-and-http/routing.md#reverse-url-resolutions) en utilisant la méthode [`Marten::Routing::Map#reverse`](https://martenframework.com/docs/api/dev/Marten/Routing/Map.html#reverse(name%3AString|Symbol%2Cparams%3AHash(String|Symbol%2CParameter%3A%3ATypes))-instance-method) de la carte de routes principale (de cette façon, vous ne codez pas en dur les chemins de routes dans vos specs). Par exemple
 
 ```crystal
 url = Marten.routes.reverse("article_detail", pk: 42)
@@ -135,12 +135,12 @@ response = Marten::Spec.client.get(url, query_params: {"foo" => "bar"})
 ```
 :::
 
-Ici, nous émettons simplement une requête GET (en utilisant la méthode [`#get`](pathname:///api/dev/Marten/Spec/Client.html#get(path%3AString%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method) du client de test) et testons la réponse obtenue. Quelques points peuvent être notés :
+Ici, nous émettons simplement une requête GET (en utilisant la méthode [`#get`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html#get(path%3AString%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method) du client de test) et testons la réponse obtenue. Quelques points peuvent être notés :
 
 * Le client de test ne nécessite pas que le serveur de votre projet soit en cours d'exécution : en interne, il utilise une chaîne légère de handlers de serveur qui garantit que les middlewares de votre projet sont appliqués et que l'URL que vous avez demandée est résolue et mappée au bon handler
 * Seul le chemin vers le handler doit être spécifié lors de l'émission de requêtes (ex. `/foo/bar`)
 
-Notez que vous pouvez également émettre d'autres types de requêtes en utilisant des méthodes comme [`#post`](pathname:///api/dev/Marten/Spec/Client.html#post(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method), [`#put`](pathname:///api/dev/Marten/Spec/Client.html#put(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method) ou [`#delete`](pathname:///api/dev/Marten/Spec/Client.html#delete(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method). Par exemple :
+Notez que vous pouvez également émettre d'autres types de requêtes en utilisant des méthodes comme [`#post`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html#post(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method), [`#put`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html#put(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method) ou [`#delete`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html#delete(path%3AString%2Cdata%3AHash|NamedTuple|Nil|String%3Dnil%2Cquery_params%3AHash|NamedTuple|Nil%3Dnil%2Ccontent_type%3AString|Nil%3Dnil%2Cheaders%3AHash|NamedTuple|Nil%3Dnil%2Csecure%3Dfalse)%3AMarten%3A%3AHTTP%3A%3AResponse-instance-method). Par exemple :
 
 ```crystal
 describe MySchemaHandler do
@@ -156,12 +156,12 @@ end
 ```
 
 :::info
-Par défaut, les vérifications CSRF sont désactivées pour les requêtes émises par le client de test. Si pour une raison quelconque vous devez vous assurer qu'elles sont activées, vous pouvez initialiser un objet [`Marten::Spec::Client`](pathname:///api/dev/Marten/Spec/Client.html) avec `disable_request_forgery_protection: false`.
+Par défaut, les vérifications CSRF sont désactivées pour les requêtes émises par le client de test. Si pour une raison quelconque vous devez vous assurer qu'elles sont activées, vous pouvez initialiser un objet [`Marten::Spec::Client`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html) avec `disable_request_forgery_protection: false`.
 :::
 
 #### Inspecter les réponses
 
-Les réponses retournées par le client de test sont des instances de la classe standard [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). En tant que tel, vous pouvez facilement accéder aux attributs de la réponse tels que le code de statut, le contenu et le type de contenu, les cookies et les en-têtes dans vos specs afin de vérifier que la réponse attendue a été retournée par votre handler.
+Les réponses retournées par le client de test sont des instances de la classe standard [`Marten::HTTP::Response`](https://martenframework.com/docs/api/dev/Marten/HTTP/Response.html). En tant que tel, vous pouvez facilement accéder aux attributs de la réponse tels que le code de statut, le contenu et le type de contenu, les cookies et les en-têtes dans vos specs afin de vérifier que la réponse attendue a été retournée par votre handler.
 
 #### Exceptions
 
@@ -169,9 +169,9 @@ Il est important de noter que les exceptions levées dans vos handlers seront vi
 
 #### Session et cookies
 
-Les clients de test sont toujours avec état : si un handler définit un cookie dans la réponse retournée, alors ce cookie sera stocké dans le magasin de cookies du client (disponible via la méthode [`#cookies`](pathname:///api/dev/Marten/Spec/Client.html#cookies-instance-method)) et sera automatiquement envoyé pour les requêtes suivantes émises par le client.
+Les clients de test sont toujours avec état : si un handler définit un cookie dans la réponse retournée, alors ce cookie sera stocké dans le magasin de cookies du client (disponible via la méthode [`#cookies`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html#cookies-instance-method)) et sera automatiquement envoyé pour les requêtes suivantes émises par le client.
 
-Il en va de même pour les valeurs de session : de telles valeurs peuvent être définies en utilisant le magasin de session retourné par la méthode client [`#sessions`](pathname:///api/dev/Marten/Spec/Client.html#session-instance-method). Si vous définissez des valeurs de session dans ce magasin avant toute requête, le handler correspondant y aura accès et les nouvelles valeurs définies par le handler seront disponibles pour une inspection ultérieure une fois la réponse retournée. Ces valeurs de session sont également maintenues entre les requêtes émises par un même client.
+Il en va de même pour les valeurs de session : de telles valeurs peuvent être définies en utilisant le magasin de session retourné par la méthode client [`#sessions`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html#session-instance-method). Si vous définissez des valeurs de session dans ce magasin avant toute requête, le handler correspondant y aura accès et les nouvelles valeurs définies par le handler seront disponibles pour une inspection ultérieure une fois la réponse retournée. Ces valeurs de session sont également maintenues entre les requêtes émises par un même client.
 
 Par exemple :
 
@@ -193,7 +193,7 @@ end
 
 #### Messages flash {#flash-messages}
 
-De manière similaire à l'accès aux valeurs de session, vous pouvez également accéder aux messages flash en utilisant la méthode [`#flash`](pathname:///api/dev/Marten/Spec/Client.html#flash-instance-method) du client de test. Cette méthode retourne un objet [`Marten::HTTP::FlashStore`](pathname:///api/dev/Marten/HTTP/FlashStore.html), initialisé à partir du magasin de session actuellement configuré. Cela peut être utile pour accéder aux messages flash qui auraient pu être définis par les handlers et vérifier qu'ils ont les valeurs attendues.
+De manière similaire à l'accès aux valeurs de session, vous pouvez également accéder aux messages flash en utilisant la méthode [`#flash`](https://martenframework.com/docs/api/dev/Marten/Spec/Client.html#flash-instance-method) du client de test. Cette méthode retourne un objet [`Marten::HTTP::FlashStore`](https://martenframework.com/docs/api/dev/Marten/HTTP/FlashStore.html), initialisé à partir du magasin de session actuellement configuré. Cela peut être utile pour accéder aux messages flash qui auraient pu être définis par les handlers et vérifier qu'ils ont les valeurs attendues.
 
 Par exemple :
 
@@ -254,7 +254,7 @@ Marten.configure :test do |config|
 end
 ```
 
-Cela garantira que tous les emails envoyés sont "collectés" pour une inspection ultérieure. Vous pouvez facilement récupérer les emails collectés en appelant la méthode [`Marten::Spec#delivered_emails`](pathname:///api/dev/Marten/Spec.html#delivered_emails%3AArray(Emailing%3A%3AEmail)-class-method), qui retourne un tableau d'instances de [`Marten::Email`](pathname:///api/dev/Marten/Emailing/Email.html). Par exemple :
+Cela garantira que tous les emails envoyés sont "collectés" pour une inspection ultérieure. Vous pouvez facilement récupérer les emails collectés en appelant la méthode [`Marten::Spec#delivered_emails`](https://martenframework.com/docs/api/dev/Marten/Spec.html#delivered_emails%3AArray(Emailing%3A%3AEmail)-class-method), qui retourne un tableau d'instances de [`Marten::Email`](https://martenframework.com/docs/api/dev/Marten/Emailing/Email.html). Par exemple :
 
 ```crystal
 describe MyObject do

@@ -50,7 +50,7 @@ class MyHandler < Marten::Handler
 end
 ```
 
-Lorsque l'un des callbacks `before_dispatch` définis retourne un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) (comme c'est le cas dans l'exemple ci-dessus), cette réponse est toujours utilisée au lieu d'appeler la méthode `#dispatch` du handler (cette dernière est ainsi complètement contournée).
+Lorsque l'un des callbacks `before_dispatch` définis retourne un objet [`Marten::HTTP::Response`](https://martenframework.com/docs/api/dev/Marten/HTTP/Response.html) (comme c'est le cas dans l'exemple ci-dessus), cette réponse est toujours utilisée au lieu d'appeler la méthode `#dispatch` du handler (cette dernière est ainsi complètement contournée).
 
 ### `after_dispatch`
 
@@ -70,7 +70,7 @@ class MyHandler < Marten::Handler
 end
 ```
 
-De manière similaire aux callbacks `#before_dispatch`, les callbacks `#after_dispatch` peuvent retourner un tout nouvel objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). Lorsque c'est le cas, cette réponse est toujours utilisée au lieu de celle retournée par la méthode `#dispatch` du handler.
+De manière similaire aux callbacks `#before_dispatch`, les callbacks `#after_dispatch` peuvent retourner un tout nouvel objet [`Marten::HTTP::Response`](https://martenframework.com/docs/api/dev/Marten/HTTP/Response.html). Lorsque c'est le cas, cette réponse est toujours utilisée au lieu de celle retournée par la méthode `#dispatch` du handler.
 
 ### `before_render`
 
@@ -89,13 +89,13 @@ class MyHandler < Marten::Handlers::Template
 end
 ```
 
-Notez que les callbacks `before_render` peuvent techniquement être utilisés pour retourner un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). Lorsque cette situation se présente, cette réponse prend toujours le pas sur celle qui aurait été retournée suite au rendu du template.
+Notez que les callbacks `before_render` peuvent techniquement être utilisés pour retourner un objet [`Marten::HTTP::Response`](https://martenframework.com/docs/api/dev/Marten/HTTP/Response.html). Lorsque cette situation se présente, cette réponse prend toujours le pas sur celle qui aurait été retournée suite au rendu du template.
 
 ## Callbacks de handler schema
 
-Les callbacks suivants ne sont disponibles que pour les handlers qui héritent du [handler schema](./reference/generic-handlers.md#traitement-dun-schéma). C'est-à-dire les handlers qui héritent de [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html), mais aussi les handlers qui héritent de [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) et [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html).
+Les callbacks suivants ne sont disponibles que pour les handlers qui héritent du [handler schema](./reference/generic-handlers.md#traitement-dun-schéma). C'est-à-dire les handlers qui héritent de [`Marten::Handlers::Schema`](https://martenframework.com/docs/api/dev/Marten/Handlers/Schema.html), mais aussi les handlers qui héritent de [`Marten::Handlers::RecordCreate`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordCreate.html) et [`Marten::Handlers::RecordUpdate`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordUpdate.html).
 
-Ces callbacks vous permettent de définir des logiques qui sont déclenchées avant ou après la validation du schéma. Cela vous permet d'intercepter facilement la validation et de gérer la réponse indépendamment de la validité du schéma. Tous ces callbacks peuvent optionnellement retourner un objet [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html). Lorsqu'une réponse HTTP est retournée,
+Ces callbacks vous permettent de définir des logiques qui sont déclenchées avant ou après la validation du schéma. Cela vous permet d'intercepter facilement la validation et de gérer la réponse indépendamment de la validité du schéma. Tous ces callbacks peuvent optionnellement retourner un objet [`Marten::HTTP::Response`](https://martenframework.com/docs/api/dev/Marten/HTTP/Response.html). Lorsqu'une réponse HTTP est retournée,
 tous les callbacks suivants sont ignorés et la réponse obtenue est retournée directement, contournant ainsi les réponses qui auraient pu être retournées ensuite par le handler.
 
 ### `before_schema_validation`

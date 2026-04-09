@@ -145,7 +145,7 @@ other_query_set = Book.all.annotate do
 end
 ```
 
-Chacune des annotations spécifiées est ensuite disponible pour une utilisation ultérieure dans le query set (afin de filtrer ou ordonner les enregistrements). Les annotations sont également disponibles dans les enregistrements de modèle récupérés via la méthode [`#annotations`](pathname:///api/dev/Marten/DB/Model.html#annotations%3AHash(String%2CBool|File|Float32|Float64|Int32|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3ADB%3A%3AField%3A%3AFile%3A%3AFile|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Symbol|Time|Time%3A%3ASpan|UUID|Nil)-instance-method), qui retourne un hash contenant les annotations comme clés et leurs valeurs comme valeurs.
+Chacune des annotations spécifiées est ensuite disponible pour une utilisation ultérieure dans le query set (afin de filtrer ou ordonner les enregistrements). Les annotations sont également disponibles dans les enregistrements de modèle récupérés via la méthode [`#annotations`](https://martenframework.com/docs/api/dev/Marten/DB/Model.html#annotations%3AHash(String%2CBool|File|Float32|Float64|Int32|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3ADB%3A%3AField%3A%3AFile%3A%3AFile|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Symbol|Time|Time%3A%3ASpan|UUID|Nil)-instance-method), qui retourne un hash contenant les annotations comme clés et leurs valeurs comme valeurs.
 
 Voici les types d'annotation supportés :
 
@@ -339,7 +339,7 @@ Author.prefetch(:books__genres, :publisher)
 
 Retourne un query set brut pour la requête SQL passée et les paramètres optionnels.
 
-Cette méthode retourne un objet [`Marten::DB::Query::RawSet`](pathname:///api/dev/Marten/DB/Query/RawSet.html), qui permet d'itérer sur les enregistrements de modèle correspondant à la requête SQL passée. Par exemple :
+Cette méthode retourne un objet [`Marten::DB::Query::RawSet`](https://martenframework.com/docs/api/dev/Marten/DB/Query/RawSet.html), qui permet d'itérer sur les enregistrements de modèle correspondant à la requête SQL passée. Par exemple :
 
 ```crystal
 Article.all.raw("SELECT * FROM articles")
@@ -751,7 +751,7 @@ Product.all.minimum(:price)  # Récupère le prix le plus bas parmi tous les pro
 
 Retourne un paginateur qui peut être utilisé pour paginer le query set actuel.
 
-Cette méthode retourne un objet [`Marten::DB::Query::Paginator`](pathname:///Marten/DB/Query/Paginator.html), qui peut ensuite être utilisé pour récupérer des pages spécifiques. Une taille de page doit être spécifiée lors de l'appel de cette méthode.
+Cette méthode retourne un objet [`Marten::DB::Query::Paginator`](https://martenframework.com/docs/api/dev/Marten/DB/Query/Paginator.html), qui peut ensuite être utilisé pour récupérer des pages spécifiques. Une taille de page doit être spécifiée lors de l'appel de cette méthode.
 
 Par exemple :
 

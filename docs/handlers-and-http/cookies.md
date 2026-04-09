@@ -9,11 +9,11 @@ Les handlers peuvent interagir avec un magasin de cookies que vous pouvez utilis
 
 ### Accéder au magasin de cookies
 
-Les cookies peuvent être manipulés en utilisant un magasin de cookies : une instance de [`Marten::HTTP::Cookies`](pathname:///api/dev/Marten/HTTP/Cookies.html) qui fournit une interface de type hash permettant de récupérer et stocker des valeurs de cookies. Ce magasin de cookies est accessible depuis trois endroits différents :
+Les cookies peuvent être manipulés en utilisant un magasin de cookies : une instance de [`Marten::HTTP::Cookies`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html) qui fournit une interface de type hash permettant de récupérer et stocker des valeurs de cookies. Ce magasin de cookies est accessible depuis trois endroits différents :
 
-* Les handlers peuvent y accéder via la méthode [`#cookies`](pathname:///api/dev/Marten/Handlers/Cookies.html#cookies(*args%2C**options)-instance-method).
-* Les objets [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html) donnent accès aux cookies associés à la requête via la méthode [`#cookies`](pathname:///api/dev/Marten/HTTP/Request.html#cookies-instance-method).
-* Les objets [`Marten::HTTP::Response`](pathname:///api/dev/Marten/HTTP/Response.html) donnent accès aux cookies qui seront retournés avec la réponse HTTP via la méthode [`#cookies`](pathname:///api/dev/Marten/HTTP/Response.html#cookies%3AMarten%3A%3AHTTP%3A%3ACookies-instance-method).
+* Les handlers peuvent y accéder via la méthode [`#cookies`](https://martenframework.com/docs/api/dev/Marten/Handlers/Cookies.html#cookies(*args%2C**options)-instance-method).
+* Les objets [`Marten::HTTP::Request`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html) donnent accès aux cookies associés à la requête via la méthode [`#cookies`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html#cookies-instance-method).
+* Les objets [`Marten::HTTP::Response`](https://martenframework.com/docs/api/dev/Marten/HTTP/Response.html) donnent accès aux cookies qui seront retournés avec la réponse HTTP via la méthode [`#cookies`](https://martenframework.com/docs/api/dev/Marten/HTTP/Response.html#cookies%3AMarten%3A%3AHTTP%3A%3ACookies-instance-method).
 
 
 Voici un exemple très simple d'interaction avec le magasin de cookies dans un handler :
@@ -29,7 +29,7 @@ end
 
 ### Récupérer des valeurs de cookies
 
-La manière la plus simple de récupérer la valeur d'un cookie est d'utiliser la méthode [`#[]`](pathname:///api/dev/Marten/HTTP/Cookies.html#[](name%3AString|Symbol)-instance-method) ou l'une de ses variantes.
+La manière la plus simple de récupérer la valeur d'un cookie est d'utiliser la méthode [`#[]`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#[](name%3AString|Symbol)-instance-method) ou l'une de ses variantes.
 
 Par exemple, les lignes suivantes pourraient être utilisées pour lire la valeur d'un cookie nommé `foo` :
 
@@ -38,7 +38,7 @@ request.cookies[:foo]  # => returns the value of "foo" or raises a KeyError if n
 request.cookies[:foo]? # => returns the value of "foo" or returns nil if not found
 ```
 
-Alternativement, la méthode [`#fetch`](pathname:///api/dev/Marten/HTTP/Cookies.html#fetch(name%3AString|Symbol%2Cdefault%3Dnil)-instance-method) peut également être utilisée pour exécuter un bloc ou retourner une valeur par défaut si le cookie spécifié n'est pas trouvé :
+Alternativement, la méthode [`#fetch`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#fetch(name%3AString|Symbol%2Cdefault%3Dnil)-instance-method) peut également être utilisée pour exécuter un bloc ou retourner une valeur par défaut si le cookie spécifié n'est pas trouvé :
 
 ```crystal
 request.cookies.fetch(:foo, "defaultval")
@@ -47,15 +47,15 @@ request.cookies.fetch(:foo) { "defaultval" }
 
 ### Définir des cookies
 
-La manière la plus simple de définir un nouveau cookie est d'appeler la méthode [`#[]=`](pathname:///api/dev/Marten/HTTP/Cookies.html#[]%3D(name%2Cvalue)-instance-method) sur un magasin de cookies. Par exemple :
+La manière la plus simple de définir un nouveau cookie est d'appeler la méthode [`#[]=`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#[]%3D(name%2Cvalue)-instance-method) sur un magasin de cookies. Par exemple :
 
 ```crystal
 request.cookies[:foo] = "bar"
 ```
 
-Appeler cette méthode créera un nouveau cookie avec le nom et la valeur spécifiés. Il convient de noter que les cookies créés avec la méthode [`#[]=`](pathname:///api/dev/Marten/HTTP/Cookies.html#[]%3D(name%2Cvalue)-instance-method) n'expireront _pas_, seront associés au chemin racine (`/`), et ne seront pas sécurisés.
+Appeler cette méthode créera un nouveau cookie avec le nom et la valeur spécifiés. Il convient de noter que les cookies créés avec la méthode [`#[]=`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#[]%3D(name%2Cvalue)-instance-method) n'expireront _pas_, seront associés au chemin racine (`/`), et ne seront pas sécurisés.
 
-Alternativement, il est possible d'utiliser la méthode [`#set`](pathname:///api/dev/Marten/HTTP/Cookies.html#set(name%3AString|Symbol%2Cvalue%2Cexpires%3ATime|Nil%3Dnil%2Cpath%3AString%3D"/"%2Cdomain%3AString|Nil%3Dnil%2Csecure%3ABool%3Dfalse%2Chttp_only%3ABool%3Dfalse%2Csame_site%3ANil|String|Symbol%3Dnil)%3ANil-instance-method) pour spécifier des propriétés de cookie personnalisées lors de la définition de nouvelles valeurs de cookies. Par exemple :
+Alternativement, il est possible d'utiliser la méthode [`#set`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#set(name%3AString|Symbol%2Cvalue%2Cexpires%3ATime|Nil%3Dnil%2Cpath%3AString%3D"/"%2Cdomain%3AString|Nil%3Dnil%2Csecure%3ABool%3Dfalse%2Chttp_only%3ABool%3Dfalse%2Csame_site%3ANil|String|Symbol%3Dnil)%3ANil-instance-method) pour spécifier des propriétés de cookie personnalisées lors de la définition de nouvelles valeurs de cookies. Par exemple :
 
 ```crystal
 request.cookies.set(
@@ -67,7 +67,7 @@ request.cookies.set(
 )
 ```
 
-En plus du nom et de la valeur du cookie, la méthode [`#set`](pathname:///api/dev/Marten/HTTP/Cookies.html#set(name%3AString|Symbol%2Cvalue%2Cexpires%3ATime|Nil%3Dnil%2Cpath%3AString%3D"/"%2Cdomain%3AString|Nil%3Dnil%2Csecure%3ABool%3Dfalse%2Chttp_only%3ABool%3Dfalse%2Csame_site%3ANil|String|Symbol%3Dnil)%3ANil-instance-method) permet de définir certaines propriétés supplémentaires du cookie :
+En plus du nom et de la valeur du cookie, la méthode [`#set`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#set(name%3AString|Symbol%2Cvalue%2Cexpires%3ATime|Nil%3Dnil%2Cpath%3AString%3D"/"%2Cdomain%3AString|Nil%3Dnil%2Csecure%3ABool%3Dfalse%2Chttp_only%3ABool%3Dfalse%2Csame_site%3ANil|String|Symbol%3Dnil)%3ANil-instance-method) permet de définir certaines propriétés supplémentaires du cookie :
 
 * La date et heure d'expiration du cookie (argument `expires`).
 * Le `path` du cookie.
@@ -78,7 +78,7 @@ En plus du nom et de la valeur du cookie, la méthode [`#set`](pathname:///api/d
 
 ### Supprimer des cookies
 
-Les cookies peuvent être supprimés en utilisant la méthode [`#delete`](pathname:///api/dev/Marten/HTTP/Cookies.html#delete(name%3AString|Symbol%2Cpath%3AString%3D"/"%2Cdomain%3AString|Nil%3Dnil%2Csame_site%3ANil|String|Symbol%3Dnil)%3AString|Nil-instance-method). Cette méthode supprimera un cookie spécifique et retournera sa valeur, ou `nil` si le cookie n'existe pas :
+Les cookies peuvent être supprimés en utilisant la méthode [`#delete`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#delete(name%3AString|Symbol%2Cpath%3AString%3D"/"%2Cdomain%3AString|Nil%3Dnil%2Csame_site%3ANil|String|Symbol%3Dnil)%3AString|Nil-instance-method). Cette méthode supprimera un cookie spécifique et retournera sa valeur, ou `nil` si le cookie n'existe pas :
 
 ```crystal
 request.cookies.delete(:foo)
@@ -94,7 +94,7 @@ Notez que les valeurs `path`, `domain` et `same_site` doivent toujours être les
 
 ## Cookies signés
 
-En plus du [magasin de cookies classique](#accéder-au-magasin-de-cookies), Marten fournit une version de magasin de cookies signés (accessible via la méthode [`Marten::HTTP::Cookies#signed`](pathname:///api/dev/Marten/HTTP/Cookies.html#signed-instance-method)) où les cookies sont signés (mais **pas** chiffrés). Cela signifie que lorsqu'un cookie est demandé depuis ce magasin, la représentation signée de la valeur correspondante sera vérifiée. Cela est utile pour créer des cookies qui ne peuvent pas être falsifiés par les utilisateurs, mais il convient de noter que les données réelles peuvent toujours être lues par le client techniquement.
+En plus du [magasin de cookies classique](#accéder-au-magasin-de-cookies), Marten fournit une version de magasin de cookies signés (accessible via la méthode [`Marten::HTTP::Cookies#signed`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#signed-instance-method)) où les cookies sont signés (mais **pas** chiffrés). Cela signifie que lorsqu'un cookie est demandé depuis ce magasin, la représentation signée de la valeur correspondante sera vérifiée. Cela est utile pour créer des cookies qui ne peuvent pas être falsifiés par les utilisateurs, mais il convient de noter que les données réelles peuvent toujours être lues par le client techniquement.
 
 Toutes les méthodes utilisables avec le magasin de cookies classique mises en évidence dans [Utilisation de base](#utilisation-de-base) peuvent également être utilisées avec le magasin de cookies signés :
 
@@ -113,7 +113,7 @@ request.signed.cookies.set(:foo, "bar", expires: 2.days.from_now)
 request.signed.cookies.delete(:foo)
 ```
 
-Le magasin de cookies signés utilise un objet signataire [`Marten::Core::Signer`](pathname:///api/dev/Marten/Core/Signer.html) pour signer les valeurs des cookies et vérifier la signature des cookies récupérés. Cela signifie que les cookies sont signés avec des signatures HMAC utilisant l'algorithme de hachage **SHA256**.
+Le magasin de cookies signés utilise un objet signataire [`Marten::Core::Signer`](https://martenframework.com/docs/api/dev/Marten/Core/Signer.html) pour signer les valeurs des cookies et vérifier la signature des cookies récupérés. Cela signifie que les cookies sont signés avec des signatures HMAC utilisant l'algorithme de hachage **SHA256**.
 
 :::info
 Seules les _valeurs_ des cookies sont signées. Les _noms_ des cookies ne sont pas signés.
@@ -121,7 +121,7 @@ Seules les _valeurs_ des cookies sont signées. Les _noms_ des cookies ne sont p
 
 ## Cookies chiffrés
 
-En plus du [magasin de cookies classique](#accéder-au-magasin-de-cookies), Marten fournit une version de magasin de cookies chiffrés (accessible via la méthode [`Marten::HTTP::Cookies#encrypted`](pathname:///api/dev/Marten/HTTP/Cookies.html#encrypted-instance-method)) où les cookies sont signés et chiffrés. Cela signifie que lorsqu'un cookie est demandé depuis ce magasin, la valeur brute du cookie sera déchiffrée et sa signature sera vérifiée. Cela est utile pour créer des cookies dont les valeurs ne peuvent être ni lues ni falsifiées par les utilisateurs.
+En plus du [magasin de cookies classique](#accéder-au-magasin-de-cookies), Marten fournit une version de magasin de cookies chiffrés (accessible via la méthode [`Marten::HTTP::Cookies#encrypted`](https://martenframework.com/docs/api/dev/Marten/HTTP/Cookies.html#encrypted-instance-method)) où les cookies sont signés et chiffrés. Cela signifie que lorsqu'un cookie est demandé depuis ce magasin, la valeur brute du cookie sera déchiffrée et sa signature sera vérifiée. Cela est utile pour créer des cookies dont les valeurs ne peuvent être ni lues ni falsifiées par les utilisateurs.
 
 Toutes les méthodes utilisables avec le magasin de cookies classique mises en évidence dans [Utilisation de base](#utilisation-de-base) peuvent également être utilisées avec le magasin de cookies chiffrés :
 
@@ -140,7 +140,7 @@ request.encrypted.cookies.set(:foo, "bar", expires: 2.days.from_now)
 request.encrypted.cookies.delete(:foo)
 ```
 
-Le magasin de cookies chiffrés utilise un objet chiffreur [`Marten::Core::Encryptor`](pathname:///api/dev/Marten/Core/Encryptor.html) pour chiffrer et signer les valeurs des cookies. Cela signifie que les cookies sont :
+Le magasin de cookies chiffrés utilise un objet chiffreur [`Marten::Core::Encryptor`](https://martenframework.com/docs/api/dev/Marten/Core/Encryptor.html) pour chiffrer et signer les valeurs des cookies. Cela signifie que les cookies sont :
 
 * chiffrés avec un chiffrement **aes-256-cbc**.
 * signés avec des signatures HMAC utilisant l'algorithme de hachage **SHA256**.

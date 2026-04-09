@@ -14,7 +14,7 @@ Les attaques Cross-Site Request Forgery (CSRF) impliquent généralement un site
 La protection CSRF ignore les requêtes HTTP sûres. Ainsi, vous devez vous assurer que celles-ci sont exemptes d'effets secondaires.
 :::
 
-La protection CSRF fournie par Marten est basée sur la vérification d'un token qui doit être fourni pour chaque requête HTTP non sûre. Ce token est stocké chez le client : Marten envoie un cookie de token avec chaque réponse HTTP lorsque la valeur du token est demandée dans les handlers (méthode [`#get_csrf_token`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection.html#get_csrf_token-instance-method)) ou les templates (par exemple via l'utilisation des tags de template [`csrf_input`](../templates/reference/tags.md#csrf_input) ou [`csrf_token`](../templates/reference/tags.md#csrf_token)). Il convient de noter que la valeur réelle du cookie de token change chaque fois qu'une réponse HTTP est retournée au client : c'est parce que le token secret réel est brouillé en utilisant un masque qui change pour chaque requête où le token CSRF est demandé et utilisé.
+La protection CSRF fournie par Marten est basée sur la vérification d'un token qui doit être fourni pour chaque requête HTTP non sûre. Ce token est stocké chez le client : Marten envoie un cookie de token avec chaque réponse HTTP lorsque la valeur du token est demandée dans les handlers (méthode [`#get_csrf_token`](https://martenframework.com/docs/api/dev/Marten/Handlers/RequestForgeryProtection.html#get_csrf_token-instance-method)) ou les templates (par exemple via l'utilisation des tags de template [`csrf_input`](../templates/reference/tags.md#csrf_input) ou [`csrf_token`](../templates/reference/tags.md#csrf_token)). Il convient de noter que la valeur réelle du cookie de token change chaque fois qu'une réponse HTTP est retournée au client : c'est parce que le token secret réel est brouillé en utilisant un masque qui change pour chaque requête où le token CSRF est demandé et utilisé.
 
 La valeur du token doit être spécifiée lors de la soumission de requêtes HTTP non sûres : cela peut être fait soit dans les données elles-mêmes (en spécifiant un input `csrftoken`) soit en utilisant un en-tête spécifique (X-CSRF-Token). Lors de la réception de cette valeur, Marten la compare à la valeur du cookie de token : si les tokens ne sont pas valides, ou s'il y a une non-correspondance, alors cela signifie que la requête est malveillante et qu'elle doit être rejetée (ce qui résultera en une erreur 403).
 
@@ -23,7 +23,7 @@ Enfin, il convient de noter que quelques vérifications supplémentaires peuvent
 * afin de protéger contre les attaques cross-subdomain, l'hôte de la requête HTTP sera vérifié pour s'assurer qu'il fait partie des hôtes autorisés (paramètre [`allowed_hosts`](../development/reference/settings.md#allowed_hosts)) ou que la valeur de l'en-tête Origin correspond aux origines de confiance configurées (paramètre [`csrf.trusted_origins`](../development/reference/settings.md#trusted_origins))
 * l'en-tête Referer sera également vérifié pour les requêtes HTTPS (si l'en-tête Origin n'est pas défini) afin d'empêcher les sous-domaines d'effectuer des requêtes HTTP non sûres sur les applications web protégées (sauf si ces sous-domaines sont explicitement autorisés dans le paramètre [`csrf.trusted_origins`](../development/reference/settings.md#trusted_origins))
 
-La protection Cross-Site Request Forgery fournie par Marten se produit automatiquement au niveau du handler. Cette protection est implémentée dans le module [`Marten::Handlers::RequestForgeryProtection`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection.html).
+La protection Cross-Site Request Forgery fournie par Marten se produit automatiquement au niveau du handler. Cette protection est implémentée dans le module [`Marten::Handlers::RequestForgeryProtection`](https://martenframework.com/docs/api/dev/Marten/Handlers/RequestForgeryProtection.html).
 
 ## Utilisation basique
 
@@ -113,7 +113,7 @@ La protection CSRF est activée par défaut et peut être configurée via l'util
 
 ## Activer ou désactiver la protection par handler
 
-Indépendamment de la valeur du paramètre [`csrf.protection_enabled`](../development/reference/settings.md#protection_enabled), il est possible d'activer ou de désactiver la protection CSRF par handler. Cela peut être réalisé via l'utilisation de la méthode de classe [`#protect_from_forgery`](pathname:///api/dev/Marten/Handlers/RequestForgeryProtection/ClassMethods.html#protect_from_forgery(protect%3ABool)%3ANil-instance-method), qui prend un seul booléen comme argument :
+Indépendamment de la valeur du paramètre [`csrf.protection_enabled`](../development/reference/settings.md#protection_enabled), il est possible d'activer ou de désactiver la protection CSRF par handler. Cela peut être réalisé via l'utilisation de la méthode de classe [`#protect_from_forgery`](https://martenframework.com/docs/api/dev/Marten/Handlers/RequestForgeryProtection/ClassMethods.html#protect_from_forgery(protect%3ABool)%3ANil-instance-method), qui prend un seul booléen comme argument :
 
 ```crystal
 class ProtectedHandler < Marten::Handler

@@ -21,7 +21,7 @@ Lors de la création d'un champ de schema personnalisé, il y a généralement d
 
 Quelle que soit l'approche que vous adoptez pour définir de nouvelles classes de champs de schema ([sous-classer des champs existants](#sous-classer-des-champs-de-schema-existants), ou [en créer de nouveaux de zéro](#créer-de-nouveaux-champs-de-schema-de-zéro)), ces classes doivent être enregistrées dans le registre global des champs de Marten afin de les rendre disponibles lors de la définition de schemas.
 
-Pour ce faire, vous devrez appeler la méthode [`Marten::Schema::Field#register`](pathname:///api/dev/Marten/Schema/Field.html#register(id%2Cfield_klass)-macro) avec l'identifiant du champ que vous souhaitez utiliser, et la classe de champ réelle. Par exemple :
+Pour ce faire, vous devrez appeler la méthode [`Marten::Schema::Field#register`](https://martenframework.com/docs/api/dev/Marten/Schema/Field.html#register(id%2Cfield_klass)-macro) avec l'identifiant du champ que vous souhaitez utiliser, et la classe de champ réelle. Par exemple :
 
 ```crystal
 Marten::Schema::Field.register(:foo, FooField)
@@ -43,7 +43,7 @@ L'appel à `#register` peut être effectué depuis n'importe où dans votre code
 
 C'est probablement la manière la plus simple de créer un champ personnalisé : si le champ que vous voulez créer peut être dérivé de l'un des [champs de schema intégrés](../reference/fields.md) (ceux-ci correspondent généralement à des types primitifs), alors vous pouvez facilement sous-classer la classe correspondante et la personnaliser pour qu'elle réponde à vos besoins.
 
-Par exemple, implémenter un champ « email » personnalisé pourrait être fait en sous-classant la classe existante [`Marten::Schema::Field::String`](pathname:///api/dev/Marten/Schema/Field/String.html). En effet, un champ « email » est essentiellement une chaîne avec une taille maximale prédéfinie et une logique de validation supplémentaire :
+Par exemple, implémenter un champ « email » personnalisé pourrait être fait en sous-classant la classe existante [`Marten::Schema::Field::String`](https://martenframework.com/docs/api/dev/Marten/Schema/Field/String.html). En effet, un champ « email » est essentiellement une chaîne avec une taille maximale prédéfinie et une logique de validation supplémentaire :
 
 ```crystal
 class EmailField < Marten::Schema::Field::String
@@ -75,7 +75,7 @@ Tout ce qui est décrit dans la section suivante sur la [création de champs de 
 
 ## Créer de nouveaux champs de schema de zéro
 
-Créer de nouveaux champs de schema de zéro implique de sous-classer la classe abstraite [`Marten::Schema::Field::Base`](pathname:///api/dev/Marten/Schema/Field/Base.html). De ce fait, la nouvelle classe de champ doit implémenter un ensemble de méthodes obligatoires. Ces méthodes obligatoires, et d'autres qui sont optionnelles (mais intéressantes en termes de fonctionnalités), sont décrites dans les sections suivantes.
+Créer de nouveaux champs de schema de zéro implique de sous-classer la classe abstraite [`Marten::Schema::Field::Base`](https://martenframework.com/docs/api/dev/Marten/Schema/Field/Base.html). De ce fait, la nouvelle classe de champ doit implémenter un ensemble de méthodes obligatoires. Ces méthodes obligatoires, et d'autres qui sont optionnelles (mais intéressantes en termes de fonctionnalités), sont décrites dans les sections suivantes.
 
 ### Méthodes obligatoires
 
@@ -124,7 +124,7 @@ Encore une fois, si la valeur ne peut pas être traitée correctement par la cla
 
 #### `initialize`
 
-La méthode `#initialize` par défaut fournie par [`Marten::Schema::Field::Base`](pathname:///api/dev/Marten/Schema/Field/Base.html) est assez simple et ressemble à ceci :
+La méthode `#initialize` par défaut fournie par [`Marten::Schema::Field::Base`](https://martenframework.com/docs/api/dev/Marten/Schema/Field/Base.html) est assez simple et ressemble à ceci :
 
 ```crystal
 def initialize(

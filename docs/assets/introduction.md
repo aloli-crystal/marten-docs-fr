@@ -23,7 +23,7 @@ Le flux d'assets fourni par Marten est **intentionnellement simple**. En effet, 
 
 Une fois les assets « collectés », il est possible de générer leurs URL via l'utilisation d'aides dédiées :
 
-* en utilisant le [moteur d'assets](pathname:///api/dev/Marten/Asset/Engine.html#url(filepath%3AString)%3AString-instance-method) en Crystal
+* en utilisant le [moteur d'assets](https://martenframework.com/docs/api/dev/Marten/Asset/Engine.html#url(filepath%3AString)%3AString-instance-method) en Crystal
 * en utilisant le tag [`asset`](../templates/reference/tags.md#asset) dans les templates
 
 La façon dont ces URL d'assets sont générées dépend du [stockage d'assets](../development/reference/settings.md#storage) configuré.
@@ -41,7 +41,7 @@ config.assets.url = "/assets/"
 
 ### Stockage des assets
 
-L'un des paramètres d'assets les plus importants est celui du [`storage`](../development/reference/settings.md#storage). En effet, Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations liées aux assets (comme le téléversement de fichiers, la génération d'URL, etc.) en utilisant une API standardisée. Par défaut, les assets utilisent le backend de stockage [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers d'assets sont collectés et placés dans un dossier spécifique du système de fichiers local : cela permet à ces fichiers d'être ensuite servis par un serveur web tel que Nginx par exemple.
+L'un des paramètres d'assets les plus importants est celui du [`storage`](../development/reference/settings.md#storage). En effet, Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations liées aux assets (comme le téléversement de fichiers, la génération d'URL, etc.) en utilisant une API standardisée. Par défaut, les assets utilisent le backend de stockage [`Marten::Core::Store::FileSystem`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers d'assets sont collectés et placés dans un dossier spécifique du système de fichiers local : cela permet à ces fichiers d'être ensuite servis par un serveur web tel que Nginx par exemple.
 
 ### Répertoire racine des assets
 
@@ -49,7 +49,7 @@ Ce répertoire - qui peut être configuré via l'utilisation du paramètre [`roo
 
 ### URL des assets
 
-L'URL des assets est utilisée lors de la génération des URL pour les assets. Cette URL de base sera utilisée par le stockage par défaut [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html) pour construire les URL d'assets. Par exemple, demander un asset `css/App.css` pourrait générer une URL `/assets/css/App.css`. La valeur par défaut est `/assets/`.
+L'URL des assets est utilisée lors de la génération des URL pour les assets. Cette URL de base sera utilisée par le stockage par défaut [`Marten::Core::Store::FileSystem`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/FileSystem.html) pour construire les URL d'assets. Par exemple, demander un asset `css/App.css` pourrait générer une URL `/assets/css/App.css`. La valeur par défaut est `/assets/`.
 
 ### Répertoires d'assets
 
@@ -113,7 +113,7 @@ Par exemple :
 
 Dans le fragment ci-dessus, l'asset `app/app.css` pourrait être résolu en `/assets/app/app.css` (en fonction de la configuration du projet évidemment).
 
-Il est également possible de résoudre les URL d'assets de manière programmatique en Crystal. Pour ce faire, vous pouvez utiliser la méthode [`#url`](pathname:///api/dev/Marten/Asset/Engine.html#url(filepath%3AString)%3AString-instance-method) du moteur d'assets de Marten :
+Il est également possible de résoudre les URL d'assets de manière programmatique en Crystal. Pour ce faire, vous pouvez utiliser la méthode [`#url`](https://martenframework.com/docs/api/dev/Marten/Asset/Engine.html#url(filepath%3AString)%3AString-instance-method) du moteur d'assets de Marten :
 
 ```crystal
 Marten.assets.url("app/app.css") # => "/assets/app/app.css"
@@ -121,7 +121,7 @@ Marten.assets.url("app/app.css") # => "/assets/app/app.css"
 
 ## Servir les assets en développement
 
-Marten fournit un handler que vous pouvez utiliser pour servir les assets uniquement dans les environnements de développement. Ce handler ([`Marten::Handlers::Defaults::Development::ServeAsset`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeAsset.html)) est automatiquement associé à une route lors de la création de nouveaux projets via l'utilisation de la commande de gestion [`new`](../development/reference/management-commands.md#new) :
+Marten fournit un handler que vous pouvez utiliser pour servir les assets uniquement dans les environnements de développement. Ce handler ([`Marten::Handlers::Defaults::Development::ServeAsset`](https://martenframework.com/docs/api/dev/Marten/Handlers/Defaults/Development/ServeAsset.html)) est automatiquement associé à une route lors de la création de nouveaux projets via l'utilisation de la commande de gestion [`new`](../development/reference/management-commands.md#new) :
 
 ```crystal
 Marten.routes.draw do
@@ -136,7 +136,7 @@ end
 Comme vous pouvez le voir, cette route utilisera automatiquement l'URL configurée dans le paramètre d'asset [`url`](../development/reference/settings.md#url). Par exemple, cela signifie qu'un asset `app/app.css` serait servi par la route `/assets/app/app.css` en développement si le paramètre [`url`](../development/reference/settings.md#url) est défini à `/assets/`.
 
 :::warning
-Il est très important de comprendre que ce handler ne devrait être utilisé **que** dans les environnements de développement. En effet, le handler [`Marten::Handlers::Defaults::Development::ServeAsset`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeAsset.html) ne nécessite pas que les assets aient été collectés au préalable via l'utilisation de la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets). Cela signifie qu'il essaiera de trouver les assets dans les répertoires `assets` de vos applications et dans les répertoires configurés dans le paramètre [`dirs`](../development/reference/settings.md#dirs). Ce mécanisme est utile en développement, mais il n'est pas adapté aux environnements de production car il est inefficace et (probablement) non sécurisé.
+Il est très important de comprendre que ce handler ne devrait être utilisé **que** dans les environnements de développement. En effet, le handler [`Marten::Handlers::Defaults::Development::ServeAsset`](https://martenframework.com/docs/api/dev/Marten/Handlers/Defaults/Development/ServeAsset.html) ne nécessite pas que les assets aient été collectés au préalable via l'utilisation de la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets). Cela signifie qu'il essaiera de trouver les assets dans les répertoires `assets` de vos applications et dans les répertoires configurés dans le paramètre [`dirs`](../development/reference/settings.md#dirs). Ce mécanisme est utile en développement, mais il n'est pas adapté aux environnements de production car il est inefficace et (probablement) non sécurisé.
 :::
 
 ## Servir les assets en production
@@ -153,7 +153,7 @@ Il est à noter qu'il existe de nombreuses façons de servir les assets en produ
 
 ### Servir les assets depuis un serveur web
 
-Comme mentionné précédemment, Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations liées aux assets et les « collecter ». Par défaut, les assets utilisent le backend de stockage [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers d'assets sont collectés et placés dans un dossier spécifique du système de fichiers local. Cela permet à ces assets d'être facilement servis par un serveur web local si vous en avez un correctement configuré.
+Comme mentionné précédemment, Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations liées aux assets et les « collecter ». Par défaut, les assets utilisent le backend de stockage [`Marten::Core::Store::FileSystem`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers d'assets sont collectés et placés dans un dossier spécifique du système de fichiers local. Cela permet à ces assets d'être facilement servis par un serveur web local si vous en avez un correctement configuré.
 
 Par exemple, vous pourriez utiliser un serveur web comme [Apache](https://httpd.apache.org/) ou [Nginx](https://nginx.org) pour servir vos assets collectés. La manière de configurer ces serveurs web variera évidemment d'une solution à une autre, mais vous devrez probablement définir un emplacement dont l'URL correspond à la valeur du paramètre [`url`](../development/reference/settings.md#url) et qui sert les fichiers depuis le dossier où les assets ont été collectés (le dossier [`root`](../development/reference/settings.md#root)).
 
@@ -192,13 +192,13 @@ Pour servir les assets depuis un stockage cloud (comme Amazon S3 ou GCS) et (opt
 Marten ne fournit pas actuellement d'implémentations de stockage de fichiers pour les solutions de stockage cloud les plus couramment rencontrées. C'est cependant quelque chose qui est prévu pour les prochaines versions.
 :::
 
-Écrire une implémentation de stockage de fichiers personnalisée impliquera de sous-classer la classe abstraite [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html) et d'implémenter un ensemble de méthodes obligatoires. La principale différence par rapport à un stockage « système de fichiers local » ici est que vous devrez utiliser l'API du stockage cloud choisi pour effectuer les opérations de fichiers de bas niveau (comme lire le contenu d'un fichier, vérifier qu'un fichier existe ou générer l'URL d'un fichier).
+Écrire une implémentation de stockage de fichiers personnalisée impliquera de sous-classer la classe abstraite [`Marten::Core::Storage::Base`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html) et d'implémenter un ensemble de méthodes obligatoires. La principale différence par rapport à un stockage « système de fichiers local » ici est que vous devrez utiliser l'API du stockage cloud choisi pour effectuer les opérations de fichiers de bas niveau (comme lire le contenu d'un fichier, vérifier qu'un fichier existe ou générer l'URL d'un fichier).
 
 ### Servir les assets en utilisant un middleware
 
 Il existe des situations où il n'est pas possible de configurer facilement un serveur web tel que [Nginx](https://nginx.org) ou un service tiers (comme Amazon S3 ou GCS) pour servir vos assets directement. Pour pallier cela, Marten fournit le middleware [`Marten::Middleware::AssetServing`](../handlers-and-http/reference/middlewares.md#asset-serving-middleware).
 
-Le but de ce middleware est de distribuer les assets collectés stockés sous la racine d'assets configurée (paramètre [`assets.root`](../development/reference/settings.md#root)). Ces assets sont supposés avoir été collectés en utilisant la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets), et il est également supposé qu'un stockage « système de fichiers local » (tel que [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)) est utilisé.
+Le but de ce middleware est de distribuer les assets collectés stockés sous la racine d'assets configurée (paramètre [`assets.root`](../development/reference/settings.md#root)). Ces assets sont supposés avoir été collectés en utilisant la commande de gestion [`collectassets`](../development/reference/management-commands.md#collectassets), et il est également supposé qu'un stockage « système de fichiers local » (tel que [`Marten::Core::Store::FileSystem`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/FileSystem.html)) est utilisé.
 
 Afin d'utiliser ce middleware, vous pouvez l'« insérer » au début du paramètre [`middleware`](../development/reference/settings.md#middleware) lors de la définition des paramètres de production. Par exemple :
 

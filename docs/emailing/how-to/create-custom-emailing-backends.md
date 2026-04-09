@@ -7,7 +7,7 @@ Marten vous permet de créer facilement des [backends d'emailing](../introductio
 
 ## Définition basique d'un backend
 
-Définir un backend d'emailing est aussi simple que de créer une classe qui hérite de la classe abstraite [`Marten::Emailing::Backend::Base`](pathname:///api/dev/Marten/Emailing/Backend/Base.html) et qui implémente une méthode `#deliver` unique. Cette méthode prend un seul argument `email` (instance de [`Marten::Emailing::Email`](pathname:///api/dev/Marten/Emailing/Email.html)), correspondant à l'email à envoyer.
+Définir un backend d'emailing est aussi simple que de créer une classe qui hérite de la classe abstraite [`Marten::Emailing::Backend::Base`](https://martenframework.com/docs/api/dev/Marten/Emailing/Backend/Base.html) et qui implémente une méthode `#deliver` unique. Cette méthode prend un seul argument `email` (instance de [`Marten::Emailing::Email`](https://martenframework.com/docs/api/dev/Marten/Emailing/Email.html)), correspondant à l'email à envoyer.
 
 Par exemple :
 

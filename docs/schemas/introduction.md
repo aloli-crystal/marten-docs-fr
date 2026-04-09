@@ -10,7 +10,7 @@ Les schemas sont des classes qui définissent comment les données d'entrée doi
 
 ### La classe schema
 
-Une classe schema décrit un ensemble _attendu_ de données. Elle décrit la structure logique de ces données, quelles sont les caractéristiques attendues, et quelles sont les règles à utiliser pour déterminer si elles sont valides ou non. Les classes schema doivent hériter de la classe de base [`Marten::Schema`](pathname:///api/dev/Marten/Schema.html) et doivent définir des « champs » via l'utilisation d'une macro `field`. Ces champs permettent de définir quelles données sont attendues par le schema, et comment elles sont validées.
+Une classe schema décrit un ensemble _attendu_ de données. Elle décrit la structure logique de ces données, quelles sont les caractéristiques attendues, et quelles sont les règles à utiliser pour déterminer si elles sont valides ou non. Les classes schema doivent hériter de la classe de base [`Marten::Schema`](https://martenframework.com/docs/api/dev/Marten/Schema.html) et doivent définir des « champs » via l'utilisation d'une macro `field`. Ces champs permettent de définir quelles données sont attendues par le schema, et comment elles sont validées.
 
 Par exemple, le fragment suivant définit un simple schema `ArticleSchema` :
 
@@ -64,7 +64,7 @@ end
 Détaillons un peu plus :
 
 * lorsque la requête entrante est un `GET`, le handler rendra simplement le template `article_create.html`, et initialisera le schema (instance de `ArticleSchema`) avec les données actuellement présentes dans l'objet requête (retourné par la méthode `#request`). Cet objet schema est rendu disponible dans le contexte du template
-* lorsque la requête entrante est un `POST`, il initialisera le schema et essaiera de voir s'il est valide compte tenu des données entrantes (en utilisant la méthode [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method)). S'il est valide, alors un nouvel enregistrement `Article` sera créé en utilisant les données validées du schema ([`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method)), et l'utilisateur sera redirigé vers une page d'accueil. Sinon, le template `article_create.html` sera rendu à nouveau avec le schema invalide dans le contexte associé
+* lorsque la requête entrante est un `POST`, il initialisera le schema et essaiera de voir s'il est valide compte tenu des données entrantes (en utilisant la méthode [`#valid?`](https://martenframework.com/docs/api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method)). S'il est valide, alors un nouvel enregistrement `Article` sera créé en utilisant les données validées du schema ([`#validated_data`](https://martenframework.com/docs/api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method)), et l'utilisateur sera redirigé vers une page d'accueil. Sinon, le template `article_create.html` sera rendu à nouveau avec le schema invalide dans le contexte associé
 
 
 :::tip
@@ -212,13 +212,13 @@ class SignUpSchema < Marten::Schema
 end
 ```
 
-Les validations de schema sont toujours déclenchées par l'utilisation des méthodes [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) : ces méthodes retournent `true` ou `false` selon que les données sont valides ou invalides.
+Les validations de schema sont toujours déclenchées par l'utilisation des méthodes [`#valid?`](https://martenframework.com/docs/api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](https://martenframework.com/docs/api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) : ces méthodes retournent `true` ou `false` selon que les données sont valides ou invalides.
 
 Consultez le guide [Validations de schema](./validations.md) pour en savoir plus sur les validations de schema et comment les personnaliser.
 
 ## Accéder aux données validées
 
-Après avoir effectué les [validations de schema](#validations) (c'est-à-dire après avoir appelé [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) sur un objet schema), l'accès aux données validées est souvent nécessaire. Par exemple, vous pourriez avoir besoin de persister les données validées dans un enregistrement de modèle. Pour y parvenir, vous pouvez utiliser la méthode [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method), qui est accessible dans toutes les instances de schema.
+Après avoir effectué les [validations de schema](#validations) (c'est-à-dire après avoir appelé [`#valid?`](https://martenframework.com/docs/api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](https://martenframework.com/docs/api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) sur un objet schema), l'accès aux données validées est souvent nécessaire. Par exemple, vous pourriez avoir besoin de persister les données validées dans un enregistrement de modèle. Pour y parvenir, vous pouvez utiliser la méthode [`#validated_data`](https://martenframework.com/docs/api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method), qui est accessible dans toutes les instances de schema.
 
 Cette méthode donne accès à un hash qui contient les valeurs de champs désérialisées et validées du schema. Par exemple, considérons l'exemple du schema `ArticleSchema` [mentionné précédemment](#la-classe-schema) :
 
@@ -230,7 +230,7 @@ schema.validated_data["title"]   # => "Test article"
 schema.validated_data["content"] # => "Test content"
 ```
 
-Il est important de noter que l'accès aux valeurs en utilisant [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) comme montré dans l'exemple ci-dessus n'est pas type-safe. Le hash [`#validated_data`](pathname:///api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) peut retourner n'importe quelle valeur de champ de schema supportée, et par conséquent, vous pourriez avoir besoin d'utiliser la pseudo-méthode [`#as`](https://crystal-lang.org/reference/syntax_and_semantics/as.html) pour gérer les données validées récupérées de manière appropriée, selon comment et où vous avez l'intention de les utiliser.
+Il est important de noter que l'accès aux valeurs en utilisant [`#validated_data`](https://martenframework.com/docs/api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) comme montré dans l'exemple ci-dessus n'est pas type-safe. Le hash [`#validated_data`](https://martenframework.com/docs/api/dev/Marten/Schema.html#validated_data%3AHash(String%2CBool|Float64|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Time|Time%3A%3ASpan|UUID|Nil)-instance-method) peut retourner n'importe quelle valeur de champ de schema supportée, et par conséquent, vous pourriez avoir besoin d'utiliser la pseudo-méthode [`#as`](https://crystal-lang.org/reference/syntax_and_semantics/as.html) pour gérer les données validées récupérées de manière appropriée, selon comment et où vous avez l'intention de les utiliser.
 
 Pour pallier cela, Marten définit automatiquement des méthodes type-safe que vous pouvez utiliser pour accéder aux valeurs validées de vos champs de schema :
 
@@ -278,4 +278,4 @@ class ArticleSchema < Marten::Schema
 end
 ```
 
-L'utilisation de méthodes comme [`#valid?`](pathname:///api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](pathname:///api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) déclenchera les callbacks de validation. Voir [Validations de schema](./validations.md) pour plus de détails.
+L'utilisation de méthodes comme [`#valid?`](https://martenframework.com/docs/api/dev/Marten/Core/Validation.html#valid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) ou [`#invalid?`](https://martenframework.com/docs/api/dev/Marten/Core/Validation.html#invalid%3F(context%3ANil|String|Symbol%3Dnil)-instance-method) déclenchera les callbacks de validation. Voir [Validations de schema](./validations.md) pour plus de détails.

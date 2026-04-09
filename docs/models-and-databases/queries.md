@@ -380,7 +380,7 @@ Author.prefetch(:books__genres, :publisher)
 
 ### Pagination
 
-Marten fournit un mécanisme de pagination que vous pouvez utiliser pour itérer facilement sur les enregistrements répartis sur plusieurs pages de données. Cela fonctionne comme suit : chaque objet query set vous permet de générer un "paginateur" (instance de [`Marten::DB::Query::Paginator`](pathname:///api/dev/Marten/DB/Query/Paginator.html)) à partir d'une taille de page donnée (le nombre d'enregistrements que vous souhaitez sur chaque page). Vous pouvez ensuite utiliser ce paginateur pour demander des pages spécifiques, ce qui vous donne accès aux enregistrements correspondants et à des métadonnées de pagination supplémentaires.
+Marten fournit un mécanisme de pagination que vous pouvez utiliser pour itérer facilement sur les enregistrements répartis sur plusieurs pages de données. Cela fonctionne comme suit : chaque objet query set vous permet de générer un "paginateur" (instance de [`Marten::DB::Query::Paginator`](https://martenframework.com/docs/api/dev/Marten/DB/Query/Paginator.html)) à partir d'une taille de page donnée (le nombre d'enregistrements que vous souhaitez sur chaque page). Vous pouvez ensuite utiliser ce paginateur pour demander des pages spécifiques, ce qui vous donne accès aux enregistrements correspondants et à des métadonnées de pagination supplémentaires.
 
 Par exemple :
 
@@ -403,7 +403,7 @@ page.next_page_number     # => 2
 page.total_count          # => 60
 ```
 
-Comme vous pouvez le voir, les objets paginateur vous permettent de demander des pages spécifiques en fournissant un numéro de page (indexé à partir de 1 !) à la méthode [`#page`](pathname:///api/dev/Marten/DB/Query/Paginator.html#page(number%3AInt)-instance-method). Ces pages sont des instances de [`Marten::DB::Query::Page`](pathname:///api/dev/Marten/DB/Query/Page.html) et vous donnent la possibilité d'itérer facilement sur les enregistrements correspondants. Elles vous donnent également la possibilité de récupérer des informations liées à la pagination (par ex. sur les pages précédente et suivante en utilisant les méthodes [`#previous_page?`](pathname:///api/dev/Marten/DB/Query/Page.html#previous_page%3F-instance-method), [`#previous_page_number`](pathname:///api/dev/Marten/DB/Query/Page.html#previous_page_number-instance-method), [`#next_page?`](pathname:///api/dev/Marten/DB/Query/Page.html#next_page%3F-instance-method) et [`#next_page_number`](pathname:///api/dev/Marten/DB/Query/Page.html#next_page_number-instance-method)).
+Comme vous pouvez le voir, les objets paginateur vous permettent de demander des pages spécifiques en fournissant un numéro de page (indexé à partir de 1 !) à la méthode [`#page`](https://martenframework.com/docs/api/dev/Marten/DB/Query/Paginator.html#page(number%3AInt)-instance-method). Ces pages sont des instances de [`Marten::DB::Query::Page`](https://martenframework.com/docs/api/dev/Marten/DB/Query/Page.html) et vous donnent la possibilité d'itérer facilement sur les enregistrements correspondants. Elles vous donnent également la possibilité de récupérer des informations liées à la pagination (par ex. sur les pages précédente et suivante en utilisant les méthodes [`#previous_page?`](https://martenframework.com/docs/api/dev/Marten/DB/Query/Page.html#previous_page%3F-instance-method), [`#previous_page_number`](https://martenframework.com/docs/api/dev/Marten/DB/Query/Page.html#previous_page_number-instance-method), [`#next_page?`](https://martenframework.com/docs/api/dev/Marten/DB/Query/Page.html#next_page%3F-instance-method) et [`#next_page_number`](https://martenframework.com/docs/api/dev/Marten/DB/Query/Page.html#next_page_number-instance-method)).
 
 ## Mettre à jour des enregistrements
 
@@ -446,7 +446,7 @@ Les scopes permettent la pré-définition de query sets filtrés spécifiques, q
 
 ### Définir des scopes
 
-Les scopes peuvent être définis via l'utilisation de la macro [`#scope`](pathname:///api/dev/Marten/DB/Model/Querying.html#scope(name%2C%26block)-macro). Cette macro attend un nom de scope (littéral de chaîne ou symbole) comme premier argument et nécessite un bloc où la logique de filtrage du query set est définie.
+Les scopes peuvent être définis via l'utilisation de la macro [`#scope`](https://martenframework.com/docs/api/dev/Marten/DB/Model/Querying.html#scope(name%2C%26block)-macro). Cette macro attend un nom de scope (littéral de chaîne ou symbole) comme premier argument et nécessite un bloc où la logique de filtrage du query set est définie.
 
 Par exemple :
 
@@ -515,7 +515,7 @@ query_set.by_author_id(42) # => Post::QuerySet [...]>
 
 Par défaut, interroger tous les enregistrements de modèle retourne des query sets non filtrés. Cependant, vous pouvez définir un scope par défaut pour appliquer automatiquement un filtre spécifique à toutes les requêtes pour ce modèle. Cela garantit que certains critères sont systématiquement appliqués sans avoir besoin d'inclure explicitement un filtre spécifique dans chaque requête.
 
-Les scopes par défaut peuvent être définis via l'utilisation de la macro [`#default_scope`](pathname:///api/dev/Marten/DB/Model/Querying.html#default_scope-macro). Cette macro nécessite un bloc où la logique de filtrage du query set est définie.
+Les scopes par défaut peuvent être définis via l'utilisation de la macro [`#default_scope`](https://martenframework.com/docs/api/dev/Marten/DB/Model/Querying.html#default_scope-macro). Cette macro nécessite un bloc où la logique de filtrage du query set est définie.
 
 Par exemple :
 
@@ -533,7 +533,7 @@ end
 
 ### Désactiver le scoping
 
-Il est intéressant de mentionner que les enregistrements de modèle sans scope sont toujours accessibles via l'utilisation de la méthode de classe [`#unscoped`](pathname:///api/dev/Marten/DB/Model/Querying/ClassMethods.html#unscoped-instance-method). Ceci est particulièrement utile si votre modèle définit un scope par défaut et que vous devez le contourner pour certaines requêtes.
+Il est intéressant de mentionner que les enregistrements de modèle sans scope sont toujours accessibles via l'utilisation de la méthode de classe [`#unscoped`](https://martenframework.com/docs/api/dev/Marten/DB/Model/Querying/ClassMethods.html#unscoped-instance-method). Ceci est particulièrement utile si votre modèle définit un scope par défaut et que vous devez le contourner pour certaines requêtes.
 
 Par exemple :
 
@@ -641,7 +641,7 @@ Author.all.annotate { maximum(:articles__score) }
 
 #### Accéder aux valeurs annotées
 
-Une fois qu'un query set annoté a été récupéré, il est possible d'accéder aux valeurs annotées pour chaque enregistrement en utilisant la méthode [`#annotations`](pathname:///api/dev/Marten/DB/Model.html#annotations%3AHash(String%2CBool|File|Float32|Float64|Int32|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3ADB%3A%3AField%3A%3AFile%3A%3AFile|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Symbol|Time|Time%3A%3ASpan|UUID|Nil)-instance-method). Cette méthode retourne un hash où les clés sont les noms des fields annotés et les valeurs sont les valeurs annotées.
+Une fois qu'un query set annoté a été récupéré, il est possible d'accéder aux valeurs annotées pour chaque enregistrement en utilisant la méthode [`#annotations`](https://martenframework.com/docs/api/dev/Marten/DB/Model.html#annotations%3AHash(String%2CBool|File|Float32|Float64|Int32|Int64|JSON%3A%3AAny|JSON%3A%3ASerializable|Marten%3A%3ADB%3A%3AField%3A%3AFile%3A%3AFile|Marten%3A%3AHTTP%3A%3AUploadedFile|String|Symbol|Time|Time%3A%3ASpan|UUID|Nil)-instance-method). Cette méthode retourne un hash où les clés sont les noms des fields annotés et les valeurs sont les valeurs annotées.
 
 Par exemple :
 

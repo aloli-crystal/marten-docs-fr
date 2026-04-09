@@ -13,7 +13,7 @@ Les fonctionnalités décrites ci-dessous nécessitent que la locale correcte so
 
 Le préfixage des routes avec des locales permet d'activer des locales spécifiques en fonction des chemins de routes accédés lorsque le [middleware I18n](../handlers-and-http/reference/middlewares.md#i18n-middleware) est utilisé.
 
-La définition de routes localisées implique d'encapsuler les définitions de chemins de route par un appel à la méthode [`#localized`](pathname:///api/dev/Marten/Routing/Map.html#localized(prefix_default_locale%3Dtrue%2C%26)%3ANil-instance-method). Lorsque de telles routes sont définies, la locale actuelle sera automatiquement préfixée au chemin des routes localisées et la carte de routes sera capable de résoudre les chemins de manière consciente de la locale.
+La définition de routes localisées implique d'encapsuler les définitions de chemins de route par un appel à la méthode [`#localized`](https://martenframework.com/docs/api/dev/Marten/Routing/Map.html#localized(prefix_default_locale%3Dtrue%2C%26)%3ANil-instance-method). Lorsque de telles routes sont définies, la locale actuelle sera automatiquement préfixée au chemin des routes localisées et la carte de routes sera capable de résoudre les chemins de manière consciente de la locale.
 
 Par exemple :
 
@@ -34,7 +34,7 @@ Marten.routes.draw do
 end
 ```
 
-Après avoir défini ces routes, Marten préfixe automatiquement le préfixe de locale aux chemins de toutes les routes incluses dans le bloc de la méthode [`#localized`](pathname:///api/dev/Marten/Routing/Map.html#localized(prefix_default_locale%3Dtrue%2C%26)%3ANil-instance-method).
+Après avoir défini ces routes, Marten préfixe automatiquement le préfixe de locale aux chemins de toutes les routes incluses dans le bloc de la méthode [`#localized`](https://martenframework.com/docs/api/dev/Marten/Routing/Map.html#localized(prefix_default_locale%3Dtrue%2C%26)%3ANil-instance-method).
 
 ```crystal
 I18n.activate("en")
@@ -63,7 +63,7 @@ La méthode `#localized` ne peut être utilisée que dans votre carte de routes 
 
 Vous pouvez traduire les chemins de routes qu'ils utilisent ou non des [préfixes de locale](#préfixer-les-routes-avec-des-locales). En effet, il est possible de définir des routes dont les chemins référencent des clés de traduction spécifiques qui correspondent à des traductions prédéfinies (traductions qui stockent les chemins de routes réels pour chaque locale).
 
-Pour ce faire, au lieu de spécifier les chemins de vos routes comme des chaînes régulières, vous devez utiliser la méthode [`#t`](pathname:///api/dev/Marten/Routing/Map.html#t(path%3AString)%3ATranslatedPath-instance-method) pour spécifier une clé de traduction qui sera dynamiquement utilisée pour générer le chemin d'une route pour une locale donnée. Cette méthode prend un seul argument : la clé de traduction qui devrait être utilisée pour déterminer dynamiquement le chemin de la route considérée.
+Pour ce faire, au lieu de spécifier les chemins de vos routes comme des chaînes régulières, vous devez utiliser la méthode [`#t`](https://martenframework.com/docs/api/dev/Marten/Routing/Map.html#t(path%3AString)%3ATranslatedPath-instance-method) pour spécifier une clé de traduction qui sera dynamiquement utilisée pour générer le chemin d'une route pour une locale donnée. Cette méthode prend un seul argument : la clé de traduction qui devrait être utilisée pour déterminer dynamiquement le chemin de la route considérée.
 
 Par exemple, considérons le [fichier de traduction](./introduction.md#définir-des-traductions) suivant :
 
@@ -107,7 +107,7 @@ end
 ```
 
 :::warning
-Lorsque vous utilisez des chemins traduits, l'intégralité du chemin **doit** être définie dans les fichiers de locale (y compris les [paramètres de route](../handlers-and-http/routing.md#specifying-route-parameters)). Ainsi, interpoler les valeurs de retour de la méthode [`#t`](pathname:///api/dev/Marten/Routing/Map.html#t(path%3AString)%3ATranslatedPath-instance-method) n'est pas autorisé et entraînera des exceptions `Marten::Routing::Errors::InvalidRouteMap`. Par exemple, la route suivante n'est pas permise :
+Lorsque vous utilisez des chemins traduits, l'intégralité du chemin **doit** être définie dans les fichiers de locale (y compris les [paramètres de route](../handlers-and-http/routing.md#specifying-route-parameters)). Ainsi, interpoler les valeurs de retour de la méthode [`#t`](https://martenframework.com/docs/api/dev/Marten/Routing/Map.html#t(path%3AString)%3ATranslatedPath-instance-method) n'est pas autorisé et entraînera des exceptions `Marten::Routing::Errors::InvalidRouteMap`. Par exemple, la route suivante n'est pas permise :
 
 ```crystal
   path "#{t("routes.articles.detail")}/<pk:int>", ArticleDetailHandler, name: "detail"

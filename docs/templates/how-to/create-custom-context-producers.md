@@ -8,7 +8,7 @@ Marten dispose d'un support intégré pour les [context producers](../reference/
 
 ## Définir un context producer
 
-Définir un context producer implique de créer une sous-classe de la classe abstraite [`Marten::Template::ContextProducer`](pathname:///api/dev/Marten/Template/ContextProducer.html). Cette classe abstraite exige que les sous-classes implémentent une seule méthode [`#produce`](pathname:///api/dev/Marten/Template/ContextProducer.html#produce(request%3AHTTP%3A%3ARequest%3F%3Dnil)-instance-method) : cette méthode prend un objet requête optionnel comme argument et doit retourner soit :
+Définir un context producer implique de créer une sous-classe de la classe abstraite [`Marten::Template::ContextProducer`](https://martenframework.com/docs/api/dev/Marten/Template/ContextProducer.html). Cette classe abstraite exige que les sous-classes implémentent une seule méthode [`#produce`](https://martenframework.com/docs/api/dev/Marten/Template/ContextProducer.html#produce(request%3AHTTP%3A%3ARequest%3F%3Dnil)-instance-method) : cette méthode prend un objet requête optionnel comme argument et doit retourner soit :
 
 * un hash ou un named tuple contenant les valeurs à contribuer au contexte du template
 * ou `nil` si aucune valeur ne peut être générée pour la requête passée

@@ -10,7 +10,7 @@ sidebar_label: Stores
 
 C'est le store par défaut utilisé dans le cadre du paramètre [`cache_store`](../../development/reference/settings.md#cache_store).
 
-Ce cache store est implémenté dans la classe [`Marten::Cache::Store::Memory`](pathname:///api/dev/Marten/Cache/Store/Memory.html). Ce cache stocke toutes les données en mémoire au sein du même processus, ce qui en fait une option rapide et fiable pour la mise en cache dans des environnements à processus unique. Cependant, il est important de noter que si vous exécutez plusieurs instances de votre application, les données du cache ne seront pas partagées entre elles.
+Ce cache store est implémenté dans la classe [`Marten::Cache::Store::Memory`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Memory.html). Ce cache stocke toutes les données en mémoire au sein du même processus, ce qui en fait une option rapide et fiable pour la mise en cache dans des environnements à processus unique. Cependant, il est important de noter que si vous exécutez plusieurs instances de votre application, les données du cache ne seront pas partagées entre elles.
 
 Par exemple :
 
@@ -24,7 +24,7 @@ end
 
 Une implémentation de cache store qui ne stocke aucune donnée.
 
-Ce cache store est implémenté dans la classe [`Marten::Cache::Store::Null`](pathname:///api/dev/Marten/Cache/Store/Null.html). Ce cache store ne stocke aucune donnée, mais fournit un moyen de passer par l'interface de mise en cache. Cela peut être utile dans les environnements de développement et de test lorsque la mise en cache n'est pas souhaitée.
+Ce cache store est implémenté dans la classe [`Marten::Cache::Store::Null`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Null.html). Ce cache store ne stocke aucune donnée, mais fournit un moyen de passer par l'interface de mise en cache. Cela peut être utile dans les environnements de développement et de test lorsque la mise en cache n'est pas souhaitée.
 
 Par exemple :
 

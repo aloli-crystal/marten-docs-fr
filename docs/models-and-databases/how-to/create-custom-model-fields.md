@@ -22,7 +22,7 @@ Créer un field de modèle personnalisé ne signifie pas nécessairement que tou
 
 Quelle que soit l'approche que vous adoptez pour définir de nouvelles classes de fields de modèle ([sous-classer des fields intégrés](#sous-classer-des-fields-de-modèle-existants) ou [en créer de nouveaux à partir de zéro](#créer-de-nouveaux-fields-de-modèle-à-partir-de-zéro)), ces classes doivent être enregistrées dans le registre global de fields de Marten afin de les rendre disponibles pour utilisation lors de la définition de modèles.
 
-Pour ce faire, vous devrez appeler la méthode [`Marten::DB::Field#register`](pathname:///api/dev/Marten/DB/Field.html#register(id%2Cfield_klass)-macro) avec l'identifiant du field que vous souhaitez utiliser et la classe de field réelle. Par exemple :
+Pour ce faire, vous devrez appeler la méthode [`Marten::DB::Field#register`](https://martenframework.com/docs/api/dev/Marten/DB/Field.html#register(id%2Cfield_klass)-macro) avec l'identifiant du field que vous souhaitez utiliser et la classe de field réelle. Par exemple :
 
 ```crystal
 Marten::DB::Field.register(:foo, FooField)
@@ -44,7 +44,7 @@ L'appel à `#register` peut être fait depuis n'importe où dans votre code, mai
 
 La manière la plus simple d'introduire un field de modèle est probablement de sous-classer l'un des [fields de modèle intégrés](../reference/fields.md) fournis par Marten. Cela peut avoir beaucoup de sens si le "type" du field que vous essayez d'implémenter est déjà supporté par Marten.
 
-Par exemple, implémenter un field "email" personnalisé pourrait être fait en sous-classant la classe existante [`Marten::DB::Field::String`](pathname:///api/dev/Marten/DB/Field/String.html). En effet, un field "email" est essentiellement une chaîne avec une taille maximale prédéfinie et une logique de validation supplémentaire :
+Par exemple, implémenter un field "email" personnalisé pourrait être fait en sous-classant la classe existante [`Marten::DB::Field::String`](https://martenframework.com/docs/api/dev/Marten/DB/Field/String.html). En effet, un field "email" est essentiellement une chaîne avec une taille maximale prédéfinie et une logique de validation supplémentaire :
 
 ```crystal
 class EmailField < Marten::DB::Field::String
@@ -82,7 +82,7 @@ Tout ce qui est décrit dans la section suivante sur la [création de fields de 
 
 ## Créer de nouveaux fields de modèle à partir de zéro
 
-Créer de nouveaux fields de modèle à partir de zéro implique de sous-classer la classe abstraite [`Marten::DB::Field::Base`](pathname:///api/dev/Marten/DB/Field/Base.html). Pour cette raison, la nouvelle classe de field doit implémenter un ensemble de méthodes obligatoires. Ces méthodes obligatoires, et d'autres qui sont optionnelles (mais intéressantes en termes de capacités), sont décrites dans les sections suivantes.
+Créer de nouveaux fields de modèle à partir de zéro implique de sous-classer la classe abstraite [`Marten::DB::Field::Base`](https://martenframework.com/docs/api/dev/Marten/DB/Field/Base.html). Pour cette raison, la nouvelle classe de field doit implémenter un ensemble de méthodes obligatoires. Ces méthodes obligatoires, et d'autres qui sont optionnelles (mais intéressantes en termes de capacités), sont décrites dans les sections suivantes.
 
 ### Méthodes obligatoires
 
@@ -141,7 +141,7 @@ La méthode `#from_db_result_set` est supposée retourner la valeur lue dans la 
 
 #### `to_column`
 
-La plupart des fields de modèle contribueront une colonne correspondante au niveau de la base de données ; ces colonnes sont lues par Marten afin de générer des migrations à partir des définitions de modèles. La colonne retournée par la méthode `#to_column` doit être une instance d'une sous-classe de [`Marten::DB::Management::Column::Base`](pathname:///api/dev/Marten/DB/Management/Column/Base.html).
+La plupart des fields de modèle contribueront une colonne correspondante au niveau de la base de données ; ces colonnes sont lues par Marten afin de générer des migrations à partir des définitions de modèles. La colonne retournée par la méthode `#to_column` doit être une instance d'une sous-classe de [`Marten::DB::Management::Column::Base`](https://martenframework.com/docs/api/dev/Marten/DB/Management/Column/Base.html).
 
 Par exemple, un field "email" pourrait retourner une colonne string dans sa méthode `#to_column` :
 
@@ -186,7 +186,7 @@ Encore une fois, si la valeur ne peut pas être traitée correctement par la cla
 
 #### `initialize`
 
-La méthode `#initialize` par défaut fournie par [`Marten::DB::Field::Base`](pathname:///api/dev/Marten/DB/Field/Base.html) est assez simple et ressemble à ceci :
+La méthode `#initialize` par défaut fournie par [`Marten::DB::Field::Base`](https://martenframework.com/docs/api/dev/Marten/DB/Field/Base.html) est assez simple et ressemble à ceci :
 
 ```crystal
 def initialize(

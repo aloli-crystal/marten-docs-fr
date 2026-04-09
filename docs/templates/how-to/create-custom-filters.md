@@ -8,7 +8,7 @@ Marten dispose d'un support intégré pour les [filters de template](../referenc
 
 ## Définir un filter de template
 
-Les filters sont des sous-classes de la classe abstraite [`Marten::Template::Filter::Base`](pathname:///api/dev/Marten/Template/Filter/Base.html). Ils doivent implémenter une seule méthode `#apply` : cette méthode prend la valeur sur laquelle le filter doit être appliqué (un objet [`Marten::Template::Value`](pathname:///api/dev/Marten/Template/Value.html) encapsulant _n'importe lequel_ des types d'objets supportés par les templates) et un argument optionnel spécifié au filter.
+Les filters sont des sous-classes de la classe abstraite [`Marten::Template::Filter::Base`](https://martenframework.com/docs/api/dev/Marten/Template/Filter/Base.html). Ils doivent implémenter une seule méthode `#apply` : cette méthode prend la valeur sur laquelle le filter doit être appliqué (un objet [`Marten::Template::Value`](https://martenframework.com/docs/api/dev/Marten/Template/Value.html) encapsulant _n'importe lequel_ des types d'objets supportés par les templates) et un argument optionnel spécifié au filter.
 
 Par exemple, dans l'expression `{{ var|test:42 }}`, le filter `test` serait appelé avec la valeur de la variable `var` et l'argument de filter `42`.
 
@@ -22,7 +22,7 @@ class UnderscoreFilter < Marten::Template::Filter::Base
 end
 ```
 
-Comme vous pouvez le voir, la méthode `#apply` doit retourner un objet [`Marten::Template::Value`](pathname:///api/dev/Marten/Template/Value.html).
+Comme vous pouvez le voir, la méthode `#apply` doit retourner un objet [`Marten::Template::Value`](https://martenframework.com/docs/api/dev/Marten/Template/Value.html).
 
 Maintenant, essayons d'écrire un filter de template `chomp` qui utilise effectivement l'argument spécifié. Dans ce cas, l'argument sera utilisé pour définir le suffixe qui doit être retiré de la fin de la représentation en chaîne de la valeur entrante :
 
@@ -36,14 +36,14 @@ end
 ```
 
 :::info
-N'hésitez pas à lever des exceptions [`Marten::Template::Errors::InvalidSyntax`](pathname:///api/dev/Marten/Template/Errors/InvalidSyntax.html) depuis la méthode `#apply` d'un filter : cela est particulièrement pertinent si l'entrée a un type inattendu ou si un argument manque. Cela dit, il est à noter que toute exception levée depuis un filter de template ne sera pas gérée par le moteur de templates et résultera en une erreur serveur (sauf si elle est explicitement gérée par l'application elle-même).
+N'hésitez pas à lever des exceptions [`Marten::Template::Errors::InvalidSyntax`](https://martenframework.com/docs/api/dev/Marten/Template/Errors/InvalidSyntax.html) depuis la méthode `#apply` d'un filter : cela est particulièrement pertinent si l'entrée a un type inattendu ou si un argument manque. Cela dit, il est à noter que toute exception levée depuis un filter de template ne sera pas gérée par le moteur de templates et résultera en une erreur serveur (sauf si elle est explicitement gérée par l'application elle-même).
 :::
 
 ### Les objets `Marten::Template::Value`
 
-Comme souligné précédemment, les filters de template interagissent principalement avec des objets [`Marten::Template::Value`](pathname:///api/dev/Marten/Template/Value.html) : ils prennent de tels objets comme paramètres (pour la valeur entrante sur laquelle le filter doit être appliqué et pour le paramètre optionnel du filter), et ils doivent également retourner de tels objets.
+Comme souligné précédemment, les filters de template interagissent principalement avec des objets [`Marten::Template::Value`](https://martenframework.com/docs/api/dev/Marten/Template/Value.html) : ils prennent de tels objets comme paramètres (pour la valeur entrante sur laquelle le filter doit être appliqué et pour le paramètre optionnel du filter), et ils doivent également retourner de tels objets.
 
-Les objets [`Marten::Template::Value`](pathname:///api/dev/Marten/Template/Value.html) peuvent être créés à partir de n'importe quel objet supporté en utilisant la méthode `#from` comme suit :
+Les objets [`Marten::Template::Value`](https://martenframework.com/docs/api/dev/Marten/Template/Value.html) peuvent être créés à partir de n'importe quel objet supporté en utilisant la méthode `#from` comme suit :
 
 ```crystal
 Marten::Template::Value.from("hello")
@@ -51,7 +51,7 @@ Marten::Template::Value.from(42)
 Marten::Template::Value.from(true)
 ```
 
-Ces objets sont essentiellement des « enveloppes » autour d'une valeur réelle manipulée lors du runtime d'un template, et ils fournissent une interface commune permettant d'interagir avec celles-ci pendant le rendu du template. Votre implémentation de filter peut effectuer des vérifications sur les objets [`Marten::Template::Value`](pathname:///api/dev/Marten/Template/Value.html) entrants si nécessaire : par exemple, pour vérifier que la valeur sous-jacente est du type attendu. Dans cette optique, il est possible d'utiliser la méthode `#raw` pour récupérer la valeur réelle encapsulée par l'objet [`Marten::Template::Value`](pathname:///api/dev/Marten/Template/Value.html) :
+Ces objets sont essentiellement des « enveloppes » autour d'une valeur réelle manipulée lors du runtime d'un template, et ils fournissent une interface commune permettant d'interagir avec celles-ci pendant le rendu du template. Votre implémentation de filter peut effectuer des vérifications sur les objets [`Marten::Template::Value`](https://martenframework.com/docs/api/dev/Marten/Template/Value.html) entrants si nécessaire : par exemple, pour vérifier que la valeur sous-jacente est du type attendu. Dans cette optique, il est possible d'utiliser la méthode `#raw` pour récupérer la valeur réelle encapsulée par l'objet [`Marten::Template::Value`](https://martenframework.com/docs/api/dev/Marten/Template/Value.html) :
 
 ```crystal
 value = Marten::Template::Value.from("hello")
@@ -81,7 +81,7 @@ end
 
 Pour pouvoir utiliser des filters de template personnalisés, vous devez les enregistrer dans le registre global des filters de template de Marten.
 
-Pour ce faire, vous devrez appeler la méthode [`Marten::Template::Filter#register`](pathname:///api/dev/Marten/Template/Filter.html#register(filter_name%3AString|Symbol%2Cfilter_klass%3ABase.class)-class-method) avec le nom du filter que vous souhaitez utiliser dans les templates, et la classe du filter.
+Pour ce faire, vous devrez appeler la méthode [`Marten::Template::Filter#register`](https://martenframework.com/docs/api/dev/Marten/Template/Filter.html#register(filter_name%3AString|Symbol%2Cfilter_klass%3ABase.class)-class-method) avec le nom du filter que vous souhaitez utiliser dans les templates, et la classe du filter.
 
 Par exemple :
 

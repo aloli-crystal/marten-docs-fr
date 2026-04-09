@@ -8,7 +8,7 @@ Les modèles définissent quelles données peuvent être persistées et manipul�
 
 ## Définition basique d'un modèle
 
-Les modèles Marten doivent être définis comme des sous-classes de la classe de base [`Marten::Model`](pathname:///api/dev/Marten/DB/Model.html) ; ils définissent explicitement des "fields" via l'utilisation de la macro `field`. Ces classes et fields correspondent aux tables et colonnes de la base de données qui peuvent être interrogées grâce à une API d'accès à la base de données générée automatiquement (voir [Requêtes](./queries.md) pour plus de détails).
+Les modèles Marten doivent être définis comme des sous-classes de la classe de base [`Marten::Model`](https://martenframework.com/docs/api/dev/Marten/DB/Model.html) ; ils définissent explicitement des "fields" via l'utilisation de la macro `field`. Ces classes et fields correspondent aux tables et colonnes de la base de données qui peuvent être interrogées grâce à une API d'accès à la base de données générée automatiquement (voir [Requêtes](./queries.md) pour plus de détails).
 
 Par exemple, l'extrait de code suivant définit un modèle `Article` simple :
 
@@ -210,7 +210,7 @@ Veuillez vous référer à [Relations many-to-many](./relationships.md#relations
 
 ### Horodatages
 
-Marten vous permet d'ajouter facilement des fields [`date_time`](./reference/fields.md#date_time) automatiques `created_at` / `updated_at` à vos modèles en utilisant la macro [`#with_timestamp_fields`](pathname:///api/dev/Marten/DB/Model/Table.html#with_timestamp_fields-macro) :
+Marten vous permet d'ajouter facilement des fields [`date_time`](./reference/fields.md#date_time) automatiques `created_at` / `updated_at` à vos modèles en utilisant la macro [`#with_timestamp_fields`](https://martenframework.com/docs/api/dev/Marten/DB/Model/Table.html#with_timestamp_fields-macro) :
 
 ```crystal
 class Article < Marten::Model
@@ -224,7 +224,7 @@ end
 
 Le field `created_at` est rempli avec l'heure actuelle lors de la création de nouveaux enregistrements, tandis que le field `updated_at` est actualisé avec l'heure actuelle à chaque mise à jour des enregistrements.
 
-Notez que l'utilisation de [`#with_timestamp_fields`](pathname:///api/dev/Marten/DB/Model/Table.html#with_timestamp_fields-macro) est techniquement équivalente à définir deux fields [`date_time`](./reference/fields.md#date_time) `created_at` et `updated_at` comme suit :
+Notez que l'utilisation de [`#with_timestamp_fields`](https://martenframework.com/docs/api/dev/Marten/DB/Model/Table.html#with_timestamp_fields-macro) est techniquement équivalente à définir deux fields [`date_time`](./reference/fields.md#date_time) `created_at` et `updated_at` comme suit :
 
 ```crystal
 class Article < Marten::Model
@@ -244,7 +244,7 @@ Les fields de modèle individuels peuvent être indexés ou associés à une con
 
 ### Index multi-fields
 
-Les index multi-fields peuvent être configurés dans un modèle en utilisant la méthode de classe [`#db_index`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_index(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method). Cette méthode nécessite un argument de nom d'index ainsi qu'un tableau de noms de fields ciblés.
+Les index multi-fields peuvent être configurés dans un modèle en utilisant la méthode de classe [`#db_index`](https://martenframework.com/docs/api/dev/Marten/DB/Model/Table/ClassMethods.html#db_index(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method). Cette méthode nécessite un argument de nom d'index ainsi qu'un tableau de noms de fields ciblés.
 
 Par exemple :
 
@@ -260,7 +260,7 @@ end
 
 ### Contraintes d'unicité multi-fields
 
-Les contraintes d'unicité multi-fields peuvent être configurées dans un modèle en utilisant la méthode de classe [`#db_unique_constraint`](pathname:///api/dev/Marten/DB/Model/Table/ClassMethods.html#db_unique_constraint(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method). Cette méthode nécessite un argument de nom d'index ainsi qu'un tableau de noms de fields ciblés.
+Les contraintes d'unicité multi-fields peuvent être configurées dans un modèle en utilisant la méthode de classe [`#db_unique_constraint`](https://martenframework.com/docs/api/dev/Marten/DB/Model/Table/ClassMethods.html#db_unique_constraint(name%3AString|Symbol%2Cfield_names%3AArray(String)|Array(Symbol))%3ANil-instance-method). Cette méthode nécessite un argument de nom d'index ainsi qu'un tableau de noms de fields ciblés.
 
 Par exemple :
 

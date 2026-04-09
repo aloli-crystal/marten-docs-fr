@@ -8,7 +8,7 @@ Les transactions sont des blocs dont les instructions SQL sous-jacentes sont val
 
 ## Les bases
 
-Les transactions sont essentielles pour garantir l'intégrité de la base de données. Chaque fois que vous êtes dans une situation où vous avez plus d'une opération SQL qui doit être exécutée ensemble ou pas du tout, vous devriez envisager d'encapsuler toutes ces opérations dans une transaction dédiée. Les blocs de transaction peuvent être créés en utilisant la méthode `#transaction`, qui peut être appelée soit sur des [enregistrements de modèle](pathname:///api/dev/Marten/DB/Model/Connection.html#transaction(using%3ANil|String|Symbol%3Dnil%2C%26block)-instance-method), soit sur des [classes de modèle](pathname:///api/dev/Marten/DB/Model/Connection/ClassMethods.html#transaction(using%3ANil|String|Symbol%3Dnil%2C%26)-instance-method).
+Les transactions sont essentielles pour garantir l'intégrité de la base de données. Chaque fois que vous êtes dans une situation où vous avez plus d'une opération SQL qui doit être exécutée ensemble ou pas du tout, vous devriez envisager d'encapsuler toutes ces opérations dans une transaction dédiée. Les blocs de transaction peuvent être créés en utilisant la méthode `#transaction`, qui peut être appelée soit sur des [enregistrements de modèle](https://martenframework.com/docs/api/dev/Marten/DB/Model/Connection.html#transaction(using%3ANil|String|Symbol%3Dnil%2C%26block)-instance-method), soit sur des [classes de modèle](https://martenframework.com/docs/api/dev/Marten/DB/Model/Connection/ClassMethods.html#transaction(using%3ANil|String|Symbol%3Dnil%2C%26)-instance-method).
 
 Par exemple :
 
@@ -21,7 +21,7 @@ end
 
 Avec l'extrait ci-dessus, les deux enregistrements ne seront sauvegardés _que_ si chaque opération de sauvegarde se termine avec succès (c'est-à-dire si aucune exception n'est levée). Si une exception se produit dans le cadre de l'une des opérations de sauvegarde (par ex. si l'un des enregistrements est invalide), alors aucun enregistrement ne sera sauvegardé.
 
-Il est à noter qu'il n'y a aucune différence entre appeler `#transaction` sur [un enregistrement de modèle](pathname:///api/dev/Marten/DB/Model/Connection.html#transaction(using%3ANil|String|Symbol%3Dnil%2C%26block)-instance-method) ou sur [une classe de modèle](pathname:///api/dev/Marten/DB/Model/Connection/ClassMethods.html#transaction(using%3ANil|String|Symbol%3Dnil%2C%26)-instance-method). Il est également intéressant de mentionner que les modèles manipulés au sein d'un bloc de transaction qui résultent en des instructions SQL peuvent être de classes différentes. Par exemple, les deux transactions suivantes seraient équivalentes :
+Il est à noter qu'il n'y a aucune différence entre appeler `#transaction` sur [un enregistrement de modèle](https://martenframework.com/docs/api/dev/Marten/DB/Model/Connection.html#transaction(using%3ANil|String|Symbol%3Dnil%2C%26block)-instance-method) ou sur [une classe de modèle](https://martenframework.com/docs/api/dev/Marten/DB/Model/Connection/ClassMethods.html#transaction(using%3ANil|String|Symbol%3Dnil%2C%26)-instance-method). Il est également intéressant de mentionner que les modèles manipulés au sein d'un bloc de transaction qui résultent en des instructions SQL peuvent être de classes différentes. Par exemple, les deux transactions suivantes seraient équivalentes :
 
 ```crystal
 MyModel.transaction do
@@ -49,7 +49,7 @@ La conséquence de cela est que les modifications que vous apportez à la base d
 
 Comme mentionné précédemment, toute exception levée depuis l'intérieur d'un bloc de transaction entraînera l'annulation de la transaction considérée. De plus, il est à noter que les exceptions levées seront également propagées en dehors du bloc de transaction, ce qui signifie que votre code devrait les intercepter de manière appropriée le cas échéant.
 
-Si vous devez annuler une transaction _manuellement_ depuis l'intérieur d'une transaction elle-même tout en vous assurant qu'aucune exception n'est propagée en dehors du bloc, alors vous pouvez utiliser l'exception [`Marten::DB::Errors::Rollback`](pathname:///api/dev/Marten/DB/Errors/Rollback.html) : lorsque cette exception spécifique est levée depuis l'intérieur d'un bloc de transaction, la transaction sera annulée et le bloc de transaction retournera `false`.
+Si vous devez annuler une transaction _manuellement_ depuis l'intérieur d'une transaction elle-même tout en vous assurant qu'aucune exception n'est propagée en dehors du bloc, alors vous pouvez utiliser l'exception [`Marten::DB::Errors::Rollback`](https://martenframework.com/docs/api/dev/Marten/DB/Errors/Rollback.html) : lorsque cette exception spécifique est levée depuis l'intérieur d'un bloc de transaction, la transaction sera annulée et le bloc de transaction retournera `false`.
 
 Par exemple :
 

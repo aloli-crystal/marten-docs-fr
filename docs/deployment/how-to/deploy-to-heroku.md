@@ -77,7 +77,7 @@ end
 
 Il convient de noter que si votre application nécessite une base de données, vous devriez également vous assurer d'analyser la variable d'environnement `DATABASE_URL` et de configurer vos [paramètres de base de données](../../development/reference/settings.md#database-settings) à partir des propriétés de l'URL de base de données analysée. La variable `DATABASE_URL` contient une chaîne encodée en URL qui spécifie les détails de connexion de votre base de données, comme le type de base de données, le nom d'hôte, le port, le nom d'utilisateur, le mot de passe et le nom de la base de données.
 
-Cela peut être accompli en fournissant la valeur de la variable d'environnement `DATABASE_URL` à la méthode de configuration [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database%28id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2Curl%3AString%7CNil%3Dnil%29-instance-method) :
+Cela peut être accompli en fournissant la valeur de la variable d'environnement `DATABASE_URL` à la méthode de configuration [`#database`](https://martenframework.com/docs/api/dev/Marten/Conf/GlobalSettings.html#database%28id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2Curl%3AString%7CNil%3Dnil%29-instance-method) :
 
 ```crystal title="config/settings/production.cr"
 Marten.configure :production do |config|
@@ -89,7 +89,7 @@ end
 
 ### Optionnel : configurer le middleware de service d'assets
 
-Afin de servir facilement les assets de votre application sur Heroku, vous pouvez utiliser le middleware [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware). En effet, il ne sera pas possible de configurer un serveur web comme [Nginx](https://nginx.org) pour servir directement vos assets sur Heroku si vous avez l'intention d'utiliser un store d'assets "système de fichiers local" (comme [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html)).
+Afin de servir facilement les assets de votre application sur Heroku, vous pouvez utiliser le middleware [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware). En effet, il ne sera pas possible de configurer un serveur web comme [Nginx](https://nginx.org) pour servir directement vos assets sur Heroku si vous avez l'intention d'utiliser un store d'assets "système de fichiers local" (comme [`Marten::Core::Store::FileSystem`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/FileSystem.html)).
 
 Pour pallier cela, vous pouvez utiliser le middleware [`Marten::Middleware::AssetServing`](../../handlers-and-http/reference/middlewares.md#asset-serving-middleware). Évidemment, cela n'est pas nécessaire si vous avez l'intention d'utiliser un fournisseur de stockage cloud (comme Amazon S3 ou GCS) pour stocker et servir vos assets collectés (dans ce cas, vous pouvez simplement passer cette section).
 

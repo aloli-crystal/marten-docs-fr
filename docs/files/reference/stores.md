@@ -9,7 +9,7 @@ description: Référence des stockages de fichiers.
 
 Un stockage basique de système de fichiers qui stocke les fichiers localement.
 
-Ce stockage de fichiers est implémenté dans la classe [`Marten::Core::Storage::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html). Il garantit que les fichiers sont persistés dans le système de fichiers local, là où l'application Marten s'exécute.
+Ce stockage de fichiers est implémenté dans la classe [`Marten::Core::Storage::FileSystem`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/FileSystem.html). Il garantit que les fichiers sont persistés dans le système de fichiers local, là où l'application Marten s'exécute.
 
 Par exemple :
 

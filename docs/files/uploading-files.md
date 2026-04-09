@@ -8,7 +8,7 @@ Marten vous donne la possibilité d'interagir avec les fichiers téléversés. C
 
 ## Accéder aux fichiers téléversés
 
-Les fichiers téléversés sont rendus disponibles dans l'objet de type hash [`#data`](pathname:///api/dev/Marten/HTTP/Request.html#data%3AParams%3A%3AData-instance-method) de tout objet de requête HTTP (instance de [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)). Ces objets fichier sont des instances de la classe [`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html).
+Les fichiers téléversés sont rendus disponibles dans l'objet de type hash [`#data`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html#data%3AParams%3A%3AData-instance-method) de tout objet de requête HTTP (instance de [`Marten::HTTP::Request`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html)). Ces objets fichier sont des instances de la classe [`Marten::HTTP::UploadedFile`](https://martenframework.com/docs/api/dev/Marten/HTTP/UploadedFile.html).
 
 Par exemple, vous pourriez accéder et traiter un fichier `uploaded_file` provenant d'un formulaire HTML en utilisant un handler comme celui-ci :
 
@@ -21,7 +21,7 @@ class ProcessUploadedFileHandler < Marten::Handler
 end
 ```
 
-Les objets [`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html) vous donnent accès aux méthodes clés suivantes, qui vous permettent d'interagir avec le fichier téléversé et son contenu :
+Les objets [`Marten::HTTP::UploadedFile`](https://martenframework.com/docs/api/dev/Marten/HTTP/UploadedFile.html) vous donnent accès aux méthodes clés suivantes, qui vous permettent d'interagir avec le fichier téléversé et son contenu :
 
 * `#filename` retourne le nom du fichier téléversé
 * `#size` retourne la taille du fichier téléversé
@@ -84,4 +84,4 @@ class UploadFileHandler < Marten::Handlers::Schema
 end
 ```
 
-Ici, le `UploadFileHandler` hérite du handler générique [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html). Il serait également pertinent d'utiliser le handler générique [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html) pour traiter le schema et créer l'enregistrement `Attachment` en même temps.
+Ici, le `UploadFileHandler` hérite du handler générique [`Marten::Handlers::Schema`](https://martenframework.com/docs/api/dev/Marten/Handlers/Schema.html). Il serait également pertinent d'utiliser le handler générique [`Marten::Handlers::RecordCreate`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordCreate.html) pour traiter le schema et créer l'enregistrement `Attachment` en même temps.

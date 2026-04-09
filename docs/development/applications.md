@@ -18,7 +18,7 @@ Un autre avantage des applications est qu'elles peuvent être empaquetées et r�
 
 L'utilisation des applications doit être activée manuellement dans les projets : cela se fait via le paramètre [`installed_apps`](./reference/settings.md#installed_apps).
 
-Ce paramètre correspond à un tableau de classes d'applications installées. En effet, chaque application Marten doit définir une sous-classe de [`Marten::App`](pathname:///api/dev/Marten/App.html) pour spécifier certaines choses comme le label de l'application (voir [Créer des applications](#créer-des-applications) pour plus d'informations à ce sujet). Lorsque ces sous-classes sont spécifiées dans le paramètre `installed_apps`, les modèles, migrations, assets et templates des applications seront rendus disponibles pour le projet considéré.
+Ce paramètre correspond à un tableau de classes d'applications installées. En effet, chaque application Marten doit définir une sous-classe de [`Marten::App`](https://martenframework.com/docs/api/dev/Marten/App.html) pour spécifier certaines choses comme le label de l'application (voir [Créer des applications](#créer-des-applications) pour plus d'informations à ce sujet). Lorsque ces sous-classes sont spécifiées dans le paramètre `installed_apps`, les modèles, migrations, assets et templates des applications seront rendus disponibles pour le projet considéré.
 
 Par exemple :
 
@@ -102,7 +102,7 @@ Le générateur [`app`](./reference/generators.md#app) s'assure automatiquement 
 * Les routes de l'application sont incluses dans la carte de routes principale (qui se trouve dans le fichier `config/routes.cr`).
 :::
 
-Le fichier le plus important d'une application est le fichier `app.cr`. Ce fichier inclut généralement tous les requirements de l'app et définit la classe de configuration de l'application elle-même, qui doit être une sous-classe de la classe abstraite [`Marten::App`](pathname:///api/dev/Marten/App.html). Cette classe permet principalement de définir l'identifiant "label" de l'application (via la méthode de classe [`#label`](pathname:///api/dev/Marten/Apps/Config.html#label(label%3AString|Symbol)-class-method)) : cet identifiant doit être unique parmi toutes les applications installées d'un projet et est utilisé pour générer des choses comme les noms de tables de modèles ou les classes de migration.
+Le fichier le plus important d'une application est le fichier `app.cr`. Ce fichier inclut généralement tous les requirements de l'app et définit la classe de configuration de l'application elle-même, qui doit être une sous-classe de la classe abstraite [`Marten::App`](https://martenframework.com/docs/api/dev/Marten/App.html). Cette classe permet principalement de définir l'identifiant "label" de l'application (via la méthode de classe [`#label`](https://martenframework.com/docs/api/dev/Marten/Apps/Config.html#label(label%3AString|Symbol)-class-method)) : cet identifiant doit être unique parmi toutes les applications installées d'un projet et est utilisé pour générer des choses comme les noms de tables de modèles ou les classes de migration.
 
 Voici un exemple de contenu du fichier `app.cr` pour une application hypothétique "blog" :
 
@@ -135,7 +135,7 @@ require "./migrations/**"
 
 Les applications que vous créez dans le cadre de vos projets ou de bibliothèques tierces peuvent avoir leurs propres paramètres associés, configurables via l'utilisation de [fichiers de paramètres](./settings.md) classiques.
 
-Pour définir des paramètres pour vos applications, la manière la plus simple est de créer un fichier `settings.cr` contenant une sous-classe de [`Marten::Conf::Settings`](pathname:///api/dev/Marten/Conf/Settings.html) dans le dossier de votre application. Cette sous-classe doit utiliser la macro [`#namespace`](pathname:///api/dev/Marten/Conf/Settings.html#namespace(ns)-macro) afin de définir le "namespace" du paramètre sous lequel les paramètres de votre application seront accessibles.
+Pour définir des paramètres pour vos applications, la manière la plus simple est de créer un fichier `settings.cr` contenant une sous-classe de [`Marten::Conf::Settings`](https://martenframework.com/docs/api/dev/Marten/Conf/Settings.html) dans le dossier de votre application. Cette sous-classe doit utiliser la macro [`#namespace`](https://martenframework.com/docs/api/dev/Marten/Conf/Settings.html#namespace(ns)-macro) afin de définir le "namespace" du paramètre sous lequel les paramètres de votre application seront accessibles.
 
 Par exemple :
 
@@ -160,6 +160,6 @@ Marten.configure do |config|
 end
 ```
 
-Comme vous pouvez le voir, les paramètres de l'application sont configurables comme n'importe quel autre paramètre intégré, mais ils sont namespacés à la valeur de namespace qui a été définie dans la classe `Blog::Settings` via la macro [`#namespace`](pathname:///api/dev/Marten/Conf/Settings.html#namespace(ns)-macro).
+Comme vous pouvez le voir, les paramètres de l'application sont configurables comme n'importe quel autre paramètre intégré, mais ils sont namespacés à la valeur de namespace qui a été définie dans la classe `Blog::Settings` via la macro [`#namespace`](https://martenframework.com/docs/api/dev/Marten/Conf/Settings.html#namespace(ns)-macro).
 
-Il est important de noter que les sous-classes de [`Marten::Conf::Settings`](pathname:///api/dev/Marten/Conf/Settings.html) ont la flexibilité de définir toutes les méthodes nécessaires pour faciliter la configuration utilisateur pour l'application considérée. Alors que les paramètres basiques ne nécessitent généralement que des getters et setters pour la configuration, des scénarios plus complexes peuvent demander des méthodes supplémentaires, l'utilisation de blocs, ou d'autres complexités.
+Il est important de noter que les sous-classes de [`Marten::Conf::Settings`](https://martenframework.com/docs/api/dev/Marten/Conf/Settings.html) ont la flexibilité de définir toutes les méthodes nécessaires pour faciliter la configuration utilisateur pour l'application considérée. Alors que les paramètres basiques ne nécessitent généralement que des getters et setters pour la configuration, des scénarios plus complexes peuvent demander des méthodes supplémentaires, l'utilisation de blocs, ou d'autres complexités.

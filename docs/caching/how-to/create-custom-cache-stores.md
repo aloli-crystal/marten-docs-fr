@@ -7,14 +7,14 @@ Marten vous permet de créer facilement des [cache stores](../introduction.md#co
 
 ## Définition basique d'un store
 
-Définir un cache store est aussi simple que de créer une classe qui hérite de la classe abstraite [`Marten::Caching::Store::Base`](pathname:///api/dev/Marten/Cache/Store/Base.html) et qui implémente les méthodes suivantes :
+Définir un cache store est aussi simple que de créer une classe qui hérite de la classe abstraite [`Marten::Caching::Store::Base`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html) et qui implémente les méthodes suivantes :
 
-* [`#clear`](pathname:///api/dev/Marten/Cache/Store/Base.html#clear-instance-method) - appelée lors du vidage du cache
-* [`#decrement`](pathname:///api/dev/Marten/Cache/Store/Base.html#decrement(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) - appelée lors de la décrémentation d'une valeur entière dans le cache
-* [`#delete_entry`](pathname:///http://localhost:3000/docs/api/dev/Marten/Cache/Store/Base.html#delete_entry%28key%3AString%29%3ABool-instance-method) - appelée lors de la suppression d'une entrée du cache
-* [`#increment`](pathname:///api/dev/Marten/Cache/Store/Base.html#increment(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) - appelée lors de l'incrémentation d'une valeur entière dans le cache
-* [`#read_entry`](pathname:///api/dev/Marten/Cache/Store/Base.html#read_entry(key%3AString)%3AString|Nil-instance-method) - appelée lors de la lecture d'une entrée dans le cache
-* [`#write_entry`](pathname:///api/dev/Marten/Cache/Store/Base.html#write_entry(key%3AString%2Cvalue%3AString%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil)-instance-method) - appelée lors de l'écriture d'une entrée dans le cache
+* [`#clear`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#clear-instance-method) - appelée lors du vidage du cache
+* [`#decrement`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#decrement(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) - appelée lors de la décrémentation d'une valeur entière dans le cache
+* [`#delete_entry`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#delete_entry%28key%3AString%29%3ABool-instance-method) - appelée lors de la suppression d'une entrée du cache
+* [`#increment`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#increment(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) - appelée lors de l'incrémentation d'une valeur entière dans le cache
+* [`#read_entry`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#read_entry(key%3AString)%3AString|Nil-instance-method) - appelée lors de la lecture d'une entrée dans le cache
+* [`#write_entry`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#write_entry(key%3AString%2Cvalue%3AString%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil)-instance-method) - appelée lors de l'écriture d'une entrée dans le cache
 
 Par exemple, l'extrait suivant implémente un store en mémoire qui persiste les entrées de cache dans un hash :
 

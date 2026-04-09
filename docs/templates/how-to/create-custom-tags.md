@@ -8,7 +8,7 @@ Marten dispose d'un support intégré pour les [tags de template](../reference/t
 
 ## Définir un tag de template
 
-Les tags de template sont des sous-classes de la classe abstraite [`Marten::Template::Tag::Base`](pathname:///api/dev/Marten/Template/Tag/Base.html). Lors de l'écriture de tags de template personnalisés, vous voudrez généralement définir deux méthodes dans vos classes de tags : les méthodes `#initialize` et `#render`. Ces deux méthodes sont appelées à différents moments du cycle de vie d'un template :
+Les tags de template sont des sous-classes de la classe abstraite [`Marten::Template::Tag::Base`](https://martenframework.com/docs/api/dev/Marten/Template/Tag/Base.html). Lors de l'écriture de tags de template personnalisés, vous voudrez généralement définir deux méthodes dans vos classes de tags : les méthodes `#initialize` et `#render`. Ces deux méthodes sont appelées à différents moments du cycle de vie d'un template :
 
 * la méthode `#initialize` est utilisée pour initialiser un objet tag de template et elle est appelée au moment de l'**analyse** : cela signifie qu'il est de la responsabilité de cette méthode de s'assurer que le contenu du tag de template est valide du point de vue de l'analyse
 * la méthode `#render` est appelée au moment du **rendu** pour appliquer la logique du tag : cela signifie que la méthode n'est appelée que pour les instructions de tag de template valides qui ont été analysées sans erreur
@@ -67,10 +67,10 @@ class LocalTimeTag < Marten::Template::Tag::Base
 end
 ```
 
-Comme vous pouvez le voir, les tags de template sont initialisés à partir d'un parser (instance de [Marten::Template::Parser](pathname:///api/dev/Marten/Template/Parser.html)) et de la « source » brute du tag de template (c'est-à-dire le contenu entre les délimiteurs de tag `{%` et `%}`). La méthode `#initialize` est responsable de l'extraction de toute information nécessaire à l'implémentation de la logique du tag de template. Dans le cas du tag de template `local_time`, nous devons prendre soin de quelques éléments :
+Comme vous pouvez le voir, les tags de template sont initialisés à partir d'un parser (instance de [Marten::Template::Parser](https://martenframework.com/docs/api/dev/Marten/Template/Parser.html)) et de la « source » brute du tag de template (c'est-à-dire le contenu entre les délimiteurs de tag `{%` et `%}`). La méthode `#initialize` est responsable de l'extraction de toute information nécessaire à l'implémentation de la logique du tag de template. Dans le cas du tag de template `local_time`, nous devons prendre soin de quelques éléments :
 
 * s'assurer que nous avons un format spécifié comme argument (et lever une erreur de syntaxe invalide sinon)
-* initialiser une expression de filter (instance de [Marten::Template::FilterExpression](pathname:///api/dev/Marten/Template/FilterExpression.html)) à partir de l'argument de format : cela est nécessaire car l'argument peut être une chaîne littérale ou une variable avec des filters appliqués
+* initialiser une expression de filter (instance de [Marten::Template::FilterExpression](https://martenframework.com/docs/api/dev/Marten/Template/FilterExpression.html)) à partir de l'argument de format : cela est nécessaire car l'argument peut être une chaîne littérale ou une variable avec des filters appliqués
 * vérifier si la sortie du tag de template est assignée à une variable en cherchant une instruction `as` : si c'est le cas, le nom de la variable est conservé dans une variable d'instance dédiée
 
 La méthode `#render` est appelée au moment du rendu : elle prend l'objet contexte courant comme argument et doit retourner une chaîne de caractères. Dans l'exemple ci-dessus, cette méthode « résout » l'expression de format horaire identifiée au moment de l'initialisation à partir du contexte (ce qui est nécessaire s'il s'agissait d'une variable) et génère la bonne représentation temporelle. Si le tag n'a pas été spécifié avec une variable `as`, alors cette valeur est simplement retournée, sinon, elle est conservée dans le contexte et une chaîne vide est retournée.
@@ -141,7 +141,7 @@ end
 Comme vous pouvez le voir, l'implémentation de ce tag ressemble beaucoup à celle mise en évidence dans [Tags simples](#tags-simples). Les seules différences dignes de mention ici sont :
 
 1. l'argument du tag de template correspond à la liste des éléments qui doivent être rendus
-2. la méthode `#render` rend explicitement le template mentionné précédemment en utilisant un contexte avec l'objet « list » dedans (la méthode [`#stack`](pathname:///api/dev/Marten/Template/Context.html#stack(%26)%3ANil-instance-method) permet de créer un nouveau contexte où de nouvelles valeurs sont empilées sur les existantes). La sortie de cette opération de rendu est soit assignée à une variable, soit retournée directement selon que l'instruction `as` a été utilisée ou non
+2. la méthode `#render` rend explicitement le template mentionné précédemment en utilisant un contexte avec l'objet « list » dedans (la méthode [`#stack`](https://martenframework.com/docs/api/dev/Marten/Template/Context.html#stack(%26)%3ANil-instance-method) permet de créer un nouveau contexte où de nouvelles valeurs sont empilées sur les existantes). La sortie de cette opération de rendu est soit assignée à une variable, soit retournée directement selon que l'instruction `as` a été utilisée ou non
 
 ### Tags fermants
 
@@ -164,7 +164,7 @@ class SpacelessTag < Marten::Template::Base
 end
 ```
 
-Dans cet exemple, la méthode `#initialize` appelle explicitement la méthode [`#parse`](pathname:///api/dev/Marten/Template/Parser.html#parse(up_to%3AArray(String)%3F%3Dnil)%3ANodeSet-instance-method) du parser afin d'analyser les « nœuds » suivants jusqu'au tag de fermeture attendu (`endspaceless` dans ce cas). Si le tag de fermeture spécifié n'est pas rencontré, le parser lèvera automatiquement une erreur de syntaxe. Les nœuds obtenus sont retournés sous forme de « jeu de nœuds » (instance de [`Marten::Template::NodeSet`](pathname:///api/dev/Marten/Template/NodeSet.html)) : c'est un objet spécial retourné par le parser de template qui correspond à plusieurs nœuds analysés (ceux-ci peuvent être des tags, des variables ou des valeurs de texte brut) qui peuvent être rendus via une méthode [`#render`](pathname:///api/dev/Marten/Template/NodeSet.html#render(context%3AContext)-instance-method) au moment du rendu.
+Dans cet exemple, la méthode `#initialize` appelle explicitement la méthode [`#parse`](https://martenframework.com/docs/api/dev/Marten/Template/Parser.html#parse(up_to%3AArray(String)%3F%3Dnil)%3ANodeSet-instance-method) du parser afin d'analyser les « nœuds » suivants jusqu'au tag de fermeture attendu (`endspaceless` dans ce cas). Si le tag de fermeture spécifié n'est pas rencontré, le parser lèvera automatiquement une erreur de syntaxe. Les nœuds obtenus sont retournés sous forme de « jeu de nœuds » (instance de [`Marten::Template::NodeSet`](https://martenframework.com/docs/api/dev/Marten/Template/NodeSet.html)) : c'est un objet spécial retourné par le parser de template qui correspond à plusieurs nœuds analysés (ceux-ci peuvent être des tags, des variables ou des valeurs de texte brut) qui peuvent être rendus via une méthode [`#render`](https://martenframework.com/docs/api/dev/Marten/Template/NodeSet.html#render(context%3AContext)-instance-method) au moment du rendu.
 
 La méthode `#render` du tag ci-dessus est relativement simple : elle « rend » simplement le jeu de nœuds correspondant aux nœuds de template extraits entre les tags `{% spaceless %}...{% endspaceless %}` puis supprime tous les espaces entre les tags HTML dans la sortie.
 
@@ -172,7 +172,7 @@ La méthode `#render` du tag ci-dessus est relativement simple : elle « rend »
 
 Afin de pouvoir utiliser des tags de template personnalisés, vous devez les enregistrer dans le registre global des tags de template de Marten.
 
-Pour ce faire, vous devrez appeler la méthode [`Marten::Template::Tag#register`](pathname:///api/dev/Marten/Template/Tag.html#register(tag_name%3AString|Symbol%2Ctag_klass%3ABase.class)-class-method) avec le nom du tag que vous souhaitez utiliser dans les templates, et la classe du tag de template.
+Pour ce faire, vous devrez appeler la méthode [`Marten::Template::Tag#register`](https://martenframework.com/docs/api/dev/Marten/Template/Tag.html#register(tag_name%3AString|Symbol%2Ctag_klass%3ABase.class)-class-method) avec le nom du tag que vous souhaitez utiliser dans les templates, et la classe du tag de template.
 
 Par exemple :
 

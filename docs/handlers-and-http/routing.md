@@ -155,13 +155,13 @@ Lorsque Marten rencontre un chemin menant à une autre sous-carte de routes, il 
 
 Lorsque l'on travaille avec des applications web, un besoin fréquent est de générer les URLs dans leur forme finale. Pour ce faire, vous voudrez éviter de coder en dur les URLs et plutôt exploiter la capacité de les générer à partir de leurs noms associés : c'est ce que nous appelons une résolution inversée d'URL.
 
-« Inverser » une URL est aussi simple que d'appeler la méthode [`Marten::Routing::Map#reverse`](pathname:///api/dev/Marten/Routing/Map.html#reverse(name%3AString|Symbol%2Cparams%3AHash(String|Symbol%2CParameter%3A%3ATypes))-instance-method) depuis la carte de routes principale, accessible via la méthode [`Marten#routes`](pathname:///api/dev/Marten.html#routes-class-method) :
+« Inverser » une URL est aussi simple que d'appeler la méthode [`Marten::Routing::Map#reverse`](https://martenframework.com/docs/api/dev/Marten/Routing/Map.html#reverse(name%3AString|Symbol%2Cparams%3AHash(String|Symbol%2CParameter%3A%3ATypes))-instance-method) depuis la carte de routes principale, accessible via la méthode [`Marten#routes`](https://martenframework.com/docs/api/dev/Marten.html#routes-class-method) :
 
 ```crystal
 Marten.routes.reverse("home") # will return "/"
 ```
 
-Pour inverser une URL depuis une classe de handler, vous pouvez simplement exploiter la méthode de handler [`Marten::Handlers::Base#reverse`](pathname:///api/dev/Marten/Handlers/Base.html#reverse(*args%2C**options)-instance-method) :
+Pour inverser une URL depuis une classe de handler, vous pouvez simplement exploiter la méthode de handler [`Marten::Handlers::Base#reverse`](https://martenframework.com/docs/api/dev/Marten/Handlers/Base.html#reverse(*args%2C**options)-instance-method) :
 
 ```crystal
 class MyHandler < Marten::Handler

@@ -40,7 +40,7 @@ end
 
 ### `before_deliver`
 
-Les callbacks `before_deliver` sont exécutés _avant_ qu'un email ne soit envoyé (dans le cadre de la méthode [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method) de l'email). Par exemple, cette capacité peut être utilisée pour muter l'instance d'email considérée avant que l'email réel ne soit envoyé :
+Les callbacks `before_deliver` sont exécutés _avant_ qu'un email ne soit envoyé (dans le cadre de la méthode [`#deliver`](https://martenframework.com/docs/api/dev/Marten/Emailing/Email.html#deliver-instance-method) de l'email). Par exemple, cette capacité peut être utilisée pour muter l'instance d'email considérée avant que l'email réel ne soit envoyé :
 
 ```crystal
 class WelcomeEmail < Marten::Email
@@ -62,7 +62,7 @@ end
 
 ### `after_deliver`
 
-Les callbacks `after_deliver` sont exécutés _après_ qu'un email est envoyé (dans le cadre de la méthode [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method) de l'email). Par exemple, de tels callbacks peuvent être utilisés pour incrémenter des métriques spécifiques aux emails :
+Les callbacks `after_deliver` sont exécutés _après_ qu'un email est envoyé (dans le cadre de la méthode [`#deliver`](https://martenframework.com/docs/api/dev/Marten/Emailing/Email.html#deliver-instance-method) de l'email). Par exemple, de tels callbacks peuvent être utilisés pour incrémenter des métriques spécifiques aux emails :
 
 ```crystal
 require "statsd"
@@ -88,7 +88,7 @@ end
 
 ### `before_render`
 
-Les callbacks `before_render` sont invoqués avant le rendu d'un template lors de la génération du corps HTML ou texte de l'email. Cela signifie que ces callbacks sont exécutés lors de l'appel des méthodes [`#deliver`](pathname:///api/dev/Marten/Emailing/Email.html#deliver-instance-method), [`#html_body`](pathname:///api/dev/Marten/Emailing/Email.html#html_body%3AString|Nil-instance-method) ou [`#text_body`](pathname:///api/dev/Marten/Emailing/Email.html#text_body%3AString|Nil-instance-method).
+Les callbacks `before_render` sont invoqués avant le rendu d'un template lors de la génération du corps HTML ou texte de l'email. Cela signifie que ces callbacks sont exécutés lors de l'appel des méthodes [`#deliver`](https://martenframework.com/docs/api/dev/Marten/Emailing/Email.html#deliver-instance-method), [`#html_body`](https://martenframework.com/docs/api/dev/Marten/Emailing/Email.html#html_body%3AString|Nil-instance-method) ou [`#text_body`](https://martenframework.com/docs/api/dev/Marten/Emailing/Email.html#text_body%3AString|Nil-instance-method).
 
 Typiquement, ces callbacks peuvent être utilisés pour ajouter de nouvelles variables au contexte global de template de l'email, afin de les rendre disponibles au runtime du template. Cela peut être utile si votre email a des variables d'instance que vous souhaitez exposer à votre template d'email. Par exemple :
 

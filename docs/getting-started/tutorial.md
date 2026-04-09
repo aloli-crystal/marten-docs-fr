@@ -819,7 +819,7 @@ Les handlers que nous avons implémentés précédemment correspondent à des ca
 
 Nous pourrions certainement exploiter ces handlers génériques dans notre application de blog.
 
-Dans cette optique, commençons par la classe `HomeHandler` que nous avons implémentée précédemment : ce handler récupère essentiellement tous les enregistrements `Article` et rend cette liste disponible dans le template `home.html`. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordList`](pathname:///api/dev/Marten/Handlers/RecordList.html). Pour l'utiliser, modifions le fichier `src/handlers/home_handler.cr` comme suit :
+Dans cette optique, commençons par la classe `HomeHandler` que nous avons implémentée précédemment : ce handler récupère essentiellement tous les enregistrements `Article` et rend cette liste disponible dans le template `home.html`. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordList`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordList.html). Pour l'utiliser, modifions le fichier `src/handlers/home_handler.cr` comme suit :
 
 ```crystal title="src/handlers/home_handler.cr"
 class HomeHandler < Marten::Handlers::RecordList
@@ -831,7 +831,7 @@ end
 
 Dans le snippet ci-dessus, nous utilisons quelques méthodes de classe pour définir comment le handler doit se comporter : `#model` permet de définir la classe de modèle qui doit être utilisée pour récupérer les enregistrements, `#template_name` permet de définir le nom du template à rendre, et `#list_context_name` permet de définir le nom de la variable de la liste d'enregistrements dans le contexte du template.
 
-Continuons avec la classe `ArticleDetailHandler` : ce handler récupère un enregistrement `Article` spécifique à partir d'un paramètre de route `pk`, et le « rend » en utilisant un template spécifique. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html). Pour l'utiliser, modifions le fichier `src/handlers/article_detail_handler.cr` comme suit :
+Continuons avec la classe `ArticleDetailHandler` : ce handler récupère un enregistrement `Article` spécifique à partir d'un paramètre de route `pk`, et le « rend » en utilisant un template spécifique. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordDetail`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordDetail.html). Pour l'utiliser, modifions le fichier `src/handlers/article_detail_handler.cr` comme suit :
 
 ```crystal title="src/handlers/article_detail_handler.cr"
 class ArticleDetailHandler < Marten::Handlers::RecordDetail
@@ -843,7 +843,7 @@ end
 
 Pour configurer le comportement du handler, nous utilisons ici aussi quelques méthodes de classe : `#model` permet de définir la classe de modèle de l'enregistrement à récupérer, `#template_name` définit le template à rendre, et `#record_context_name` définit le nom de la variable de l'enregistrement dans le contexte du template.
 
-Examinons maintenant la classe `ArticleCreateHandler` : cette classe affiche un formulaire lors du traitement des requêtes GET, et valide un schema utilisé pour créer un enregistrement spécifique lors du traitement des requêtes POST. Ce pattern exact est rendu possible par le handler générique [`Marten::Handlers::RecordCreate`](pathname:///api/dev/Marten/Handlers/RecordCreate.html). Pour l'utiliser, nous pouvons modifier le fichier `src/handlers/article_create_handler.cr` comme suit :
+Examinons maintenant la classe `ArticleCreateHandler` : cette classe affiche un formulaire lors du traitement des requêtes GET, et valide un schema utilisé pour créer un enregistrement spécifique lors du traitement des requêtes POST. Ce pattern exact est rendu possible par le handler générique [`Marten::Handlers::RecordCreate`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordCreate.html). Pour l'utiliser, nous pouvons modifier le fichier `src/handlers/article_create_handler.cr` comme suit :
 
 ```crystal title="src/handlers/article_create_handler.cr"
 class ArticleCreateHandler < Marten::Handlers::RecordCreate
@@ -856,7 +856,7 @@ end
 
 Ici, `#model` permet de définir la classe de modèle à utiliser pour créer le nouvel enregistrement, `#schema` est la classe de schema qui doit être utilisée pour valider les données entrantes, `#template_name` définit le nom du template à rendre, et `#success_route_name` est le nom de la route vers laquelle rediriger après une création d'enregistrement réussie.
 
-Nous pouvons maintenant examiner la classe `ArticleUpdateHandler` : cette classe récupère un enregistrement spécifique et affiche un formulaire lors du traitement des requêtes GET, et valide un schema dont les données sont utilisées pour mettre à jour l'enregistrement lors du traitement des requêtes POST. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordUpdate`](pathname:///api/dev/Marten/Handlers/RecordUpdate.html). Utilisons-le et modifions le fichier `src/handlers/article_update_handler.cr` comme suit :
+Nous pouvons maintenant examiner la classe `ArticleUpdateHandler` : cette classe récupère un enregistrement spécifique et affiche un formulaire lors du traitement des requêtes GET, et valide un schema dont les données sont utilisées pour mettre à jour l'enregistrement lors du traitement des requêtes POST. Ce pattern est rendu possible par le handler générique [`Marten::Handlers::RecordUpdate`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordUpdate.html). Utilisons-le et modifions le fichier `src/handlers/article_update_handler.cr` comme suit :
 
 ```crystal title="src/handlers/article_update_handler.cr"
 class ArticleUpdateHandler < Marten::Handlers::RecordUpdate
@@ -870,7 +870,7 @@ end
 
 Ici, `#model` permet de définir la classe de modèle à utiliser pour récupérer et mettre à jour l'enregistrement, `#schema` est la classe de schema qui doit être utilisée pour valider les données entrantes, `#template_name` définit le nom du template à rendre, `#success_route_name` est le nom de la route vers laquelle rediriger après une mise à jour réussie, et `#record_context_name` est le nom de la variable de l'enregistrement dans le contexte du template.
 
-Enfin, examinons la classe `ArticleDeleteHandler` : ce handler rend un template lors du traitement des requêtes GET, et effectue la suppression de l'enregistrement considéré lors du traitement des requêtes POST. Ce pattern est fourni par le handler générique [`Marten::Handlers::RecordDelete`](pathname:///api/dev/Marten/Handlers/RecordDelete.html). Pour l'utiliser, modifions le fichier `src/handlers/article_delete_handler.cr` comme suit :
+Enfin, examinons la classe `ArticleDeleteHandler` : ce handler rend un template lors du traitement des requêtes GET, et effectue la suppression de l'enregistrement considéré lors du traitement des requêtes POST. Ce pattern est fourni par le handler générique [`Marten::Handlers::RecordDelete`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordDelete.html). Pour l'utiliser, modifions le fichier `src/handlers/article_delete_handler.cr` comme suit :
 
 ```crystal title="src/handlers/article_delete_handler.cr"
 class ArticleDeleteHandler < Marten::Handlers::RecordDelete

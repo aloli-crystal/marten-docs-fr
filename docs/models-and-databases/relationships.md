@@ -365,7 +365,7 @@ article.tags.to_a # => [#<Tag:0x1036e3ee0 id: 1, label: "Tag 1">,
 article.tags.clear
 ```
 
-Notez l'utilisation des méthodes [`#add`](pathname:///api/dev/Marten/DB/Query/ManyToManySet.html#add(*objs%3AM)-instance-method) et [`#remove`](pathname:///api/dev/Marten/DB/Query/ManyToManySet.html#remove(*objs%3AM)%3ANil-instance-method), qui facilitent l'ajout ou la suppression d'objets de la collection many-to-many d'éléments associés à l'enregistrement. Ces méthodes peuvent être appelées avec un ou plusieurs enregistrements comme paramètres, ainsi qu'avec des tableaux d'enregistrements pour un ajout ou une suppression simplifiés.
+Notez l'utilisation des méthodes [`#add`](https://martenframework.com/docs/api/dev/Marten/DB/Query/ManyToManySet.html#add(*objs%3AM)-instance-method) et [`#remove`](https://martenframework.com/docs/api/dev/Marten/DB/Query/ManyToManySet.html#remove(*objs%3AM)%3ANil-instance-method), qui facilitent l'ajout ou la suppression d'objets de la collection many-to-many d'éléments associés à l'enregistrement. Ces méthodes peuvent être appelées avec un ou plusieurs enregistrements comme paramètres, ainsi qu'avec des tableaux d'enregistrements pour un ajout ou une suppression simplifiés.
 
 ### Relations inverses
 

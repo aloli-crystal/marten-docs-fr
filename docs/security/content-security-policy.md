@@ -13,7 +13,7 @@ L'utilisation de l'en-tête Content-Security-Policy dans une application web est
 
 ## Utilisation basique
 
-Le mécanisme Content-Security-Policy de Marten implique l'utilisation d'un middleware dédié : le [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware). Pour vous assurer que votre projet utilise ce middleware, vous pouvez ajouter la classe [`Marten::Middleware::ContentSecurityPolicy`](pathname:///api/dev/Marten/Middleware/ContentSecurityPolicy.html) au paramètre [`middleware`](../development/reference/settings.md#middleware) comme suit :
+Le mécanisme Content-Security-Policy de Marten implique l'utilisation d'un middleware dédié : le [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware). Pour vous assurer que votre projet utilise ce middleware, vous pouvez ajouter la classe [`Marten::Middleware::ContentSecurityPolicy`](https://martenframework.com/docs/api/dev/Marten/Middleware/ContentSecurityPolicy.html) au paramètre [`middleware`](../development/reference/settings.md#middleware) comme suit :
 
 ```crystal title="config/settings/base.cr"
 Marten.configure do |config|
@@ -28,7 +28,7 @@ Marten.configure do |config|
 end
 ```
 
-Le [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) garantit la présence de l'en-tête Content-Security-Policy dans les en-têtes de la réponse. Par défaut, le middleware inclura un en-tête Content-Security-Policy qui correspond à la politique définie dans les paramètres [`content_security_policy`](../development/reference/settings.md#content-security-policy-settings). Cependant, si un objet [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) est explicitement assigné à l'objet requête, il prendra le pas sur la politique par défaut et sera utilisé à la place.
+Le [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware) garantit la présence de l'en-tête Content-Security-Policy dans les en-têtes de la réponse. Par défaut, le middleware inclura un en-tête Content-Security-Policy qui correspond à la politique définie dans les paramètres [`content_security_policy`](../development/reference/settings.md#content-security-policy-settings). Cependant, si un objet [`Marten::HTTP::ContentSecurityPolicy`](https://martenframework.com/docs/api/dev/Marten/HTTP/ContentSecurityPolicy.html) est explicitement assigné à l'objet requête, il prendra le pas sur la politique par défaut et sera utilisé à la place.
 
 Lors de l'activation du [middleware Content-Security-Policy](../handlers-and-http/reference/middlewares.md#content-security-policy-middleware), il est recommandé de définir une Content-Security-Policy par défaut en utilisant les paramètres [`content_security_policy`](../development/reference/settings.md#content-security-policy-settings). Par exemple :
 
@@ -41,7 +41,7 @@ end
 
 ## Désactiver l'en-tête CSP dans des handlers spécifiques
 
-Vous pouvez décider de désactiver ou d'activer l'utilisation de l'en-tête Content-Security-Policy par [handler](../handlers-and-http.mdx). Pour ce faire, vous pouvez simplement utiliser la méthode de classe [`#exempt_from_content_security_policy`](pathname:///api/dev/Marten/Handlers/ContentSecurityPolicy/ClassMethods.html#exempt_from_content_security_policy(exempt:Bool):Nil-instance-method), qui prend un seul booléen comme argument :
+Vous pouvez décider de désactiver ou d'activer l'utilisation de l'en-tête Content-Security-Policy par [handler](../handlers-and-http.mdx). Pour ce faire, vous pouvez simplement utiliser la méthode de classe [`#exempt_from_content_security_policy`](https://martenframework.com/docs/api/dev/Marten/Handlers/ContentSecurityPolicy/ClassMethods.html#exempt_from_content_security_policy(exempt:Bool):Nil-instance-method), qui prend un seul booléen comme argument :
 
 ```crystal
 class ProtectedHandler < Marten::Handler
@@ -59,7 +59,7 @@ end
 
 ## Surcharger l'en-tête CSP dans des handlers spécifiques
 
-Parfois, vous pourriez également avoir besoin de surcharger le contenu de l'en-tête Content-Security-Policy par [handler](../handlers-and-http.mdx). Pour ce faire, vous pouvez utiliser la méthode de classe [`#content_security_policy`](pathname:///api/dev/Marten/Handlers/ContentSecurityPolicy/ClassMethods.html#content_security_policy(%26content_security_policy_block%3AHTTP%3A%3AContentSecurityPolicy->)-instance-method), qui fournit un objet [`Marten::HTTP::ContentSecurityPolicy`](pathname:///api/dev/Marten/HTTP/ContentSecurityPolicy.html) que vous pouvez configurer (en ajoutant/modifiant/supprimant des directives CSP) pour le handler en question. Par exemple :
+Parfois, vous pourriez également avoir besoin de surcharger le contenu de l'en-tête Content-Security-Policy par [handler](../handlers-and-http.mdx). Pour ce faire, vous pouvez utiliser la méthode de classe [`#content_security_policy`](https://martenframework.com/docs/api/dev/Marten/Handlers/ContentSecurityPolicy/ClassMethods.html#content_security_policy(%26content_security_policy_block%3AHTTP%3A%3AContentSecurityPolicy->)-instance-method), qui fournit un objet [`Marten::HTTP::ContentSecurityPolicy`](https://martenframework.com/docs/api/dev/Marten/HTTP/ContentSecurityPolicy.html) que vous pouvez configurer (en ajoutant/modifiant/supprimant des directives CSP) pour le handler en question. Par exemple :
 
 ```crystal
 class ProtectedHandler < Marten::Handler
@@ -85,7 +85,7 @@ end
 
 Par exemple, si ce paramètre est défini sur `["script-src", "style-src"]`, une valeur `nonce-<b64-value>` sera ajoutée aux directives `script-src` et `style-src` dans la valeur de l'en-tête Content-Security-Policy. Le nonce est une valeur Base64 générée aléatoirement (générée via l'utilisation de [`Random::Secure#urlsafe_base64`](https://crystal-lang.org/api/Random.html#urlsafe_base64(n:Int=16,padding=false):String-instance-method)).
 
-Pour que le navigateur fasse quoi que ce soit avec la valeur du nonce, vous devrez l'inclure dans les attributs des tags que vous souhaitez marquer comme sûrs. Dans cette optique, vous pouvez utiliser la méthode [`Marten::HTTP::Request#content_security_policy_nonce`](pathname:///api/dev/Marten/HTTP/Request.html#content_security_policy_nonce-instance-method), qui retourne la valeur du nonce CSP pour la requête actuelle. Cette méthode peut également être appelée depuis les [templates](../templates.mdx), ce qui facilite la génération de tags `script` ou `style` contenant le bon attribut `nonce` :
+Pour que le navigateur fasse quoi que ce soit avec la valeur du nonce, vous devrez l'inclure dans les attributs des tags que vous souhaitez marquer comme sûrs. Dans cette optique, vous pouvez utiliser la méthode [`Marten::HTTP::Request#content_security_policy_nonce`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html#content_security_policy_nonce-instance-method), qui retourne la valeur du nonce CSP pour la requête actuelle. Cette méthode peut également être appelée depuis les [templates](../templates.mdx), ce qui facilite la génération de tags `script` ou `style` contenant le bon attribut `nonce` :
 
 ```html
 <script nonce="{{ request.content_security_policy_nonce }}">

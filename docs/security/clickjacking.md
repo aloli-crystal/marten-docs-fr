@@ -20,7 +20,7 @@ La protection contre le clickjacking de Marten implique l'utilisation d'un middl
 
 Le [middleware X-Frame-Options](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) définit simplement l'en-tête X-Frame-Options afin d'empêcher le site Marten considéré d'être inséré dans un cadre. La valeur utilisée pour l'en-tête X-Frame-Options dépend de la valeur du paramètre [`x_frame_options`](../development/reference/settings.md#x_frame_options) (dont la valeur par défaut est `DENY`).
 
-Il convient de noter que vous pouvez décider de désactiver ou d'activer l'utilisation du [middleware X-Frame-Options](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) par handler. Pour ce faire, vous pouvez simplement utiliser la méthode de classe [`#exempt_from_x_frame_options`](pathname:///api/dev/Marten/Handlers/XFrameOptions/ClassMethods.html#exempt_from_x_frame_options(exempt%3ABool)%3ANil-instance-method), qui prend un seul booléen comme argument :
+Il convient de noter que vous pouvez décider de désactiver ou d'activer l'utilisation du [middleware X-Frame-Options](../handlers-and-http/reference/middlewares.md#x-frame-options-middleware) par handler. Pour ce faire, vous pouvez simplement utiliser la méthode de classe [`#exempt_from_x_frame_options`](https://martenframework.com/docs/api/dev/Marten/Handlers/XFrameOptions/ClassMethods.html#exempt_from_x_frame_options(exempt%3ABool)%3ANil-instance-method), qui prend un seul booléen comme argument :
 
 ```crystal
 class ProtectedHandler < Marten::Handler

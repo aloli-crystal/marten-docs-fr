@@ -98,7 +98,7 @@ Dans l'extrait ci-dessus, une méthode de validation personnalisée s'assure que
 
 Les méthodes comme `#valid?` ou `#invalid?` vous permettent uniquement de savoir si une instance de modèle est valide ou invalide. Mais vous voudrez probablement connaître exactement les erreurs réelles ou savoir comment en ajouter de nouvelles.
 
-À ce titre, chaque instance de modèle possède un ensemble d'erreurs associé, qui est une instance de [`Marten::Core::Validation::ErrorSet`](pathname:///api/dev/Marten/Core/Validation/ErrorSet.html).
+À ce titre, chaque instance de modèle possède un ensemble d'erreurs associé, qui est une instance de [`Marten::Core::Validation::ErrorSet`](https://martenframework.com/docs/api/dev/Marten/Core/Validation/ErrorSet.html).
 
 ### Inspecter les erreurs
 

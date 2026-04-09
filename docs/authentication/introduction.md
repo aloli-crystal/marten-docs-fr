@@ -86,7 +86,7 @@ L'application `auth` définit un seul modèle `Auth::User` qui hérite ses champ
 
 ### Récupérer l'utilisateur actuel
 
-Les projets générés avec l'application `auth` utilisent automatiquement un middleware (`MartenAuth::Middleware`) qui garantit que l'ID de l'utilisateur actuellement authentifié est associé à la requête actuelle. Cela signifie qu'étant donné une requête HTTP spécifique (instance de [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)), il est possible d'identifier quel utilisateur est connecté ou non. Concrètement, les méthodes suivantes sont rendues disponibles sur l'objet standard [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html) afin d'interagir avec l'utilisateur actuellement connecté :
+Les projets générés avec l'application `auth` utilisent automatiquement un middleware (`MartenAuth::Middleware`) qui garantit que l'ID de l'utilisateur actuellement authentifié est associé à la requête actuelle. Cela signifie qu'étant donné une requête HTTP spécifique (instance de [`Marten::HTTP::Request`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html)), il est possible d'identifier quel utilisateur est connecté ou non. Concrètement, les méthodes suivantes sont rendues disponibles sur l'objet standard [`Marten::HTTP::Request`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html) afin d'interagir avec l'utilisateur actuellement connecté :
 
 | Méthode | Description |
 | --- | --- |
@@ -162,7 +162,7 @@ La méthode `MartenAuth#authenticate` est automatiquement utilisée par les hand
 
 ### Connecter des utilisateurs
 
-Connecter un utilisateur est l'acte de l'attacher à la session actuelle - après avoir vérifié que les identifiants associés sont valides (voir [Authentifier des utilisateurs](#authentifier-des-utilisateurs)). Cette capacité est fournie par le shard [`marten-auth`](https://github.com/martenframework/marten-auth) via l'utilisation de la méthode `MartenAuth#sign_in` : cette méthode prend un objet requête (instance de [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)) et un enregistrement utilisateur comme arguments et garantit que l'ID utilisateur est attaché à la session actuelle afin qu'ils n'aient pas à se ré-authentifier pour chaque requête.
+Connecter un utilisateur est l'acte de l'attacher à la session actuelle - après avoir vérifié que les identifiants associés sont valides (voir [Authentifier des utilisateurs](#authentifier-des-utilisateurs)). Cette capacité est fournie par le shard [`marten-auth`](https://github.com/martenframework/marten-auth) via l'utilisation de la méthode `MartenAuth#sign_in` : cette méthode prend un objet requête (instance de [`Marten::HTTP::Request`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html)) et un enregistrement utilisateur comme arguments et garantit que l'ID utilisateur est attaché à la session actuelle afin qu'ils n'aient pas à se ré-authentifier pour chaque requête.
 
 Par exemple :
 
@@ -187,7 +187,7 @@ Il est important de comprendre que cette méthode est destinée à être utilis�
 
 ### Déconnecter des utilisateurs
 
-La capacité de déconnecter des utilisateurs est fournie par le shard [`marten-auth`](https://github.com/martenframework/marten-auth) via l'utilisation de la méthode `MartenAuth#sign_out` : cette méthode prend un objet requête (instance de [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html)) comme argument, supprime l'ID utilisateur authentifié de la requête actuelle et vide les données de session associées.
+La capacité de déconnecter des utilisateurs est fournie par le shard [`marten-auth`](https://github.com/martenframework/marten-auth) via l'utilisation de la méthode `MartenAuth#sign_out` : cette méthode prend un objet requête (instance de [`Marten::HTTP::Request`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html)) comme argument, supprime l'ID utilisateur authentifié de la requête actuelle et vide les données de session associées.
 
 Par exemple :
 
@@ -220,7 +220,7 @@ Comme mentionné précédemment, vous ne devriez pas tenter de manipuler directe
 
 ### Limiter l'accès aux utilisateurs connectés
 
-Limiter l'accès aux utilisateurs connectés peut facilement être réalisé en utilisant la méthode `#user?` disponible depuis les objets [`Marten::HTTP::Request`](pathname:///api/dev/Marten/HTTP/Request.html). En utilisant cette méthode, vous pouvez facilement implémenter des callbacks de handler [`#before_dispatch`](../handlers-and-http/callbacks.md#before_dispatch) afin de rediriger les utilisateurs anonymes vers une page de connexion ou une page d'erreur.
+Limiter l'accès aux utilisateurs connectés peut facilement être réalisé en utilisant la méthode `#user?` disponible depuis les objets [`Marten::HTTP::Request`](https://martenframework.com/docs/api/dev/Marten/HTTP/Request.html). En utilisant cette méthode, vous pouvez facilement implémenter des callbacks de handler [`#before_dispatch`](../handlers-and-http/callbacks.md#before_dispatch) afin de rediriger les utilisateurs anonymes vers une page de connexion ou une page d'erreur.
 
 Par exemple :
 

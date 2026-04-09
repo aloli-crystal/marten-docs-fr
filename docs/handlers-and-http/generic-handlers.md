@@ -23,7 +23,7 @@ Enfin, il convient de noter que l'utilisation des handlers génériques est tota
 
 ### Effectuer une redirection
 
-Avoir un handler qui effectue une redirection peut être facilement réalisé en sous-classant le handler générique [`Marten::Handlers::Redirect`](pathname:///api/dev/Marten/Handlers/Redirect.html). Par exemple, vous pourriez facilement définir un handler qui redirige vers une route `articles:list` avec l'extrait suivant :
+Avoir un handler qui effectue une redirection peut être facilement réalisé en sous-classant le handler générique [`Marten::Handlers::Redirect`](https://martenframework.com/docs/api/dev/Marten/Handlers/Redirect.html). Par exemple, vous pourriez facilement définir un handler qui redirige vers une route `articles:list` avec l'extrait suivant :
 
 ```crystal
 class ArticlesRedirectHandler < Marten::Handlers::Redirect
@@ -59,7 +59,7 @@ end
 
 ### Rendu d'un template
 
-L'une des choses les plus fréquentes que vous voudrez faire lors de l'écriture de handlers est de retourner des réponses HTML contenant des [templates](../templates.mdx) rendus. Pour ce faire, vous pouvez évidemment définir un handler classique et utiliser la méthode d'aide [`#render`](./introduction.md#render). Mais vous pouvez également vouloir exploiter le handler générique [`Marten::Handlers::Template`](pathname:///api/dev/Marten/Handlers/Template.html).
+L'une des choses les plus fréquentes que vous voudrez faire lors de l'écriture de handlers est de retourner des réponses HTML contenant des [templates](../templates.mdx) rendus. Pour ce faire, vous pouvez évidemment définir un handler classique et utiliser la méthode d'aide [`#render`](./introduction.md#render). Mais vous pouvez également vouloir exploiter le handler générique [`Marten::Handlers::Template`](https://martenframework.com/docs/api/dev/Marten/Handlers/Template.html).
 
 Ce handler générique retournera une réponse HTTP 200 OK contenant un template HTML rendu. Pour l'utiliser, vous pouvez simplement définir une sous-classe et vous assurer d'appeler la méthode de classe `#template_name` pour définir le template qui sera rendu :
 
@@ -87,7 +87,7 @@ Les variables ajoutées au contexte de template global seront automatiquement di
 
 ### Afficher un enregistrement de modèle
 
-Il est possible d'effectuer le rendu d'un template qui présente un enregistrement de modèle spécifique en exploitant le handler générique [`Marten::Handlers::RecordDetail`](pathname:///api/dev/Marten/Handlers/RecordDetail.html).
+Il est possible d'effectuer le rendu d'un template qui présente un enregistrement de modèle spécifique en exploitant le handler générique [`Marten::Handlers::RecordDetail`](https://martenframework.com/docs/api/dev/Marten/Handlers/RecordDetail.html).
 
 Par exemple, il serait possible d'effectuer le rendu d'un template `articles/detail.html` présentant un enregistrement de modèle `Article` spécifique avec le handler suivant :
 
@@ -111,7 +111,7 @@ Par exemple, le template associé à ce handler pourrait ressembler à ceci :
 
 ### Traiter un formulaire
 
-Il est possible d'utiliser le handler générique [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) pour traiter les données d'un formulaire avec un [schéma](../schemas.mdx).
+Il est possible d'utiliser le handler générique [`Marten::Handlers::Schema`](https://martenframework.com/docs/api/dev/Marten/Handlers/Schema.html) pour traiter les données d'un formulaire avec un [schéma](../schemas.mdx).
 
 Pour ce faire, il est nécessaire :
 
@@ -145,5 +145,5 @@ Par défaut, un tel handler effectuera le rendu du template configuré lorsque l
 Si le schéma est valide, une redirection temporaire est émise en utilisant l'URL correspondant à la valeur de `#success_route_name` (bien qu'il convienne de noter que la manière de générer cette URL de succès peut être redéfinie en définissant une méthode `#success_url`). Par défaut, le handler ne fait rien lorsque le schéma traité est valide (hormis rediriger vers l'URL de succès).
 
 :::tip
-Les handlers utilisant le handler générique [`Marten::Handlers::Schema`](pathname:///api/dev/Marten/Handlers/Schema.html) peuvent exploiter des types supplémentaires de callbacks. Veuillez consulter [Callbacks de handler schema](./callbacks.md#callbacks-de-handler-schema) pour en savoir plus.
+Les handlers utilisant le handler générique [`Marten::Handlers::Schema`](https://martenframework.com/docs/api/dev/Marten/Handlers/Schema.html) peuvent exploiter des types supplémentaires de callbacks. Veuillez consulter [Callbacks de handler schema](./callbacks.md#callbacks-de-handler-schema) pour en savoir plus.
 :::

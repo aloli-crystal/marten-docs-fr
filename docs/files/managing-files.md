@@ -30,7 +30,7 @@ attachment.uploaded_file.size      # => 5796929
 attachment.uploaded_file.url       # => "/media/test.txt"
 ```
 
-L'objet retourné par la méthode `Attachment#uploaded_file` est un « objet fichier » : une instance de [`Marten::DB::Field::File::File`](pathname:///api/dev/Marten/DB/Field/File/File.html). Ces objets et leurs fonctionnalités associées sont décrits ci-dessous dans [Objets fichier](#objets-fichier).
+L'objet retourné par la méthode `Attachment#uploaded_file` est un « objet fichier » : une instance de [`Marten::DB::Field::File::File`](https://martenframework.com/docs/api/dev/Marten/DB/Field/File/File.html). Ces objets et leurs fonctionnalités associées sont décrits ci-dessous dans [Objets fichier](#objets-fichier).
 
 :::tip Sous quel chemin les fichiers sont-ils persistés ?
 Les fichiers sont stockés à la racine du [stockage](#stockages-de-fichiers) media par défaut. Il est à noter que le chemin utilisé pour persister les fichiers dans les stockages peut être configuré en définissant l'option `upload_to` du champ [`file`](../models-and-databases/reference/fields.md#file).
@@ -71,14 +71,14 @@ Vous n'avez pas besoin de vous soucier des collisions possibles entre les noms d
 
 ## Objets fichier
 
-Comme mentionné précédemment, les objets fichier sont utilisés en interne par Marten pour permettre l'interaction avec les fichiers associés aux enregistrements de modèle. Ces objets sont des instances de la classe [`Marten::DB::Field::File::File`](pathname:///api/dev/Marten/DB/Field/File/File.html). Ils donnent accès aux propriétés de base du fichier et permettent d'interagir avec l'IO associé.
+Comme mentionné précédemment, les objets fichier sont utilisés en interne par Marten pour permettre l'interaction avec les fichiers associés aux enregistrements de modèle. Ces objets sont des instances de la classe [`Marten::DB::Field::File::File`](https://martenframework.com/docs/api/dev/Marten/DB/Field/File/File.html). Ils donnent accès aux propriétés de base du fichier et permettent d'interagir avec l'IO associé.
 
 Il est à noter que ces « objets fichier » sont **toujours** associés à un enregistrement de modèle (persisté ou non), et en tant que tels, ils ne sont utilisés que dans le contexte du champ de modèle [`file`](../models-and-databases/reference/fields.md#file).
 
 Enfin, il convient de mentionner que les objets fichier peuvent être **attachés** et/ou **validés** :
 
-* un objet fichier **attaché** a un fichier associé défini : dans ce cas, sa méthode [`#attached?`](pathname:///api/dev/Marten/DB/Field/File/File.html#attached%3F-instance-method) retourne `true`
-* un objet fichier **validé** a un fichier associé qui est _persisté_ dans le [stockage](#stockages-de-fichiers) sous-jacent : dans ce cas, sa méthode [`#committed?`](pathname:///api/dev/Marten/DB/Field/File/File.html#committed%3F%3ABool-instance-method) retourne `true`
+* un objet fichier **attaché** a un fichier associé défini : dans ce cas, sa méthode [`#attached?`](https://martenframework.com/docs/api/dev/Marten/DB/Field/File/File.html#attached%3F-instance-method) retourne `true`
+* un objet fichier **validé** a un fichier associé qui est _persisté_ dans le [stockage](#stockages-de-fichiers) sous-jacent : dans ce cas, sa méthode [`#committed?`](https://martenframework.com/docs/api/dev/Marten/DB/Field/File/File.html#committed%3F%3ABool-instance-method) retourne `true`
 
 Par exemple :
 
@@ -94,14 +94,14 @@ Les objets fichier donnent accès aux propriétés de base du fichier via les m�
 
 | Méthode | Description |
 | ----------- | ----------- |
-| `#file` | Retourne l'objet fichier associé / « encapsulé ». Il peut s'agir d'un véritable objet [`File`](https://crystal-lang.org/api/File.html), d'un fichier téléversé (instance de [`Marten::HTTP::UploadedFile`](pathname:///api/dev/Marten/HTTP/UploadedFile.html)), ou `nil` si aucun fichier n'est encore associé. |
+| `#file` | Retourne l'objet fichier associé / « encapsulé ». Il peut s'agir d'un véritable objet [`File`](https://crystal-lang.org/api/File.html), d'un fichier téléversé (instance de [`Marten::HTTP::UploadedFile`](https://martenframework.com/docs/api/dev/Marten/HTTP/UploadedFile.html)), ou `nil` si aucun fichier n'est encore associé. |
 | `#name` | Retourne le nom du fichier. |
 | `#size` | Retourne la taille du fichier, en utilisant le [stockage](#stockages-de-fichiers) associé. |
 | `#url` | Retourne l'URL du fichier, en utilisant le [stockage](#stockages-de-fichiers) associé. |
 
 ### Accéder au contenu du fichier sous-jacent
 
-Les objets fichier vous permettent d'accéder au contenu du fichier sous-jacent via la méthode [`#open`](pathname:///api/dev/Marten/DB/Field/File/File.html#open%3AIO-instance-method). Cette méthode retourne un objet [`IO`](https://crystal-lang.org/api/IO.html).
+Les objets fichier vous permettent d'accéder au contenu du fichier sous-jacent via la méthode [`#open`](https://martenframework.com/docs/api/dev/Marten/DB/Field/File/File.html#open%3AIO-instance-method). Cette méthode retourne un objet [`IO`](https://crystal-lang.org/api/IO.html).
 
 Par exemple :
 
@@ -113,7 +113,7 @@ puts file_io.gets_to_end
 
 ### Mettre à jour le fichier attaché
 
-Il est possible de mettre à jour le fichier réel d'un « objet fichier » en utilisant la méthode [`#save`](pathname:///api/dev/Marten/DB/Field/File/File.html#save(filepath%3A%3A%3AString%2Ccontent%3AIO%2Csave%3Dfalse)%3ANil-instance-method). Cette méthode permet de sauvegarder le contenu d'un objet [`IO`](https://crystal-lang.org/api/IO.html) spécifié et de l'associer à un chemin de fichier spécifique dans le [stockage](#stockages-de-fichiers) sous-jacent.
+Il est possible de mettre à jour le fichier réel d'un « objet fichier » en utilisant la méthode [`#save`](https://martenframework.com/docs/api/dev/Marten/DB/Field/File/File.html#save(filepath%3A%3A%3AString%2Ccontent%3AIO%2Csave%3Dfalse)%3ANil-instance-method). Cette méthode permet de sauvegarder le contenu d'un objet [`IO`](https://crystal-lang.org/api/IO.html) spécifié et de l'associer à un chemin de fichier spécifique dans le [stockage](#stockages-de-fichiers) sous-jacent.
 
 Par exemple :
 
@@ -130,7 +130,7 @@ attachment.uploaded_file.url # => "/media/path/to/test.txt"
 
 ### Supprimer le fichier attaché
 
-Il est également possible de « supprimer » manuellement le fichier associé à l'« objet fichier ». Pour ce faire, la méthode [`#delete`](pathname:///api/dev/Marten/DB/Field/File/File.html#delete(save%3Dfalse)%3ANil-instance-method) peut être utilisée. Il est à noter que l'appel de cette méthode supprimera l'association entre l'enregistrement de modèle et le fichier ET supprimera également le fichier dans le [stockage](#stockages-de-fichiers) considéré.
+Il est également possible de « supprimer » manuellement le fichier associé à l'« objet fichier ». Pour ce faire, la méthode [`#delete`](https://martenframework.com/docs/api/dev/Marten/DB/Field/File/File.html#delete(save%3Dfalse)%3ANil-instance-method) peut être utilisée. Il est à noter que l'appel de cette méthode supprimera l'association entre l'enregistrement de modèle et le fichier ET supprimera également le fichier dans le [stockage](#stockages-de-fichiers) considéré.
 
 Par exemple :
 
@@ -145,20 +145,20 @@ attachment.uploaded_file.committed? # => false
 
 Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérations sur les fichiers comme la sauvegarde, la suppression, la génération d'URL, etc. Ce mécanisme de stockage de fichiers permet de sauvegarder les fichiers dans différents backends en utilisant une API standardisée (par exemple dans le système de fichiers local, dans un bucket cloud, etc.).
 
-Par défaut, les champs de modèle [`file`](../models-and-databases/reference/fields.md#file) utilisent le stockage « media » configuré. Ce stockage utilise les paramètres [`settings.media_files`](../development/reference/settings.md#media-files-settings) pour déterminer quel backend de stockage utiliser, et où persister les fichiers. Par défaut, le stockage media utilise le backend de stockage [`Marten::Core::Store::FileSystem`](pathname:///api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers sont persistés dans le système de fichiers local, là où l'application Marten s'exécute.
+Par défaut, les champs de modèle [`file`](../models-and-databases/reference/fields.md#file) utilisent le stockage « media » configuré. Ce stockage utilise les paramètres [`settings.media_files`](../development/reference/settings.md#media-files-settings) pour déterminer quel backend de stockage utiliser, et où persister les fichiers. Par défaut, le stockage media utilise le backend de stockage [`Marten::Core::Store::FileSystem`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/FileSystem.html), qui garantit que les fichiers sont persistés dans le système de fichiers local, là où l'application Marten s'exécute.
 
 Tous les stockages de fichiers disponibles sont listés dans la [référence des stockages de fichiers](./reference/stores.md).
 
 ### Interagir avec le stockage de fichiers media
 
-Vous n'aurez généralement pas besoin d'interagir directement avec le stockage de fichiers, mais il convient de mentionner que les objets de stockage partagent la même API. En effet, la classe de ces objets de stockage doit hériter de la classe abstraite [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html) et implémenter un ensemble de méthodes obligatoires qui fournissent les fonctionnalités suivantes :
+Vous n'aurez généralement pas besoin d'interagir directement avec le stockage de fichiers, mais il convient de mentionner que les objets de stockage partagent la même API. En effet, la classe de ces objets de stockage doit hériter de la classe abstraite [`Marten::Core::Storage::Base`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html) et implémenter un ensemble de méthodes obligatoires qui fournissent les fonctionnalités suivantes :
 
-* sauvegarder des fichiers ([`#save`](pathname:///api/dev/Marten/Core/Storage/Base.html#save(filepath%3AString%2Ccontent%3AIO)%3AString-instance-method))
-* supprimer des fichiers ([`#delete`](pathname:///api/dev/Marten/Core/Storage/Base.html#delete(filepath%3AString)%3ANil-instance-method))
-* ouvrir des fichiers ([`#open`](pathname:///api/dev/Marten/Core/Storage/Base.html#open(filepath%3AString)%3AIO-instance-method))
-* vérifier que des fichiers existent ([`#exist?`](pathname:///api/dev/Marten/Core/Storage/Base.html#exists%3F(filepath%3AString)%3ABool-instance-method))
-* récupérer les tailles de fichiers ([`#size`](pathname:///api/dev/Marten/Core/Storage/Base.html#size(filepath%3AString)%3AInt64-instance-method))
-* récupérer les URL de fichiers ([`#url`](pathname:///api/dev/Marten/Core/Storage/Base.html#url(filepath%3AString)%3AString-instance-method))
+* sauvegarder des fichiers ([`#save`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#save(filepath%3AString%2Ccontent%3AIO)%3AString-instance-method))
+* supprimer des fichiers ([`#delete`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#delete(filepath%3AString)%3ANil-instance-method))
+* ouvrir des fichiers ([`#open`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#open(filepath%3AString)%3AIO-instance-method))
+* vérifier que des fichiers existent ([`#exist?`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#exists%3F(filepath%3AString)%3ABool-instance-method))
+* récupérer les tailles de fichiers ([`#size`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#size(filepath%3AString)%3AInt64-instance-method))
+* récupérer les URL de fichiers ([`#url`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#url(filepath%3AString)%3AString-instance-method))
 
 Ces fonctionnalités sont illustrées dans l'exemple suivant, où le stockage media est utilisé pour interagir avec des fichiers :
 
@@ -209,7 +209,7 @@ Ce faisant, toutes les opérations sur les fichiers seront effectuées en utilis
 
 ## Servir les fichiers téléversés pendant le développement
 
-Marten fournit un handler que vous pouvez utiliser pour servir les fichiers media uniquement dans les environnements de développement. Ce handler ([`Marten::Handlers::Defaults::Development::ServeMediaFile`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeMediaFile.html)) est automatiquement associé à une route lors de la création de nouveaux projets via l'utilisation de la commande de gestion [`new`](../development/reference/management-commands.md#new) :
+Marten fournit un handler que vous pouvez utiliser pour servir les fichiers media uniquement dans les environnements de développement. Ce handler ([`Marten::Handlers::Defaults::Development::ServeMediaFile`](https://martenframework.com/docs/api/dev/Marten/Handlers/Defaults/Development/ServeMediaFile.html)) est automatiquement associé à une route lors de la création de nouveaux projets via l'utilisation de la commande de gestion [`new`](../development/reference/management-commands.md#new) :
 
 ```crystal
 Marten.routes.draw do
@@ -224,5 +224,5 @@ end
 Comme vous pouvez le voir, cette route utilisera automatiquement l'URL configurée dans le paramètre de fichiers media [`url`](../development/reference/settings.md#url-1). Par exemple, cela signifie qu'un fichier media `foo/bar.txt` serait servi par la route `/media/foo/bar.txt` en développement si le paramètre [`url`](../development/reference/settings.md#url-1) est défini à `/media/`.
 
 :::warning
-Il est très important de comprendre que ce handler ne devrait être utilisé **que** dans les environnements de développement. En effet, le handler [`Marten::Handlers::Defaults::Development::ServeMediaFile`](pathname:///api/dev/Marten/Handlers/Defaults/Development/ServeMediaFile.html) n'est pas adapté aux environnements de production car il n'est pas vraiment efficace ni sécurisé. Une meilleure façon de servir les fichiers téléversés est d'utiliser un serveur web ou un bucket cloud par exemple (en fonction du stockage de fichiers media configuré).
+Il est très important de comprendre que ce handler ne devrait être utilisé **que** dans les environnements de développement. En effet, le handler [`Marten::Handlers::Defaults::Development::ServeMediaFile`](https://martenframework.com/docs/api/dev/Marten/Handlers/Defaults/Development/ServeMediaFile.html) n'est pas adapté aux environnements de production car il n'est pas vraiment efficace ni sécurisé. Une meilleure façon de servir les fichiers téléversés est d'utiliser un serveur web ou un bucket cloud par exemple (en fonction du stockage de fichiers media configuré).
 :::

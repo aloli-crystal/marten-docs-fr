@@ -7,14 +7,14 @@ Marten utilise un mécanisme de stockage de fichiers pour effectuer les opérati
 
 ## Implémentation basique d'un stockage de fichiers
 
-Les stockages de fichiers sont implémentés comme des sous-classes de la classe abstraite [`Marten::Core::Storage::Base`](pathname:///api/dev/Marten/Core/Storage/Base.html). En tant que tels, ils doivent implémenter un ensemble de méthodes obligatoires qui fournissent les fonctionnalités suivantes :
+Les stockages de fichiers sont implémentés comme des sous-classes de la classe abstraite [`Marten::Core::Storage::Base`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html). En tant que tels, ils doivent implémenter un ensemble de méthodes obligatoires qui fournissent les fonctionnalités suivantes :
 
-* sauvegarder des fichiers ([`#save`](pathname:///api/dev/Marten/Core/Storage/Base.html#save(filepath%3AString%2Ccontent%3AIO)%3AString-instance-method))
-* supprimer des fichiers ([`#delete`](pathname:///api/dev/Marten/Core/Storage/Base.html#delete(filepath%3AString)%3ANil-instance-method))
-* ouvrir des fichiers ([`#open`](pathname:///api/dev/Marten/Core/Storage/Base.html#open(filepath%3AString)%3AIO-instance-method))
-* vérifier que des fichiers existent ([`#exist?`](pathname:///api/dev/Marten/Core/Storage/Base.html#exists%3F(filepath%3AString)%3ABool-instance-method))
-* récupérer les tailles de fichiers ([`#size`](pathname:///api/dev/Marten/Core/Storage/Base.html#size(filepath%3AString)%3AInt64-instance-method))
-* récupérer les URL de fichiers ([`#url`](pathname:///api/dev/Marten/Core/Storage/Base.html#url(filepath%3AString)%3AString-instance-method))
+* sauvegarder des fichiers ([`#save`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#save(filepath%3AString%2Ccontent%3AIO)%3AString-instance-method))
+* supprimer des fichiers ([`#delete`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#delete(filepath%3AString)%3ANil-instance-method))
+* ouvrir des fichiers ([`#open`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#open(filepath%3AString)%3AIO-instance-method))
+* vérifier que des fichiers existent ([`#exist?`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#exists%3F(filepath%3AString)%3ABool-instance-method))
+* récupérer les tailles de fichiers ([`#size`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#size(filepath%3AString)%3AInt64-instance-method))
+* récupérer les URL de fichiers ([`#url`](https://martenframework.com/docs/api/dev/Marten/Core/Storage/Base.html#url(filepath%3AString)%3AString-instance-method))
 
 Notez que vous pouvez entièrement personnaliser la façon dont les objets de stockage de fichiers sont initialisés.
 

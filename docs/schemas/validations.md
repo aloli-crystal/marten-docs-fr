@@ -89,7 +89,7 @@ Vous pouvez définir plusieurs règles de validation dans vos classes schema. Ce
 
 Des méthodes comme `#valid?` ou `#invalid?` vous permettent uniquement de savoir si une instance de schema est valide ou invalide pour un jeu de données spécifique. Mais vous voudrez probablement savoir exactement quelles sont les erreurs réelles ou comment en ajouter de nouvelles.
 
-En tant que tel, chaque instance de schema a un ensemble d'erreurs associé, qui est une instance de [`Marten::Core::Validation::ErrorSet`](pathname:///api/dev/Marten/Core/Validation/ErrorSet.html).
+En tant que tel, chaque instance de schema a un ensemble d'erreurs associé, qui est une instance de [`Marten::Core::Validation::ErrorSet`](https://martenframework.com/docs/api/dev/Marten/Core/Validation/ErrorSet.html).
 
 ### Inspecter les erreurs
 

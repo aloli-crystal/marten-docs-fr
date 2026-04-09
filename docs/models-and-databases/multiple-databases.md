@@ -11,7 +11,7 @@ Le support des projets multi-bases de données est encore expérimental et manqu
 
 ## Définir plusieurs bases de données
 
-Chaque projet Marten utilisant une seule base de données utilise ce qu'on appelle une base de données "par défaut". C'est la base de données dont la configuration est définie lors de l'appel à la méthode de configuration [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2C%26)-instance-method) :
+Chaque projet Marten utilisant une seule base de données utilise ce qu'on appelle une base de données "par défaut". C'est la base de données dont la configuration est définie lors de l'appel à la méthode de configuration [`#database`](https://martenframework.com/docs/api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2C%26)-instance-method) :
 
 ```crystal
 config.database do |db|
@@ -22,7 +22,7 @@ end
 
 La base de données "par défaut" est implicite chaque fois que vous interagissez avec la base de données (par ex. en effectuant des requêtes, en créant des enregistrements, etc.), sauf indication contraire.
 
-La méthode de configuration [`#database`](pathname:///api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2C%26)-instance-method) peut prendre un argument supplémentaire afin de définir des bases de données additionnelles. Par exemple :
+La méthode de configuration [`#database`](https://martenframework.com/docs/api/dev/Marten/Conf/GlobalSettings.html#database(id%3DDB%3A%3AConnection%3A%3ADEFAULT_CONNECTION_NAME%2C%26)-instance-method) peut prendre un argument supplémentaire afin de définir des bases de données additionnelles. Par exemple :
 
 ```crystal
 config.database :other_db do |db|

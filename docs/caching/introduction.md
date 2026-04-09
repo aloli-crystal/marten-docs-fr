@@ -21,18 +21,18 @@ end
 ```
 
 :::info
-Par défaut, Marten utilise un cache en mémoire (instance de [`Marten::Cache::Store::Memory`](pathname:///api/dev/Marten/Cache/Store/Memory.html)). Notez que ce simple cache en mémoire ne permet pas d'effectuer de la mise en cache inter-processus puisque chaque processus exécutant votre application aura sa propre instance de cache privée. Dans les situations où vous avez plusieurs processus séparés exécutant votre application, il est préférable d'utiliser un système de mise en cache approprié comme [Redis](https://redis.io) ou [Memcached](https://memcached.org), ce qui peut être fait en utilisant respectivement les shards [`marten-redis-cache`](https://github.com/martenframework/marten-redis-cache) ou [`marten-memcached-cache`](https://github.com/martenframework/marten-memcached-cache).
+Par défaut, Marten utilise un cache en mémoire (instance de [`Marten::Cache::Store::Memory`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Memory.html)). Notez que ce simple cache en mémoire ne permet pas d'effectuer de la mise en cache inter-processus puisque chaque processus exécutant votre application aura sa propre instance de cache privée. Dans les situations où vous avez plusieurs processus séparés exécutant votre application, il est préférable d'utiliser un système de mise en cache approprié comme [Redis](https://redis.io) ou [Memcached](https://memcached.org), ce qui peut être fait en utilisant respectivement les shards [`marten-redis-cache`](https://github.com/martenframework/marten-redis-cache) ou [`marten-memcached-cache`](https://github.com/martenframework/marten-memcached-cache).
 
-Dans les environnements de test, vous pourriez configurer votre projet pour qu'il utilise une instance de [`Marten::Cache::Store::Null`](pathname:///api/dev/Marten/Cache/Store/Null.html) comme cache global. Cette approche peut être utile lorsque la mise en cache n'est pas nécessaire, mais que vous voulez tout de même vous assurer que votre code passe par l'interface de mise en cache.
+Dans les environnements de test, vous pourriez configurer votre projet pour qu'il utilise une instance de [`Marten::Cache::Store::Null`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Null.html) comme cache global. Cette approche peut être utile lorsque la mise en cache n'est pas nécessaire, mais que vous voulez tout de même vous assurer que votre code passe par l'interface de mise en cache.
 :::
 
 ## Mise en cache de bas niveau
 
 ### Utilisation basique
 
-La mise en cache de bas niveau vous permet d'interagir directement avec le cache store global et d'effectuer des opérations de mise en cache. Pour ce faire, vous pouvez accéder au cache store global en appelant la méthode [`Marten#cache`](pathname:///api/dev/Marten.html#cache%3ACache%3A%3AStore%3A%3ABase-class-method).
+La mise en cache de bas niveau vous permet d'interagir directement avec le cache store global et d'effectuer des opérations de mise en cache. Pour ce faire, vous pouvez accéder au cache store global en appelant la méthode [`Marten#cache`](https://martenframework.com/docs/api/dev/Marten.html#cache%3ACache%3A%3AStore%3A%3ABase-class-method).
 
-La principale façon de mettre de nouvelles valeurs en cache est d'utiliser la méthode [`#fetch`](pathname:///api/dev/Marten/Cache/Store/Base.html#fetch(key%3AString|Symbol%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Cforce%3Dfalse%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil%2C%26)%3AString|Nil-instance-method), qui est fournie sur tous les cache stores. Cette méthode permet de récupérer des données du cache en utilisant une clé spécifique : si une entrée existe pour cette clé dans le cache, alors les données sont retournées. Sinon, la valeur de retour du bloc (qui _doit_ être spécifié lors de l'appel à [`#fetch`](pathname:///api/dev/Marten/Cache/Store/Base.html#fetch(key%3AString|Symbol%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Cforce%3Dfalse%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil%2C%26)%3AString|Nil-instance-method)) est écrite dans le cache et retournée. Cette méthode supporte quelques arguments supplémentaires qui permettent de personnaliser davantage la façon dont l'entrée est écrite dans le cache (ex. le temps d'expiration associé à l'entrée).
+La principale façon de mettre de nouvelles valeurs en cache est d'utiliser la méthode [`#fetch`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#fetch(key%3AString|Symbol%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Cforce%3Dfalse%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil%2C%26)%3AString|Nil-instance-method), qui est fournie sur tous les cache stores. Cette méthode permet de récupérer des données du cache en utilisant une clé spécifique : si une entrée existe pour cette clé dans le cache, alors les données sont retournées. Sinon, la valeur de retour du bloc (qui _doit_ être spécifié lors de l'appel à [`#fetch`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#fetch(key%3AString|Symbol%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Cforce%3Dfalse%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil%2C%26)%3AString|Nil-instance-method)) est écrite dans le cache et retournée. Cette méthode supporte quelques arguments supplémentaires qui permettent de personnaliser davantage la façon dont l'entrée est écrite dans le cache (ex. le temps d'expiration associé à l'entrée).
 
 Par exemple :
 
@@ -44,7 +44,7 @@ end
 
 ### Lire et écrire dans le cache
 
-Il est important de mentionner que vous pouvez également lire explicitement depuis le cache et écrire dans le cache en utilisant respectivement les méthodes [`#read`](pathname:///api/dev/Marten/Cache/Store/Base.html#read(key%3AString|Symbol%2Cversion%3AInt32|Nil%3Dnil)%3AString|Nil-instance-method) et [`#write`](pathname:///api/dev/Marten/Cache/Store/Base.html#write(key%3AString|Symbol%2Cvalue%3AString%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)-instance-method). La vérification de l'existence d'une clé peut être effectuée en utilisant la méthode [`#exists?`](pathname:///api/dev/Marten/Cache/Store/Base.html#exists%3F(key%3AString|Symbol%2Cversion%3AInt32|Nil%3Dnil)%3ABool-instance-method).
+Il est important de mentionner que vous pouvez également lire explicitement depuis le cache et écrire dans le cache en utilisant respectivement les méthodes [`#read`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#read(key%3AString|Symbol%2Cversion%3AInt32|Nil%3Dnil)%3AString|Nil-instance-method) et [`#write`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#write(key%3AString|Symbol%2Cvalue%3AString%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)-instance-method). La vérification de l'existence d'une clé peut être effectuée en utilisant la méthode [`#exists?`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#exists%3F(key%3AString|Symbol%2Cversion%3AInt32|Nil%3Dnil)%3ABool-instance-method).
 
 Par exemple :
 
@@ -63,7 +63,7 @@ Marten.cache.exists?("foo") # => true
 
 ### Supprimer une entrée du cache
 
-La suppression d'une entrée du cache est rendue possible grâce à la méthode [`#delete`](pathname:///api/dev/Marten/Cache/Store/Base.html#delete(key%3AString|Symbol)%3ABool-instance-method). Cette méthode prend la clé de l'entrée à supprimer comme argument et retourne un booléen indiquant si une entrée a effectivement été supprimée.
+La suppression d'une entrée du cache est rendue possible grâce à la méthode [`#delete`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#delete(key%3AString|Symbol)%3ABool-instance-method). Cette méthode prend la clé de l'entrée à supprimer comme argument et retourne un booléen indiquant si une entrée a effectivement été supprimée.
 
 Par exemple :
 
@@ -78,7 +78,7 @@ Marten.cache.delete("foo") # => true
 
 ### Incrémenter et décrémenter des valeurs
 
-Si vous devez persister des valeurs entières destinées à être incrémentées ou décrémentées, vous pouvez utiliser les méthodes [`#increment`](pathname:///api/dev/Marten/Cache/Store/Base.html#increment(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) et [`#decrement`](pathname:///api/dev/Marten/Cache/Store/Base.html#decrement(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method). L'avantage de procéder ainsi est que l'opération d'incrémentation/décrémentation sera effectuée de manière atomique selon le cache store que vous utilisez (ex. c'est le cas pour les stores fournis par les shards [`marten-memcached-cache`](https://github.com/martenframework/marten-memcached-cache) et [`marten-redis-cache`](https://github.com/martenframework/marten-redis-cache)).
+Si vous devez persister des valeurs entières destinées à être incrémentées ou décrémentées, vous pouvez utiliser les méthodes [`#increment`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#increment(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method) et [`#decrement`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#decrement(key%3AString%2Camount%3AInt32%3D1%2Cexpires_at%3ATime|Nil%3Dnil%2Cexpires_in%3ATime%3A%3ASpan|Nil%3Dnil%2Cversion%3AInt32|Nil%3Dnil%2Crace_condition_ttl%3ATime%3A%3ASpan|Nil%3Dnil%2Ccompress%3ABool|Nil%3Dnil%2Ccompress_threshold%3AInt32|Nil%3Dnil)%3AInt-instance-method). L'avantage de procéder ainsi est que l'opération d'incrémentation/décrémentation sera effectuée de manière atomique selon le cache store que vous utilisez (ex. c'est le cas pour les stores fournis par les shards [`marten-memcached-cache`](https://github.com/martenframework/marten-memcached-cache) et [`marten-redis-cache`](https://github.com/martenframework/marten-redis-cache)).
 
 Par exemple :
 
@@ -90,7 +90,7 @@ Marten.cache.decrement("mycounter") # => 2
 
 ### Vider le cache
 
-Il est possible de vider entièrement le contenu du cache en utilisant la méthode [`#clear`](pathname:///api/dev/Marten/Cache/Store/Base.html#clear-instance-method).
+Il est possible de vider entièrement le contenu du cache en utilisant la méthode [`#clear`](https://martenframework.com/docs/api/dev/Marten/Cache/Store/Base.html#clear-instance-method).
 
 Par exemple :
 
