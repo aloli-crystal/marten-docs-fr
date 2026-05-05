@@ -68,9 +68,12 @@ jobs:
           2. Reporter les modifications dans la traduction française
           3. Le sync point sera mis à jour automatiquement par ce workflow"
 
-          gh issue create \
-            --title "Traduction : mise à jour depuis upstream ($(date +%Y-%m-%d))" \
-            --body "$BODY"
+          # On passe par l'API REST plutôt que `gh issue create` (GraphQL),
+          # ce dernier renvoyant `Resource not accessible by integration`
+          # sur le GITHUB_TOKEN malgré la permission `issues: write`.
+          gh api "repos/${GITHUB_REPOSITORY}/issues" \
+            -f title="Traduction : mise à jour depuis upstream ($(date +%Y-%m-%d))" \
+            -f body="$BODY"
 
           # Update sync point
           git log upstream/main -1 --format="%H" > .upstream-sync
