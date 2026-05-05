@@ -68,16 +68,9 @@ jobs:
           2. Reporter les modifications dans la traduction française
           3. Le sync point sera mis à jour automatiquement par ce workflow"
 
-          # S'assurer que le label existe (idempotent ; tolère l'absence préalable)
-          gh label create traduction \
-            --color FBCA04 \
-            --description "Mise à jour de traduction depuis l'amont" \
-            --force 2>/dev/null || true
-
           gh issue create \
             --title "Traduction : mise à jour depuis upstream ($(date +%Y-%m-%d))" \
-            --body "$BODY" \
-            --label "traduction"
+            --body "$BODY"
 
           # Update sync point
           git log upstream/main -1 --format="%H" > .upstream-sync
